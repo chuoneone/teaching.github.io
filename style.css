@@ -1,0 +1,338 @@
+﻿body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f8fc;
+    color: #5a5a5a;
+    margin: 0;
+    padding: 20px;
+    padding-top: 70px; /* 確保內容不會被導覽列擋住 */
+    box-sizing: border-box;
+    font-family: 'Orbitron', sans-serif; /* 科幻感字型，可用 Google Fonts */
+    background: radial-gradient(circle at top left, #0f2027, #203a43, #2c5364);
+    color: #cce7ff;
+}
+
+
+
+/* 導覽列樣式 */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(90deg, #000428, #004e92);
+    color: #00ffe7;
+    padding: 15px 20px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-sizing: border-box;
+    box-shadow: 0 0 10px #00ffe7;
+}
+
+    .navbar .logo {
+        font-size: 1.5em;
+    }
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    gap: 15px; /* 調整間距 */
+    margin-left: auto; /* 讓它靠右但不超出 */
+    margin-right: 40px; /* 防止太過貼邊 */
+    color: #00ffe7;
+}
+
+    .nav-links li {
+        display: inline;
+    }
+
+    .nav-links a {
+        color: #6a9fb5;
+        text-decoration: none;
+        font-size: 1em;
+    }
+    .nav-links a:hover {
+        color: #ff00d4;
+        text-shadow: 0 0 5px #ff00d4;
+    }
+
+
+.intro-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.8rem;
+    text-align: center;
+    margin: 60px auto 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 4px solid #0ff;
+    width: 0;
+    animation: typing 3.5s steps(35, end) forwards, blink 0.75s step-end infinite;
+    background: linear-gradient(90deg, #00ffff, #ff00ff, #00ffff);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 5px;
+
+
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+@keyframes blink {
+    50% { border-color: transparent }
+}
+
+
+.button-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    margin-top: 30px;
+    padding: 20px;
+}
+
+/* 每個年級一排 */
+.grade-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    width: 100%;
+    max-width: 900px;
+}
+
+/* 模仿小按鈕風格，但更大一點 */
+.big-button {
+    background: linear-gradient(135deg, #0fffc1, #7e0fff);
+    color: #ffffff;
+    padding: 20px 50px;
+    font-size: 26px;
+    border-radius: 80px;
+    text-decoration: none;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: block;
+    box-shadow: 0 0 15px #0fffc1, 0 0 25px #7e0fff;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    letter-spacing: 1.5px;
+    font-weight: bold;
+}
+
+    .big-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px #0fffc1, 0 0 30px #7e0fff;
+    }
+
+
+
+
+/* 響應式調整：手機上變成垂直排列 */
+@media (max-width: 768px) {
+    .header-flex-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .memo-column, .ai-column {
+        width: 90%;
+    }
+}
+
+
+
+.menu-toggle {
+    display: none;
+    cursor: pointer;
+}
+
+.calendar-container {
+    width: 95%;
+    max-width: 1000px;
+    height: 600px;
+    margin: 0 auto;
+}
+
+iframe {
+    border: none;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.calendar-section {
+    width: 95%;
+    max-width: 1000px;
+    margin: 20px auto;
+}
+
+.calendar-container {
+    width: 100%;
+    height: 600px;
+    margin-top: 10px;
+}
+
+    .calendar-container iframe {
+        border: none;
+        width: 100%;
+        height: 100%;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+
+/* 響應式設計 - 漢堡選單 */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        background-color: #e8eaf6;
+        width: 100%;
+        text-align: center;
+    }
+
+        .nav-links.active {
+            display: flex;
+        }
+
+    .menu-toggle {
+        display: block;
+    }
+}
+
+
+
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    margin: 10px 8px;
+    border-radius: 50%;
+    font-size: 28px;
+    text-decoration: none;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    background: linear-gradient(145deg, #1f1c2c, #928dab);
+    border: 1px solid #00ffe7;
+    box-shadow: 0 0 10px #00ffe7;
+    color: #00ffe7;
+}
+
+.btn-icon:hover {
+    background-color: #ff00cc;
+    color: #ffffff;
+    transform: scale(1.2);
+}
+
+
+
+
+/* 社交链接区域（保持原样） */
+.social-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.single-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.social-group {
+    padding: 20px;
+    border-radius: 10px;
+    text-align: left;
+    width: calc(25% - 20px);
+    min-width: 250px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid #00ffe7;
+    box-shadow: 0 0 10px #00ffe7;
+}
+
+.social-group h3 {
+    margin-bottom: 15px;
+    color: #cce7ff;
+    font-size: 25px;
+
+}
+
+.btn-group {
+    display:  inherit;
+    flex-direction: inherit;
+    gap: 10px;
+}
+
+.btn {
+    background: linear-gradient(135deg, #0fffc1, #7e0fff);
+    color: #ffffff;
+    padding: 7px 20px;
+    font-size: 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: block;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px #0fffc1, 0 0 20px #7e0fff;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+
+.icon-button {
+    width: 32px; /* 調整圖片大小 */
+    height: 32px;
+}
+
+.btn:hover {
+    transform: scale(1.1);
+    background: linear-gradient(135deg, #ff4dff, #00ffff);
+    box-shadow: 0 0 15px #ff4dff, 0 0 25px #00ffff;
+}
+
+
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+    .header-section {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .memo-container {
+        width: 100%;
+    }
+
+    .single-row {
+        flex-wrap: wrap;
+    }
+
+    .social-group {
+        width: calc(50% - 20px);
+    }
+}
+
+@media (max-width: 768px) {
+    .social-group {
+        width: 100%;
+    }
+}
+
