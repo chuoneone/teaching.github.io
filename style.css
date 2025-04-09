@@ -11,8 +11,6 @@
     color: #cce7ff;
 }
 
-
-
 /* 導覽列樣式 */
 .navbar {
     display: flex;
@@ -43,6 +41,7 @@
     margin-left: auto; /* 讓它靠右但不超出 */
     margin-right: 40px; /* 防止太過貼邊 */
     color: #00ffe7;
+
 }
 
     .nav-links li {
@@ -54,17 +53,17 @@
         text-decoration: none;
         font-size: 1em;
     }
-    .nav-links a:hover {
-        color: #ff00d4;
-        text-shadow: 0 0 5px #ff00d4;
-    }
 
+        .nav-links a:hover {
+            color: #ff00d4;
+            text-shadow: 0 0 5px #ff00d4;
+        }
 
 .intro-text {
     font-family: 'Orbitron', sans-serif;
     font-size: 2.8rem;
     text-align: center;
-    margin: 60px auto 20px;
+    margin: 30px auto 20px;
     white-space: nowrap;
     overflow: hidden;
     border-right: 5px solid #0ff;
@@ -75,19 +74,35 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     letter-spacing: 5px;
-    /* 更清楚的發光效果 */
     text-shadow: 0 0 2px #0ff, 0 0 4px #0ff, 0 0 6px #ff00ff;
+    max-width: 600px; /* 設定一個適合的最大寬度 */
 }
 
-
-
 @keyframes typing {
-    from { width: 0 }
-    to { width: 100% }
+    from {
+        width: 0
+    }
+
+    to {
+        width: 100%
+    }
 }
 
 @keyframes blink {
-    50% { border-color: transparent }
+    50% {
+        border-color: transparent
+    }
+}
+
+.poetry-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    color: #ffffff; /* 設定文字顏色 */
+    text-align: center;
+    margin-top: 30px;
+    white-space: pre-line; /* 保留文字的換行 */
+    line-height: 0; /* 增加行間距，使文字更易讀 */
+    margin-bottom: 30px;
 }
 
 
@@ -100,7 +115,8 @@
     padding: 20px;
 }
 
-/* 每個年級一排 */
+
+
 .grade-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -109,12 +125,12 @@
     max-width: 900px;
 }
 
-/* 模仿小按鈕風格，但更大一點 */
+/* 大型按鈕 */
 .big-button {
     background: linear-gradient(135deg, #0fffc1, #7e0fff);
     color: #ffffff;
-    padding: 20px 50px;
-    font-size: 35px;
+    padding: 15px 30px;
+    font-size: 30px;
     border-radius: 80px;
     text-decoration: none;
     text-align: center;
@@ -126,73 +142,83 @@
     font-weight: bold;
 }
 
-    .big-button:hover {
+.big-button:hover {
+        transform: scale(1.05);
+        background: linear-gradient(135deg, #ff4dff, #00ffff);
+        box-shadow: 0 0 15px #ff4dff, 0 0 25px #00ffff;
+}
+
+.big-button i {
+        margin-right: 10px; /* 圖示和文字之間的距離 */
+        font-size: 0.9em; /* 調整圖示大小 */
+ }
+
+.big-button2 {
+    background: linear-gradient(135deg, #0fffc1, #7e0fff);
+    color: #ffffff;
+    padding: 15px 30px;
+    font-size: 35px;
+    border-radius: 80px;
+    text-decoration: none;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: inline-flex; /* 改為 inline-flex 以更好地控制尺寸 */
+    justify-content: center; /* 水平置中內容 */
+    align-items: center; /* 垂直置中內容 */
+    box-shadow: 0 0 15px #0fffc1, 0 0 25px #7e0fff;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    letter-spacing: 1.5px;
+    font-weight: bold;
+    min-width: 300px; /* 您已有最小寬度，這很好 */
+    width: 300px; /* 固定寬度 */
+    height: 80px; /* 固定高度 */
+    box-sizing: border-box; /* 確保 padding 和 border 不會增加總尺寸 */
+    white-space: nowrap; /* 防止文字換行 */
+    overflow: hidden; /* 如果文字太長則隱藏 */
+    text-overflow: ellipsis; /* 可選：如果文字被截斷則顯示省略號 */
+    position: relative; /* 或 absolute，取決於您的布局 */
+    top: -50px; /* 負值會讓元素往上移動，調整數值以達到您想要的效果 */
+    margin-bottom: 20px; /* 增加按鈕下方的間距，使按鈕之間的距離更大 */
+}
+
+    .big-button2:hover {
         transform: scale(1.05);
         background: linear-gradient(135deg, #ff4dff, #00ffff);
         box-shadow: 0 0 15px #ff4dff, 0 0 25px #00ffff;
     }
 
-        
-    
-
-
-
-/* 響應式調整：手機上變成垂直排列 */
+/* 響應式設計 - 手機上按鈕垂直排列 */
 @media (max-width: 768px) {
-    .header-flex-container {
-        flex-direction: column;
+    .button-section {
+        display: flex;
+        flex-direction: column; /* 按鈕垂直排列 */
         align-items: center;
+        gap: 20px;
     }
 
-    .memo-column, .ai-column {
-        width: 90%;
+    iframe {
+        width: 90% !important; /* 讓 iframe 在手機上縮小 */
+        height: 60vh !important; /* 讓 iframe 在手機上顯示適當大小 */
+    }
+
+    .big-button {
+        font-size: 28px; /* 調整按鈕字體大小 */
+        padding: 15px 30px; /* 調整按鈕內邊距 */
+    }
+
+    .grade-row {
+        display: grid;
+        grid-template-columns: 1fr; /* 手機上每行一個按鈕 */
+        gap: 20px;
+        width: 100%;
     }
 }
-
-
 
 .menu-toggle {
     display: none;
-    cursor: pointer;
 }
 
-.calendar-container {
-    width: 95%;
-    max-width: 1000px;
-    height: 600px;
-    margin: 0 auto;
-}
-
-iframe {
-    border: none;
-    width: 100%;
-    height: 100%;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.calendar-section {
-    width: 95%;
-    max-width: 1000px;
-    margin: 20px auto;
-}
-
-.calendar-container {
-    width: 100%;
-    height: 600px;
-    margin-top: 10px;
-}
-
-    .calendar-container iframe {
-        border: none;
-        width: 100%;
-        height: 100%;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-
-
-/* 響應式設計 - 漢堡選單 */
+/* 響應式設計 - 導覽列漢堡選單 */
 @media (max-width: 768px) {
     .nav-links {
         display: none;
@@ -212,37 +238,13 @@ iframe {
     .menu-toggle {
         display: block;
     }
+
+    .navbar {
+        padding: 15px 10px;
+    }
 }
 
-
-
-.btn-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 60px;
-    height: 60px;
-    margin: 10px 8px;
-    border-radius: 50%;
-    font-size: 28px;
-    text-decoration: none;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-    background: linear-gradient(145deg, #1f1c2c, #928dab);
-    border: 1px solid #00ffe7;
-    box-shadow: 0 0 10px #00ffe7;
-    color: #00ffe7;
-}
-
-.btn-icon:hover {
-    background-color: #ff00cc;
-    color: #ffffff;
-    transform: scale(1.2);
-}
-
-
-
-
-/* 社交链接区域（保持原样） */
+/* 其他社交區域 */
 .social-container {
     display: flex;
     flex-direction: column;
@@ -272,15 +274,14 @@ iframe {
     box-shadow: 0 0 10px #00ffe7;
 }
 
-.social-group h3 {
-    margin-bottom: 15px;
-    color: #cce7ff;
-    font-size: 25px;
-
-}
+    .social-group h3 {
+        margin-bottom: 15px;
+        color: #cce7ff;
+        font-size: 25px;
+    }
 
 .btn-group {
-    display:  inherit;
+    display: inherit;
     flex-direction: inherit;
     gap: 10px;
 }
@@ -303,7 +304,7 @@ iframe {
 }
 
 .icon-button {
-    width: 32px; /* 調整圖片大小 */
+    width: 32px;
     height: 32px;
 }
 
@@ -315,29 +316,45 @@ iframe {
 
 
 
-/* 响应式设计 */
-@media (max-width: 1200px) {
-    .header-section {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .memo-container {
-        width: 100%;
-    }
-
-    .single-row {
-        flex-wrap: wrap;
-    }
-
-    .social-group {
-        width: calc(50% - 20px);
-    }
+.image-button {
+    position: relative;
+    display: inline-block;
+    width: 250px; /* 設定按鈕寬度 */
+    height: 300px; /* 設定按鈕高度 */
+    overflow: hidden;
+    border-radius: 8px; /* 可選：圓角效果 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 可選：陰影效果 */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-@media (max-width: 768px) {
-    .social-group {
+    .image-button img {
         width: 100%;
+        height: 100%;
+        object-fit: cover; /* 確保圖片覆蓋整個區域 */
+        transition: transform 0.3s ease;
     }
+
+.overlay-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white; /* 文字顏色 */
+    font-weight: bold;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); /* 文字陰影，提高可讀性 */
+    background-color: rgba(0, 0, 0, 0.3); /* 半透明黑色背景提高文字可見度 */
+    font-size: 50px; /* 調整文字大小，可以根據需要增加或減少數值 */
 }
 
+.image-button:hover {
+    transform: translateY(-5px); /* 懸停時輕微上移 */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* 懸停時增強陰影 */
+}
+
+    .image-button:hover img {
+        transform: scale(1.1); /* 懸停時圖片輕微放大 */
+    }
