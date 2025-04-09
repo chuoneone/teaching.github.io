@@ -67,7 +67,7 @@
     margin: 60px auto 20px;
     white-space: nowrap;
     overflow: hidden;
-    border-right: 4px solid #0ff;
+    border-right: 5px solid #0ff;
     width: 0;
     animation: typing 3.5s steps(35, end) forwards, blink 0.75s step-end infinite;
     background: linear-gradient(90deg, #00ffff, #ff00ff, #00ffff);
@@ -75,9 +75,11 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     letter-spacing: 5px;
-
-
+    /* 更清楚的發光效果 */
+    text-shadow: 0 0 2px #0ff, 0 0 4px #0ff, 0 0 6px #ff00ff;
 }
+
+
 
 @keyframes typing {
     from { width: 0 }
@@ -112,7 +114,7 @@
     background: linear-gradient(135deg, #0fffc1, #7e0fff);
     color: #ffffff;
     padding: 20px 50px;
-    font-size: 26px;
+    font-size: 35px;
     border-radius: 80px;
     text-decoration: none;
     text-align: center;
@@ -126,9 +128,12 @@
 
     .big-button:hover {
         transform: scale(1.05);
-        box-shadow: 0 0 20px #0fffc1, 0 0 30px #7e0fff;
+        background: linear-gradient(135deg, #ff4dff, #00ffff);
+        box-shadow: 0 0 15px #ff4dff, 0 0 25px #00ffff;
     }
 
+        
+    
 
 
 
@@ -287,7 +292,7 @@ iframe {
     font-size: 20px;
     border-radius: 50px;
     text-decoration: none;
-    text-align: center;
+    text-align: left;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: block;
     margin-bottom: 20px;
