@@ -197,38 +197,45 @@
     }
 
     iframe {
-        width: 90% !important; /* 讓 iframe 在手機上縮小 */
-        height: 60vh !important; /* 讓 iframe 在手機上顯示適當大小 */
+        width: 90% !important; /* 手機上 iframe 縮小 */
+        height: 60vh !important; /* 高度適配手機螢幕 */
     }
 
     .big-button {
-        font-size: 28px; /* 調整按鈕字體大小 */
-        padding: 15px 30px; /* 調整按鈕內邊距 */
+        font-size: 28px; /* 按鈕字體大小 */
+        padding: 15px 30px; /* 按鈕內邊距 */
+    }
+
+    .big-button2 {
+        font-size: 28px; /* 按鈕字體大小 */
+        padding: 15px 30px; /* 按鈕內邊距 */
     }
 
     .grade-row {
         display: grid;
-        grid-template-columns: 1fr; /* 手機上每行一個按鈕 */
+        grid-template-columns: 1fr; /* 每行一個按鈕 */
         gap: 20px;
         width: 100%;
     }
+
+
 }
 
+/* 預設隱藏漢堡選單 */
 .menu-toggle {
     display: none;
 }
 
-/* 響應式設計 - 導覽列漢堡選單 */
-@media (max-width: 768px) {
+/* 響應式設計 - 導覽列漢堡選單與社交卡片調整 */
+@media screen and (max-width: 768px) {
     .nav-links {
         display: none;
         flex-direction: column;
+        background-color: #004080;
         position: absolute;
         top: 60px;
-        left: 0;
-        background-color: #e8eaf6;
+        right: 0;
         width: 100%;
-        text-align: center;
     }
 
         .nav-links.active {
@@ -240,9 +247,19 @@
     }
 
     .navbar {
-        padding: 15px 10px;
+        flex-wrap: wrap;
+    }
+
+    .single-row {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .social-group {
+        width: 90%;
     }
 }
+
 
 /* 其他社交區域 */
 .social-container {

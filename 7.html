@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
 </head>
+
 <body>
     <!-- 頂部導覽列 -->
     <header class="navbar">
@@ -36,8 +37,8 @@
 
         <!-- 社交链接区域（保持原样） -->
         <div class="social-container">
-            <div class="single-row">
 
+            <div class="single-row">
                 <div class="social-group">
                     <img src="images/math701.png" alt="書商資源圖示"
                          style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
@@ -49,9 +50,9 @@
                         <a href="https://wordwall.net/play/71329/146/264" target="_blank" class="btn">04去括號</a>
                         <a href="https://wordwall.net/play/71329/146/264" target="_blank" class="btn">05列二元一次</a>
 
-
                     </div>
                 </div>
+
 
                 <div class="social-group">
                     <img src="images/math702.png" alt="書商資源圖示"
@@ -92,13 +93,15 @@
                     </div>
                 </div>
 
-
-
-
-
             </div>
 
         </div>
-    
+        <script>
+            function toggleMenu() {
+                const navLinks = document.querySelector('.nav-links');
+                navLinks.classList.toggle('active');
+            }
+        </script>
+
 </body>
 </html>

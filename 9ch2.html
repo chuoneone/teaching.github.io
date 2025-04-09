@@ -38,6 +38,7 @@
     <!-- 外層容器：橫向排列 iframe + 按鈕 -->
     <div style="display: flex; justify-content: center; align-items: flex-start; gap: 20px;">
 
+
         <!-- 左邊：Quizlet 單字卡 -->
         <iframe src="https://wordwall.net/tc/embed/6dfdfd4f69a8401682546ab763d0f411?themeId=62&templateId=76&fontStackId=12"
                 style="border:0; width:40%; height:70vh;"></iframe>
@@ -54,6 +55,11 @@
 
 
 
-
+    <script>
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('active');
+        }
+    </script>
 </body>
 </html>
