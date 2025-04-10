@@ -1,5 +1,4 @@
 ﻿body {
-    font-family: Arial, sans-serif;
     background-color: #f7f8fc;
     color: #5a5a5a;
     margin: 0;
@@ -9,7 +8,10 @@
     font-family: 'Orbitron', sans-serif; /* 科幻感字型，可用 Google Fonts */
     background: radial-gradient(circle at top left, #0f2027, #203a43, #2c5364);
     color: #cce7ff;
+
 }
+
+
 
 /* 導覽列樣式 */
 .navbar {
@@ -59,6 +61,16 @@
             text-shadow: 0 0 5px #ff00d4;
         }
 
+
+.menu-toggle {
+    font-size: 28px;
+    cursor: pointer;
+    color: #00ffe7;
+    background: none;
+    border: none;
+}
+
+
 .intro-text {
     font-family: 'Orbitron', sans-serif;
     font-size: 2.8rem;
@@ -94,17 +106,6 @@
     }
 }
 
-.poetry-text {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.8rem;
-    color: #ffffff; /* 設定文字顏色 */
-    text-align: center;
-    margin-top: 30px;
-    white-space: pre-line; /* 保留文字的換行 */
-    line-height: 0; /* 增加行間距，使文字更易讀 */
-    margin-bottom: 30px;
-}
-
 
 .button-section {
     display: flex;
@@ -135,11 +136,17 @@
     text-decoration: none;
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    display: block;
+    display: inline-block;
     box-shadow: 0 0 15px #0fffc1, 0 0 25px #7e0fff;
     border: 2px solid rgba(255, 255, 255, 0.2);
     letter-spacing: 1.5px;
     font-weight: bold;
+    max-width: 250px;
+}
+
+.button-container {
+    text-align: center;
+    margin-top: 20px; /* 可依需要調整間距 */
 }
 
 .big-button:hover {
@@ -153,42 +160,37 @@
         font-size: 0.9em; /* 調整圖示大小 */
  }
 
-.big-button2 {
-    background: linear-gradient(135deg, #0fffc1, #7e0fff);
-    color: #ffffff;
-    padding: 15px 30px;
-    font-size: 35px;
-    border-radius: 80px;
-    text-decoration: none;
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    display: inline-flex; /* 改為 inline-flex 以更好地控制尺寸 */
-    justify-content: center; /* 水平置中內容 */
-    align-items: center; /* 垂直置中內容 */
-    box-shadow: 0 0 15px #0fffc1, 0 0 25px #7e0fff;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    letter-spacing: 1.5px;
-    font-weight: bold;
-    min-width: 300px; /* 您已有最小寬度，這很好 */
-    width: 300px; /* 固定寬度 */
-    height: 80px; /* 固定高度 */
-    box-sizing: border-box; /* 確保 padding 和 border 不會增加總尺寸 */
-    white-space: nowrap; /* 防止文字換行 */
-    overflow: hidden; /* 如果文字太長則隱藏 */
-    text-overflow: ellipsis; /* 可選：如果文字被截斷則顯示省略號 */
-    position: relative; /* 或 absolute，取決於您的布局 */
-    top: -50px; /* 負值會讓元素往上移動，調整數值以達到您想要的效果 */
-    margin-bottom: 20px; /* 增加按鈕下方的間距，使按鈕之間的距離更大 */
+.menu-toggle {
+    display: none;
 }
 
-    .big-button2:hover {
-        transform: scale(1.05);
-        background: linear-gradient(135deg, #ff4dff, #00ffff);
-        box-shadow: 0 0 15px #ff4dff, 0 0 25px #00ffff;
+@media (max-width: 768px) {
+    .nav-links {
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        right: 0;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        display: none;
+        padding: 10px 0;
+        z-index: 999;
     }
 
-/* 響應式設計 - 手機上按鈕垂直排列 */
-@media (max-width: 768px) {
+        .nav-links.active {
+            display: flex;
+        }
+
+        .nav-links li {
+            text-align: center;
+            padding: 5px 0;
+        }
+
+    .menu-toggle {
+        display: block;
+    }
+
     .button-section {
         display: flex;
         flex-direction: column; /* 按鈕垂直排列 */
@@ -197,66 +199,44 @@
     }
 
     iframe {
-        width: 90% !important; /* 手機上 iframe 縮小 */
-        height: 60vh !important; /* 高度適配手機螢幕 */
+        width: 90% !important;
+        height: 60vh !important;
     }
 
-    .big-button {
-        font-size: 28px; /* 按鈕字體大小 */
-        padding: 15px 30px; /* 按鈕內邊距 */
-    }
-
-    .big-button2 {
-        font-size: 28px; /* 按鈕字體大小 */
-        padding: 15px 30px; /* 按鈕內邊距 */
+    .big-button, .big-button2 {
+        font-size: 28px;
+        padding: 15px 30px;
     }
 
     .grade-row {
-        display: grid;
-        grid-template-columns: 1fr; /* 每行一個按鈕 */
+        grid-template-columns: 1fr;
         gap: 20px;
         width: 100%;
     }
 
-
-}
-
-/* 預設隱藏漢堡選單 */
-.menu-toggle {
-    display: none;
-}
-
-/* 響應式設計 - 導覽列漢堡選單與社交卡片調整 */
-@media screen and (max-width: 768px) {
-    .nav-links {
-        display: none;
-        flex-direction: column;
-        background-color: #004080;
-        position: absolute;
-        top: 60px;
-        right: 0;
-        width: 100%;
-    }
-
-        .nav-links.active {
-            display: flex;
-        }
-
-    .menu-toggle {
-        display: block;
-    }
-
-    .navbar {
-        flex-wrap: wrap;
-    }
-
     .single-row {
-        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .image-button {
+        width: 45% !important;
+        margin: 10px;
+    }
+
+    .iframe-container {
+        flex-direction: column !important;
         align-items: center;
     }
 
-    .social-group {
-        width: 90%;
+    .iframe-box {
+        width: 90% !important;
+        margin-bottom: 20px;
+    }
+
+    .image-button {
+        width: 45% !important;
+        margin: 10px;
     }
 }
 
@@ -289,6 +269,8 @@
     background: rgba(0, 0, 0, 0.4);
     border: 1px solid #00ffe7;
     box-shadow: 0 0 10px #00ffe7;
+
+
 }
 
     .social-group h3 {
@@ -346,9 +328,10 @@
 
     .image-button img {
         width: 100%;
-        height: 100%;
+        height: 120%;
         object-fit: cover; /* 確保圖片覆蓋整個區域 */
         transition: transform 0.3s ease;
+        
     }
 
 .overlay-text {
@@ -375,3 +358,73 @@
     .image-button:hover img {
         transform: scale(1.1); /* 懸停時圖片輕微放大 */
     }
+
+.section-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    text-align: center;
+    margin: 40px auto 20px;
+    white-space: nowrap;
+    background: linear-gradient(90deg, #00ffff, #ff00ff, #00ffff);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 4px;
+    text-shadow: 0 0 1px #0ff, 0 0 3px #0ff, 0 0 5px #ff00ff;
+    max-width: 500px;
+    border-bottom: 2px solid #0ff;
+    padding-bottom: 10px;
+}
+
+.iframe-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.iframe-box {
+
+    padding: 20px;
+    border-radius: 10px;
+    text-align: left;
+    width: calc(25% - 20px);
+    min-width: 250px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid #00ffe7;
+    box-shadow: 0 0 10px #00ffe7;
+}
+
+.button-row {
+    display: flex;
+    flex-direction: column; /* 改成直排 */
+    align-items: center; /* 讓每個按鈕置中 */
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.step-label:first-of-type {
+    animation: pulse 1s infinite;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    text-align: center;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.6;
+        transform: scale(1.05);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
