@@ -426,5 +426,18 @@
         opacity: 1;
         transform: scale(1);
     }
+
+
 }
+
+footer {
+
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+
+}
+
 
