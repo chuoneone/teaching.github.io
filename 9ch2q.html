@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>天淨沙秋思選擇題</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600&display=swap');
+
+    body {
+      background-color: #f8f4e6;
+      color: #4b3621;
+      font-family: 'Noto Serif TC', serif;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 2.5em;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .question-box {
+      display: none;
+      background-color: #fff7e6;
+      border: 2px solid #c2a875;
+      border-radius: 10px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
+    }
+    .active {
+      display: block;
+    }
+    .question-box p {
+      font-size: 1.8em;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+    .option-button {
+      display: block;
+      width: 100%;
+      background-color: #e6d3b3;
+      color: #4b3621;
+      border: 2px solid #c2a875;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 1.3em;
+      margin: 18px 0;
+      text-align: left;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    .option-button:hover {
+      background-color: #f2e1c1;
+      transform: scale(1.02);
+    }
+    button {
+      background-color: #a67c52;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      margin: 10px 10px 0 0;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 8px;
+      font-size: 1em;
+    }
+    #result-box {
+      display: none;
+      border: 2px solid #a67c52;
+      padding: 30px;
+      background-color: #fffdf8;
+      color: #4b3621;
+    }
+    .explanation-box {
+      border: 2px solid #d4b085;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      background-color: #fffaf0;
+    }
+    .explanation-box p {
+      font-size: 1.2em;
+    }
+    .celebration {
+      animation: celebration 1s ease-in-out infinite alternate;
+    }
+    @keyframes celebration {
+      from { text-shadow: 0 0 10px #a67c52; }
+      to { text-shadow: 0 0 20px #ffd700; color: #c03030; }
+    }
+  </style>
+</head>
+<body>
+  <h1>天淨沙秋思選擇題</h1>
+  <div id="quiz-container"></div>
+  <div id="result-box">
+    <h2 id="result-title">作答結果</h2>
+    <div id="score"></div>
+    <div id="wrong-list"></div>
+    <button onclick="retryWrong()">重測錯題</button>
+    <button onclick="retryAll()">全部重測</button>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        q: '（  ）作者透過描寫「枯藤老樹昏鴉，小橋流水人家」營造出何種氛圍？',
+        options: ['A. 安詳寧靜', 'B. 歡樂喜悅', 'C. 緊張刺激', 'D. 熱鬧喧囂'],
+        answer: 0,
+        explanation: '這句描寫了傍晚時分的寧靜鄉村景象，營造出安詳、靜謐的氛圍。'
+      },
+      {
+        q: '（  ）「夕陽西下，斷腸人在天涯」中的「斷腸人」最可能表現出什麼情感？',
+        options: ['A. 對自然的讚美', 'B. 對家鄉的思念', 'C. 對親人的懷疑', 'D. 對愛情的歡喜'],
+        answer: 1,
+        explanation: '「斷腸人」指極度悲傷、思念的人，表現出對家鄉或親人的強烈思念。'
+      },
+      {
+        q: '（  ）〈天淨沙．秋思〉的景物排列方式有何特色？',
+        options: ['A. 順時序描寫早中晚', 'B. 由動到靜', 'C. 由遠到近', 'D. 從整體到局部'],
+        answer: 3,
+        explanation: '全曲由大景「枯藤老樹昏鴉」到小景「斷腸人在天涯」，呈現由整體到局部的寫法。'
+      },
+      {
+        q: '（  ）「枯藤」、「老樹」、「昏鴉」的描寫共同營造出何種季節氛圍？',
+        options: ['A. 春天的生氣盎然', 'B. 夏天的熱烈奔放', 'C. 秋天的蕭瑟淒涼', 'D. 冬天的寒冷沉寂'],
+        answer: 2,
+        explanation: '這些意象皆與秋天的蕭條景象相符，營造出淒涼的秋意。'
+      },
+      {
+        q: '（  ）全詩以一人稱為「斷腸人」，其意義為何？',
+        options: ['A. 表現主人公的身世坎坷', 'B. 將景物轉化為人物情感的延伸', 'C. 讚美流浪者的堅強', 'D. 描述英雄的孤獨'],
+        answer: 1,
+        explanation: '詩末以「斷腸人」點出主角內心情感，將之前的景象與人物情感結合。'
+      }
+    ];
+
+    let current = 0;
+    let userAnswers = [];
+    let wrongAnswers = [];
+    let currentList = [...questions];
+
+    function createQuiz(questionsToRender) {
+      const container = document.getElementById('quiz-container');
+      container.innerHTML = '';
+
+      questionsToRender.forEach((q, index) => {
+        const box = document.createElement('div');
+        box.className = 'question-box';
+        if (index === 0) box.classList.add('active');
+
+        const question = document.createElement('p');
+        question.innerText = `${index + 1}. ${q.q.replace(/[（|）]/g, '')}`;
+        box.appendChild(question);
+
+        q.options.forEach((opt, i) => {
+          const btn = document.createElement('button');
+          btn.className = 'option-button';
+          btn.innerText = opt;
+          btn.onclick = () => {
+            const buttons = box.querySelectorAll('.option-button');
+            buttons.forEach(b => b.disabled = true);
+            btn.style.backgroundColor = i === q.answer ? '#b5d7a8' : '#e8a1a1';
+            userAnswers[index] = i;
+            if (q.answer !== i) wrongAnswers.push(index);
+          };
+          box.appendChild(btn);
+        });
+
+        const nav = document.createElement('div');
+        if (index > 0) {
+          const prevBtn = document.createElement('button');
+          prevBtn.innerText = '上一題';
+          prevBtn.onclick = () => showQuestion(index - 1);
+          nav.appendChild(prevBtn);
+        }
+        if (index < questionsToRender.length - 1) {
+          const nextBtn = document.createElement('button');
+          nextBtn.innerText = '下一題';
+          nextBtn.onclick = () => showQuestion(index + 1);
+          nav.appendChild(nextBtn);
+        } else {
+          const submitBtn = document.createElement('button');
+          submitBtn.innerText = '交卷';
+          submitBtn.onclick = () => showResult(questionsToRender);
+          nav.appendChild(submitBtn);
+        }
+        box.appendChild(nav);
+        container.appendChild(box);
+      });
+    }
+
+    function showQuestion(index) {
+      const boxes = document.getElementsByClassName('question-box');
+      for (let i = 0; i < boxes.length; i++) boxes[i].classList.remove('active');
+      boxes[index].classList.add('active');
+    }
+
+    function showResult(list) {
+      document.getElementById('result-box').style.display = 'block';
+      const score = list.length - wrongAnswers.length;
+      const scoreEl = document.getElementById('score');
+      const title = document.getElementById('result-title');
+      const wrongDiv = document.getElementById('wrong-list');
+
+      if (score === list.length) {
+        title.classList.add('celebration');
+        title.innerText = '🎉 恭喜你全答對了！🎉';
+        wrongDiv.innerHTML = '';
+      } else {
+        title.classList.remove('celebration');
+        title.innerText = '作答結果';
+        wrongDiv.innerHTML = '<h3>錯誤題目解析：</h3>';
+        wrongAnswers.forEach(i => {
+          const wrong = document.createElement('div');
+          wrong.className = 'explanation-box';
+          wrong.innerHTML = `<p><strong>${i + 1}. ${list[i].q.replace(/[（|）]/g, '')}</strong><br>
+            你的答案：${list[i].options[userAnswers[i]]}<br>
+            正確答案：${list[i].options[list[i].answer]}<br>
+            <span class="explanation">解析：${list[i].explanation}</span></p>`;
+          wrongDiv.appendChild(wrong);
+        });
+      }
+
+      scoreEl.innerHTML = `<p style="font-size: 1.4em;"><strong>你答對了 ${score} 題，共 ${list.length} 題。</strong></p>`;
+    }
+
+    function retryWrong() {
+      if (wrongAnswers.length === 0) return;
+      const retryList = wrongAnswers.map(i => currentList[i]);
+      current = 0;
+      userAnswers = [];
+      wrongAnswers = [];
+      document.getElementById('result-box').style.display = 'none';
+      currentList = retryList;
+      createQuiz(currentList);
+    }
+
+    function retryAll() {
+      current = 0;
+      userAnswers = [];
+      wrongAnswers = [];
+      currentList = [...questions];
+      document.getElementById('result-box').style.display = 'none';
+      createQuiz(currentList);
+    }
+
+    createQuiz(questions);
+  </script>
+</body>
+</html>
