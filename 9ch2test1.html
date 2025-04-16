@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>天淨沙秋思測驗</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      font-family: 'Noto Serif TC', serif;
+      background: linear-gradient(to bottom, #fffce0aa, #fef9c3cc), url('https://cdn.pixabay.com/photo/2016/11/29/09/08/paper-1868729_1280.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500&display=swap');
+
+    @media (max-width: 640px) {
+      body {
+        padding: 1rem;
+      }
+      .rounded-lg {
+        padding: 1rem;
+      }
+      h1.text-2xl {
+        font-size: 1.25rem;
+      }
+      .text-xl {
+        font-size: 1rem;
+      }
+      .w-8, .h-8 {
+        width: 2rem;
+        height: 2rem;
+      }
+      .w-6, .h-6, .w-5, .h-5, .w-4, .h-4 {
+        width: 1rem;
+        height: 1rem;
+      }
+    }
+  </style>
+  <script defer>
+    let questions = [
+      {
+        question: "《天淨沙・秋思》是誰寫的？",
+        options: { A: "杜甫", B: "李白", C: "馬致遠", D: "王之渙" },
+        answer: "C",
+        explanation: "這首詩出自元代的馬致遠。"
+      },
+      {
+        question: "「枯藤老樹昏鴉」是描述哪一種景象？",
+        options: {
+          A: "傍晚時分，樹木枯萎，烏鴉歸巢",
+          B: "早晨的樹木和烏鴉",
+          C: "中午的陽光照耀下",
+          D: "秋天的黃昏，樹木茂盛"
+        },
+        answer: "A",
+        explanation: "這句描寫的是秋天黃昏，枯藤老樹與烏鴉形成的孤寂場景。"
+      },
+      {
+        question: "「小橋流水人家」這句話表現了什麼景象？",
+        options: {
+          A: "冬天的雪景",
+          B: "秋天的寂寞",
+          C: "和諧的鄉村生活",
+          D: "春天的綠色景象"
+        },
+        answer: "C",
+        explanation: "這句話描繪的是典型的鄉村景象，充滿自然和人文的和諧。"
+      },
+      {
+        question: "「古道西風瘦馬」描述的是什麼樣的情況？",
+        options: {
+          A: "寒冷的秋天，馬兒艱難行走",
+          B: "一匹強壯的馬在奔馳",
+          C: "夕陽下馬兒悠閒走過",
+          D: "一匹馬在草地上休息"
+        },
+        answer: "A",
+        explanation: "詩句中的「古道」、「西風」和「瘦馬」表達的是一個荒涼且悲涼的情境。"
+      },
+      {
+        question: "「斷腸人在天涯」表達了怎樣的情感？",
+        options: {
+          A: "旅行的快樂",
+          B: "孤獨與思鄉",
+          C: "期待與希望",
+          D: "激動與歡欣"
+        },
+        answer: "B",
+        explanation: "這句表達了人在遠方的孤寂和心中的思鄉之情。"
+      }
+    ];
+
+    let current = 0;
+    let userAnswers = Array(questions.length).fill(null);
+    let showResult = false;
+
+    function render() {
+      const q = questions[current];
+      const app = document.getElementById("app");
+      const isCorrect = userAnswers[current] === q.answer;
+
+      app.innerHTML = `
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <div class="mb-6 p-4 bg-yellow-100 border-l-8 border-yellow-500 rounded-lg shadow flex justify-between items-center">
+  <h1 class="text-3xl font-extrabold text-yellow-900 flex items-center">
+    <i data-lucide="scroll" class="w-7 h-7 mr-3"></i>天淨沙・秋思 選擇題
+  </h1>
+  <span class="text-yellow-700 font-medium">${current + 1} / ${questions.length}</span>
+</div>
+
+          <div class="mb-4 text-xl font-semibold text-yellow-900 flex items-center">
+            <i data-lucide="feather" class="w-5 h-5 mr-2 text-yellow-600"></i>${q.question}
+          </div>
+          <div class="space-y-2 mb-4">
+            ${Object.entries(q.options).map(([key, val], idx) => `
+              <button onclick="selectOption('${key}')" class="w-full flex items-center border p-3 rounded hover:bg-yellow-100 transition ${userAnswers[current] === key ? 'bg-yellow-200' : ''}">
+                <div class="w-8 h-8 mr-3 flex items-center justify-center bg-yellow-100 rounded-full font-bold">${key}</div>
+                ${val}
+              </button>
+            `).join("")}
+          </div>
+
+          ${showResult && userAnswers[current] ? `
+            ${showResult && userAnswers[current] ? `
+            <div class="mb-2 p-4 border ${isCorrect ? 'border-green-400 bg-green-100 text-green-800' : 'border-red-400 bg-red-100 text-red-800'} rounded font-semibold flex items-start">
+              <i data-lucide="${isCorrect ? 'check-circle' : 'x-circle'}" class="w-5 h-5 mt-1 mr-2"></i>
+              <div>${isCorrect ? '答對了！你好棒！' : `答錯了，正確答案是 ${q.answer}.`}</div>
+            </div>
+            <div class="mb-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-900 text-sm">
+              <i data-lucide="book-open" class="inline w-4 h-4 mr-1"></i>解析：${q.explanation}
+            </div>
+          ` : ''}
+            </div>
+          ` : ''}
+
+          <div class="flex justify-between mt-6">
+            <button onclick="prev()" ${current === 0 ? 'disabled' : ''} class="bg-yellow-200 px-4 py-2 rounded text-gray-800">上一題</button>
+            ${showResult && current === questions.length - 1 ? `
+              <button onclick="showSummary()" class="bg-green-600 px-4 py-2 rounded text-white flex items-center">
+                <i data-lucide="award" class="w-4 h-4 mr-2"></i>看成績
+              </button>
+            ` : `
+              <button onclick="${showResult ? 'next()' : 'submitAnswer()'}" class="${showResult && !isCorrect ? 'bg-red-600' : 'bg-yellow-600'} px-4 py-2 rounded text-white flex items-center" id="mainBtn">
+                <i data-lucide="${showResult ? 'arrow-right-circle' : 'send'}" class="w-4 h-4 mr-2"></i>${showResult ? '下一題' : '送出答案'}
+              </button>
+            `}
+          </div>
+        </div>
+      `;
+      lucide.createIcons();
+    }
+
+    function selectOption(key) {
+      userAnswers[current] = key;
+      render();
+    }
+
+    function submitAnswer() {
+      if (!userAnswers[current]) {
+        alert("請先選擇答案！");
+        return;
+      }
+      showResult = true;
+      render();
+    }
+
+    function next() {
+      if (current < questions.length - 1) {
+        current++;
+        showResult = false;
+        render();
+      }
+    }
+
+    function prev() {
+      if (current > 0) {
+        current--;
+        showResult = false;
+        render();
+      }
+    }
+
+    function showSummary() {
+      const total = questions.length;
+      const correct = questions.filter((q, i) => q.answer === userAnswers[i]).length;
+      const wrongList = questions.map((q, i) => ({ q, i })).filter(({ q, i }) => userAnswers[i] !== q.answer);
+
+      const app = document.getElementById("app");
+      app.innerHTML = `
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <h2 class="text-2xl font-bold text-yellow-800 mb-4">作答完畢 🎉</h2>
+          <p class="text-lg mb-2">你總共答對了 <span class="text-green-600 font-bold">${correct}</span> 題，共 ${total} 題。</p>
+
+          ${wrongList.length ? `
+            <p class="mt-4 font-bold text-red-600">錯題：</p>
+            <ul class="list-disc list-inside text-sm text-gray-700 mb-4">
+              ${wrongList.map(({ q, i }) => `<li>第 ${i + 1} 題：${q.question}</li>`).join("")}
+            </ul>
+            <button onclick="retryWrong()" class="bg-red-600 text-white px-4 py-2 rounded">重測錯題</button>
+          ` : `
+            <p class="text-green-700">太棒了！全部答對 🎉</p>
+          `}
+          <button onclick="location.reload()" class="mt-4 bg-yellow-700 text-white px-4 py-2 rounded">重新測驗</button>
+        </div>
+      `;
+    }
+
+    function retryWrong() {
+      questions = questions.filter((q, i) => userAnswers[i] !== q.answer);
+      userAnswers = Array(questions.length).fill(null);
+      current = 0;
+      showResult = false;
+      render();
+    }
+
+    window.onload = () => {
+      render();
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          const btn = document.getElementById("mainBtn");
+          if (btn) btn.click();
+        }
+        if (["1", "2", "3", "4"].includes(e.key)) {
+          const idx = parseInt(e.key) - 1;
+          const keys = Object.keys(questions[current].options);
+          if (keys[idx]) {
+            selectOption(keys[idx]);
+          }
+        }
+      });
+    };
+  </script>
+</head>
+<body>
+  <div id="app" class="max-w-3xl mx-auto mt-10"></div>
+</body>
+</html>
