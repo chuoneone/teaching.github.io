@@ -11,8 +11,6 @@
 
 }
 
-
-
 /* 導覽列樣式 */
 .navbar {
     display: flex;
@@ -73,7 +71,7 @@
 
 .intro-text {
     font-family: 'Orbitron', sans-serif;
-    font-size: 2.8rem;
+    font-size: clamp(1.4rem, 5vw, 2.8rem); /* ✅ 字體自適應，最小 1.4rem 最大 2.8rem */
     text-align: center;
     margin: 30px auto 20px;
     white-space: nowrap;
@@ -85,10 +83,12 @@
     background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    letter-spacing: 5px;
+    letter-spacing: 3px; /* ✅ 手機也不會太寬 */
     text-shadow: 0 0 2px #0ff, 0 0 4px #0ff, 0 0 6px #ff00ff;
-    max-width: 600px; /* 設定一個適合的最大寬度 */
-}
+    max-width: 90vw; /* ✅ 裝置寬度自適應 */
+    padding: 0 10px;
+  }
+  
 
 @keyframes typing {
     from {
@@ -164,84 +164,6 @@
     display: none;
 }
 
-@media (max-width: 768px) {
-    .nav-links {
-        flex-direction: column;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        right: 0;
-        width: 100%;
-        background-color: rgba(0, 0, 0, 0.9);
-        display: none;
-        padding: 10px 0;
-        z-index: 999;
-    }
-
-        .nav-links.active {
-            display: flex;
-        }
-
-        .nav-links li {
-            text-align: center;
-            padding: 5px 0;
-        }
-
-    .menu-toggle {
-        display: block;
-    }
-
-    .button-section {
-        display: flex;
-        flex-direction: column; /* 按鈕垂直排列 */
-        align-items: center;
-        gap: 20px;
-    }
-
-    iframe {
-        width: 90% !important;
-        height: 60vh !important;
-    }
-
-    .big-button, .big-button2 {
-        font-size: 28px;
-        padding: 15px 30px;
-    }
-
-    .grade-row {
-        grid-template-columns: 1fr;
-        gap: 20px;
-        width: 100%;
-    }
-
-    .single-row {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .image-button {
-        width: 45% !important;
-        margin: 10px;
-    }
-
-    .iframe-container {
-        flex-direction: column !important;
-        align-items: center;
-    }
-
-    .iframe-box {
-        width: 90% !important;
-        margin-bottom: 20px;
-    }
-
-    .image-button {
-        width: 45% !important;
-        margin: 10px;
-    }
-}
-
-
-/* 其他社交區域 */
 .social-container {
     display: flex;
     flex-direction: column;
@@ -439,5 +361,3 @@ footer {
     font-size: 14px;
 
 }
-
-

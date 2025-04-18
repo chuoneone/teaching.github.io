@@ -1,0 +1,197 @@
+/* 📱 手機版：最大寬度 768px */
+@media (max-width: 768px) {
+    .nav-links {
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        right: 0;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.95);
+        display: none;
+        padding: 10px 0;
+        z-index: 999;
+        align-items: center;
+        text-align: center;
+      
+        /* ✅ 淡入動畫 */
+        animation: fadeSlideDown 0.3s ease-in-out;
+      }
+      
+      .nav-links.active {
+        display: flex;
+      }
+      
+      .nav-links li {
+        padding: 3px 0;
+        width: 100%;
+      }
+      
+      .nav-links a {
+        font-size: 16px;          /* ✅ 字體較小 */
+        line-height: 0.8;         /* ✅ 行距縮短 */
+        color: #cce7ff;
+        display: block;
+        padding: 3px 0;
+        width: 100%;
+      
+        /* ✅ Hover 效果 */
+        transition: all 0.2s ease-in-out;
+      }
+      
+      .nav-links a:hover {
+        background-color: rgba(0, 255, 255, 0.1);
+        color: #00ffe7;
+        text-shadow: 0 0 5px #00ffe7;
+      }
+      
+  
+  
+    .menu-toggle {
+      display: block;
+    }
+
+    
+  
+    .button-section {
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+  
+    iframe {
+      width: 90% !important;
+      height: 60vh !important;
+    }
+  
+    @media (max-width: 768px) {
+        .big-button,
+        .big-button2 {
+          font-size: 28px;
+          padding: 15px 30px;
+          
+          display: block;         /* ✅ 讓按鈕成為 block 元素 */
+          margin: 0 auto;         /* ✅ 自動左右置中 */
+          text-align: center;     /* ✅ 文字也置中 */
+        }
+      }
+      
+  
+    .grade-row {
+      grid-template-columns: 1fr;
+      gap: 20px;
+      width: 100%;
+    }
+  
+    .single-row {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+
+    .image-button {
+        width: 80% !important;   /* 原本你寫 45%，這裡手機寬度建議再小一點 */
+        height: 200px !important; /* 圖片高度變小 */
+      }
+
+    .image-button img {
+        height: 100% !important; /* 跟著容器高度縮放 */
+      }
+    
+      .overlay-text {
+        font-size: 35px !important; /* 手機時的文字大小，原本是 50px */
+        padding: 0 10px;            /* 讓文字不要太擠 */
+      }
+  
+    .iframe-container {
+      flex-direction: column !important;
+      align-items: center;
+    }
+  
+    .iframe-box {
+      width: 90% !important;
+      margin-bottom: 20px;
+    }
+  }
+  
+  
+  /* 💻 平板版：769px ~ 1024px */
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .grade-row {
+
+      gap: 20px;
+      width: 100%;
+
+    }
+  
+    .image-button {
+      width: 45%;
+      height: 250px;
+      margin: 10px auto;
+    }
+  
+    .iframe-box {
+      width: 45%;
+    }
+  
+    .big-button {
+      font-size: 26px;
+      max-width: 80%;
+      padding: 14px 28px;
+    }
+  
+    .button-section {
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+    }
+  
+    .social-group {
+      width: 45%;
+      min-width: unset;
+    }
+  
+    .iframe-container {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+  
+    iframe {
+      width: 80%;
+      height: 400px;
+    }
+  }
+  
+  
+  /* 🖥️ 超寬桌機版：1440px 以上（可選） */
+  @media (min-width: 1440px) {
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+  
+    .grade-row {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  
+    .image-button {
+      height: 320px;
+    }
+  
+    .big-button {
+      font-size: 32px;
+    }
+  }
+  
+  @keyframes fadeSlideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
