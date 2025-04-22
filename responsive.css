@@ -63,8 +63,7 @@
       width: 90% !important;
       height: 60vh !important;
     }
-  
-    @media (max-width: 768px) {
+     
         .big-button,
         .big-button2 {
           font-size: 28px;
@@ -74,7 +73,7 @@
           margin: 0 auto;         /* ✅ 自動左右置中 */
           text-align: center;     /* ✅ 文字也置中 */
         }
-      }
+      
       
   
     .grade-row {
@@ -111,6 +110,42 @@
     .iframe-box {
       width: 90% !important;
       margin-bottom: 20px;
+    }
+    
+    .countdown-container {
+      max-width: 400px;            /* ✅ 整體縮小 */
+      margin: 0 auto;
+      padding: 10px 7px;
+      font-size: 12px;
+    }
+  
+    .countdown-title {
+      font-size: 1rem;             /* ✅ 標題變小 */
+      margin-bottom: 8px;
+      margin-top: 1px;
+    }
+  
+    .countdown-timer {
+      display: flex;               /* ✅ 橫排不換行 */
+      flex-wrap: nowrap;
+      justify-content: space-around;
+      gap: 0px;
+    }
+  
+    .countdown-timer > div {
+      display: flex;
+      align-items: baseline;
+      gap: 0px; /* ✅ 直接貼齊數字和單位 */
+    }
+  
+    .countdown-timer span {
+      font-size: 3rem;
+      white-space: nowrap;
+    }
+  
+    .label {
+      font-size: 0.8rem;
+      margin-left: 0.5px;
     }
   }
   
