@@ -132,6 +132,10 @@
       margin-left: -0.5px; /* ✅ 手機版也保持緊密，但略微寬鬆避免擠太多 */
 
     }
+
+    .section-title {
+      font-size: 1rem; /* 手機版自動變小 */
+    }
   }
   
   
