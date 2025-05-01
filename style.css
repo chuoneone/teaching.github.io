@@ -123,7 +123,7 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
     width: 100%;
-    max-width: 900px;
+    max-width: 1000px;
 }
 
 /* 大型按鈕 */
@@ -131,7 +131,7 @@
     background: linear-gradient(135deg, #0fffc1, #7e0fff);
     color: #ffffff;
     padding: 15px 30px;
-    font-size: 30px;
+    font-size: 20px;
     border-radius: 80px;
     text-decoration: none;
     text-align: center;
@@ -142,6 +142,9 @@
     letter-spacing: 1.5px;
     font-weight: bold;
     max-width: 250px;
+
+    
+
 }
 
 .button-container {
