@@ -783,7 +783,7 @@
     const reasonsText = selectedReasons.join('; ');
 
     // ✅ 實際提交到 Google Sheets Web App
-    fetch('https://script.google.com/macros/s/AKfycbwlCnnSg7gSPD82sn0bv1DxYf9-cWzXUzu38W8H6bDIXnOGPVoroy3IipGVUV6v6zx_cQ/exec', {
+    fetch('https://script.google.com/macros/s/AKfycbynNVDBrak2D-gU48jh2xrgoLQ2WpwDLVptMutrkai0CY2rc29Koa-23uex5UR5E6Ns6A/exec', {
         method: 'POST',
         body: JSON.stringify({
             date: currentDate,
@@ -812,7 +812,7 @@
         alert('提交失敗：' + error.message);
     });
 });
-    
+
 
             // 換下一個人按鈕事件
             document.getElementById('next-person-btn').addEventListener('click', function() {
