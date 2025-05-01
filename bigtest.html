@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>會考專區</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="icon" href="images/dog.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+  
+<body>
+    <!-- 頂部導覽列 -->
+    <header class="navbar">
+        <div class="logo">SPED</div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html">HOME</a></li>
+				<li><a href="https://chuone.my.canva.site/emotionsystem">情緒紀錄</a></li>
+                <li><a href="7.html">7數</a></li>
+                <li><a href="8.html">8數</a></li>
+                <li><a href="9.html">9數</a></li>
+                <li><a href="7eng.html">7英</a></li>
+                <li><a href="8eng.html">8英</a></li>
+                <li><a href="9eng.html">9英</a></li>
+                <li><a href="https://chuone.my.canva.site/spedchb2">7國</a></li>
+                <li><a href="https://chuone.my.canva.site/spedchb4">8國</a></li>
+                <li><a href="9ch.html">9國</a></li>
+            </ul>
+
+        </nav>
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </div>
+    </header>
+
+
+    <div class="section-title text-lg font-bold">
+        <i class="fas fa-compass mr-2"></i> 會考專區
+      </div>      
+    
+      <div class="single-row">
+        <div class="social-group">
+            <h3 style="text-align: center;"><i class="fas fa-pen-alt"></i>國文</h3>
+            <div class="btn-group">
+                <a href="https://sites.google.com/view/specialchu/%E5%9C%8B%E6%96%87/%E6%9C%83%E8%80%83%E5%9C%8B%E6%96%87" target="_blank" class="btn">國文</a>
+            </div>
+        </div> 
+
+
+      <div class="social-group">
+        <h3 style="text-align: center;"><i class="fas fa-pen-alt"></i>數學</h3>
+        <div class="btn-group">
+            <a href="https://five-flamingo-d65.notion.site/mathreview" target="_blank" class="btn">數學-達B</a>
+            <a href="https://five-flamingo-d65.notion.site/1d84c52ff8d080f1938defa776fd04f2" target="_blank" class="btn">數學-基礎</a>
+        </div>
+    </div>   
+    </div>
+
+   
+        <script>
+            function toggleMenu() {
+                const navLinks = document.querySelector('.nav-links');
+                navLinks.classList.toggle('active');
+            }
+        </script>
+
+</body>
+</html>
+<footer>
+    <img src="images/dog.png" alt="Logo" style="height: 100px; vertical-align: middle; margin-right: 10px;">
+    <br>
+    <p style="display: inline;">Created by Chu Pei Yi</p>
+</footer>
