@@ -1,0 +1,853 @@
+<html lang="zh-TW"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>學生情緒紀錄系統</title>
+    <link rel="icon" href="images/dog.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', 'PingFang TC', sans-serif;
+            background: linear-gradient(135deg, #f9f3e5 0%, #fff9e6 100%);
+            min-height: 100vh;
+            color: #5c4f3c;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f0e6d2;
+        }
+        select, button {
+            transition: all 0.3s ease;
+        }
+        select:hover, button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        .emotion-btn {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .emotion-btn .emoji {
+            font-size: 1.8rem;
+            margin-bottom: 0.25rem;
+        }
+        .emotion-btn .text {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .emotion-btn:hover {
+            transform: scale(1.1);
+        }
+        .emotion-btn.selected {
+            transform: scale(1.1);
+            box-shadow: 0 0 0 3px #e6c87a;
+            border-color: #e6c87a;
+        }
+        .hidden {
+            display: none;
+        }
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #e6c87a;
+            color: #5c4f3c;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .toast.show {
+            opacity: 1;
+        }
+        .btn-primary {
+            background-color: #e6c87a;
+            border-color: #d4b66a;
+            color: #5c4f3c;
+        }
+        .btn-primary:hover {
+            background-color: #d4b66a;
+        }
+        .btn-secondary {
+            background-color: #f0e6d2;
+            border-color: #e6d9bc;
+            color: #5c4f3c;
+        }
+        .btn-secondary:hover {
+            background-color: #e6d9bc;
+        }
+        .btn-danger {
+            background-color: #e6a87a;
+            border-color: #d49a6a;
+            color: #5c4f3c;
+        }
+        .btn-danger:hover {
+            background-color: #d49a6a;
+        }
+        .btn-neutral {
+            background-color: #f5f0e5;
+            border-color: #ebe3d1;
+            color: #5c4f3c;
+        }
+        .btn-neutral:hover {
+            background-color: #ebe3d1;
+        }
+        .leaf-decoration {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            opacity: 0.1;
+            z-index: -1;
+        }
+        .reason-category {
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #f0e6d2;
+            overflow: hidden;
+        }
+        .reason-category-header {
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .reason-category-content {
+            padding: 1rem;
+            border-top: 1px solid #f0e6d2;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .reason-category.active .reason-category-content {
+            max-height: 500px;
+        }
+        .reason-option {
+            padding: 0.5rem 0.5rem 0.5rem 2rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        .reason-option:hover {
+            background-color: #f9f3e5;
+        }
+        .reason-option.selected {
+            background-color: #e6c87a;
+            color: #5c4f3c;
+            font-weight: 500;
+        }
+        .reason-option.selected::before {
+            content: "✓";
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: bold;
+        }
+        .category-home {
+            background-color: #ffedd5;
+        }
+        .category-school {
+            background-color: #e0f2fe;
+        }
+        .category-peer {
+            background-color: #dcfce7;
+        }
+        .category-health {
+            background-color: #fae8ff;
+        }
+        .category-other {
+            background-color: #f3f4f6;
+        }
+        .selected-reason-tag {
+            display: inline-block;
+            background-color: #e6c87a;
+            color: #5c4f3c;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            margin: 0.25rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .selected-reason-tag:hover {
+            background-color: #d4b66a;
+        }
+        .selected-reason-tag::after {
+            content: "×";
+            margin-left: 0.5rem;
+            font-weight: bold;
+        }
+        .btn-disabled {
+            background-color: #e5e7eb;
+            border-color: #d1d5db;
+            color: #9ca3af;
+            cursor: not-allowed;
+        }
+        .btn-disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        .success-message {
+            background-color: #dcfce7;
+            border: 1px solid #86efac;
+            color: #166534;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-weight: 500;
+        }
+        .developer-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #5c4f3c;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+        .developer-btn:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+        .code-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .code-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .code-container {
+            width: 90%;
+            height: 90%;
+            background-color: #fff;
+            border-radius: 1rem;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .code-header {
+            padding: 1rem;
+            background-color: #5c4f3c;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .code-content {
+            flex: 1;
+            overflow: auto;
+            padding: 1rem;
+            background-color: #f8f8f8;
+        }
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.16 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.container{width:100%}@media (min-width: 640px){.container{max-width:640px}}@media (min-width: 768px){.container{max-width:768px}}@media (min-width: 1024px){.container{max-width:1024px}}@media (min-width: 1280px){.container{max-width:1280px}}@media (min-width: 1536px){.container{max-width:1536px}}.relative{position:relative}.mb-2{margin-bottom:0.5rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.mr-2{margin-right:0.5rem}.mt-2{margin-top:0.5rem}.mt-4{margin-top:1rem}.mt-6{margin-top:1.5rem}.block{display:block}.inline-block{display:inline-block}.flex{display:flex}.hidden{display:none}.h-6{height:1.5rem}.min-h-\[40px\]{min-height:40px}.w-6{width:1.5rem}.w-full{width:100%}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.rounded-lg{border-radius:0.5rem}.border{border-width:1px}.border-amber-100{--tw-border-opacity:1;border-color:rgb(254 243 199 / var(--tw-border-opacity, 1))}.border-amber-200{--tw-border-opacity:1;border-color:rgb(253 230 138 / var(--tw-border-opacity, 1))}.bg-amber-50{--tw-bg-opacity:1;background-color:rgb(255 251 235 / var(--tw-bg-opacity, 1))}.bg-amber-800{--tw-bg-opacity:1;background-color:rgb(146 64 14 / var(--tw-bg-opacity, 1))}.bg-blue-100{--tw-bg-opacity:1;background-color:rgb(219 234 254 / var(--tw-bg-opacity, 1))}.bg-gray-100{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.bg-gray-800{--tw-bg-opacity:1;background-color:rgb(31 41 55 / var(--tw-bg-opacity, 1))}.bg-green-100{--tw-bg-opacity:1;background-color:rgb(220 252 231 / var(--tw-bg-opacity, 1))}.bg-orange-100{--tw-bg-opacity:1;background-color:rgb(255 237 213 / var(--tw-bg-opacity, 1))}.bg-purple-100{--tw-bg-opacity:1;background-color:rgb(243 232 255 / var(--tw-bg-opacity, 1))}.bg-red-100{--tw-bg-opacity:1;background-color:rgb(254 226 226 / var(--tw-bg-opacity, 1))}.bg-yellow-100{--tw-bg-opacity:1;background-color:rgb(254 249 195 / var(--tw-bg-opacity, 1))}.p-3{padding:0.75rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-8{padding-top:2rem;padding-bottom:2rem}.text-center{text-align:center}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.text-amber-800{--tw-text-opacity:1;color:rgb(146 64 14 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-amber-300:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(252 211 77 / var(--tw-ring-opacity, 1))}</style></head>
+<body class="py-8">
+    <!-- 葉子裝飾 -->
+    <svg class="leaf-decoration" style="top: 10%; left: 5%;" viewBox="0 0 24 24">
+        <path fill="#e6c87a" d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"></path>
+    </svg>
+    <svg class="leaf-decoration" style="top: 30%; right: 8%;" viewBox="0 0 24 24">
+        <path fill="#e6c87a" d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"></path>
+    </svg>
+    <svg class="leaf-decoration" style="bottom: 15%; left: 15%;" viewBox="0 0 24 24">
+        <path fill="#e6c87a" d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"></path>
+    </svg>
+
+    <div class="container relative">
+        <!-- 首頁 -->
+        <div id="home-page" class="text-center">
+            <h1 class="text-3xl font-bold mb-8 text-amber-800">學生情緒紀錄系統</h1>
+            <div class="mb-6">
+                <label class="block text-lg font-medium mb-2">請選擇年級：</label>
+                <select id="grade-select" class="w-full p-3 border border-amber-200 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-amber-300">
+                    <option value="" disabled="" selected="">請選擇年級</option>
+                    <option value="七年級">七年級</option>
+                    <option value="八年級">八年級</option>
+                    <option value="九年級">九年級</option>
+                </select>
+            </div>
+            <div class="mb-8">
+                <label class="block text-lg font-medium mb-2">請選擇姓名：</label>
+                <select id="name-select" class="w-full p-3 border border-amber-200 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-amber-300">
+                    <option value="" disabled="" selected="">請選擇姓名</option>
+                    <option value="蘇祐慶">蘇祐慶</option>
+                    <option value="黃雅璇">黃雅璇</option>
+                    <option value="黃寬益">黃寬益</option>
+                    <option value="徐文彥">徐文彥</option>
+                    <option value="蘇佳琦">蘇佳琦</option>
+                    <option value="鄭詠文">鄭詠文</option>
+                    <option value="卓冠佑">卓冠佑</option>
+                    <option value="馬若庭">馬若庭</option>
+                    <option value="朱奕凱">朱奕凱</option>
+                    <option value="吳亮勳">吳亮勳</option>
+                    <option value="梁莎湘">梁莎湘</option>
+                    <option value="吳少軍">吳少軍</option>
+                    <option value="李億隆">李億隆</option>
+                    <option value="陳凱威">陳凱威</option>
+                    <option value="吳少天">吳少天</option>
+                    <option value="王劉詠舜">王劉詠舜</option>
+                    <option value="林子薇">林子薇</option>
+                </select>
+            </div>
+            <button id="start-btn" class="btn-primary font-bold py-3 px-6 rounded-lg text-lg transition-all">
+                開始紀錄
+            </button>
+        </div>
+
+        <!-- 情緒紀錄頁面 -->
+        <div id="emotion-page" class="hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold text-amber-800">今日情緒紀錄</h1>
+                <div>
+                    <span id="current-date" class="text-lg font-medium">2025/5/1</span>
+                </div>
+            </div>
+            <div class="mb-4">
+                <p class="text-lg"><span id="display-grade" class="font-medium"></span> - <span id="display-name" class="font-medium"></span></p>
+            </div>
+            <div class="mb-6">
+                <p class="text-lg font-medium mb-3">請選擇你今天的心情：</p>
+                <div class="flex flex-wrap justify-center">
+                    <div class="emotion-btn bg-yellow-100" data-emotion="開心" data-color="🟡">
+                        <div class="emoji">😄</div>
+                        <div class="text">開心</div>
+                    </div>
+                    <div class="emotion-btn bg-green-100" data-emotion="平靜" data-color="🟢">
+                        <div class="emoji">😌</div>
+                        <div class="text">平靜</div>
+                    </div>
+                    <div class="emotion-btn bg-orange-100" data-emotion="興奮" data-color="🟠">
+                        <div class="emoji">🤩</div>
+                        <div class="text">興奮</div>
+                    </div>
+                    <div class="emotion-btn bg-red-100" data-emotion="生氣" data-color="🔴">
+                        <div class="emoji">😠</div>
+                        <div class="text">生氣</div>
+                    </div>
+                    <div class="emotion-btn bg-blue-100" data-emotion="難過" data-color="🔵">
+                        <div class="emoji">😢</div>
+                        <div class="text">難過</div>
+                    </div>
+                    <div class="emotion-btn bg-purple-100" data-emotion="焦慮" data-color="🟣">
+                        <div class="emoji">😰</div>
+                        <div class="text">焦慮</div>
+                    </div>
+                    <div class="emotion-btn bg-gray-800 text-white" data-emotion="害怕" data-color="⚫">
+                        <div class="emoji">😱</div>
+                        <div class="text">害怕</div>
+                    </div>
+                    <div class="emotion-btn bg-gray-100" data-emotion="疲倦" data-color="⚪">
+                        <div class="emoji">🥱</div>
+                        <div class="text">疲倦</div>
+                    </div>
+                    <div class="emotion-btn bg-amber-800 text-white" data-emotion="煩躁" data-color="🟤">
+                        <div class="emoji">😤</div>
+                        <div class="text">煩躁</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 分類原因選擇區域 -->
+            <div id="reason-section" class="mb-8 hidden">
+                <p class="text-lg font-medium mb-3">請選擇原因（可複選）：</p>
+                
+                <!-- 家庭相關 -->
+                <div class="reason-category mb-3 active">
+                    <div class="reason-category-header category-home">
+                        <span>🏠 家庭相關</span>
+                        <span class="toggle-icon">▲</span>
+                    </div>
+                    <div class="reason-category-content">
+                        <div class="reason-option" data-reason="和家人吵架">和家人吵架</div>
+                        <div class="reason-option" data-reason="有人鼓勵我">有人鼓勵我</div>
+                        <div class="reason-option" data-reason="家人支持我">家人支持我</div>
+                        <div class="reason-option" data-reason="家中發生不開心的事">家中發生不開心的事</div>
+                        <div class="reason-option" data-reason="收到禮物或好消息">收到禮物或好消息</div>
+                    </div>
+                </div>
+                
+                <!-- 學校與課業 -->
+                <div class="reason-category mb-3">
+                    <div class="reason-category-header category-school">
+                        <span>🏫 學校與課業</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="reason-category-content">
+                        <div class="reason-option" data-reason="作業太多">作業太多</div>
+                        <div class="reason-option" data-reason="考試壓力">考試壓力</div>
+                        <div class="reason-option" data-reason="被老師讚美">被老師讚美</div>
+                        <div class="reason-option" data-reason="考試成績比預期好">考試成績比預期好</div>
+                        <div class="reason-option" data-reason="成績不理想、考試失敗">成績不理想、考試失敗</div>
+                        <div class="reason-option" data-reason="今天有喜歡的活動/課程">今天有喜歡的活動/課程</div>
+                        <div class="reason-option" data-reason="不喜歡的課程拖太久">不喜歡的課程拖太久</div>
+                        <div class="reason-option" data-reason="害怕被老師點名或上台報告">害怕被老師點名或上台報告</div>
+                    </div>
+                </div>
+                
+                <!-- 同儕互動 -->
+                <div class="reason-category mb-3">
+                    <div class="reason-category-header category-peer">
+                        <span>🧍‍♂️ 同儕互動</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="reason-category-content">
+                        <div class="reason-option" data-reason="跟同學吵架">跟同學吵架</div>
+                        <div class="reason-option" data-reason="被忽略、被排擠">被忽略、被排擠</div>
+                        <div class="reason-option" data-reason="跟朋友玩很開心">跟朋友玩很開心</div>
+                        <div class="reason-option" data-reason="和朋友聊天、玩耍很開心">和朋友聊天、玩耍很開心</div>
+                        <div class="reason-option" data-reason="被朋友排擠或誤會">被朋友排擠或誤會</div>
+                        <div class="reason-option" data-reason="和朋友關係緊張">和朋友關係緊張</div>
+                        <div class="reason-option" data-reason="害怕某些人或被霸凌">害怕某些人或被霸凌</div>
+                    </div>
+                </div>
+                
+                <!-- 身體狀況 -->
+                <div class="reason-category mb-3">
+                    <div class="reason-category-header category-health">
+                        <span>😷 身體狀況</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="reason-category-content">
+                        <div class="reason-option" data-reason="沒睡飽">沒睡飽</div>
+                        <div class="reason-option" data-reason="肚子痛">肚子痛</div>
+                        <div class="reason-option" data-reason="生理期不舒服">生理期不舒服</div>
+                        <div class="reason-option" data-reason="昨天熬夜、睡不好">昨天熬夜、睡不好</div>
+                        <div class="reason-option" data-reason="身體不舒服">身體不舒服</div>
+                        <div class="reason-option" data-reason="一整天排滿課程、沒有休息">一整天排滿課程、沒有休息</div>
+                        <div class="reason-option" data-reason="上太多補習、活動太密集">上太多補習、活動太密集</div>
+                        <div class="reason-option" data-reason="情緒消耗太多，精神難集中">情緒消耗太多，精神難集中</div>
+                    </div>
+                </div>
+                
+                <!-- 其他 -->
+                <div class="reason-category mb-3">
+                    <div class="reason-category-header category-other">
+                        <span>🔄 其他</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="reason-category-content">
+                        <div class="reason-option" data-reason="沒什麼特別">沒什麼特別</div>
+                        <div class="reason-option" data-reason="我也不知道為什麼">我也不知道為什麼</div>
+                        <div class="reason-option" data-reason="太熱／太吵／環境擁擠">太熱／太吵／環境擁擠</div>
+                        <div class="reason-option" data-reason="想安靜一下但周圍太吵">想安靜一下但周圍太吵</div>
+                        <div class="reason-option" data-reason="被打斷正在做的事情">被打斷正在做的事情</div>
+                        <div class="reason-option" data-reason="其他（請寫）">其他（請寫）</div>
+                    </div>
+                </div>
+                
+                <!-- 其他原因輸入框 -->
+                <div id="other-reason-section" class="mt-4 hidden">
+                    <label class="block text-lg font-medium mb-2">請輸入其他原因：</label>
+                    <input type="text" id="other-reason-input" class="w-full p-3 border border-amber-200 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-amber-300" placeholder="請輸入原因...">
+                    <button id="add-other-reason-btn" class="mt-2 btn-secondary font-bold py-1 px-3 rounded-lg">
+                        新增此原因
+                    </button>
+                </div>
+                
+                <!-- 已選擇的原因顯示 -->
+                <div class="mt-4 p-3 bg-amber-50 rounded-lg border border-amber-100">
+                    <p class="font-medium">已選擇的原因：</p>
+                    <div id="selected-reasons-container" class="mt-2 min-h-[40px]">
+                        <p id="no-reasons-selected" class="text-gray-500">尚未選擇任何原因</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-between">
+                <button id="back-btn" class="btn-neutral font-bold py-2 px-4 rounded-lg">
+                    返回
+                </button>
+                <button id="submit-btn" class="btn-disabled font-bold py-2 px-4 rounded-lg hidden" disabled="">
+                    提交
+                </button>
+            </div>
+        </div>
+
+        <!-- 結果頁面 -->
+        <div id="result-page" class="hidden">
+            <div class="success-message">
+                <svg class="inline-block w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                資料已成功提交到 Canva Sheet！
+            </div>
+            
+            <h1 class="text-2xl font-bold mb-6 text-amber-800 text-center">紀錄完成</h1>
+            
+            <div class="flex justify-between mt-6">
+                <button id="next-person-btn" class="btn-secondary font-bold py-2 px-4 rounded-lg">
+                    換下一個人
+                </button>
+                <a href="https://www.canva.com/design/DAGlO5OuIpk/pPhGdOXGaa065Gljs4P0XA/edit?utm_content=DAGlO5OuIpk&amp;utm_campaign=designshare&amp;utm_medium=link2&amp;utm_source=sharebutton" target="_blank" class="btn-primary font-bold py-2 px-4 rounded-lg inline-block">
+                    前往 Canva Sheet
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- 原始碼顯示模態框 -->
+    <div id="code-modal" class="code-modal">
+        <div class="code-container">
+            <div class="code-header">
+                <h2>程式原始碼</h2>
+                <button id="close-modal-btn" class="close-btn">×</button>
+            </div>
+            <div class="code-content">
+                <pre id="source-code"></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- 提示訊息 -->
+    <div id="toast" class="toast">資料已成功提交！</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化變數
+            const currentDate = new Date().toLocaleDateString('zh-TW');
+            document.getElementById('current-date').textContent = currentDate;
+            let selectedReasons = [];
+
+            // 頁面元素
+            const homePage = document.getElementById('home-page');
+            const emotionPage = document.getElementById('emotion-page');
+            const resultPage = document.getElementById('result-page');
+            const gradeSelect = document.getElementById('grade-select');
+            const nameSelect = document.getElementById('name-select');
+            const displayGrade = document.getElementById('display-grade');
+            const displayName = document.getElementById('display-name');
+            const reasonSection = document.getElementById('reason-section');
+            const otherReasonSection = document.getElementById('other-reason-section');
+            const otherReasonInput = document.getElementById('other-reason-input');
+            const addOtherReasonBtn = document.getElementById('add-other-reason-btn');
+            const submitBtn = document.getElementById('submit-btn');
+            const emotionBtns = document.querySelectorAll('.emotion-btn');
+            const toast = document.getElementById('toast');
+            const selectedReasonsContainer = document.getElementById('selected-reasons-container');
+            const noReasonsSelected = document.getElementById('no-reasons-selected');
+            const reasonCategories = document.querySelectorAll('.reason-category');
+            const reasonOptions = document.querySelectorAll('.reason-option');
+            const developerBtn = document.getElementById('developer-btn');
+            const codeModal = document.getElementById('code-modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const sourceCode = document.getElementById('source-code');
+
+            // 顯示提示訊息
+            function showToast(message) {
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+
+            // 開始按鈕事件
+            document.getElementById('start-btn').addEventListener('click', function() {
+                const grade = gradeSelect.value;
+                const name = nameSelect.value;
+                
+                if (!grade || !name) {
+                    alert('請選擇年級和姓名');
+                    return;
+                }
+                
+                displayGrade.textContent = grade;
+                displayName.textContent = name;
+                
+                homePage.classList.add('hidden');
+                emotionPage.classList.remove('hidden');
+            });
+
+            // 返回按鈕事件
+            document.getElementById('back-btn').addEventListener('click', function() {
+                emotionPage.classList.add('hidden');
+                homePage.classList.remove('hidden');
+                resetEmotionSelection();
+            });
+
+            // 情緒按鈕事件
+            emotionBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 移除其他按鈕的選中狀態
+                    emotionBtns.forEach(b => b.classList.remove('selected'));
+                    // 添加當前按鈕的選中狀態
+                    this.classList.add('selected');
+                    
+                    reasonSection.classList.remove('hidden');
+                    submitBtn.classList.remove('hidden');
+                    updateSubmitButtonState();
+                });
+            });
+
+            // 分類標題點擊事件
+            reasonCategories.forEach(category => {
+                const header = category.querySelector('.reason-category-header');
+                header.addEventListener('click', function() {
+                    // 切換當前分類的展開/收起狀態
+                    category.classList.toggle('active');
+                    
+                    // 更新箭頭圖標
+                    const toggleIcon = this.querySelector('.toggle-icon');
+                    if (category.classList.contains('active')) {
+                        toggleIcon.textContent = '▲';
+                    } else {
+                        toggleIcon.textContent = '▼';
+                    }
+                });
+            });
+
+            // 原因選項點擊事件
+            reasonOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const reason = this.getAttribute('data-reason');
+                    
+                    // 如果是"其他（請寫）"，顯示輸入框
+                    if (reason === '其他（請寫）') {
+                        otherReasonSection.classList.remove('hidden');
+                        return;
+                    }
+                    
+                    // 切換選中狀態
+                    this.classList.toggle('selected');
+                    
+                    // 更新已選擇的原因列表
+                    if (this.classList.contains('selected')) {
+                        // 添加到已選擇列表
+                        if (!selectedReasons.includes(reason)) {
+                            selectedReasons.push(reason);
+                        }
+                    } else {
+                        // 從已選擇列表中移除
+                        const index = selectedReasons.indexOf(reason);
+                        if (index !== -1) {
+                            selectedReasons.splice(index, 1);
+                        }
+                    }
+                    
+                    updateSelectedReasonsDisplay();
+                    updateSubmitButtonState();
+                });
+            });
+
+            // 添加其他原因按鈕事件
+            addOtherReasonBtn.addEventListener('click', function() {
+                const otherReason = otherReasonInput.value.trim();
+                
+                if (!otherReason) {
+                    alert('請輸入其他原因');
+                    return;
+                }
+                
+                const customReason = `其他: ${otherReason}`;
+                
+                // 添加到已選擇列表
+                if (!selectedReasons.includes(customReason)) {
+                    selectedReasons.push(customReason);
+                }
+                
+                // 清空輸入框並隱藏
+                otherReasonInput.value = '';
+                otherReasonSection.classList.add('hidden');
+                
+                // 更新顯示
+                updateSelectedReasonsDisplay();
+                updateSubmitButtonState();
+            });
+
+            // 更新已選擇的原因顯示
+            function updateSelectedReasonsDisplay() {
+                if (selectedReasons.length === 0) {
+                    noReasonsSelected.classList.remove('hidden');
+                    selectedReasonsContainer.innerHTML = '';
+                    selectedReasonsContainer.appendChild(noReasonsSelected);
+                } else {
+                    noReasonsSelected.classList.add('hidden');
+                    selectedReasonsContainer.innerHTML = '';
+                    
+                    selectedReasons.forEach(reason => {
+                        const tag = document.createElement('span');
+                        tag.className = 'selected-reason-tag';
+                        tag.textContent = reason;
+                        tag.setAttribute('data-reason', reason);
+                        
+                        tag.addEventListener('click', function() {
+                            const reasonToRemove = this.getAttribute('data-reason');
+                            
+                            // 從已選擇列表中移除
+                            const index = selectedReasons.indexOf(reasonToRemove);
+                            if (index !== -1) {
+                                selectedReasons.splice(index, 1);
+                            }
+                            
+                            // 更新選項的選中狀態
+                            reasonOptions.forEach(option => {
+                                if (option.getAttribute('data-reason') === reasonToRemove) {
+                                    option.classList.remove('selected');
+                                }
+                            });
+                            
+                            // 更新顯示
+                            updateSelectedReasonsDisplay();
+                            updateSubmitButtonState();
+                        });
+                        
+                        selectedReasonsContainer.appendChild(tag);
+                    });
+                }
+            }
+
+            // 更新提交按鈕狀態
+            function updateSubmitButtonState() {
+                const selectedEmotionBtn = document.querySelector('.emotion-btn.selected');
+                const hasEmotion = selectedEmotionBtn !== null;
+                const hasReasons = selectedReasons.length > 0;
+                
+                if (hasEmotion && hasReasons) {
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('btn-disabled');
+                    submitBtn.classList.add('btn-primary');
+                } else {
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('btn-disabled');
+                    submitBtn.classList.remove('btn-primary');
+                }
+            }
+
+            submitBtn.addEventListener('click', function() {
+    if (this.disabled) return;
+
+    const grade = displayGrade.textContent;
+    const name = displayName.textContent;
+    const selectedEmotionBtn = document.querySelector('.emotion-btn.selected');
+    const emotion = selectedEmotionBtn ? selectedEmotionBtn.getAttribute('data-emotion') : null;
+
+    if (!emotion || selectedReasons.length === 0) {
+        alert('請選擇心情和至少一個原因');
+        return;
+    }
+
+    const reasonsText = selectedReasons.join('; ');
+
+    // ✅ 實際提交到 Google Sheets Web App
+    fetch('https://script.google.com/macros/s/AKfycbwlCnnSg7gSPD82sn0bv1DxYf9-cWzXUzu38W8H6bDIXnOGPVoroy3IipGVUV6v6zx_cQ/exec', {
+        method: 'POST',
+        body: JSON.stringify({
+            date: currentDate,
+            grade: grade,
+            name: name,
+            emotion: emotion,
+            reasons: reasonsText
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('網路錯誤，請稍後再試');
+        }
+        return response.text();
+    })
+    .then(result => {
+        showToast('✅ 資料已成功提交！');
+        emotionPage.classList.add('hidden');
+        resultPage.classList.remove('hidden');
+        resetEmotionSelection();
+    })
+    .catch(error => {
+        alert('提交失敗：' + error.message);
+    });
+});
+    
+
+            // 換下一個人按鈕事件
+            document.getElementById('next-person-btn').addEventListener('click', function() {
+                resultPage.classList.add('hidden');
+                homePage.classList.remove('hidden');
+                gradeSelect.value = '';
+                nameSelect.value = '';
+            });
+
+            // 重置情緒選擇
+            function resetEmotionSelection() {
+                emotionBtns.forEach(btn => btn.classList.remove('selected'));
+                reasonOptions.forEach(opt => opt.classList.remove('selected'));
+                reasonSection.classList.add('hidden');
+                otherReasonSection.classList.add('hidden');
+                submitBtn.classList.add('hidden');
+                selectedReasons = [];
+                updateSelectedReasonsDisplay();
+                otherReasonInput.value = '';
+                
+                // 收起所有分類
+                reasonCategories.forEach(category => {
+                    category.classList.remove('active');
+                    const toggleIcon = category.querySelector('.toggle-icon');
+                    toggleIcon.textContent = '▼';
+                });
+            }
+            
+            // 初始化時展開第一個分類
+            if (reasonCategories.length > 0) {
+                reasonCategories[0].classList.add('active');
+                reasonCategories[0].querySelector('.toggle-icon').textContent = '▲';
+            }
+
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'938fdc83709fa9cb',t:'MTc0NjEwODYxNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><iframe height="1" width="1" style="position: absolute; top: 0px; left: 0px; border: none; visibility: hidden;"></iframe>
+</body></html>
