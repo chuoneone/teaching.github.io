@@ -443,6 +443,7 @@
                         <span class="toggle-icon">▼</span>
                     </div>
                     <div class="reason-category-content">
+                        <div class="reason-option" data-reason="戀愛了">戀愛了</div>
                         <div class="reason-option" data-reason="跟同學吵架">跟同學吵架</div>
                         <div class="reason-option" data-reason="被忽略、被排擠">被忽略、被排擠</div>
                         <div class="reason-option" data-reason="跟朋友玩很開心">跟朋友玩很開心</div>
@@ -460,6 +461,7 @@
                         <span class="toggle-icon">▼</span>
                     </div>
                     <div class="reason-category-content">
+                        <div class="reason-option" data-reason="睡很飽">睡很飽</div>
                         <div class="reason-option" data-reason="沒睡飽">沒睡飽</div>
                         <div class="reason-option" data-reason="肚子痛">肚子痛</div>
                         <div class="reason-option" data-reason="生理期不舒服">生理期不舒服</div>
@@ -518,21 +520,17 @@
         <!-- 結果頁面 -->
         <div id="result-page" class="hidden">
             <div class="success-message">
-                <svg class="inline-block w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                資料已成功提交到 Canva Sheet！
-            </div>
+                <svg class="inline-block w-6 h-6 mr-2" ...></svg>
+                ✅ 已成功記錄！
+              </div>
+              
             
             <h1 class="text-2xl font-bold mb-6 text-amber-800 text-center">紀錄完成</h1>
             
             <div class="flex justify-between mt-6">
                 <button id="next-person-btn" class="btn-secondary font-bold py-2 px-4 rounded-lg">
                     換下一個人
-                </button>
-                <a href="https://www.canva.com/design/DAGlO5OuIpk/pPhGdOXGaa065Gljs4P0XA/edit?utm_content=DAGlO5OuIpk&amp;utm_campaign=designshare&amp;utm_medium=link2&amp;utm_source=sharebutton" target="_blank" class="btn-primary font-bold py-2 px-4 rounded-lg inline-block">
-                    前往 Canva Sheet
-                </a>
+                
             </div>
         </div>
     </div>
@@ -770,6 +768,12 @@
             submitBtn.addEventListener('click', function() {
     if (this.disabled) return;
 
+        // 🔒 立即鎖定按鈕
+        submitBtn.disabled = true;
+    submitBtn.textContent = "送出中...";
+    submitBtn.classList.add("btn-disabled");
+    submitBtn.classList.remove("btn-primary");
+
     const grade = displayGrade.textContent;
     const name = displayName.textContent;
     const selectedEmotionBtn = document.querySelector('.emotion-btn.selected');
@@ -783,8 +787,8 @@
     const reasonsText = selectedReasons.join('; ');
 
     // ✅ 實際提交到 Google Sheets Web App
-    fetch('https://script.google.com/macros/s/AKfycbynNVDBrak2D-gU48jh2xrgoLQ2WpwDLVptMutrkai0CY2rc29Koa-23uex5UR5E6Ns6A/exec', {
-        method: 'POST',
+    fetch('https://google-sheet-proxy.onrender.com/submit', {
+    method: 'POST',
         body: JSON.stringify({
             date: currentDate,
             grade: grade,
