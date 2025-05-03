@@ -66,7 +66,7 @@
      
         .big-button,
         .big-button2 {
-          font-size: 28px;
+          font-size: 20px;
           padding: 15px 30px;
           
           display: block;         /* ✅ 讓按鈕成為 block 元素 */
@@ -136,6 +136,10 @@
     .section-title {
       font-size: 1rem; /* 手機版自動變小 */
     }
+
+    .responsive-img {
+      height: 200px;  /* 手機時縮小圖片高度 */
+  }
   }
   
   
