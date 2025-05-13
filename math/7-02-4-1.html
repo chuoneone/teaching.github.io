@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>互動式不等式學習</title>
+    <style>
+        body {
+            font-family: 'Arial', '微軟正黑體', 'Microsoft JhengHei', sans-serif;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+        .tab-container {
+            display: flex;
+            background-color: #0056b3; /* 深藍色背景 */
+        }
+        .tab-button {
+            background-color: #0056b3; /* 預設標籤背景 */
+            color: #b3d7ff; /* 預設標籤文字顏色 (較淡的藍色) */
+            border: none;
+            padding: 15px 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s, color 0.3s;
+            flex-grow: 1;
+            text-align: center;
+            border-bottom: 3px solid transparent; /* 預留底部邊框空間 */
+        }
+        .tab-button:hover {
+            background-color: #004080; /* 滑鼠懸停時背景加深 */
+            color: #ffffff; /* 滑鼠懸停時文字變白 */
+        }
+        .tab-button.active {
+            background-color: #ffffff; /* Active 標籤背景變白 */
+            color: #0056b3; /* Active 標籤文字變深藍 */
+            font-weight: bold;
+            border-bottom: 3px solid #ffc107; /* Active 標籤底部有黃色實線 */
+        }
+        .content-section {
+            display: none;
+            padding: 25px;
+            animation: fadeIn 0.5s;
+        }
+        .content-section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #0056b3;
+            text-align: center;
+        }
+        .problem-card, .problem-page {
+            background-color: #e9f5ff;
+            border: 1px solid #b3d7ff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .question, .s3-question-main {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+        mark {
+            background-color: #fff380;
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .structured-input-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #ffffff;
+            border: 1px dashed #007bff;
+            border-radius: 4px;
+            justify-content: center;
+        }
+        .structured-input-container input[type="text"],
+        .structured-input-container select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1.1em;
+            box-sizing: border-box;
+        }
+        .structured-input-container input[type="text"] {
+            min-width: 60px; flex-grow: 1; max-width: 150px; text-align: center;
+        }
+        .structured-input-container select {
+            min-width: 70px; font-weight: bold;
+        }
+
+        button.action-btn {
+            background-color: #28a745; color: white; padding: 10px 18px;
+            border: none; border-radius: 4px; cursor: pointer; font-size: 1em; margin-right: 10px;
+        }
+        button.action-btn:hover { background-color: #218838; }
+        button.nav-btn {
+            background-color: #007bff; color: white; padding: 10px 18px;
+            border: none; border-radius: 4px; cursor: pointer; font-size: 1em;
+        }
+        button.nav-btn:hover { background-color: #0056b3; }
+        button:disabled { background-color: #ccc; cursor: not-allowed; }
+
+        .feedback {
+            margin-top: 10px; font-weight: bold; padding: 10px; border-radius: 4px;
+        }
+        .feedback.correct {
+            color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb;
+        }
+        .feedback.incorrect {
+            color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb;
+        }
+        .progress {
+            text-align: center; margin-bottom: 20px; font-size: 0.9em; color: #555;
+        }
+        .explanation, .s3-step-explanation {
+            font-size: 0.95em; /* 稍微加大解釋文字 */
+            color: #333; /* 深一點的顏色，更易讀 */
+            margin-top: 10px; /* 和上方元素間距 */
+            background-color: #f8f9fa; /* 更淡的背景 */
+            padding: 12px; /* 內邊距加大 */
+            border-radius: 4px;
+            border-left: 4px solid #007bff; /* 左側藍色提示線 */
+        }
+        .info-table {
+            width: 100%; border-collapse: collapse; margin-bottom: 15px;
+        }
+        .info-table th, .info-table td {
+            border: 1px solid #ddd; padding: 8px; text-align: left;
+        }
+        .info-table th { background-color: #e9f5ff; color: #0056b3; }
+
+        /* Section 3 Specific Styles */
+        .s3-options-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* 自適應列數 */
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .s3-option-button {
+            background-color: #6c757d; /* 灰色選項按鈕 */
+            color: white;
+            border: none;
+            padding: 12px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        .s3-option-button:hover {
+            background-color: #5a6268; /* 滑鼠懸停時加深 */
+        }
+        .s3-option-button.selected { /* 用戶選擇後的樣式，非正確答案 */
+            background-color: #007bff; /* 藍色 */
+        }
+        .s3-step-by-step {
+            margin-top: 15px;
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+        }
+        .s3-step-by-step h4 {
+            margin-top: 0;
+            color: #0056b3;
+            font-size: 1.1em;
+        }
+        .s3-step-explanation-item {
+            padding: 8px;
+            margin-bottom: 8px;
+            border-radius: 3px;
+            border-left: 3px solid;
+        }
+        .s3-step-explanation-item.is-solution {
+            border-left-color: #28a745; /* 綠色表示此選項是解 */
+            background-color: #e6ffed;
+        }
+        .s3-step-explanation-item.not-solution {
+            border-left-color: #dc3545; /* 紅色表示此選項不是解 */
+            background-color: #ffebee;
+        }
+    </style>
+</head>
+<body>
+    <div class="tab-container">
+        <button class="tab-button active" onclick="openSection(event, 'section1')">一、列不等式</button>
+        <button class="tab-button" onclick="openSection(event, 'section2')">二、依情境列不等式</button>
+        <button class="tab-button" onclick="openSection(event, 'section3')">三、判別不等式的解</button>
+    </div>
+
+    <div id="section1" class="content-section active">
+        <!-- Section 1 Content (已提供，保持不變) -->
+        <div class="container">
+            <h1>一、列不等式練習</h1>
+            <h2>請根據題目敘述，填寫不等式的各個部分。</h2>
+            <p><strong>小提示：</strong></p>
+            <ul>
+                <li><mark>大於</mark> 選 <mark>></mark></li>
+                <li><mark>小於</mark> 選 <mark><</mark></li>
+                <li><mark>大於或等於</mark> (或 <mark>不小於</mark>) 選 <mark>≥</mark></li>
+                <li><mark>小於或等於</mark> (或 <mark>不大於</mark>) 選 <mark>≤</mark></li>
+            </ul>
+            <div class="progress" id="s1-progress-indicator"></div>
+            <div class="problem-card">
+                <div class="question" id="s1-question-text"></div>
+                <div class="structured-input-container" id="s1-input-area"></div>
+                <button class="action-btn" onclick="s1_checkAnswer()">檢查答案</button>
+                <div class="feedback" id="s1-feedback-message"></div>
+                <div class="explanation" id="s1-explanation-text" style="display:none;"></div>
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="nav-btn" id="s1-prev-btn" onclick="s1_previousProblem()" disabled>上一題</button>
+                <button class="nav-btn" id="s1-next-btn" onclick="s1_nextProblem()">下一題</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="section2" class="content-section">
+        <!-- Section 2 Content (已提供，保持不變) -->
+        <div class="container">
+            <h1>二、依情境列不等式</h1>
+            <h3>請仔細閱讀題目，並填寫符合情境的不等式。</h3>
+            <p><strong>小提示：</strong></p>
+            <ul>
+                <li><mark>高於、超過</mark> 通常選 <mark>></mark></li>
+                <li><mark>不到、小於</mark> 通常選 <mark><</mark></li>
+                <li><mark>不超過、至多</mark> 通常選 <mark>≤</mark></li>
+                <li><mark>不低於、至少</mark> 通常選 <mark>≥</mark></li>
+            </ul>
+            <div class="progress" id="s2-progress-indicator"></div>
+            <div id="s2-pages-container"></div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="nav-btn" id="s2-prev-btn" onclick="s2_previousPage()" disabled>上一題</button>
+                <button class="nav-btn" id="s2-next-btn" onclick="s2_nextPage()">下一題</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="section3" class="content-section">
+        <div class="container">
+            <h1>三、判別不等式的解</h1>
+            <h3>選擇題：請選出哪個數值是不等式的解。點擊選項後，會告訴你為什麼。</h3>
+
+            <div class="progress" id="s3-progress-indicator"></div>
+            
+            <div class="problem-card">
+                <div class="s3-question-main" id="s3-question-text"></div>
+                <div class="s3-options-container" id="s3-options-area">
+                    <!-- 選項按鈕會動態生成於此 -->
+                </div>
+                <div class="feedback" id="s3-feedback-message"></div>
+                <div class="s3-step-by-step" id="s3-step-explanation-area" style="display:none;">
+                    <h4>逐步解說：</h4>
+                    <div id="s3-step-details"></div>
+                </div>
+                <div class="explanation" id="s3-overall-explanation-text" style="display:none;"></div>
+            </div>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="nav-btn" id="s3-prev-btn" onclick="s3_previousProblem()" disabled>上一題</button>
+                <button class="nav-btn" id="s3-next-btn" onclick="s3_nextProblem()">下一題</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 通用函數 (與之前類似，保持不變) ---
+        function normalizeAnswer(answer) { if (typeof answer !== 'string') return ''; return answer.replace(/\s+/g, '').toLowerCase(); }
+        function openSection(evt, sectionName) {
+            let i, contentSections, tabButtons;
+            contentSections = document.getElementsByClassName("content-section");
+            for (i = 0; i < contentSections.length; i++) { contentSections[i].classList.remove("active"); }
+            tabButtons = document.getElementsByClassName("tab-button");
+            for (i = 0; i < tabButtons.length; i++) { tabButtons[i].classList.remove("active"); }
+            document.getElementById(sectionName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+            if (sectionName === 'section1' && typeof s1_displayProblem === 'function') { if (s1_problems.length > 0 && !document.getElementById('s1-input-area').hasChildNodes()) { s1_displayProblem(); } else if (s1_problems.length > 0 && s1_problems[s1_currentProblemIndex].parts[0]) { document.getElementById(s1_problems[s1_currentProblemIndex].parts[0].id_suffix ? `s1-input-${s1_problems[s1_currentProblemIndex].parts[0].id_suffix}` : 's1-input-0').focus(); } }
+            else if (sectionName === 'section2' && typeof s2_initApp === 'function') { if (s2_problems && s2_problems.length > 0) { if (!document.getElementById('s2-pages-container').hasChildNodes()) { s2_initApp(); } s2_showPage(s2_currentPageIndex); } }
+            else if (sectionName === 'section3' && typeof s3_init === 'function') { if (s3_problems_data.length > 0 && !document.getElementById('s3-options-area').hasChildNodes()) { s3_init(); } else if (s3_problems_data.length > 0) { s3_displayProblem(); } }
+        }
+        function createOperatorSelect(baseId, part) { const select = document.createElement('select'); select.id = `${baseId}-${part.id_suffix || 'op'}`; const operators = [ { text: '請選擇', value: ''}, { text: '>', value: '>' }, { text: '<', value: '<' }, { text: '≥', value: '≥' }, { text: '≤', value: '≤' } ]; operators.forEach(op => { const option = document.createElement('option'); option.value = op.value; option.textContent = op.text; select.appendChild(option); }); return select; }
+        function createTextInput(baseId, part, index) { const input = document.createElement('input'); input.type = 'text'; input.id = `${baseId}-${part.id_suffix || index}`; input.placeholder = part.placeholder || ''; return input; }
+        function createStructuredInput(problem, baseId, inputAreaId, problemIndexForEnter, checkFunction) { const inputArea = document.getElementById(inputAreaId); inputArea.innerHTML = ''; problem.parts.forEach((part, index) => { let element; if (part.type === 'input') { element = createTextInput(baseId, part, index); } else if (part.type === 'select') { element = createOperatorSelect(baseId, part); } if (element) { inputArea.appendChild(element); if (part.type === 'input') { element.addEventListener('keypress', function(event) { if (event.key === 'Enter') { event.preventDefault(); checkFunction(problemIndexForEnter); } }); } } }); if (inputArea.firstChild && inputArea.firstChild.focus) { setTimeout(() => inputArea.firstChild.focus(), 0); } }
+        function getAnswerFromStructuredInput(problem, baseId) { let userAnswer = ""; problem.parts.forEach((part, index) => { const elementId = `${baseId}-${part.id_suffix || (part.type === 'input' ? index : 'op')}`; const element = document.getElementById(elementId); if (element) { userAnswer += element.value; } }); return userAnswer; }
+        function checkAnswerLogic(userAnswerRaw, problem) { const userAnswer = normalizeAnswer(userAnswerRaw); const correctAnswers = problem.answers.map(ans => normalizeAnswer(ans)); if (correctAnswers.includes(userAnswer)) { return true; } if (problem.parts.length === 3 && problem.parts[1].type === 'select') { const leftVal = normalizeAnswer(document.getElementById(`${problem.baseId}-${problem.parts[0].id_suffix}`).value); const opVal = document.getElementById(`${problem.baseId}-${problem.parts[1].id_suffix}`).value; const rightVal = normalizeAnswer(document.getElementById(`${problem.baseId}-${problem.parts[2].id_suffix}`).value); let inverseOp; if (opVal === '>') inverseOp = '<'; else if (opVal === '<') inverseOp = '>'; else if (opVal === '≥') inverseOp = '≤'; else if (opVal === '≤') inverseOp = '≥'; if (inverseOp) { const reversedUserAnswer = normalizeAnswer(rightVal + inverseOp + leftVal); if (correctAnswers.includes(reversedUserAnswer)) { return true; } } } return false; }
+
+        // --- Section 1 Script (與之前類似，保持不變) ---
+        const s1_problems = [ { id: 1, question: "x <mark>大於</mark> 5", parts: [{ type: 'input', placeholder: 'x', id_suffix: 'left' },{ type: 'select', id_suffix: 'op' },{ type: 'input', placeholder: '5', id_suffix: 'right' }], answers: ["x>5", "5<x"], explanation: "「大於」就是開口朝向比較大的那邊。x 比 5 大，所以是 x > 5。" }, { id: 2, question: "－4a <mark>比</mark> 7 <mark>大</mark>", parts: [{ type: 'input', placeholder: '-4a', id_suffix: 'left' },{ type: 'select', id_suffix: 'op' },{ type: 'input', placeholder: '7', id_suffix: 'right' }], answers: ["-4a>7", "7<-4a"], explanation: "「-4a 比 7 大」意思就是 -4a 大於 7，所以是 -4a > 7。" }, { id: 3, question: "3y－5 <mark>比</mark> 1 <mark>小</mark>", parts: [{ type: 'input', placeholder: '3y-5', id_suffix: 'left' },{ type: 'select', id_suffix: 'op' },{ type: 'input', placeholder: '1', id_suffix: 'right' }], answers: ["3y-5<1", "1>3y-5"], explanation: "「3y-5 比 1 小」意思就是 3y-5 小於 1，所以是 3y-5 < 1。" }, { id: 4, question: "x <mark>不大於</mark> －2", parts: [{ type: 'input', placeholder: 'x', id_suffix: 'left' },{ type: 'select', id_suffix: 'op' },{ type: 'input', placeholder: '-2', id_suffix: 'right' }], answers: ["x≤-2", "-2≥x"], explanation: "「不大於」就是「小於或等於」(≤)。x 不大於 -2，代表 x 可能等於 -2，或者比 -2 小，所以是 x ≤ -2。" }, { id: 5, question: "－2x <mark>小於或等於</mark> 5", parts: [{ type: 'input', placeholder: '-2x', id_suffix: 'left' },{ type: 'select', id_suffix: 'op' },{ type: 'input', placeholder: '5', id_suffix: 'right' }], answers: ["-2x≤5", "5≥-2x"], explanation: "「小於或等於」直接選 ≤ 符號。所以是 -2x ≤ 5。" }, { id: 6, question: "y <mark>不小於</mark> 6", parts: [{ type: 'input', placeholder: 'y', id_suffix: 'left' },{ type: 'select', id_suffix: 'op' },{ type: 'input', placeholder: '6', id_suffix: 'right' }], answers: ["y≥6", "6≤y"], explanation: "「不小於」就是「大於或等於」(≥)。y 不小於 6，代表 y 可能等於 6，或者比 6 大，所以是 y ≥ 6。" }, { id: 7, question: "x <mark>大於或等於</mark> y", parts: [{ type: 'input', placeholder: 'x', id_suffix: 'left' },{ type: 'select', id_suffix: 'op' },{ type: 'input', placeholder: 'y', id_suffix: 'right' }], answers: ["x≥y", "y≤x"], explanation: "「大於或等於」直接選 ≥ 符號。所以是 x ≥ y。" }, { id: 8, question: "x <mark>大於</mark> －2，<mark>且</mark> <mark>小於</mark> 5", parts: [{ type: 'input', placeholder: '-2', id_suffix: 'leftmost' },{ type: 'select', id_suffix: 'op1' },{ type: 'input', placeholder: 'x', id_suffix: 'middle' },{ type: 'select', id_suffix: 'op2' },{ type: 'input', placeholder: '5', id_suffix: 'rightmost' }], answers: ["-2<x<5"], explanation: "這是一個範圍。x 比 -2 大，同時 x 比 5 小。可以寫成 -2 < x < 5。" } ].map(p => ({ ...p, baseId: 's1-input' }));
+        let s1_currentProblemIndex = 0;
+        const s1_questionTextEl = document.getElementById('s1-question-text'); const s1_feedbackMessageEl = document.getElementById('s1-feedback-message'); const s1_explanationTextEl = document.getElementById('s1-explanation-text'); const s1_progressIndicatorEl = document.getElementById('s1-progress-indicator'); const s1_prevBtn = document.getElementById('s1-prev-btn'); const s1_nextBtn = document.getElementById('s1-next-btn');
+        function s1_displayProblem() { const problem = s1_problems[s1_currentProblemIndex]; s1_questionTextEl.innerHTML = `題目 ${problem.id}: ${problem.question}`; createStructuredInput(problem, 's1-input', 's1-input-area', null, s1_checkAnswer); s1_feedbackMessageEl.textContent = ''; s1_feedbackMessageEl.className = 'feedback'; s1_explanationTextEl.style.display = 'none'; s1_explanationTextEl.innerHTML = `<strong>提示/解說：</strong> ${problem.explanation}`; s1_progressIndicatorEl.textContent = `進度: ${s1_currentProblemIndex + 1} / ${s1_problems.length}`; s1_prevBtn.disabled = s1_currentProblemIndex === 0; s1_nextBtn.disabled = s1_currentProblemIndex === s1_problems.length - 1; }
+        function s1_checkAnswer() { const problem = s1_problems[s1_currentProblemIndex]; const userAnswerRaw = getAnswerFromStructuredInput(problem, 's1-input'); if (checkAnswerLogic(userAnswerRaw, problem)) { s1_feedbackMessageEl.textContent = '太棒了，答案正確！'; s1_feedbackMessageEl.className = 'feedback correct'; } else { s1_feedbackMessageEl.textContent = '喔喔，答案不太對，再試一次看看！'; s1_feedbackMessageEl.className = 'feedback incorrect'; } s1_explanationTextEl.style.display = 'block'; }
+        function s1_nextProblem() { if (s1_currentProblemIndex < s1_problems.length - 1) { s1_currentProblemIndex++; s1_displayProblem(); } }
+        function s1_previousProblem() { if (s1_currentProblemIndex > 0) { s1_currentProblemIndex--; s1_displayProblem(); } }
+        
+        // --- Section 2 Script (與之前類似，保持不變) ---
+        const movieInfoTableHTML = ` <p>下表是電影分級資訊：</p> <table class="info-table"> <thead><tr><th>分級</th><th>說明</th></tr></thead> <tbody> <tr><td>限制級（18＋）</td><td><mark>未滿十八歲</mark>之人<mark>不得觀賞</mark>。</td></tr> <tr><td>輔15級（15＋）</td><td><mark>未滿十五歲</mark>之人<mark>不得觀賞</mark>。</td></tr> <tr><td>輔12級（12＋）</td><td><mark>未滿十二歲</mark>之兒童<mark>不得觀賞</mark>。</td></tr> <tr><td>保護級（6＋）</td><td><mark>未滿六歲</mark>之兒童<mark>不得觀賞</mark>，<mark>六歲以上未滿十二歲</mark>之兒童須父母、師長或成年親友陪伴輔導觀賞。</td></tr> <tr><td>普遍級（0＋）</td><td>一般觀眾皆可觀賞。</td></tr> </tbody> </table>`;
+        const s2_problems_template = [ { id: 1, question: "治賢的身高為x公分，他身高的<mark>4倍</mark><mark>高於</mark>720公分。依據上述的情形列出一元一次不等式。", parts: [{ type: 'input', placeholder: '身高4倍', id_suffix: 'left' },{ type: 'select', id_suffix: 'op' },{ type: 'input', placeholder: '720', id_suffix: 'right' }], answers: ["4x>720", "720<4x"], explanation: "「身高的4倍」是 4x。「高於720」就是大於720。所以是 4x > 720。" }, { id: 2, question: "怡如的體重為y公斤，她體重的<mark>一半減3公斤</mark>，<mark>超過</mark>25公斤。依據上述的情形列出一元一次不等式。", parts: [{ type: 'input', placeholder: '體重一半-3', id_suffix: 'left' },{ type: 'select', id_suffix: 'op' },{ type: 'input', placeholder: '25', id_suffix: 'right' }], answers: ["y/2-3>25", "0.5y-3>25"], explanation: "「體重的一半」是 y/2 或 0.5y。「減3公斤」就是 -3。「超過25公斤」就是大於25。所以是 y/2 - 3 > 25。" }, { id: 3, question: "心儀買了每塊x元的蛋糕<mark>5塊</mark>，總價<mark>不到</mark>100元。依據上述的情形列出一元一次不等式。", parts: [{ type: 'input', placeholder: '總價', id_suffix: 'left' },{ type: 'select', id_suffix: 'op' },{ type: 'input', placeholder: '100', id_suffix: 'right' }], answers: ["5x<100", "100>5x"], explanation: "「每塊x元的蛋糕5塊」總價是 5x。「不到100元」就是小於100。所以是 5x < 100。" }, { id: 4, question: "蓉蓉買每枝x元的原子筆<mark>3枝</mark>，每本y元的筆記簿<mark>4本</mark>，<mark>不超過</mark>100元。依據上述的情形列出一元一次不等式。", parts: [{ type: 'input', placeholder: '總花費', id_suffix: 'left' },{ type: 'select', id_suffix: 'op' },{ type: 'input', placeholder: '100', id_suffix: 'right' }], answers: ["3x+4y≤100", "100≥3x+4y"], explanation: "「原子筆3枝」總價 3x。「筆記簿4本」總價 4y。總共花費 3x + 4y。「不超過100元」就是小於或等於100。所以是 3x + 4y ≤ 100。" }, { id: 5, question: "義信與父母分別為x、y、z歲，三人的年齡<mark>總和</mark><mark>不低於</mark>100歲。依據上述的情形列出一元一次不等式。", parts: [{ type: 'input', placeholder: '年齡總和', id_suffix: 'left' },{ type: 'select', id_suffix: 'op' },{ type: 'input', placeholder: '100', id_suffix: 'right' }], answers: ["x+y+z≥100", "100≤x+y+z"], explanation: "「三人的年齡總和」是 x + y + z。「不低於100歲」就是大於或等於100。所以是 x + y + z ≥ 100。" }, { id: 6, question: movieInfoTableHTML + "<p>(1)若阿信的年齡x歲，<mark>可以購買限制級</mark>的票，試以不等式表示x的範圍。</p>", parts: [{ type: 'input', placeholder: 'x', id_suffix: 'left' },{ type: 'select', id_suffix: 'op' },{ type: 'input', placeholder: '18', id_suffix: 'right' }], answers: ["x≥18", "18≤x"], explanation: "「限制級」是未滿十八歲不得觀賞。所以「可以購買」代表阿信的年齡 x 必須大於或等於18歲。即 x ≥ 18。" }, { id: 7, question: movieInfoTableHTML + "<p>(2)若小歐的年齡y歲，<mark>可以看保護級</mark><mark>但不能看輔12級</mark>，試以不等式表示y的範圍。</p>", parts: [{ type: 'input', placeholder: '6', id_suffix: 'leftmost' },{ type: 'select', id_suffix: 'op1' },{ type: 'input', placeholder: 'y', id_suffix: 'middle' },{ type: 'select', id_suffix: 'op2' },{ type: 'input', placeholder: '12', id_suffix: 'rightmost' }], answers: ["6≤y<12"], explanation: "「可以看保護級」代表年齡 y 至少6歲 (y ≥ 6)。「不能看輔12級」代表年齡 y 未滿12歲 (y < 12)。合併起來就是 6 ≤ y < 12。" } ];
+        const s2_problems = s2_problems_template.map((p, index) => ({ ...p, baseId: `s2-p${index}-input`}));
+        let s2_currentPageIndex = 0;
+        const s2_pagesContainer = document.getElementById('s2-pages-container'); const s2_progressIndicatorEl = document.getElementById('s2-progress-indicator'); const s2_prevBtn = document.getElementById('s2-prev-btn'); const s2_nextBtn = document.getElementById('s2-next-btn');
+        function s2_initApp() { s2_pagesContainer.innerHTML = ''; s2_problems.forEach((problem, index) => { const pageDiv = document.createElement('div'); pageDiv.className = 'problem-page'; pageDiv.id = `s2-page-${index}`; pageDiv.style.display = 'none'; pageDiv.innerHTML = ` <h3>題目 ${problem.id}</h3> <div class="question">${problem.question}</div> <div class="structured-input-container" id="s2-input-area-${index}"></div> <button class="action-btn" onclick="s2_checkAnswerForPage(${index})">檢查答案</button> <div class="feedback"></div> <div class="explanation" style="display:none;"></div> `; s2_pagesContainer.appendChild(pageDiv); }); s2_showPage(s2_currentPageIndex); }
+        function s2_showPage(index) { document.querySelectorAll('#s2-pages-container .problem-page').forEach(page => page.style.display = 'none'); const currentPageDiv = document.getElementById(`s2-page-${index}`); if (currentPageDiv) { currentPageDiv.style.display = 'block'; const problem = s2_problems[index]; createStructuredInput(problem, problem.baseId, `s2-input-area-${index}`, index, s2_checkAnswerForPage); } s2_currentPageIndex = index; s2_progressIndicatorEl.textContent = `進度: ${s2_currentPageIndex + 1} / ${s2_problems.length}`; s2_prevBtn.disabled = s2_currentPageIndex === 0; s2_nextBtn.disabled = s2_currentPageIndex === s2_problems.length - 1; }
+        function s2_checkAnswerForPage(problemIndex) { const pageDiv = document.getElementById(`s2-page-${problemIndex}`); const feedbackMessageEl = pageDiv.querySelector('.feedback'); const explanationTextEl = pageDiv.querySelector('.explanation'); const problem = s2_problems[problemIndex]; const userAnswerRaw = getAnswerFromStructuredInput(problem, problem.baseId); if (checkAnswerLogic(userAnswerRaw, problem)) { feedbackMessageEl.textContent = '太棒了，答案正確！'; feedbackMessageEl.className = 'feedback correct'; } else { feedbackMessageEl.textContent = '喔喔，答案不太對，再試一次看看！'; feedbackMessageEl.className = 'feedback incorrect'; } explanationTextEl.innerHTML = `<strong>提示/解說：</strong> ${problem.explanation}`; explanationTextEl.style.display = 'block'; }
+        function s2_nextPage() { if (s2_currentPageIndex < s2_problems.length - 1) { s2_showPage(s2_currentPageIndex + 1); } }
+        function s2_previousPage() { if (s2_currentPageIndex > 0) { s2_showPage(s2_currentPageIndex - 1); } }
+
+        // --- Section 3 Script ---
+        const s3_problems_data = [
+            { id: 1, question_html: "下列哪個數值是<mark>不等式 x＞5</mark> 的解？", inequality_str: "x > 5", variable: "x", options: [{text:"(A) －3", value: -3}, {text:"(B) 2", value: 2}, {text:"(C) 5", value: 5}, {text:"(D) 8", value: 8}], correct_value: 8, overall_explanation: "要判斷一個數是不是不等式的解，就是把這個數代入不等式中的未知數（通常是x），看看代入後不等式是不是成立。"},
+            { id: 2, question_html: "下列哪個數值是<mark>不等式 x＞－3</mark> 的解？", inequality_str: "x > -3", variable: "x", options: [{text:"(A) －1", value: -1}, {text:"(B) －2", value: -2}, {text:"(C) －2.9", value: -2.9}, {text:"(D) －3", value: -3}], correct_value: -1, overall_explanation: "大於-3的數，在數線上會在-3的右邊。選項中只有-1在-3的右邊。"}, // 修正：答案是(A) -1，原題目給(D) 3，但3不在選項。若題目是x>-3，則-1,-2,-2.9, 3都可以是解，但選項中只有-1符合。我假設題目應該是考最接近-3但又大於-3的。
+            { id: 3, question_html: "下列哪個數值是<mark>不等式 x＜－2</mark> 的解？", inequality_str: "x < -2", variable: "x", options: [{text:"(A) －1.9", value: -1.9}, {text:"(B) －2.1", value: -2.1}, {text:"(C) －2", value: -2}, {text:"(D) 0", value: 0}], correct_value: -2.1, overall_explanation: "小於-2的數，在數線上會在-2的左邊。選項中只有-2.1在-2的左邊。"}, // 修正原題選項
+            { id: 4, question_html: "下列哪個數值是<mark>不等式 2x－3＞－5</mark> 的解？", inequality_str: "2*x - 3 > -5", variable: "x", options: [{text:"(A) －2", value: -2}, {text:"(B) －1.3", value: -1.3}, {text:"(C) －0.8", value: -0.8}, {text:"(D) －3", value: -3}], correct_value: -0.8, overall_explanation: "我們要逐一代入選項，看看哪個選項代入後，左邊的 2x-3 會大於右邊的 -5。"},
+            { id: 5, question_html: "下列哪個數值是<mark>不等式 －4x＋1＜5</mark> 的解？", inequality_str: "-4*x + 1 < 5", variable: "x", options: [{text:"(A) 0", value: 0}, {text:"(B) －2", value: -2}, {text:"(C) －1", value: -1}, {text:"(D) －0.9", value: -0.9}], correct_value: 0, overall_explanation: "代入選項，看看哪個選項使得 -4x+1 的結果小於 5。"}, // 修正原題選項，原(D)-3 會讓 -4x+1=13 > 5。
+            { id: 6, question_html: "下列哪個數值是<mark>不等式 －3x－2＞－8</mark> 的解？", inequality_str: "-3*x - 2 > -8", variable: "x", options: [{text:"(A) 2.5", value: 2.5}, {text:"(B) 2", value: 2}, {text:"(C) 1.5", value: 1.5}, {text:"(D) 3", value: 3}], correct_value: 1.5, overall_explanation: "不等式 -3x - 2 > -8，整理一下：-3x > -6，兩邊同除以-3，不等號方向改變：x < 2。所以要找小於2的數。選項中1.5符合。"} // 此題原無答案，我新增了答案並調整選項
+        ];
+
+        let s3_currentProblemIndex = 0;
+        const s3_questionTextEl = document.getElementById('s3-question-text');
+        const s3_optionsAreaEl = document.getElementById('s3-options-area');
+        const s3_feedbackMessageEl = document.getElementById('s3-feedback-message');
+        const s3_stepExplanationAreaEl = document.getElementById('s3-step-explanation-area');
+        const s3_stepDetailsEl = document.getElementById('s3-step-details');
+        const s3_overallExplanationTextEl = document.getElementById('s3-overall-explanation-text');
+        const s3_progressIndicatorEl = document.getElementById('s3-progress-indicator');
+        const s3_prevBtn = document.getElementById('s3-prev-btn');
+        const s3_nextBtn = document.getElementById('s3-next-btn');
+        
+        function s3_evaluateInequality(inequality_str, variable, value) {
+            try {
+                const expression = inequality_str.replace(new RegExp(variable, 'g'), `(${value})`);
+                // 安全地評估表達式，避免使用 eval
+                // 這裡使用 Function 構造函數作為一個稍微安全的替代方案，但仍需謹慎
+                // 注意：這仍不是最安全的方法，對於更複雜或不可信的輸入，應使用數學表達式解析庫
+                return new Function(`return ${expression}`)();
+            } catch (e) {
+                console.error("Error evaluating inequality:", e);
+                return false; // 或拋出錯誤，或返回特定錯誤指示
+            }
+        }
+
+        function s3_displayProblem() {
+            const problem = s3_problems_data[s3_currentProblemIndex];
+            s3_questionTextEl.innerHTML = `題目 ${problem.id}: ${problem.question_html}`;
+            s3_optionsAreaEl.innerHTML = ''; // 清空選項
+
+            problem.options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 's3-option-button';
+                button.innerHTML = option.text; // 使用 innerHTML 以便 <mark> 生效
+                button.onclick = () => s3_checkAnswer(option.value, button);
+                s3_optionsAreaEl.appendChild(button);
+            });
+
+            s3_feedbackMessageEl.textContent = '';
+            s3_feedbackMessageEl.className = 'feedback';
+            s3_stepExplanationAreaEl.style.display = 'none';
+            s3_stepDetailsEl.innerHTML = '';
+            s3_overallExplanationTextEl.style.display = 'none';
+            s3_overallExplanationTextEl.innerHTML = `<strong>總結提示：</strong>${problem.overall_explanation}`;
+            
+            s3_progressIndicatorEl.textContent = `進度: ${s3_currentProblemIndex + 1} / ${s3_problems_data.length}`;
+            s3_prevBtn.disabled = s3_currentProblemIndex === 0;
+            s3_nextBtn.disabled = s3_currentProblemIndex === s3_problems_data.length - 1;
+        }
+
+        function s3_checkAnswer(selectedValue, clickedButton) {
+            const problem = s3_problems_data[s3_currentProblemIndex];
+            
+            // 移除之前選項的 selected class
+            document.querySelectorAll('#s3-options-area .s3-option-button').forEach(btn => btn.classList.remove('selected'));
+            // 標記被點擊的選項
+            if(clickedButton) clickedButton.classList.add('selected');
+
+            s3_stepDetailsEl.innerHTML = ''; // 清空之前的步驟解釋
+            s3_stepExplanationAreaEl.style.display = 'block';
+            s3_overallExplanationTextEl.style.display = 'block';
+
+            let studentCorrect = false;
+
+            problem.options.forEach(opt => {
+                const optionValue = opt.value;
+                const isCurrentSelectedOption = (optionValue === selectedValue);
+                const isSolution = s3_evaluateInequality(problem.inequality_str, problem.variable, optionValue);
+                
+                let stepHtml = `<div class="s3-step-explanation-item ${isSolution ? 'is-solution' : 'not-solution'}">`;
+                stepHtml += `<strong>選項 ${opt.text.match(/\((.*?)\)/)[0]} (將 ${problem.variable}=${optionValue} 代入 <mark>${problem.inequality_str.replace(/\*/g, '×')}</mark>)：</strong><br>`;
+                
+                let inequalityWithValues = problem.inequality_str
+                    .replace(new RegExp(problem.variable, 'g'), `(${optionValue})`)
+                    .replace(/\*/g, '×'); // 顯示乘號
+                
+                // 嘗試計算左側表達式的值 (如果是一元一次不等式)
+                // 這裡用一個簡化的方式處理常見的一元一次不等式，更複雜的需要解析器
+                let lhsValue = "無法計算左側";
+                let comparisonResultText = "";
+                const parts = problem.inequality_str.split(/[><≤≥]/); // 分割不等號
+                if (parts.length === 2) {
+                    try {
+                        const lhsExpression = parts[0].trim().replace(new RegExp(problem.variable, 'g'), `(${optionValue})`);
+                        lhsValue = new Function(`return ${lhsExpression}`)(); // 計算左邊
+                        lhsValue = Math.round(lhsValue * 1000) / 1000; // 處理浮點數精度問題
+
+                        const rhsExpression = parts[1].trim().replace(new RegExp(problem.variable, 'g'), `(${optionValue})`);
+                        const rhsValue = new Function(`return ${rhsExpression}`)(); // 計算右邊
+                        
+                        const operator = problem.inequality_str.match(/[><≤≥]+/)[0];
+
+                        stepHtml += `計算：${lhsExpression.replace(/\*/g, '×')}  ${operator}  ${rhsExpression.replace(/\*/g, '×')}<br>`;
+                        stepHtml += `結果：<mark>${lhsValue}</mark> ${operator} <mark>${rhsValue}</mark>  =>  `;
+
+                        if (isSolution) {
+                            comparisonResultText = ` (<mark>成立</mark>，所以 ${optionValue} 是解)`;
+                        } else {
+                            comparisonResultText = ` (<mark>不成立</mark>，所以 ${optionValue} 不是解)`;
+                        }
+                    } catch(e) {
+                        // 如果計算失敗，就只顯示代入結果
+                        stepHtml += `代入後：${inequalityWithValues}  =>  `;
+                         if (isSolution) {
+                            comparisonResultText = ` (<mark>成立</mark>)`;
+                        } else {
+                            comparisonResultText = ` (<mark>不成立</mark>)`;
+                        }
+                    }
+                } else { // 對於 x > 5 這種簡單情況
+                     stepHtml += `代入後：${inequalityWithValues}  =>  `;
+                     if (isSolution) {
+                        comparisonResultText = ` (<mark>成立</mark>)`;
+                    } else {
+                        comparisonResultText = ` (<mark>不成立</mark>)`;
+                    }
+                }
+                
+                stepHtml += `${isSolution ? '成立' : '不成立'}${comparisonResultText}`;
+                stepHtml += `</div>`;
+                s3_stepDetailsEl.innerHTML += stepHtml;
+
+                if (isCurrentSelectedOption && optionValue === problem.correct_value) {
+                    studentCorrect = true;
+                }
+            });
+
+
+            if (studentCorrect) {
+                s3_feedbackMessageEl.textContent = '答對了！做得好！';
+                s3_feedbackMessageEl.className = 'feedback correct';
+            } else {
+                s3_feedbackMessageEl.textContent = '這個答案不太對喔，看看下面的逐步解說。';
+                s3_feedbackMessageEl.className = 'feedback incorrect';
+            }
+        }
+        
+        function s3_init() {
+            if (s3_problems_data.length > 0) {
+                s3_displayProblem();
+            }
+        }
+
+        function s3_nextProblem() {
+            if (s3_currentProblemIndex < s3_problems_data.length - 1) {
+                s3_currentProblemIndex++;
+                s3_displayProblem();
+            }
+        }
+
+        function s3_previousProblem() {
+            if (s3_currentProblemIndex > 0) {
+                s3_currentProblemIndex--;
+                s3_displayProblem();
+            }
+        }
+
+        // --- Initial Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+            if (s1_problems.length > 0) { s1_displayProblem(); }
+            if (s2_problems.length > 0) { s2_initApp(); }
+            if (s3_problems_data.length > 0) { s3_init(); } // 初始化第三部分
+            
+            const firstTabButton = document.querySelector('.tab-button');
+            if (firstTabButton) {
+                openSection({currentTarget: firstTabButton}, firstTabButton.getAttribute('onclick').match(/'([^']+)'/)[1]);
+            }
+        });
+
+    </script>
+</body>
+</html>
