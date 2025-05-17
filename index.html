@@ -1,159 +1,169 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
+    <title>歡迎進入學習系統</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPED</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="responsive.css">
-    <link rel="icon" href="images/dog.png" type="image/png">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="images/dog.png">
+    <script src="https://kit.fontawesome.com/932c74a72b.js" crossorigin="anonymous"></script>
+    <style>
+      body {
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+        background: radial-gradient(circle at 60% 20%, #2b5876 0%, #22223e 70%, #0d133d 100%);
+        overflow-x: hidden;
+      }
+      .space-bg {
+        pointer-events: none;
+        position: fixed;
+        top: 0; left: 0; width: 100vw; height: 100vh;
+        z-index: 0;
+      }
+      .star {
+        animation: twinkle 2.5s infinite alternate;
+        opacity: 0.72;
+      }
+      .star2 { animation-delay: 0.5s;}
+      .star3 { animation-delay: 1.2s;}
+      .star4 { animation-delay: 1.9s;}
+      @keyframes twinkle {
+        0% { opacity: 0.4;}
+        100% { opacity: 1;}
+      }
+      .landing-center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 90vh;
+        position: relative;
+        z-index: 2;
+      }
+      .landing-img {
+        width: 240px;
+        height: 240px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-bottom: 40px;        
+        transition: box-shadow 0.4s, filter 0.4s;
+        cursor: pointer;
+        will-change: transform, opacity;
+        animation: pulse 1.5s infinite;
+        background: none;
+        box-shadow: none;
+        border: none;
+      }
+      .landing-img.flying {
+        animation: fly-left-up 0.8s cubic-bezier(.42,1.1,.74,1.05) forwards;
+        filter: blur(2px) brightness(1.15);
+      }
+      @keyframes fly-left-up {
+        0% { transform: translate(0,0) scale(1) rotate(0deg); opacity: 1;}
+        80% { transform: translate(-350px, -120px) scale(0.5) rotate(-10deg); opacity: 0.9;}
+        100% { transform: translate(-600px, -350px) scale(0.18) rotate(-18deg); opacity: 0;}
+      }
+      .click-hint {
+        color: #a8faff;
+        font-size: 1.05rem;
+        font-family: 'Share Tech Mono', monospace;
+        margin-bottom: 18px;
+        animation: pulse 1.5s infinite;
+        letter-spacing: 2px;
+        text-align: center;
+      }
+      .big-button { display: none; }
 
+
+    .arrow-bounce {
+    width: 0; height: 0;
+    border-left: 18px solid transparent;
+    border-right: 18px solid transparent;
+    border-top: 28px solid #00ffff;
+    margin: -10px auto 16px auto;
+    animation: arrowBounce 1s infinite alternate;
+    opacity: 0.8;
+    }
+    @keyframes arrowBounce {
+    0% { transform: translateY(0);}
+    100% { transform: translateY(10px);}
+    }
+
+    .intro-text1 {
+    font-family: 'Orbitron', 'Segoe UI', Arial, sans-serif;
+    font-size: clamp(2rem, 6vw, 3.6rem);
+    background: linear-gradient(100deg, #00ffff, #ff00ff, #00ffff);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 3px;
+    text-align: center;
+    margin: 60px auto 36px auto;
+    opacity: 0;
+    transform: scale(0.86);
+    text-shadow: 0 0 2px #0ff, 0 0 4px #0ff, 0 0 6px #ff00ff;
+    animation: introPop 1.15s cubic-bezier(.52,1.7,.52,.9) 0.18s forwards;
+    filter: drop-shadow(0 4px 16px #ffee9940);
+    }
+
+    @keyframes introPop {
+    0% { opacity: 0; transform: scale(0.86);}
+    70% { opacity: 1; transform: scale(1.06);}
+    100% { opacity: 1; transform: scale(1);}
+    }
+
+
+    </style>
 </head>
 <body>
-    <!-- 頂部導覽列 -->
-    <header class="navbar">
-        <div class="logo">SPED</div>
-        <nav>
-            <ul class="nav-links">
-                <li><a href="index.html">HOME</a></li>
-		        <li><a href="tt.html">情緒紀錄</a></li>
-                <li><a href="7.html">7數</a></li>
-                <li><a href="8.html">8數</a></li>
-                <li><a href="9.html">9數</a></li>
-                <li><a href="7eng.html">7英</a></li>
-                <li><a href="8eng.html">8英</a></li>
-                <li><a href="9eng.html">9英</a></li>
-                <li><a href="https://chuone.my.canva.site/spedchb2">7國</a></li>
-                <li><a href="https://chuone.my.canva.site/spedchb4">8國</a></li>
-                <li><a href="9ch.html">9國</a></li>
-                <li><a href="bigtest.html">會考專區</a></li>
-                <li><a href="learningstrategy/learningstrategy.html">學習策略</a></li>                
-            </ul>
-        </nav>
-        <div class="menu-toggle" onclick="toggleMenu()">
-            <i class="fas fa-bars"></i>
-        </div>
-    </header>
+  <!-- 動態星空背景（無行星） -->
+  <svg class="space-bg" viewBox="0 0 1920 1080" preserveAspectRatio="none">
+    <!-- 星星 -->
+    <circle class="star" cx="300" cy="90" r="2.2" fill="#fff" />
+    <circle class="star star2" cx="1220" cy="300" r="1.6" fill="#fff" />
+    <circle class="star star3" cx="900" cy="900" r="1.9" fill="#fff" />
+    <circle class="star star4" cx="1500" cy="400" r="2.5" fill="#eaf3ff" />
+    <circle class="star" cx="600" cy="800" r="1.2" fill="#fff" />
+    <circle class="star2" cx="1800" cy="950" r="1.4" fill="#b9e4ff" />
+    <circle class="star3" cx="1700" cy="180" r="1.8" fill="#fffbe0" />
+    <circle class="star4" cx="400" cy="980" r="1.5" fill="#ffeac2" />
+  </svg>
+  <div class="landing-center">
+      <div class="intro-text1" style="margin-top: 30px;">
+          歡迎進入學習系統
+      </div>
+      <div class="click-hint">點擊狗狗火箭，啟動你的學習旅程！(Enter)
+      </div>
+      <div class="arrow-bounce"></div>
 
-    <div class="intro-text">請選擇你要學習的科目...</div>
+      <img 
+        src="images/dog.png"
+        alt="Logo" 
+        class="landing-img" 
+        id="rocketDog"
+      >
+      <div class="slogan">一起探索、一起進步、一起變強！</div>
 
-
-    <main class="button-section">
-        <div class="grade-row">
-            <a href="https://chuone.my.canva.site/spedchb2" class="big-button"><i class="fas fa-book"></i> 7年級國文</a>
-            <a href="7.html" class="big-button"><i class="fas fa-calculator"></i> 7年級數學</a>
-            <a href="7eng.html" class="big-button"><i class="fas fa-language"></i> 7年級英文</a>
-        </div>
-        <div class="grade-row">
-            <a href="https://chuone.my.canva.site/spedchb4" class="big-button"><i class="fas fa-book"></i> 8年級國文</a>
-            <a href="8.html" class="big-button"><i class="fas fa-calculator"></i> 8年級數學</a>
-            <a href="8eng.html" class="big-button"><i class="fas fa-language"></i> 8年級英文</a>
-        </div>
-        <div class="grade-row">
-            <a href="9ch.html" class="big-button"><i class="fas fa-book"></i> 9年級國文</a>
-            <a href="9.html" class="big-button"><i class="fas fa-calculator"></i> 9年級數學</a>
-            <a href="9eng.html" class="big-button"><i class="fas fa-language"></i> 9年級英文</a>
-
-        </div>       
-
-
-    </div>
- 
-    <div class="grade-row">
-        <a href="learningstrategy/learningstrategy.html" class="big-button"><i class="fas fa-lightbulb"></i> 學習策略</a>
-        <a href="https://sites.google.com/view/specialchu/%E7%89%B9%E9%9C%80%E9%A0%98%E5%9F%9F/%E7%A4%BE%E6%9C%83%E6%8A%80%E5%B7%A7" class="big-button"><i class="fas fa-user-group"></i>社會技巧</a>
-        <a href="bigtest.html" class="big-button"><i class="fas fa-pen-alt"></i> 會考專區</a>
-    </div>
-        
-        <br><br>
-
-        <div class="countdown-container">
-            <h2 class="countdown-title"><i class="fas fa-clock"></i>暑假還有...</h2>
-            <div class="countdown-timer" id="countdown">
-              <span id="days">00</span><span class="label">天</span>
-              <span id="hours">00</span><span class="label">時</span>
-              <span id="minutes">00</span><span class="label">分</span>
-              <span id="seconds">00</span><span class="label">秒</span>
-            </div>
-          </div>
-                
-          
-
-
-
-        <div class="single-row">
-
-            <div class="social-group">
-                <h3 style="text-align: center;"><i class="fas fa-cogs"></i> 小工具</h3>
-                <div class="btn-group">
-                    <a href="https://play.blooket.com/play" target="_blank" class="btn">Blooket</a>
-                    <a href="https://www.gimkit.com/join?class=60a1e3ba9eaadc0022adafb6" target="_blank" class="btn">Gimkit</a>
-                    <a href="https://chuone.my.canva.site/counter" target="_blank" class="btn">計時器</a>
-
-
-
-                </div>
-            </div>
-
-
-            <div class="social-group">
-                <h3 style="text-align: center;"><i class="fas fa-"></i> 基本練功</h3>
-                <div class="btn-group">
-                    <a href="test2.html" target="_blank" class="btn">加減法</a>
-                    <a href="test.html" target="_blank" class="btn">99乘法</a>
-                    <a href="math/game1.html" target="_blank" class="btn">正負數加減</a>
-		    <a href="https://five-flamingo-d65.notion.site/1eb4c52ff8d08068abfbdbf7ba7bb48e" target="_blank" class="btn">基礎字練習</a>
-                </div>
-            </div>
-        </div>     
-
-    </main>
-
-    <script>
-        function toggleMenu() {
-            const navLinks = document.querySelector('.nav-links');
-            navLinks.classList.toggle('active');
-        }
-
-        const countdown = () => {
-    const countDate = new Date("2025-07-01T00:00:00").getTime(); // ← 自訂目標日期
-    const now = new Date().getTime();
-    const gap = countDate - now;
-
-    const second = 1000;
-    const minute = second * 60;
-    const hour = minute * 60;
-    const day = hour * 24;
-
-    const textDay = Math.floor(gap / day);
-    const textHour = Math.floor((gap % day) / hour);
-    const textMinute = Math.floor((gap % hour) / minute);
-    const textSecond = Math.floor((gap % minute) / second);
-
-    document.getElementById("days").innerText = textDay.toString().padStart(2, '0');
-    document.getElementById("hours").innerText = textHour.toString().padStart(2, '0');
-    document.getElementById("minutes").innerText = textMinute.toString().padStart(2, '0');
-    document.getElementById("seconds").innerText = textSecond.toString().padStart(2, '0');
-  };
-
-  setInterval(countdown, 1000);
-
-    </script>
-
-
+  </div>
+  <script>
+    const rocket = document.getElementById('rocketDog');
+    rocket.addEventListener('click', function() {
+      rocket.classList.add('flying');
+      setTimeout(() => {
+        window.location.href = 'start.html';
+      }, 800);
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === "Enter") {
+        rocket.classList.add('flying');
+        setTimeout(() => {
+          window.location.href = 'start.html';
+        }, 800);
+      }
+    });
+  </script>
 </body>
-
-
-
 </html>
-<footer>
-    <img src="images/dog.png" alt="Logo" style="height: 200px; vertical-align: middle; margin-right: 10px;">
-    <br>
-    <p style="display: inline;">Created by Chu Pei Yi</p>
-</footer>
-
