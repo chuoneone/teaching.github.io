@@ -40,10 +40,16 @@
             <i class="fas fa-bars"></i>
         </div>
     </header>
+  <div style="text-align:center; margin-top: 40px;">
+    <button class="section-button" onclick="showSection('section1')">第1區：解題步道</button>
+    <button class="section-button" onclick="showSection('section2')">第2區：挑戰之地</button>
+    <button class="section-button" onclick="showSection('section3')">第3區：學習放映室</button>
+  </div>
 
 
+  <div id="section1" class="section-content active-section">
     <div class="section-title text-lg font-bold">
-        <i class="fas fa-compass mr-2"></i> 第1區：8下數學解題步道
+        <i class="fas fa-compass mr-2"></i> 第1區：8下數學-解題步道
       </div>
 
         <div class="social-container">
@@ -97,7 +103,10 @@
             </div>
         </div>
     </div>
+    </div>
 
+
+      <div id="section2" class="section-content">
     <div class="section-title text-lg font-bold">
         <i class="fas fa-pen-to-square mr-2"></i> 第2區︰8下數學-挑戰之地
       </div>
@@ -146,8 +155,9 @@
             </div>
         </div>
     </div>
+    </div>
 
-
+  <div id="section3" class="section-content">
     <div class="section-title text-lg font-bold">
         <i class="fas fa-video"></i> 第3區︰8下數學-學習放映室
       </div>
@@ -204,11 +214,26 @@
             </div>
         </div>
     </div>
+    </div>
     <script>
         function toggleMenu() {
             const navLinks = document.querySelector('.nav-links');
             navLinks.classList.toggle('active');
         }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // 預設不顯示任何 section
+    document.querySelectorAll('.section-content').forEach(section => {
+      section.classList.remove('active-section');
+    });
+  });
+
+  function showSection(id) {
+    document.querySelectorAll('.section-content').forEach(section => {
+      section.classList.remove('active-section');
+    });
+    document.getElementById(id).classList.add('active-section');
+  }
     </script>
 </body>
 </html>
