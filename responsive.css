@@ -1,57 +1,82 @@
 /* 📱 手機版：最大寬度 768px */
 @media (max-width: 768px) {
-    .nav-links {
-        flex-direction: column;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        right: 0;
-        width: 100%;
-        background-color: rgba(0, 0, 0, 0.95);
-        display: none;
-        padding: 10px 0;
-        z-index: 999;
-        align-items: center;
-        text-align: center;
-      
-        /* ✅ 淡入動畫 */
-        animation: fadeSlideDown 0.3s ease-in-out;
-      }
-      
-      .nav-links.active {
-        display: flex;
-      }
-      
-      .nav-links li {
-        padding: 3px 0;
-        width: 100%;
-      }
-      
-      .nav-links a {
-        font-size: 16px;          /* ✅ 字體較小 */
-        line-height: 0.8;         /* ✅ 行距縮短 */
-        color: #cce7ff;
-        display: block;
-        padding: 3px 0;
-        width: 100%;
-      
-        /* ✅ Hover 效果 */
-        transition: all 0.2s ease-in-out;
-      }
-      
-      .nav-links a:hover {
-        background-color: rgba(0, 255, 255, 0.1);
-        color: #00ffe7;
-        text-shadow: 0 0 5px #00ffe7;
-      }
-      
-  
-  
-    .menu-toggle {
-      display: block;
-    }
+  .nav-links {
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 150px; /* ✅ 控制右側展開寬度 */
+    background-color: rgba(0, 0, 0, 0.95); /* 你原本的背景 */
+    display: none;
+    padding: 20px 15px;
+    z-index: 999;
+    align-items: flex-start;
+    text-align: left;
+    animation: fadeSlideLeft 0.3s ease-in-out;
+    box-shadow: -2px 0 6px rgba(0, 0, 0, 0.3); /* ✅ 右側陰影 */
+  }
 
+  .nav-links.active {
+    display: flex;
+  }
+
+  .nav-links li {
+    padding: 8px 0;
+    width: 100%;
+  }
+
+  .nav-links a {
+    font-size: 16px;
+    line-height: 0.2;
+    color: #cce7ff; /* 原字色 */
+    display: block;
+    padding: 6px 12px;
+    width: 100%;
+    transition: all 0.2s ease-in-out;
     
+  }
+
+  .nav-links a:hover {
+    background-color: rgba(0, 255, 255, 0.1);
+    color: #00ffe7;
+    text-shadow: 0 0 5px #00ffe7;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+
+  .nav-links a.active {
+    font-size: 17px;
+    padding-left: 16px;
+    box-shadow: inset 4px 0 0 #00ffe7; /* ✅ 改為左邊內嵌提示線 */
+    border-radius: 0;
+    background-color: rgba(0, 255, 255, 0.08);
+  }
+
+  
+/* ✅ 可選：右側滑出動畫 */
+@keyframes fadeSlideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+    
+  .intro-text {
+    font-size: 2rem;
+    letter-spacing: 1.5px;
+    border-right: 3px solid #0ff;
+    animation: typing 3s steps(28, end) forwards, blink 0.6s step-end infinite;
+    padding: 0 16px;
+  }
+
   
     .button-section {
       flex-direction: column;
@@ -64,15 +89,14 @@
       height: 60vh !important;
     }
      
-        .big-button,
-        .big-button2 {
-          font-size: 20px;
-          padding: 15px 30px;
-          
-          display: block;         /* ✅ 讓按鈕成為 block 元素 */
-          margin: 0 auto;         /* ✅ 自動左右置中 */
-          text-align: center;     /* ✅ 文字也置中 */
-        }
+  .big-button,
+  .big-button2 {
+    width: 180px;
+    height: 50px;
+    font-size: 25px;
+    line-height: 50px;
+    margin: 8px auto;
+  }
       
       
   
@@ -134,13 +158,14 @@
     }
 
     .section-title {
-      font-size: 1rem; /* 手機版自動變小 */
+      font-size: 2rem; /* 手機版自動變小 */
     }
 
     .responsive-img {
       height: 200px;  /* 手機時縮小圖片高度 */
   }
-  }
+}
+  
   
   
   /* 💻 平板版：769px ~ 1024px */
