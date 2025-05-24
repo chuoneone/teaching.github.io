@@ -40,13 +40,18 @@
         </div>
     </header>
 
+    <div class="section-title text-lg font-bold">
+        <i class="fas fa-compass mr-2"></i> 7下數學
+      </div> 
 
-<div class="section-title text-lg font-bold flex items-center">
-<i class="fas fa-compass mr-2"></i> 第1區：7下數學解題步道
+    <div style="text-align:center; margin-top: 40px;">
+            <button class="section-button" onclick="showSection('section1', this)">1.解題區</button>
+            <button class="section-button" onclick="showSection('section2', this)">2.挑戰區</button>
+            <button class="section-button" onclick="showSection('section3', this)">3.影片區</button>
+    </div>
 
-</div>
+<div id="section1" class="section-content active-section">
    
-    
     <div class="social-container">
         <div class="single-row">
             <div class="social-group">
@@ -98,15 +103,15 @@
         </div>
     
     </div>
-
-    <div class="section-title text-lg font-bold !text-blue-600">
-        <i class="fas fa-pen-to-square mr-2"></i>第2區︰7下數學-挑戰之地
-      </div>
-      
+    </div>
+<div id="section2" class="section-content active-section">      
 
         <div class="social-container">
             <div class="single-row">
                 <div class="social-group">
+                    <img src="images/math701.png" alt="書商資源圖示"
+                     style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
+                
                     <h3 style="text-align: center;">第1章 二元一次方程式</h3>
                     <div class="btn-group">
                         <a href="https://wordwall.net/play/70607/680/874" target="_blank" class="btn">01列式</a>
@@ -120,6 +125,9 @@
 
 
                 <div class="social-group">
+                    <img src="images/math702.png" alt="書商資源圖示"
+                     style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
+                
                     <h3 style="text-align: center;">第2章 直角坐標平面</h3>
                     <div class="btn-group">
                         <a href="https://wordwall.net/play/68570/946/261" target="_blank" class="btn">01認識座標</a>
@@ -130,6 +138,9 @@
                 </div>
 
                 <div class="social-group">
+                    <img src="images/math703.png" alt="書商資源圖示"
+                     style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
+                
                     <h3 style="text-align: center;">第3章 比例</h3>
                     <div class="btn-group">
                         <a href="https://wordwall.net/play/70607/680/874" target="_blank" class="btn">01相等的比</a>
@@ -143,6 +154,9 @@
 
 
                 <div class="social-group">
+                    <img src="images/math704.png" alt="書商資源圖示"
+                     style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
+                
                     <h3 style="text-align: center;">第4章 不等式</h3>
                     <div class="btn-group">
                         <a href="https://chuone.my.canva.site/7-2-4-1" target="_blank" class="btn">4-1不等式</a>
@@ -151,12 +165,9 @@
                 </div>
             </div>
         </div>
+        </div>
 
-
-        <div class="section-title text-lg font-bold">
-            <i class="fas fa-video mr-2"></i>第3區︰7下數學-學習放映室
-          </div>
-          
+<div id="section3" class="section-content active-section">          
         
         <div class="social-container">
             <div class="single-row">
@@ -209,22 +220,18 @@
             </div>
         
         </div>
+        </div>
 
 
         
 
-        <script>
-            function toggleMenu() {
-                const navLinks = document.querySelector('.nav-links');
-                navLinks.classList.toggle('active');
-            }
-        </script>
+<script src="main.js"></script>
 
 </body>
 </html>
 <footer>
     <a href="index.html">
-        <img src="images/dog.png" alt="Logo" style="height: 200px; vertical-align: middle; margin-right: 10px;">
+        <img src="images/dog.png" alt="Logo" style="height: 100px; vertical-align: middle; margin-right: 10px;">
     </a>
     <br>
     <p style="display: inline;">Created by Chu Pei Yi</p>

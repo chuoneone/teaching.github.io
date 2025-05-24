@@ -32,7 +32,7 @@
                 <li><a href="https://chuone.my.canva.site/spedchb4">8國</a></li>
                 <li><a href="9ch.html">9國</a></li>
                 <li><a href="bigtest.html">會考專區</a></li>
-                <li><a href="learningstrategy/learningstrategy.html">學習策略</a></li>                
+                <li><a href="learningstrategy.html">學習策略</a></li>                
             </ul>
         </nav>
         <div class="menu-toggle" onclick="toggleMenu()">
@@ -65,7 +65,7 @@
     </div>
  
     <div class="grade-row">
-        <a href="learningstrategy/learningstrategy.html" class="big-button"><i class="fas fa-lightbulb"></i> 學習策略</a>
+        <a href="learningstrategy.html" class="big-button"><i class="fas fa-lightbulb"></i> 學習策略</a>
         <a href="https://sites.google.com/view/specialchu/%E7%89%B9%E9%9C%80%E9%A0%98%E5%9F%9F/%E7%A4%BE%E6%9C%83%E6%8A%80%E5%B7%A7" class="big-button"><i class="fas fa-user-group"></i>社會技巧</a>
         <a href="bigtest.html" class="big-button"><i class="fas fa-pen-alt"></i> 會考專區</a>
     </div>
@@ -114,36 +114,8 @@
 
     </main>
 
-    <script>
-        function toggleMenu() {
-            const navLinks = document.querySelector('.nav-links');
-            navLinks.classList.toggle('active');
-        }
+ <script src="main.js"></script>
 
-        const countdown = () => {
-    const countDate = new Date("2025-07-01T00:00:00").getTime(); // ← 自訂目標日期
-    const now = new Date().getTime();
-    const gap = countDate - now;
-
-    const second = 1000;
-    const minute = second * 60;
-    const hour = minute * 60;
-    const day = hour * 24;
-
-    const textDay = Math.floor(gap / day);
-    const textHour = Math.floor((gap % day) / hour);
-    const textMinute = Math.floor((gap % hour) / minute);
-    const textSecond = Math.floor((gap % minute) / second);
-
-    document.getElementById("days").innerText = textDay.toString().padStart(2, '0');
-    document.getElementById("hours").innerText = textHour.toString().padStart(2, '0');
-    document.getElementById("minutes").innerText = textMinute.toString().padStart(2, '0');
-    document.getElementById("seconds").innerText = textSecond.toString().padStart(2, '0');
-  };
-
-  setInterval(countdown, 1000);
-
-    </script>
 
 
 </body>

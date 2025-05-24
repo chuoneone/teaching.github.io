@@ -41,8 +41,17 @@
         </div>
     </header>
 
+    <div style="text-align:center; margin-top: 40px;">
+        <button class="section-button" onclick="showSection('section1', this)">1.單字區</button>
+        <button class="section-button" onclick="showSection('section2', this)">2.文法區</button>
+        <button class="section-button" onclick="showSection('section3', this)">3.其他區</button>
+    </div>
+
+
+
+<div id="section1" class="section-content active-section">
     <div class="section-title text-lg font-bold">
-        <i class="fas fa-gamepad mr-2"></i> 9下英文-字彙對決場
+        <i class="fas fa-gamepad mr-2"></i> 1.單字區
       </div>
       
     <div class="social-container">
@@ -93,13 +102,14 @@
                 </div>
             </div>
         </div>
+        </div>
+</div>
 
+<div id="section2" class="section-content">
         <div class="section-title text-lg font-bold">
-            <i class="fas fa-scroll mr-2"></i> 9下英文-文法修煉塔
-          </div>
+            <i class="fas fa-scroll mr-2"></i> 2.文法區
+          </div>        
           
-          
-
         <div class="social-container">
             <div class="single-row">
     
@@ -148,7 +158,13 @@
                         </div>
                 </div>
             </div>
+            </div>
+ </div>
 
+<div id="section3" class="section-content active-section">
+        <div class="section-title text-lg font-bold">
+        <i class="fas fa-gamepad mr-2"></i> 3.其他區
+      </div>
         <div class="single-row">
 
             <div class="social-group">
@@ -168,21 +184,17 @@
                 </div>
             </div>
         </div>
-    </div>
+</div>
 
-    <script>
-        function toggleMenu() {
-            const navLinks = document.querySelector('.nav-links');
-            navLinks.classList.toggle('active');
-        }
-    </script>
+
+<script src="main.js"></script>
 
 
 </body>
 </html>
 <footer>
     <a href="index.html">
-        <img src="images/dog.png" alt="Logo" style="height: 200px; vertical-align: middle; margin-right: 10px;">
+        <img src="images/dog.png" alt="Logo" style="height: 100px; vertical-align: middle; margin-right: 10px;">
     </a>
     <br>
     <p style="display: inline;">Created by Chu Pei Yi</p>

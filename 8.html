@@ -40,17 +40,20 @@
             <i class="fas fa-bars"></i>
         </div>
     </header>
-  <div style="text-align:center; margin-top: 40px;">
-    <button class="section-button" onclick="showSection('section1')">第1區：解題步道</button>
-    <button class="section-button" onclick="showSection('section2')">第2區：挑戰之地</button>
-    <button class="section-button" onclick="showSection('section3')">第3區：學習放映室</button>
-  </div>
+
+    <div class="section-title text-lg font-bold">
+        <i class="fas fa-pen-to-square mr-2"></i> 8下數學
+      </div>
+
+
+    <div style="text-align:center; margin-top: 40px;">
+            <button class="section-button" onclick="showSection('section1', this)">1.解題區</button>
+            <button class="section-button" onclick="showSection('section2', this)">2.挑戰區</button>
+            <button class="section-button" onclick="showSection('section3', this)">3.影片區</button>
+    </div>
 
 
   <div id="section1" class="section-content active-section">
-    <div class="section-title text-lg font-bold">
-        <i class="fas fa-compass mr-2"></i> 第1區：8下數學-解題步道
-      </div>
 
         <div class="social-container">
         <div class="single-row">
@@ -58,7 +61,7 @@
             <div class="social-group">
                 <img src="images/math801.png" alt="書商資源圖示"
                      style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
-                <h3 style="text-align: center;">第1章</h3>
+                <h3 style="text-align: center;">第1章 數列與級數</h3>
                 <div class="btn-group">
                     <a href="https://mathvideo.hle.com.tw/2B/1-1/" target="_blank" class="btn">1-1認識數列等差數列</a>
                     <a href="https://mathvideo.hle.com.tw/2B/1-2/" target="_blank" class="btn">1-2等差級數</a>
@@ -70,7 +73,7 @@
             <div class="social-group">
                 <img src="images/math802.png" alt="書商資源圖示"
                      style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
-                <h3 style="text-align: center;">第2章</h3>
+                <h3 style="text-align: center;">第2章 線型函數圖形</h3>
                 <div class="btn-group">
                     <a href="https://mathvideo.hle.com.tw/2B/CH2/" target="_blank" class="btn">2線型函數與其圖形</a>
                 </div>
@@ -79,7 +82,7 @@
             <div class="social-group">
                 <img src="images/math803.png" alt="書商資源圖示"
                      style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
-                <h3 style="text-align: center;">第3章</h3>
+                <h3 style="text-align: center;">第3章 內角與外角</h3>
                 <div class="btn-group">
                     <a href="https://chuone.my.canva.site/3-3" class="btn">3-1內角與外角</a>
                     <a href="https://chuone.my.canva.site/3-3" class="btn">3-2基本尺規作圖</a>
@@ -94,7 +97,7 @@
             <div class="social-group">
                 <img src="images/math804.png" alt="書商資源圖示"
                      style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
-                <h3 style="text-align: center;">第4章</h3>
+                <h3 style="text-align: center;">第4章 平行與四邊形</h3>
                 <div class="btn-group">
                     <a href="https://mathvideo.hle.com.tw/2B/4-1/" target="_blank" class="btn">4-1平行線截角性質</a>
                     <a href="https://mathvideo.hle.com.tw/2B/4-2/" target="_blank" class="btn">4-2平行四邊形</a>
@@ -106,16 +109,14 @@
     </div>
 
 
-      <div id="section2" class="section-content">
-    <div class="section-title text-lg font-bold">
-        <i class="fas fa-pen-to-square mr-2"></i> 第2區︰8下數學-挑戰之地
-      </div>
+ <div id="section2" class="section-content">
 
-    <!-- 社交链接区域（保持原样） -->
     <div class="social-container">
         <div class="single-row">
 
             <div class="social-group">
+                <img src="images/math801.png" alt="書商資源圖示"
+                     style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
                <h3 style="text-align: center;">第1章 數列與級數</h3>
                 <div class="btn-group">
                     <a href="https://chuone.my.canva.site/8-2-1-1" target="_blank" class="btn">1-1認識數列等差數列</a>
@@ -126,6 +127,8 @@
             </div>
 
             <div class="social-group">
+                 <img src="images/math802.png" alt="書商資源圖示"
+                     style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
                 <h3 style="text-align: center;">第2章 線型函數圖形</h3>
                 <div class="btn-group">
                     <a href="https://wordwall.net/play/88285/785/792" target="_blank" class="btn">01求函數值</a>
@@ -134,6 +137,8 @@
             </div>
 
             <div class="social-group">
+                 <img src="images/math803.png" alt="書商資源圖示"
+                     style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
                 <h3 style="text-align: center;">第3章 內角與外角</h3>
                 <div class="btn-group">
                     <a href="https://chuone.my.canva.site/8-2-3-1" target="_blank" class="btn">3-1內角與外角</a>
@@ -145,6 +150,9 @@
 
 
             <div class="social-group">
+                <img src="images/math804.png" alt="書商資源圖示"
+                     style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
+                
                 <h3 style="text-align: center;">第4章 平行與四邊形</h3>
                 <div class="btn-group">
                     <a href="https://chuone.my.canva.site/8-2-4-1" target="_blank" class="btn">4-1平行線與截角</a>
@@ -158,9 +166,6 @@
     </div>
 
   <div id="section3" class="section-content">
-    <div class="section-title text-lg font-bold">
-        <i class="fas fa-video"></i> 第3區︰8下數學-學習放映室
-      </div>
 
         <div class="social-container">
         <div class="single-row">
@@ -168,7 +173,7 @@
             <div class="social-group">
                 <img src="images/math801.png" alt="書商資源圖示"
                      style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
-                <h3 style="text-align: center;">第1章</h3>
+                <h3 style="text-align: center;">第1章 數列與級數</h3>
                 <div class="btn-group">
                     <a href="https://mathvideo.hle.com.tw/2B/1-1/" target="_blank" class="btn">1-1認識數列等差數列</a>
                     <a href="https://mathvideo.hle.com.tw/2B/1-2/" target="_blank" class="btn">1-2等差級數</a>
@@ -180,7 +185,7 @@
             <div class="social-group">
                 <img src="images/math802.png" alt="書商資源圖示"
                      style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
-                <h3 style="text-align: center;">第2章</h3>
+                <h3 style="text-align: center;">第2章 線型函數圖形</h3>
                 <div class="btn-group">
                     <a href="https://mathvideo.hle.com.tw/2B/CH2/" target="_blank" class="btn">2線型函數與其圖形</a>
                 </div>
@@ -189,7 +194,7 @@
             <div class="social-group">
                 <img src="images/math803.png" alt="書商資源圖示"
                      style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
-                <h3 style="text-align: center;">第3章</h3>
+                <h3 style="text-align: center;">第3章 內角與外角</h3>
                 <div class="btn-group">
                     <a href="https://mathvideo.hle.com.tw/2B/3-1/" class="btn">3-1內角與外角</a>
                     <a href="https://mathvideo.hle.com.tw/2B/3-2SC/" class="btn">3-2基本尺規作圖</a>
@@ -205,7 +210,7 @@
             <div class="social-group">
                 <img src="images/math804.png" alt="書商資源圖示"
                      style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
-                <h3 style="text-align: center;">第4章</h3>
+                <h3 style="text-align: center;">第4章 平行與四邊形</h3>
                 <div class="btn-group">
                     <a href="https://mathvideo.hle.com.tw/2B/4-1/" target="_blank" class="btn">4-1平行線截角性質</a>
                     <a href="https://mathvideo.hle.com.tw/2B/4-2/" target="_blank" class="btn">4-2平行四邊形</a>
@@ -215,31 +220,13 @@
         </div>
     </div>
     </div>
-    <script>
-        function toggleMenu() {
-            const navLinks = document.querySelector('.nav-links');
-            navLinks.classList.toggle('active');
-        }
+<script src="main.js"></script>
 
-  document.addEventListener('DOMContentLoaded', () => {
-    // 預設不顯示任何 section
-    document.querySelectorAll('.section-content').forEach(section => {
-      section.classList.remove('active-section');
-    });
-  });
-
-  function showSection(id) {
-    document.querySelectorAll('.section-content').forEach(section => {
-      section.classList.remove('active-section');
-    });
-    document.getElementById(id).classList.add('active-section');
-  }
-    </script>
 </body>
 </html>
 <footer>
     <a href="index.html">
-        <img src="images/dog.png" alt="Logo" style="height: 200px; vertical-align: middle; margin-right: 10px;">
+        <img src="images/dog.png" alt="Logo" style="height: 100px; vertical-align: middle; margin-right: 10px;">
     </a>
     <br>
     <p style="display: inline;">Created by Chu Pei Yi</p>
