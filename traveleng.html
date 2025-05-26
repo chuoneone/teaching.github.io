@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>成功飛美國</title>
+  <link rel="icon" href="images/dog.png" type="image/png">
+  <style>
+    /* CSS 樣式保持不變，此處省略以節省空間 */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #ece9e6 0%, #ffffff 100%);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      color: #333;
+    }
+
+    h1 {
+      color: #005a8d;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2.5em;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .question {
+      display: none;
+      margin-bottom: 30px;
+      border-radius: 15px;
+      background: #ffffff;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      max-width: 750px;
+      width: 95%;
+    }
+
+    .question.active {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .question-header {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .question-header h2 {
+      color: #007bff;
+      margin-top: 0;
+      margin-bottom: 0;
+      font-size: 1.8em;
+    }
+
+    .question-left-panel {
+      flex: 1 1 45%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-right: 15px;
+      box-sizing: border-box;
+    }
+
+    .question-right-panel {
+      flex: 1 1 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-left: 15px;
+      box-sizing: border-box;
+    }
+
+    img {
+      width: 100%;
+      max-width: 300px;
+      height: auto;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+
+    .play-audio-button {
+      background-color: #ffc107;
+      color: #212529;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 25px;
+      font-size: 1em;
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      width: fit-content;
+    }
+    .play-audio-button:hover {
+      background-color: #e0a800;
+    }
+    .play-audio-button:disabled {
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+
+    .options-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+    }
+
+    button, .action-button {
+      padding: 14px 20px;
+      font-size: 1em;
+      cursor: pointer;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      width: 100%;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+      box-sizing: border-box;
+    }
+    .options-container button {
+        background-color: #007bff;
+    }
+    .options-container button:hover:not(:disabled) {
+      background-color: #0056b3;
+      transform: translateY(-2px);
+    }
+    .options-container button:active:not(:disabled) {
+      background-color: #004085;
+    }
+    .options-container button:disabled {
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+
+    .feedback-container {
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    .feedback-message {
+      font-size: 1em;
+      font-weight: bold;
+      text-align: center;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    .correct {
+      color: #155724;
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+    }
+
+    .incorrect {
+      color: #721c24;
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+    }
+
+ /* 完成畫面的按鈕容器 */
+    .final-actions-container {
+        display: flex;
+        flex-direction: column; /* 預設垂直排列 */
+        gap: 15px; /* 按鈕間的間距 */
+        margin-top: 20px; /* 與上方<p>標籤的間距 */
+        width: 100%;
+        max-width: 450px; /* 限制容器最大寬度，使其居中 */
+        align-items: center; /* 使按鈕在容器內水平居中 */
+    }
+
+    /* 確保 .learn-vocab-button 的 margin-top 被容器的 margin-top 取代 */
+    .learn-vocab-button {
+        background-color: #28a745;
+        /* margin-top: 25px;  <-- 這個可以移除或減小，因為父容器已有 margin-top */
+        max-width: 300px; /* 如果希望它不佔滿容器，可以保留；否則設為 width: 100%; */
+        width: 100%; /* 讓按鈕填滿容器寬度 */
+    }
+    .learn-vocab-button:hover {
+        background-color: #218838;
+        transform: translateY(-2px);
+    }
+
+    /* 新增口說練習按鈕的樣式 */
+    .speaking-practice-button {
+        background-color: #17a2b8; /* 青色/藍綠色 */
+        color: white; /* 確保文字顏色是白色 */
+        text-decoration: none; /* 移除連結下劃線 */
+        /* padding: 14px 20px; 已由 .action-button 提供 */
+        /* border-radius: 30px; 已由 .action-button 提供 */
+        /* font-size: 1em; 已由 .action-button 提供 */
+        /* cursor: pointer; 已由 .action-button 提供 */
+        /* box-shadow: 0 2px 5px rgba(0,0,0,0.1); 已由 .action-button 提供 */
+        width: 100%; /* 讓按鈕填滿容器寬度 */
+        /* max-width: 300px; */ /* 同上，如果希望它不佔滿容器，可以保留 */
+        display: inline-block; /* 確保 padding 生效 */
+        text-align: center; /* 文字居中 */
+        box-sizing: border-box;
+    }
+    .speaking-practice-button:hover {
+        background-color: #138496;
+        transform: translateY(-2px);
+    }
+
+
+    #q6 {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 30px 20px;
+    }
+    #q6 .question-header h2 {
+        color: #28a745;
+        font-size: 1.9em;
+        margin-bottom: 15px;
+    }
+    #q6 p {
+        font-size: 1.5em;
+        color: #333;
+        margin-bottom: 10px; /* 調整與下方按鈕容器的間距 */
+    }
+
+    /* 響應式：當螢幕寬度較大時，讓兩個按鈕並排 */
+    @media (min-width: 480px) {
+        .final-actions-container {
+            flex-direction: row; /* 水平排列 */
+            justify-content: center; /* 按鈕水平居中 */
+        }
+        .final-actions-container .action-button {
+            width: auto; /* 讓按鈕寬度根據內容調整 */
+            min-width: 180px; /* 給按鈕一個最小寬度 */
+            padding-left: 25px;
+            padding-right: 25px;
+        }
+    }
+
+
+    @media (max-width: 600px) {
+      .question.active {
+        flex-direction: column;
+        align-items: center;
+      }
+      .question-left-panel, .question-right-panel {
+        flex-basis: 100%;
+        padding-left: 0;
+        padding-right: 0;
+        align-items: center;
+      }
+      .question-right-panel {
+        margin-top: 20px;
+      }
+      img {
+        max-width: 80%;
+      }
+      h1 {
+        font-size: 2em;
+      }
+      .learn-vocab-button {
+        max-width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>✈️ 成功飛美國</h1>
+
+  <!-- 問題 1 (原本的第一題) -->
+  <div class="question active" id="q1">
+    <div class="question-header">
+      <h2>第一關: 關於機票 🎫</h2>
+    </div>
+    <div class="question-left-panel">
+      <img src="images/ticket.png" alt="Ticket Image" />
+      <audio id="audio1" src="audio/q1_question.mp3" preload="auto"></audio>
+      <button class="play-audio-button" onclick="playQuestionAudio(1)">🔊 聽題目</button>
+    </div>
+    <div class="question-right-panel">
+      <div class="options-container">
+        <button onclick="checkAnswer(1, this, 'LAX')">LAX (洛杉磯)</button>
+        <button onclick="checkAnswer(1, this, 'JFK')">JFK (紐約)</button>
+        <button onclick="checkAnswer(1, this, 'SFO')">SFO (舊金山)</button>
+        <button onclick="checkAnswer(1, this, 'SFO')">TPE (台灣)</button>
+      </div>
+      <div id="feedback1" class="feedback-container"></div>
+    </div>
+  </div>
+
+  <!-- 新增問題 (現在是第二題) -->
+  <div class="question" id="q2">
+    <div class="question-header">
+      <h2>第二關:💺</h2>
+    </div>
+    <div class="question-left-panel">
+      <img src="images/ticket.png" alt="Ticket Image for Seat Number" /> <!-- 使用 ticket.png -->
+      <audio id="audio2" src="audio/q2_question.mp3" preload="auto"></audio>
+      <button class="play-audio-button" onclick="playQuestionAudio(2)">🔊 聽題目</button>
+    </div>
+    <div class="question-right-panel">
+      <div class="options-container">
+        <button onclick="checkAnswer(2, this, 'I’m going to Los Angeles.')"> I’m going to Los Angeles. </button>
+        <button onclick="checkAnswer(2, this, 'Yes, I have a passport.')"> Yes, I have a passport. </button>
+        <button onclick="checkAnswer(2, this, 'It’s 24A.')"> It’s 24A. </button>
+        <button onclick="checkAnswer(2, this, 'I like window seats.')"> I like window seats. </button>
+      </div>
+      <div id="feedback2" class="feedback-container"></div>
+    </div>
+  </div>
+
+  <!-- 問題 3 (原本的第二題) -->
+  <div class="question" id="q3">
+    <div class="question-header">
+      <h2>第三關: 海關查驗 👮</h2>
+    </div>
+    <div class="question-left-panel">
+      <img src="images/security.png" alt="Security Check Image" />
+      <audio id="audio3" src="audio/q3_question.mp3" preload="auto"></audio> <!-- audio3, q3_question -->
+      <button class="play-audio-button" onclick="playQuestionAudio(3)">🔊 聽題目</button> <!-- playQuestionAudio(3) -->
+    </div>
+    <div class="question-right-panel">
+      <div class="options-container">
+        <button onclick="checkAnswer(3, this, 'Yes, here you are.')"> Yes, here you are. </button> <!-- checkAnswer(3, ...) -->
+        <button onclick="checkAnswer(3, this, 'No, I don’t like passports.')"> No, I don’t like passports. </button>
+        <button onclick="checkAnswer(3, this, 'I’m flying to Tokyo.')"> I’m flying to Tokyo. </button>
+        <button onclick="checkAnswer(3, this, 'My seat is 12A.')"> My seat is 12A. </button>
+      </div>
+      <div id="feedback3" class="feedback-container"></div> <!-- feedback3 -->
+    </div>
+  </div>
+
+  <!-- 問題 4 (原本的第三題) -->
+  <div class="question" id="q4">
+    <div class="question-header">
+      <h2>第四關: 在機上點餐 🍽️</h2>
+    </div>
+    <div class="question-left-panel">
+      <img src="images/meal.png" alt="Airplane Meal Image" />
+      <audio id="audio4" src="audio/q4_question.mp3" preload="auto"></audio> <!-- audio4, q4_question -->
+      <button class="play-audio-button" onclick="playQuestionAudio(4)">🔊 聽題目</button> <!-- playQuestionAudio(4) -->
+    </div>
+    <div class="question-right-panel">
+      <div class="options-container">
+        <button onclick="checkAnswer(4, this, 'Chicken')">Chicken </button> <!-- checkAnswer(4, ...) -->
+        <button onclick="checkAnswer(4, this, 'Beef')">Beef </button>
+      </div>
+      <div id="feedback4" class="feedback-container"></div> <!-- feedback4 -->
+    </div>
+  </div>
+
+  <!-- 問題 5 (原本的第四題) -->
+  <div class="question" id="q5">
+    <div class="question-header">
+      <h2>第五關: 入境提問 🛃</h2>
+    </div>
+    <div class="question-left-panel">
+      <img src="images/customs.png" alt="Customs Image" />
+      <audio id="audio5" src="audio/q5_question.mp3" preload="auto"></audio> <!-- audio5, q5_question -->
+      <button class="play-audio-button" onclick="playQuestionAudio(5)">🔊 聽題目</button> <!-- playQuestionAudio(5) -->
+    </div>
+    <div class="question-right-panel">
+      <div class="options-container">
+        <button onclick="checkAnswer(5, this, 'Two weeks')">Two weeks </button> <!-- checkAnswer(5, ...) -->
+        <button onclick="checkAnswer(5, this, 'Forever')">Forever </button>
+        <button onclick="checkAnswer(5, this, 'Not sure')">Not sure </button>
+      </div>
+      <div id="feedback5" class="feedback-container"></div> <!-- feedback5 -->
+    </div>
+  </div>
+
+  <!-- 完成畫面 (現在是第六關/畫面) -->
+  <div class="question" id="q6"> <!-- id="q6" -->
+    <div class="question-header">
+        <h2>🎉 任務完成！ Mission Accomplished! 🎉</h2>
+    </div>
+    <p>🥳 你已成功飛抵美國！恭喜你完成所有關卡！ 🥳<br>Welcome to the USA!</p>
+    <audio id="audio_win" src="audio/win_sound.mp3" preload="auto"></audio>
+
+    <!-- 新增一個容器來包裹最終的行動按鈕 -->
+    <div class="final-actions-container">
+        <a href="https://wordwall.net/play/92775/603/216" target="_blank" class="action-button learn-vocab-button">
+          📚 前往學習單字
+        </a>
+        <!-- 新增口說練習按鈕 -->
+        <a href="https://www.learnmode.net/course/625023?passcode=623523" target="_blank" class="action-button speaking-practice-button">
+          🗣️ 開始口說練習
+        </a>
+    </div>
+  </div>
+
+  <script>
+    const correctAnswers = {
+      1: 'LAX',
+      2: 'It’s 24A.', // 新增問題的正確答案
+      3: 'Yes, here you are.', // 原 q2 的答案，現為 q3
+      4: ['Chicken', 'Beef'], // 原 q3 的答案，現為 q4
+      5: 'Two weeks' // 原 q4 的答案，現為 q5
+      // q6 是完成畫面，沒有答案
+    };
+    let currentPlayingAudio = null;
+
+    function playQuestionAudio(questionNumber) {
+      if (currentPlayingAudio && !currentPlayingAudio.paused) {
+        currentPlayingAudio.pause();
+        currentPlayingAudio.currentTime = 0;
+      }
+      const audioElement = document.getElementById(`audio${questionNumber}`);
+      if (audioElement) {
+        audioElement.play().catch(error => {
+          console.error("音檔播放失敗:", error);
+          const feedbackContainer = document.getElementById(`feedback${questionNumber}`);
+          if(feedbackContainer) feedbackContainer.innerHTML = `<p class="feedback-message incorrect">🔊 音檔播放似乎出了點問題。</p>`;
+        });
+        currentPlayingAudio = audioElement;
+      }
+    }
+
+    function checkAnswer(questionNumber, button, selectedAnswer) {
+      const feedbackContainer = document.getElementById(`feedback${questionNumber}`);
+      const optionButtons = document.querySelectorAll(`#q${questionNumber} .options-container button`);
+      const playButton = document.querySelector(`#q${questionNumber} .play-audio-button`);
+
+      optionButtons.forEach(btn => btn.disabled = true);
+      if(playButton) playButton.disabled = true;
+
+      let isCorrect = false;
+      const correctAnswerForQuestion = correctAnswers[questionNumber];
+
+      // 特別處理第四題（原第三題）的多重答案
+      if (questionNumber === 4) { // 注意這裡的題號已經更新
+        isCorrect = correctAnswerForQuestion.includes(selectedAnswer);
+      } else {
+        isCorrect = (selectedAnswer === correctAnswerForQuestion);
+      }
+
+      if (isCorrect) {
+        feedbackContainer.innerHTML = '<p class="feedback-message correct">✅ 正確！Excellent!</p>';
+        button.style.backgroundColor = '#28a745';
+        setTimeout(() => nextQuestion(questionNumber), 1200);
+      } else {
+        feedbackContainer.innerHTML = '<p class="feedback-message incorrect">❌ 哎呀！回答不恰當哦，再想想！</p>';
+        button.style.backgroundColor = '#dc3545';
+        setTimeout(() => {
+            optionButtons.forEach(btn => btn.disabled = false);
+            if(playButton) playButton.disabled = false;
+            button.style.backgroundColor = '';
+            feedbackContainer.innerHTML = '';
+        }, 2000);
+      }
+    }
+
+    function nextQuestion(current) {
+      const currentAudio = document.getElementById(`audio${current}`);
+      if (currentAudio && !currentAudio.paused) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+      currentPlayingAudio = null;
+
+      document.getElementById(`q${current}`).classList.remove('active');
+      const next = current + 1;
+      const nextQuestionElement = document.getElementById(`q${next}`);
+
+      if (nextQuestionElement) {
+        nextQuestionElement.classList.add('active');
+        const nextOptionButtons = document.querySelectorAll(`#q${next} .options-container button`);
+        const nextPlayButton = document.querySelector(`#q${next} .play-audio-button`);
+        nextOptionButtons.forEach(btn => btn.disabled = false);
+        if(nextPlayButton) nextPlayButton.disabled = false;
+      } else {
+        // 所有問題都完成了 (現在是 q6)
+        const winAudio = document.getElementById('audio_win');
+        if (winAudio) {
+            winAudio.play().catch(e => console.log("勝利音效播放失敗", e));
+        }
+      }
+    }
+
+    window.onload = () => {
+        document.querySelectorAll('.question').forEach((questionDiv, index) => {
+            const playBtn = questionDiv.querySelector('.play-audio-button');
+            const optionBtns = questionDiv.querySelectorAll('.options-container button');
+
+            const isActiveQuestion = (index === 0); // 只有第一個問題 (q1) 初始啟用
+            if(playBtn) playBtn.disabled = !isActiveQuestion;
+            optionBtns.forEach(btn => btn.disabled = !isActiveQuestion);
+        });
+
+        const q6Element = document.getElementById('q6'); // 更新為 q6
+        if (q6Element && q6Element.classList.contains('active')) {
+            const winAudio = document.getElementById('audio_win');
+            if (winAudio && winAudio.paused) {
+                 winAudio.play().catch(e => console.log("直接加載 q6 時勝利音效播放失敗", e));
+            }
+        }
+    };
+  </script>
+</body>
+</html>
