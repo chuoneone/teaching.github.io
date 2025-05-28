@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>狗子冒險之旅 - 操場挑戰</title> 
+    <link rel="stylesheet" href="css/style.css"> 
+    <link rel="stylesheet" href="css/quiz_page_styles.css"> 
+</head>
+<body class="playground-quiz-page">
+    <div class="container"> 
+        <h1 id="quiz-page-title">操場挑戰</h1> 
+        <div class="player-info-bar">
+            <span>角色：<strong id="player-char">未知夥伴</strong></span>
+            <span class="meat-jerky-counter">🦴 肉乾：<strong id="meat-jerky-display">0</strong></span>
+        </div>
+        <div class="quiz-area" id="quiz-content-area">
+            <h2 id="question-text">正在加載問題...</h2> 
+            <form id="quiz-form">
+                <ul class="quiz-options-list" id="options-container">
+                    <!-- 選項會由 JS 動態生成 -->
+                </ul>
+                <button type="submit" class="quiz-submit-btn" id="submit-answer-btn">提交答案</button>
+            </form>
+            <p id="quiz-feedback" style="display: none;"></p> 
+        </div>
+        
+        <div id="quiz-navigation" style="text-align: center; margin-top: 20px; display: none;">
+            <!-- "下一題" 按鈕 -->
+            <button id="next-question-btn" class="quiz-navigation-link" style="background-color: #007bff;">下一題</button> 
+            <a href="map_selection.html" class="quiz-navigation-link" id="back-to-map-link">返回地圖選擇</a>
+        </div>
+
+        <div id="quiz-complete-message" style="display: none; text-align:center; margin-top:30px;">
+            <h3 id="quiz-complete-title">挑戰完成！</h3>
+            <p id="final-score-message"></p> 
+            <p id="basement-unlock-message" style="display: none; color: green; font-weight: bold;">🎉 恭喜！你收集到了足夠的肉乾，地下室已經解鎖了！ 🎉</p>
+            <a href="map_selection.html" class="quiz-navigation-link">返回地圖選擇</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Elements ---
+            const playerCharSpan = document.getElementById('player-char');
+            const currentLocationSpan = document.getElementById('current-location');
+            const quizPageTitle = document.getElementById('quiz-page-title');
+            const meatJerkyDisplay = document.getElementById('meat-jerky-display');
+            
+            const quizContentArea = document.getElementById('quiz-content-area');
+            const questionTextEl = document.getElementById('question-text');
+            const optionsContainer = document.getElementById('options-container');
+            const quizForm = document.getElementById('quiz-form');
+            const submitAnswerBtn = document.getElementById('submit-answer-btn');
+            const feedbackEl = document.getElementById('quiz-feedback');
+
+            const quizNavigationDiv = document.getElementById('quiz-navigation');
+            const nextQuestionBtn = document.getElementById('next-question-btn'); // 確保獲取
+            const backToMapLinkFromNav = document.getElementById('back-to-map-link');
+
+            const quizCompleteMessageDiv = document.getElementById('quiz-complete-message');
+            const quizCompleteTitle = document.getElementById('quiz-complete-title');
+            const finalScoreMessage = document.getElementById('final-score-message');
+            const basementUnlockMessage = document.getElementById('basement-unlock-message');
+
+            // --- Game State & Data ---
+            let currentQuestionIndex = 0; 
+            let meatJerkyCount = parseInt(localStorage.getItem('meatJerkyCount')) || 0;
+            const MAX_MEAT_JERKY_TO_UNLOCK = 3;
+            let questionsAnsweredInThisSession = 0; // 跟蹤本次會話答對的題目數
+
+            // ******** 圖書館的多個題目數據 ********
+            const questionsData = [
+                {
+                    question: "圖書館中記載「尾語之石」的古籍是什麼顏色封面的？",
+                    options: {
+                        a: "紅色羊皮封面",
+                        b: "深藍色硬殼封面",
+                        c: "破損的棕色皮革封面",
+                        d: "沒有封面，只有散頁"
+                    },
+                    correctAnswer: "c",
+                    locationName: "圖書館" 
+                },
+                {
+                    question: "在圖書館的歷史區，哪位著名校友的肖像畫作風格最為抽象？",
+                    options: {
+                        a: "創校校長 阿爾伯特·汪 (寫實派)",
+                        b: "發明家 艾拉·骨頭 (未來主義)",
+                        c: "探險家 巴克·毛毛 (印象派)",
+                        d: "藝術家 達利犬 (超現實主義)"
+                    },
+                    correctAnswer: "d",
+                    locationName: "圖書館"
+                },
+                {
+                    question: "圖書館的禁書區傳聞藏有什麼秘密？",
+                    options: {
+                        a: "失落的食譜",
+                        b: "古老的魔法咒語",
+                        c: "校園建設的藍圖",
+                        d: "一本空白的日記"
+                    },
+                    correctAnswer: "b",
+                    locationName: "圖書館"
+                }
+            ];
+            // *****************************************
+            
+            // --- Initialization ---
+            function initializeQuiz() {
+                updateMeatJerkyDisplay();
+                
+                if (!questionsData || questionsData.length === 0) {
+                    questionTextEl.textContent = "此地點暫無挑戰題目。";
+                    if(submitAnswerBtn) submitAnswerBtn.style.display = 'none';
+                    if(quizNavigationDiv) quizNavigationDiv.style.display = 'block';
+                    if(nextQuestionBtn) nextQuestionBtn.style.display = 'none';
+                    return;
+                }
+                loadQuestion(currentQuestionIndex);
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const characterId = urlParams.get('char');
+                const locationNameParam = urlParams.get('location'); 
+
+                const characterNames = {'sheepdog':'牧羊犬','shiba':'柴犬','mix':'米克斯','bulldog':'鬥牛犬'};
+                if (characterId && characterNames[characterId]) {
+                    playerCharSpan.textContent = characterNames[characterId];
+                }
+                
+                const displayLocation = questionsData[0].locationName || (locationNameParam ? decodeURIComponent(locationNameParam) : "未知地點");
+                currentLocationSpan.textContent = displayLocation;
+                if (quizPageTitle) {
+                    quizPageTitle.textContent = `${displayLocation}挑戰`;
+                }
+            }
+
+            // --- UI Update Functions ---
+            function updateMeatJerkyDisplay() {
+                meatJerkyDisplay.textContent = meatJerkyCount;
+            }
+
+            function loadQuestion(index) {
+                if (index >= questionsData.length) {
+                    endQuiz(); 
+                    return;
+                }
+                const qData = questionsData[index];
+                questionTextEl.textContent = `問題 ${index + 1}：${qData.question}`;
+
+                optionsContainer.innerHTML = ''; 
+                for (const key in qData.options) {
+                    const optionLi = document.createElement('li');
+                    optionLi.className = 'quiz-option';
+                    const label = document.createElement('label');
+                    label.className = 'quiz-option-label';
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = 'q_answer'; 
+                    input.value = key;
+                    const customRadio = document.createElement('span');
+                    customRadio.className = 'custom-radio';
+                    const optionText = document.createElement('span');
+                    optionText.className = 'option-text';
+                    optionText.textContent = qData.options[key];
+                    
+                    label.appendChild(input);
+                    label.appendChild(customRadio);
+                    label.appendChild(optionText);
+                    optionLi.appendChild(label);
+                    optionsContainer.appendChild(optionLi);
+
+                    input.addEventListener('change', () => {
+                        document.querySelectorAll('input[name="q_answer"]').forEach(radio => {
+                            radio.closest('.quiz-option-label').classList.remove('selected');
+                        });
+                        if (input.checked) {
+                            label.classList.add('selected');
+                        }
+                    });
+                }
+                feedbackEl.style.display = 'none';
+                if(submitAnswerBtn) {
+                    submitAnswerBtn.disabled = false;
+                    submitAnswerBtn.style.display = 'block'; 
+                }
+                if(quizNavigationDiv) quizNavigationDiv.style.display = 'none'; 
+            }
+
+            // --- Event Handlers ---
+            if (quizForm) {
+                quizForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    if(submitAnswerBtn) submitAnswerBtn.disabled = true; 
+                    
+                    const selectedAnswerInput = quizForm.querySelector('input[name="q_answer"]:checked');
+                    
+                    feedbackEl.style.display = 'block';
+                    feedbackEl.className = ''; 
+                    feedbackEl.id = 'quiz-feedback';
+
+                    if (selectedAnswerInput) {
+                        const userAnswer = selectedAnswerInput.value;
+                        const correctAnswer = questionsData[currentQuestionIndex].correctAnswer;
+                        if (userAnswer === correctAnswer) {
+                            feedbackEl.textContent = '答對了！獲得一個 🦴 肉乾！';
+                            feedbackEl.classList.add('correct');
+                            meatJerkyCount++;
+                            questionsAnsweredInThisSession++; // 本次答對題數增加
+                            localStorage.setItem('meatJerkyCount', meatJerkyCount); 
+                            updateMeatJerkyDisplay();
+                            checkBasementUnlock();
+                        } else {
+                            feedbackEl.textContent = `答錯了。正確答案是：${questionsData[currentQuestionIndex].options[correctAnswer]}`;
+                            feedbackEl.classList.add('incorrect');
+                        }
+                    } else {
+                        feedbackEl.textContent = '請選擇一個答案！';
+                        feedbackEl.classList.add('info');
+                        if(submitAnswerBtn) submitAnswerBtn.disabled = false; 
+                        return; 
+                    }
+                    
+                    if(submitAnswerBtn) submitAnswerBtn.style.display = 'none'; 
+                    if(quizNavigationDiv) quizNavigationDiv.style.display = 'block';
+
+                    if (currentQuestionIndex >= questionsData.length - 1) {
+                        // 這是最後一題
+                        if (nextQuestionBtn) nextQuestionBtn.textContent = "查看結果";
+                    } else {
+                        // 還有下一題
+                        if (nextQuestionBtn) {
+                            nextQuestionBtn.textContent = "下一題";
+                            nextQuestionBtn.style.display = 'inline-block'; // 確保可見
+                        }
+                    }
+                });
+            }
+
+            if (nextQuestionBtn) {
+                nextQuestionBtn.addEventListener('click', () => {
+                    if (currentQuestionIndex >= questionsData.length - 1) {
+                        // 如果按鈕是 "查看結果"
+                        endQuiz();
+                    } else {
+                        // 處理 "下一題"
+                        currentQuestionIndex++;
+                        loadQuestion(currentQuestionIndex);
+                    }
+                });
+            }
+
+
+            // --- Game Logic ---
+            function checkBasementUnlock() {
+                if (meatJerkyCount >= MAX_MEAT_JERKY_TO_UNLOCK) {
+                    if (localStorage.getItem('basementUnlocked') !== 'true') {
+                        localStorage.setItem('basementUnlocked', 'true');
+                    }
+                }
+            }
+
+            function endQuiz() {
+                if(quizContentArea) quizContentArea.style.display = 'none'; 
+                if(quizNavigationDiv) quizNavigationDiv.style.display = 'none'; 
+                if(quizCompleteMessageDiv) quizCompleteMessageDiv.style.display = 'block'; 
+
+                if (quizCompleteTitle) quizCompleteTitle.textContent = "圖書館挑戰完成！"; 
+                if (finalScoreMessage) {
+                     finalScoreMessage.textContent = `本次挑戰你答對了 ${questionsAnsweredInThisSession} / ${questionsData.length} 題。`;
+                     finalScoreMessage.textContent += ` 目前總共有 ${meatJerkyCount} 個肉乾。`;
+                }
+
+
+                if (localStorage.getItem('basementUnlocked') === 'true') {
+                    if(basementUnlockMessage) basementUnlockMessage.style.display = 'block';
+                } else if (meatJerkyCount >= MAX_MEAT_JERKY_TO_UNLOCK) {
+                     if(basementUnlockMessage) basementUnlockMessage.style.display = 'block';
+                }
+            }
+
+            // --- Start Quiz ---
+            initializeQuiz();
+        });
+    </script>
+</body>
+</html>
