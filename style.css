@@ -419,7 +419,7 @@
     padding: 15px;
     border-radius: 12px;
     margin: 20px auto;
-    max-width: 700px; /* 更扁的寬度 */
+    max-width: 800px; /* 更扁的寬度 */
     width: 100%;
     box-shadow: 0 0 12px rgba(0, 255, 247, 0.3);
     overflow: hidden; 

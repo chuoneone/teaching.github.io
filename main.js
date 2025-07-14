@@ -28,7 +28,7 @@ function showSection(id, clickedBtn = null) {
 
 // 🕒 倒數計時功能（目標日：2025-07-01）
 function countdown() {
-    const countDate = new Date("2025-07-01T00:00:00").getTime();
+    const countDate = new Date("2026-01-24T00:00:00").getTime();
     const now = new Date().getTime();
     const gap = countDate - now;
 
