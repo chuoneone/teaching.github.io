@@ -8,13 +8,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            font-family: 'Microsoft JhengHei', 'PingFang TC', sans-serif;
+            font-family: 'Noto Sans TC', 'Microsoft JhengHei', 'PingFang TC', sans-serif;
             background: linear-gradient(135deg, #f9f3e5 0%, #fff9e6 100%);
             min-height: 100vh;
             color: #5c4f3c;
+            font-size: 20px;
         }
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             padding: 2rem;
             background-color: rgba(255, 255, 255, 0.95);
@@ -22,10 +23,10 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
             border: 1px solid #f0e6d2;
         }
-        select, button {
+        select, button, textarea {
             transition: all 0.3s ease;
         }
-        select:hover, button:hover {
+        select:hover, button:hover, textarea:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
@@ -42,267 +43,128 @@
             transition: all 0.3s ease;
             border: 2px solid transparent;
         }
-        .emotion-btn .emoji {
-            font-size: 1.8rem;
-            margin-bottom: 0.25rem;
-        }
-        .emotion-btn .text {
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-        .emotion-btn:hover {
-            transform: scale(1.1);
-        }
+        .emotion-btn .emoji { font-size: 1.8rem; margin-bottom: 0.25rem; }
+        .emotion-btn .text { font-size: 1rem; font-weight: 500; }
+        .emotion-btn:hover { transform: scale(1.1); }
         .emotion-btn.selected {
             transform: scale(1.1);
             box-shadow: 0 0 0 3px #e6c87a;
             border-color: #e6c87a;
         }
-        .hidden {
-            display: none;
-        }
+        .hidden { display: none; }
         .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
+            position: fixed; bottom: 20px; left: 50%;
             transform: translateX(-50%);
-            background-color: #e6c87a;
-            color: #5c4f3c;
-            padding: 12px 24px;
-            border-radius: 8px;
+            background-color: #e6c87a; color: #5c4f3c;
+            padding: 12px 24px; border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            z-index: 1000; opacity: 0; transition: opacity 0.3s ease;
         }
-        .toast.show {
-            opacity: 1;
-        }
-        .btn-primary {
-            background-color: #e6c87a;
-            border-color: #d4b66a;
-            color: #5c4f3c;
-        }
-        .btn-primary:hover {
-            background-color: #d4b66a;
-        }
-        .btn-secondary {
-            background-color: #f0e6d2;
-            border-color: #e6d9bc;
-            color: #5c4f3c;
-        }
-        .btn-secondary:hover {
-            background-color: #e6d9bc;
-        }
-        .btn-danger {
-            background-color: #e6a87a;
-            border-color: #d49a6a;
-            color: #5c4f3c;
-        }
-        .btn-danger:hover {
-            background-color: #d49a6a;
-        }
-        .btn-neutral {
-            background-color: #f5f0e5;
-            border-color: #ebe3d1;
-            color: #5c4f3c;
-        }
-        .btn-neutral:hover {
-            background-color: #ebe3d1;
-        }
-        .leaf-decoration {
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            opacity: 0.1;
-            z-index: -1;
-        }
-        .reason-category {
-            margin-bottom: 1rem;
-            border-radius: 0.5rem;
-            border: 1px solid #f0e6d2;
-            overflow: hidden;
-        }
-        .reason-category-header {
-            padding: 0.75rem 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .reason-category-content {
-            padding: 1rem;
-            border-top: 1px solid #f0e6d2;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-        .reason-category.active .reason-category-content {
-            max-height: 500px;
-        }
-        .reason-option {
-            padding: 0.5rem 0.5rem 0.5rem 2rem;
-            margin-bottom: 0.5rem;
-            border-radius: 0.25rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-        }
-        .reason-option:hover {
-            background-color: #f9f3e5;
-        }
-        .reason-option.selected {
-            background-color: #e6c87a;
-            color: #5c4f3c;
-            font-weight: 500;
-        }
-        .reason-option.selected::before {
-            content: "✓";
-            position: absolute;
-            left: 0.75rem;
-            top: 50%;
-            transform: translateY(-50%);
-            font-weight: bold;
-        }
-        .category-home {
-            background-color: #ffedd5;
-        }
-        .category-school {
-            background-color: #e0f2fe;
-        }
-        .category-peer {
-            background-color: #dcfce7;
-        }
-        .category-health {
-            background-color: #fae8ff;
-        }
-        .category-other {
-            background-color: #f3f4f6;
-        }
-        .selected-reason-tag {
-            display: inline-block;
-            background-color: #e6c87a;
-            color: #5c4f3c;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            margin: 0.25rem;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .selected-reason-tag:hover {
-            background-color: #d4b66a;
-        }
-        .selected-reason-tag::after {
-            content: "×";
-            margin-left: 0.5rem;
-            font-weight: bold;
-        }
+        .toast.show { opacity: 1; }
+        .btn-primary { background-color: #e6c87a; border-color: #d4b66a; color: #5c4f3c; }
+        .btn-primary:hover { background-color: #d4b66a; }
+        .btn-secondary { background-color: #f0e6d2; border-color: #e6d9bc; color: #5c4f3c; }
+        .btn-secondary:hover { background-color: #e6d9bc; }
         .btn-disabled {
-            background-color: #e5e7eb;
-            border-color: #d1d5db;
-            color: #9ca3af;
-            cursor: not-allowed;
-        }
-        .btn-disabled:hover {
-            transform: none;
-            box-shadow: none;
+            background-color: #e5e7eb; border-color: #d1d5db; color: #9ca3af;
+            cursor: not-allowed; transform: none; box-shadow: none;
         }
         .success-message {
-            background-color: #dcfce7;
-            border: 1px solid #86efac;
-            color: #166534;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            margin-bottom: 1rem;
-            text-align: center;
-            font-weight: 500;
+            background-color: #dcfce7; border: 1px solid #86efac; color: #166534;
+            padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;
+            text-align: center; font-weight: 500;
         }
-        .developer-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #5c4f3c;
-            color: #fff;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            opacity: 0.7;
-            transition: all 0.3s ease;
+
+        /* 四象限佈局的 CSS */
+        .quadrant-layout-wrapper { display: flex; flex-direction: column; align-items: center; margin-top: 1rem; }
+        .center-content { display: flex; align-items: stretch; gap: 0.5rem; }
+        .axis-label {
+            display: flex; align-items: center; justify-content: center; color: #854d0e;
+            font-weight: 500; writing-mode: vertical-rl; padding: 0 0.25rem;
         }
-        .developer-btn:hover {
-            opacity: 1;
-            transform: translateY(-2px);
+        .y-axis-top { writing-mode: horizontal-tb; transform: none; margin-bottom: 0.5rem; }
+        .y-axis-bottom { writing-mode: horizontal-tb; transform: none; margin-top: 0.5rem; }
+        #emotion-quadrant-container {
+            display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto;
+            gap: 10px; width: 900px; border: 2px solid #f0e6d2; padding: 10px; border-radius: 1rem;
         }
-        .code-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
+        .quadrant {
+            padding: 1rem; border-radius: 0.75rem; min-height: 220px; /* 增加最小高度以容納按鈕 */
             display: flex;
+            flex-direction: column; /* 改為垂直排列 */
             justify-content: center;
             align-items: center;
-            opacity: 0;
-            visibility: hidden;
+            gap: 0; /* 移除 gap，由按鈕 margin 控制間距 */
             transition: all 0.3s ease;
         }
-        .code-modal.show {
-            opacity: 1;
-            visibility: visible;
-        }
-        .code-container {
-            width: 90%;
-            height: 90%;
-            background-color: #fff;
-            border-radius: 1rem;
-            overflow: hidden;
+        .button-row {
             display: flex;
-            flex-direction: column;
+            justify-content: center;
         }
-        .code-header {
-            padding: 1rem;
-            background-color: #5c4f3c;
-            color: #fff;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .quadrant:hover { transform: scale(1.02); box-shadow: 0 8px 16px rgba(0,0,0,0.05); }
+        .q1 { background-color: #fef3c7; grid-area: 1 / 2 / 2 / 3; } /* 右上 */
+        .q2 { background-color: #fee2e2; grid-area: 1 / 1 / 2 / 2; } /* 左上 */
+        .q3 { background-color: #e5e7eb; grid-area: 2 / 1 / 3 / 2; } /* 左下 */
+        .q4 { background-color: #dcfce7; grid-area: 2 / 2 / 3 / 3; } /* 右下 */
+
+        /* 情緒說明 Modal 的 CSS */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 2000; opacity: 0; transition: opacity 0.3s ease;
         }
-        .code-content {
-            flex: 1;
-            overflow: auto;
-            padding: 1rem;
-            background-color: #f8f8f8;
+        .modal-content {
+            background-color: #fff; color: #5c4f3c; padding: 2rem;
+            border-radius: 1rem; width: 90%; max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative; transform: scale(0.95); transition: transform 0.3s ease;
         }
-        pre {
-            margin: 0;
-            white-space: pre-wrap;
-            font-family: monospace;
-            font-size: 0.9rem;
-            line-height: 1.5;
+        .modal-overlay.show { opacity: 1; }
+        .modal-overlay.show .modal-content { transform: scale(1); }
+        .modal-close-btn {
+            position: absolute; top: 1rem; right: 1rem;
+            font-size: 1.5rem; line-height: 1; color: #9ca3af;
+            background: none; border: none; cursor: pointer;
         }
-        .close-btn {
-            background: none;
-            border: none;
-            color: #fff;
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0;
-            margin: 0;
+        .modal-title { font-size: 1.75rem; font-weight: bold; color: #854d0e; margin-bottom: 1rem; }
+        .modal-section-title { font-weight: 600; margin-bottom: 0.5rem; border-left: 4px solid #e6c87a; padding-left: 0.5rem; }
+        .modal-text { line-height: 1.75; }
+
+        /* 語音功能按鈕樣式 */
+        .speech-btn {
+            background: none; border: none; cursor: pointer;
+            color: #a16207; transition: color 0.2s ease;
+            padding: 0.5rem;
+        }
+        .speech-btn:hover { color: #e6c87a; }
+        .speech-btn svg { width: 24px; height: 24px; }
+
+        #mic-btn {
+            position: absolute; bottom: 8px; right: 8px;
+            background-color: #f0e6d2; border-radius: 50%; padding: 8px;
+        }
+        #mic-btn.is-recording {
+             background-color: #ef4444; color: white;
+        }
+        #mic-status { color: #854d0e; }
+
+
+        @media (max-width: 700px) {
+            #emotion-quadrant-container { width: 100%; grid-template-columns: 1fr; grid-template-rows: auto; }
+            .q1 { grid-area: auto; }
+            .q2 { grid-area: auto; }
+            .q3 { grid-area: auto; }
+            .q4 { grid-area: auto; }
+            .center-content { flex-direction: column; }
+            .axis-label { writing-mode: horizontal-tb; transform: none; padding: 0.5rem 0; }
         }
     </style>
 </head>
 <body class="py-8">
-    <svg class="leaf-decoration" style="top: 10%; left: 5%;" viewBox="0 0 24 24"><path fill="#e6c87a" d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"></path></svg>
-    <svg class="leaf-decoration" style="top: 30%; right: 8%;" viewBox="0 0 24 24"><path fill="#e6c87a" d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"></path></svg>
-    <svg class="leaf-decoration" style="bottom: 15%; left: 15%;" viewBox="0 0 24 24"><path fill="#e6c87a" d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"></path></svg>
-    
     <div class="container relative">
         <div id="home-page" class="text-center">
-            <h1 class="text-3xl font-bold mb-8 text-amber-800">學生情緒紀錄系統</h1>
+            <h1 class="text-5xl font-bold mb-8 text-amber-800">學生情緒紀錄系統</h1>
             <div class="mb-6">
                 <label class="block text-lg font-medium mb-2">請選擇年級：</label>
                 <select id="grade-select" class="w-full p-3 border border-amber-200 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-amber-300">
@@ -321,118 +183,97 @@
             <button id="start-btn" class="btn-primary font-bold py-3 px-6 rounded-lg text-lg transition-all">
                 開始紀錄
             </button>
+
+                        <!-- START: 新增的圖片 -->
+                        <div class="mt-8">
+                            <img src="images/twodogs.png" alt="兩隻可愛的狗狗" class="mx-auto rounded-lg w-40">
+                        </div>
+                        <!-- END: 新增的圖片 -->
         </div>
 
         <div id="emotion-page" class="hidden">
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-2xl font-bold text-amber-800">今日情緒紀錄</h1>
-                <div>
-                    <span id="current-date" class="text-lg font-medium"></span>
-                </div>
+                <div><span id="current-date" class="text-lg font-medium"></span></div>
             </div>
             <div class="mb-4">
                 <p class="text-lg"><span id="display-grade" class="font-medium"></span> - <span id="display-name" class="font-medium"></span></p>
             </div>
+            
+            
             <div class="mb-6">
-                <p class="text-lg font-medium mb-3">請選擇你今天的心情：</p>
-                <div class="flex flex-wrap justify-center">
-                    <div class="emotion-btn bg-yellow-100" data-emotion="開心" data-color="🟡"><div class="emoji">😄</div><div class="text">開心</div></div>
-                    <div class="emotion-btn bg-green-100" data-emotion="平靜" data-color="🟢"><div class="emoji">😌</div><div class="text">平靜</div></div>
-                    <div class="emotion-btn bg-orange-100" data-emotion="興奮" data-color="🟠"><div class="emoji">🤩</div><div class="text">興奮</div></div>
-                    <div class="emotion-btn bg-red-100" data-emotion="生氣" data-color="🔴"><div class="emoji">😠</div><div class="text">生氣</div></div>
-                    <div class="emotion-btn bg-blue-100" data-emotion="難過" data-color="🔵"><div class="emoji">😢</div><div class="text">難過</div></div>
-                    <div class="emotion-btn bg-purple-100" data-emotion="焦慮" data-color="🟣"><div class="emoji">😰</div><div class="text">焦慮</div></div>
-                    <div class="emotion-btn bg-gray-800 text-white" data-emotion="害怕" data-color="⚫"><div class="emoji">😱</div><div class="text">害怕</div></div>
-                    <div class="emotion-btn bg-gray-100" data-emotion="疲倦" data-color="⚪"><div class="emoji">🥱</div><div class="text">疲倦</div></div>
-                    <div class="emotion-btn bg-amber-800 text-white" data-emotion="煩躁" data-color="🟤"><div class="emoji">😤</div><div class="text">煩躁</div></div>
+                <div class="flex justify-center items-center">
+                    <p id="main-instruction" class="text-lg font-medium mb-3 text-center">請點選你今天的心情</p>
+                    <button id="read-aloud-btn" class="speech-btn" title="朗讀說明">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" /></svg>
+                    </button>
+                </div>
+                <div class="quadrant-layout-wrapper">
+                    <span class="axis-label y-axis-top">高能量</span>
+                    <div class="center-content">
+                        <span class="axis-label x-axis-left">不好的感受</span>
+                        <div id="emotion-quadrant-container">
+                            <!-- Q2: 高能量 / 不好的感受 -->
+                            <div class="quadrant q2">
+                                <div class="button-row">
+                                    <div class="emotion-btn bg-red-100" data-emotion="生氣"><div class="emoji">😠</div><div class="text">生氣</div></div>
+                                    <div class="emotion-btn bg-gray-800 text-white" data-emotion="害怕"><div class="emoji">😱</div><div class="text">害怕</div></div>
+                                    <div class="emotion-btn bg-amber-800 text-white" data-emotion="煩"><div class="emoji">😩</div><div class="text">煩</div></div>
+                                </div>
+                                <div class="button-row">
+                                    <div class="emotion-btn bg-purple-100" data-emotion="緊張"><div class="emoji">😰</div><div class="text">緊張</div></div>
+                                    <div class="emotion-btn bg-yellow-800 text-white" data-emotion="嫉妒"><div class="emoji">😒</div><div class="text">嫉妒</div></div>
+                                </div>
+                            </div>
+                            <!-- Q1: 高能量 / 好的感受 -->
+                            <div class="quadrant q1">
+                                <div class="button-row">
+                                    <div class="emotion-btn bg-orange-100" data-emotion="興奮"><div class="emoji">🤩</div><div class="text">興奮</div></div>
+                                    <div class="emotion-btn bg-yellow-100" data-emotion="開心"><div class="emoji">😄</div><div class="text">開心</div></div>
+                                    <div class="emotion-btn bg-teal-100" data-emotion="期待"><div class="emoji">✨</div><div class="text">期待</div></div>
+                                </div>
+                                <div class="button-row">
+                                    <div class="emotion-btn bg-sky-100" data-emotion="自信"><div class="emoji">💪</div><div class="text">自信</div></div>
+                                    <div class="emotion-btn bg-cyan-100" data-emotion="驚訝"><div class="emoji">😮</div><div class="text">驚訝</div></div>
+                                </div>
+                            </div>
+                            <!-- Q3: 低能量 / 不好的感受 -->
+                            <div class="quadrant q3">
+                                <div class="button-row">
+                                    <div class="emotion-btn bg-blue-100" data-emotion="難過"><div class="emoji">😢</div><div class="text">難過</div></div>
+                                    <div class="emotion-btn bg-indigo-100" data-emotion="失望"><div class="emoji">😞</div><div class="text">失望</div></div>
+                                    <div class="emotion-btn bg-gray-100" data-emotion="心累"><div class="emoji">😮‍💨</div><div class="text">心累</div></div>
+                                </div>
+                                <div class="button-row">
+                                    <div class="emotion-btn bg-pink-100" data-emotion="尷尬"><div class="emoji">😳</div><div class="text">尷尬</div></div>
+                                    <div class="emotion-btn bg-slate-200" data-emotion="沒自信"><div class="emoji">😥</div><div class="text">沒自信</div></div>
+                                </div>
+                            </div>
+                            <!-- Q4: 低能量 / 好的感受 -->
+                            <div class="quadrant q4">
+                                <div class="emotion-btn bg-lime-100" data-emotion="放鬆"><div class="emoji">😌</div><div class="text">放鬆</div></div>
+                                <div class="emotion-btn bg-green-100" data-emotion="滿足"><div class="emoji">😊</div><div class="text">滿足</div></div>
+                            </div>
+                        </div>
+                        <span class="axis-label x-axis-right">好的感受</span>
+                    </div>
+                    <span class="axis-label y-axis-bottom">低能量</span>
                 </div>
             </div>
             
             <div id="reason-section" class="mb-8 hidden">
-                <p class="text-lg font-medium mb-3">請選擇原因（可複選）：</p>
-                
-                <div class="reason-category mb-3 active">
-                    <div class="reason-category-header category-home"><span>🏠 家庭相關</span><span class="toggle-icon">▲</span></div>
-                    <div class="reason-category-content">
-                        <div class="reason-option" data-reason="和家人吵架">和家人吵架</div>
-                        <div class="reason-option" data-reason="有人鼓勵我">有人鼓勵我</div>
-                        <div class="reason-option" data-reason="家人支持我">家人支持我</div>
-                        <div class="reason-option" data-reason="家中發生不開心的事">家中發生不開心的事</div>
-                        <div class="reason-option" data-reason="收到禮物或好消息">收到禮物或好消息</div>
-                    </div>
+                <label for="reason-input" class="block text-lg font-medium mb-3">請說明你今天有這個心情的原因：</label>
+                <div class="relative">
+                    <textarea id="reason-input" class="w-full p-3 border border-amber-200 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-amber-300" rows="4" placeholder="請在這裡輸入原因..."></textarea>
+                    <button id="mic-btn" class="speech-btn absolute bottom-2 right-2 bg-gray-200 rounded-full p-2" title="語音輸入">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 016 0v8.25a3 3 0 01-3 3z" /></svg>
+                    </button>
                 </div>
-                
-                <div class="reason-category mb-3">
-                    <div class="reason-category-header category-school"><span>🏫 學校與課業</span><span class="toggle-icon">▼</span></div>
-                    <div class="reason-category-content">
-                        <div class="reason-option" data-reason="作業太多">作業太多</div>
-                        <div class="reason-option" data-reason="考試壓力">考試壓力</div>
-                        <div class="reason-option" data-reason="被老師讚美">被老師讚美</div>
-                        <div class="reason-option" data-reason="考試成績比預期好">考試成績比預期好</div>
-                        <div class="reason-option" data-reason="成績不理想、考試失敗">成績不理想、考試失敗</div>
-                        <div class="reason-option" data-reason="今天有喜歡的活動/課程">今天有喜歡的活動/課程</div>
-                        <div class="reason-option" data-reason="不喜歡的課程拖太久">不喜歡的課程拖太久</div>
-                        <div class="reason-option" data-reason="害怕被老師點名或上台報告">害怕被老師點名或上台報告</div>
-                    </div>
-                </div>
-                
-                <div class="reason-category mb-3">
-                    <div class="reason-category-header category-peer"><span>🧍‍♂️ 同儕互動</span><span class="toggle-icon">▼</span></div>
-                    <div class="reason-category-content">
-                        <div class="reason-option" data-reason="戀愛了">戀愛了</div>
-                        <div class="reason-option" data-reason="跟同學吵架">跟同學吵架</div>
-                        <div class="reason-option" data-reason="被忽略、被排擠">被忽略、被排擠</div>
-                        <div class="reason-option" data-reason="跟朋友玩很開心">跟朋友玩很開心</div>
-                        <div class="reason-option" data-reason="和朋友聊天、玩耍很開心">和朋友聊天、玩耍很開心</div>
-                        <div class="reason-option" data-reason="被朋友排擠或誤會">被朋友排擠或誤會</div>
-                        <div class="reason-option" data-reason="和朋友關係緊張">和朋友關係緊張</div>
-                        <div class="reason-option" data-reason="害怕某些人或被霸凌">害怕某些人或被霸凌</div>
-                    </div>
-                </div>
-                
-                <div class="reason-category mb-3">
-                    <div class="reason-category-header category-health"><span>😷 身體狀況</span><span class="toggle-icon">▼</span></div>
-                    <div class="reason-category-content">
-                        <div class="reason-option" data-reason="睡很飽">睡很飽</div>
-                        <div class="reason-option" data-reason="沒睡飽">沒睡飽</div>
-                        <div class="reason-option" data-reason="肚子痛">肚子痛</div>
-                        <div class="reason-option" data-reason="生理期不舒服">生理期不舒服</div>
-                        <div class="reason-option" data-reason="昨天熬夜、睡不好">昨天熬夜、睡不好</div>
-                        <div class="reason-option" data-reason="身體不舒服">身體不舒服</div>
-                        <div class="reason-option" data-reason="一整天排滿課程、沒有休息">一整天排滿課程、沒有休息</div>
-                        <div class="reason-option" data-reason="上太多補習、活動太密集">上太多補習、活動太密集</div>
-                        <div class="reason-option" data-reason="情緒消耗太多，精神難集中">情緒消耗太多，精神難集中</div>
-                    </div>
-                </div>
-                
-                <div class="reason-category mb-3">
-                    <div class="reason-category-header category-other"><span>🔄 其他</span><span class="toggle-icon">▼</span></div>
-                    <div class="reason-category-content">
-                        <div class="reason-option" data-reason="沒什麼特別">沒什麼特別</div>
-                        <div class="reason-option" data-reason="我也不知道為什麼">我也不知道為什麼</div>
-                        <div class="reason-option" data-reason="太熱／太吵／環境擁擠">太熱／太吵／環境擁擠</div>
-                        <div class="reason-option" data-reason="想安靜一下但周圍太吵">想安靜一下但周圍太吵</div>
-                        <div class="reason-option" data-reason="被打斷正在做的事情">被打斷正在做的事情</div>
-                        <div class="reason-option" data-reason="其他（請寫）">其他（請寫）</div>
-                    </div>
-                </div>
-                
-                <div id="other-reason-section" class="mt-4 hidden">
-                    <label class="block text-lg font-medium mb-2">請輸入其他原因：</label>
-                    <input type="text" id="other-reason-input" class="w-full p-3 border border-amber-200 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-amber-300" placeholder="請輸入原因...">
-                    <button id="add-other-reason-btn" class="mt-2 btn-secondary font-bold py-1 px-3 rounded-lg">新增此原因</button>
-                </div>
-                
-                <div class="mt-4 p-3 bg-amber-50 rounded-lg border border-amber-100">
-                    <p class="font-medium">已選擇的原因：</p>
-                    <div id="selected-reasons-container" class="mt-2 min-h-[40px]">
-                        <p id="no-reasons-selected" class="text-gray-500">尚未選擇任何原因</p>
-                    </div>
-                </div>
+                 <p id="mic-status" class="text-sm text-center mt-1 hidden"></p>
             </div>
             
             <div class="flex justify-between">
-                <button id="back-btn" class="btn-neutral font-bold py-2 px-4 rounded-lg">返回</button>
+                <button id="back-btn" class="btn-secondary font-bold py-2 px-4 rounded-lg">返回</button>
                 <button id="submit-btn" class="btn-disabled font-bold py-2 px-4 rounded-lg hidden" disabled>提交</button>
             </div>
         </div>
@@ -447,26 +288,41 @@
         </div>
     </div>
 
-    <div id="code-modal" class="code-modal">
-        <div class="code-container">
-            <div class="code-header">
-                <h2>程式原始碼</h2>
-                <button id="close-modal-btn" class="close-btn">×</button>
+    <div id="toast" class="toast"></div>
+
+    <div id="emotion-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button id="modal-close-btn" class="modal-close-btn">&times;</button>
+            <h2 id="modal-title" class="modal-title"></h2>
+            <div>
+                <div class="flex justify-between items-center mt-4">
+                    <h3 class="modal-section-title">簡單說明</h3>
+                    <button id="modal-read-desc-btn" class="speech-btn" title="朗讀說明">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" /></svg>
+                    </button>
+                </div>
+                <p id="modal-description" class="modal-text"></p>
+                
+                <div class="flex justify-between items-center mt-6">
+                    <h3 class="modal-section-title">生活舉例</h3>
+                    <button id="modal-read-ex-btn" class="speech-btn" title="朗讀舉例">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" /></svg>
+                    </button>
+                </div>
+                <p id="modal-examples" class="modal-text"></p>
             </div>
-            <div class="code-content">
-                <pre id="source-code"></pre>
+            <div class="text-center mt-8">
+                <button id="modal-confirm-btn" class="btn-primary font-bold py-2 px-6 rounded-lg text-lg">就是這個心情</button>
             </div>
         </div>
     </div>
 
-    <div id="toast" class="toast">資料已成功提交！</div>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 初始化變數
             const currentDate = new Date().toLocaleDateString('zh-TW');
             document.getElementById('current-date').textContent = currentDate;
-            let selectedReasons = [];
+            let selectedEmotion = null;
+            let currentEmotionTarget = null;
 
             // 頁面元素
             const homePage = document.getElementById('home-page');
@@ -477,39 +333,58 @@
             const displayGrade = document.getElementById('display-grade');
             const displayName = document.getElementById('display-name');
             const reasonSection = document.getElementById('reason-section');
-            const otherReasonSection = document.getElementById('other-reason-section');
-            const otherReasonInput = document.getElementById('other-reason-input');
-            const addOtherReasonBtn = document.getElementById('add-other-reason-btn');
+            const reasonInput = document.getElementById('reason-input');
             const submitBtn = document.getElementById('submit-btn');
-            const emotionBtns = document.querySelectorAll('.emotion-btn');
             const toast = document.getElementById('toast');
-            const selectedReasonsContainer = document.getElementById('selected-reasons-container');
-            const noReasonsSelected = document.getElementById('no-reasons-selected');
-            const reasonCategories = document.querySelectorAll('.reason-category');
-            const reasonOptions = document.querySelectorAll('.reason-option');
-            const developerBtn = document.getElementById('developer-btn');
-            const codeModal = document.getElementById('code-modal');
-            const closeModalBtn = document.getElementById('close-modal-btn');
-            const sourceCode = document.getElementById('source-code');
+            const emotionBtns = document.querySelectorAll('.emotion-btn');
 
-            // --- NEW CODE START ---
-            // 學生資料庫
+            // Modal 元素
+            const emotionModal = document.getElementById('emotion-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalDescription = document.getElementById('modal-description');
+            const modalExamples = document.getElementById('modal-examples');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+            const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+            
+            // 語音功能相關元素
+            const readAloudBtn = document.getElementById('read-aloud-btn');
+            const mainInstruction = document.getElementById('main-instruction');
+            const micBtn = document.getElementById('mic-btn');
+            const micStatus = document.getElementById('mic-status');
+            const modalReadDescBtn = document.getElementById('modal-read-desc-btn');
+            const modalReadExBtn = document.getElementById('modal-read-ex-btn');
+
+            const emotionDetails = {
+                '興奮': { desc: '心裡充滿期待，身體好像也充滿了電力，讓你幾乎<u>等不及</u>要迎接某件開心的事！', ex: '當你想到明天就要去期待已久的旅行、當你喜歡的偶像即將獲勝、當你正要拆開一份很想要的禮物。' },
+                '開心': { desc: '一種內心感到<u>愉快、順利</u>的舒服感覺，會讓你忍不住想微笑。', ex: '當你和好朋友聚在一起聊天大笑、當你的努力被看見並稱讚、當你完成一件困難的事。' },
+                '期待': { desc: '在心裡<u>盼望著</u>某件好事發生，雖然比「興奮」平靜一點，但充滿了希望的感覺。', ex: '當你期待放學後要看的最新一集動漫、當你和朋友約好週末要見面、當你希望訂的包裹趕快送到。' },
+                '自信': { desc: '<u>相信自己有能力</u>做到某件事，覺得自己是可靠的、有價值的。', ex: '當你為報告準備了很久，相信自己能表現得很好、當你熟練了一個新技能並準備好展示它、當你勇敢地舉手發言。' },
+                '驚訝': { desc: '發生了<u>出乎你意料之外</u>的事，可能是一個開心的驚喜，也可能只是一個小小的嚇一跳。', ex: '當朋友們為你準備了生日驚喜、當考試內容跟你想的完全不一樣、當看到一個意想不到的劇情反轉。' },
+                '生氣': { desc: '當你覺得事情<u>不公平</u>、自己的<u>界線被侵犯</u>，或目標被阻礙時，內心會產生一股強烈的能量。', ex: '當別人沒有經過同意就拿走你的東西、當你被誤會了卻沒有機會好好解釋、當你想做好的事卻一再被打斷。' },
+                '害怕': { desc: '感覺到可能有<u>危險或威脅</u>，身體會變得警覺，心跳加速，想要逃跑或躲起來。', ex: '當你晚上一個人走在暗巷裡、當你覺得自己好像闖禍了要被責罵、當你在看恐怖片被嚇到。' },
+                '煩': { desc: '一種不太強烈但持續的生氣，讓你覺得<u>不耐煩、靜不下心</u>，很想擺脫目前的狀況。', ex: '當天氣又濕又熱讓你渾身不舒服、當你有很多事要做卻不知從何開始、當旁邊的人一直發出噪音。' },
+                '緊張': { desc: '對於即將發生的事感到<u>擔心和不安</u>，可能會手心冒汗、肚子怪怪的。', ex: '當你馬上就要上台報告或表演、當重要的考試發下考卷的那一刻、當你鼓起勇氣要和某人說話。' },
+                '嫉妒': { desc: '當看到別人擁有你想要的東西、才華或人際關係時，心裡產生的一種<u>酸酸的、不舒服</u>的感覺。', ex: '當你的好朋友好像跟別人更要好、當別人擁有你夢寐以求的最新款手機、當同學在某方面表現得特別出色。' },
+                '難過': { desc: '因為<u>失去、分離或受傷</u>而感到心情低落，身體沉重，可能會想哭。', ex: '當你和親近的人或心愛的寵物分開、當你和最好的朋友大吵一架、當你覺得沒有人理解你。' },
+                '失望': { desc: '當你所期待或盼望的事情沒有發生，那種<u>希望落空</u>的感覺。', ex: '當期待已久的活動因為下雨而取消、當朋友忘記了和你的約定、當考試成績比你預期的要差很多。' },
+                '心累': { desc: '不是身體上的疲倦，而是<u>精神和情緒上的消耗</u>，覺得沒有力氣再去應付任何事。', ex: '當你應付了一整天複雜的人際關係後、當你為了不讓別人擔心一直假裝自己沒事、當有太多的煩惱壓在你心上。' },
+                '尷尬': { desc: '當眾做了一些你覺得<u>很糗、很笨拙</u>的事，讓你臉上發熱，恨不得找個地洞鑽進去。', ex: '當你在走廊上不小心滑倒、當你在安靜的教室裡肚子突然叫了一聲、當你不小心把老師叫成「媽媽」。' },
+                '沒自信': { desc: '一種<u>懷疑自己</u>、覺得自己<u>不夠好</u>或能力不足的感覺。當有這種感覺時，你可能會害怕嘗試，或是不敢表達自己的真實想法。', ex: '上課時明明知道答案，卻因為害怕說錯而不敢舉手、在分組活動時，總覺得自己的意見不重要、看到別人很輕鬆做到某件事，心裡想著「我一定辦不到」。' },
+                '放鬆': { desc: '<u>沒有任何壓力</u>和煩惱，身心都處於非常平靜、舒展的狀態。', ex: '當你做完所有功課躺在床上聽音樂、當你沉浸在自己的興趣中（例如畫畫或閱讀）、當你泡在溫暖的浴缸裡。' },
+                '滿足': { desc: '一種內心感到<u>充實、溫暖</u>的平靜喜悅，覺得「這樣就夠了」、「很美好」。', ex: '當你吃到一頓非常好吃的晚餐、當你完成一件作品並對它感到很滿意、當你和家人或朋友度過了一段溫馨的時光。' }
+            };
+
             const studentsByGrade = {
                 '七年級': ['吳恩旻', '林子龍', '楊育翔', '陳凱莉', '陳燕鈴'],
                 '八年級': ['蘇祐慶', '黃雅璇', '黃寬益', '徐文彥', '蘇佳琦'],
                 '九年級': ['鄭詠文', '卓冠佑', '馬若庭', '吳亮勳']
             };
 
-            // 年級選擇事件監聽
             gradeSelect.addEventListener('change', function() {
                 const selectedGrade = this.value;
-                // 清空姓名選單
                 nameSelect.innerHTML = '<option value="" disabled selected>請選擇姓名</option>';
-
                 if (selectedGrade && studentsByGrade[selectedGrade]) {
-                    // 啟用姓名選單
                     nameSelect.disabled = false;
-                    // 根據選擇的年級，填入對應的學生名單
                     studentsByGrade[selectedGrade].forEach(name => {
                         const option = document.createElement('option');
                         option.value = name;
@@ -517,161 +392,145 @@
                         nameSelect.appendChild(option);
                     });
                 } else {
-                    // 如果沒有選擇年級，則禁用姓名選單
                     nameSelect.innerHTML = '<option value="" disabled selected>請先選擇年級</option>';
                     nameSelect.disabled = true;
                 }
             });
-            // --- NEW CODE END ---
 
-            // 顯示提示訊息
             function showToast(message) {
                 toast.textContent = message;
                 toast.classList.add('show');
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                }, 3000);
+                setTimeout(() => { toast.classList.remove('show'); }, 3000);
             }
 
-            // 開始按鈕事件
             document.getElementById('start-btn').addEventListener('click', function() {
                 const grade = gradeSelect.value;
                 const name = nameSelect.value;
-                
-                if (!grade || !name) {
-                    alert('請選擇年級和姓名');
-                    return;
-                }
-                
+                if (!grade || !name) { alert('請選擇年級和姓名'); return; }
                 displayGrade.textContent = grade;
                 displayName.textContent = name;
-                
                 homePage.classList.add('hidden');
                 emotionPage.classList.remove('hidden');
             });
 
-            // 返回按鈕事件
             document.getElementById('back-btn').addEventListener('click', function() {
                 emotionPage.classList.add('hidden');
                 homePage.classList.remove('hidden');
                 resetEmotionSelection();
             });
-
-            // 情緒按鈕事件
-            emotionBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    emotionBtns.forEach(b => b.classList.remove('selected'));
-                    this.classList.add('selected');
-                    reasonSection.classList.remove('hidden');
-                    submitBtn.classList.remove('hidden');
-                    updateSubmitButtonState();
-                });
-            });
-
-            // 分類標題點擊事件
-            reasonCategories.forEach(category => {
-                const header = category.querySelector('.reason-category-header');
-                header.addEventListener('click', function() {
-                    category.classList.toggle('active');
-                    const toggleIcon = this.querySelector('.toggle-icon');
-                    toggleIcon.textContent = category.classList.contains('active') ? '▲' : '▼';
-                });
-            });
-
-            // 原因選項點擊事件
-            reasonOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    const reason = this.getAttribute('data-reason');
-                    
-                    if (reason === '其他（請寫）') {
-                        otherReasonSection.classList.remove('hidden');
-                        return;
-                    }
-                    
-                    this.classList.toggle('selected');
-                    
-                    if (this.classList.contains('selected')) {
-                        if (!selectedReasons.includes(reason)) {
-                            selectedReasons.push(reason);
-                        }
-                    } else {
-                        const index = selectedReasons.indexOf(reason);
-                        if (index !== -1) {
-                            selectedReasons.splice(index, 1);
-                        }
-                    }
-                    
-                    updateSelectedReasonsDisplay();
-                    updateSubmitButtonState();
-                });
-            });
-
-            // 添加其他原因按鈕事件
-            addOtherReasonBtn.addEventListener('click', function() {
-                const otherReason = otherReasonInput.value.trim();
-                
-                if (!otherReason) {
-                    alert('請輸入其他原因');
-                    return;
-                }
-                
-                const customReason = `其他: ${otherReason}`;
-                
-                if (!selectedReasons.includes(customReason)) {
-                    selectedReasons.push(customReason);
-                }
-                
-                otherReasonInput.value = '';
-                otherReasonSection.classList.add('hidden');
-                
-                updateSelectedReasonsDisplay();
-                updateSubmitButtonState();
-            });
-
-            // 更新已選擇的原因顯示
-            function updateSelectedReasonsDisplay() {
-                if (selectedReasons.length === 0) {
-                    noReasonsSelected.classList.remove('hidden');
-                    selectedReasonsContainer.innerHTML = '';
-                    selectedReasonsContainer.appendChild(noReasonsSelected);
+            
+            // 語音朗讀 (TTS) 邏輯
+            function speak(text) {
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'zh-TW';
+                    utterance.rate = 1.1;
+                    window.speechSynthesis.cancel();
+                    window.speechSynthesis.speak(utterance);
                 } else {
-                    noReasonsSelected.classList.add('hidden');
-                    selectedReasonsContainer.innerHTML = '';
-                    
-                    selectedReasons.forEach(reason => {
-                        const tag = document.createElement('span');
-                        tag.className = 'selected-reason-tag';
-                        tag.textContent = reason;
-                        tag.setAttribute('data-reason', reason);
-                        
-                        tag.addEventListener('click', function() {
-                            const reasonToRemove = this.getAttribute('data-reason');
-                            const index = selectedReasons.indexOf(reasonToRemove);
-                            if (index !== -1) {
-                                selectedReasons.splice(index, 1);
-                            }
-                            
-                            reasonOptions.forEach(option => {
-                                if (option.getAttribute('data-reason') === reasonToRemove) {
-                                    option.classList.remove('selected');
-                                }
-                            });
-                            
-                            updateSelectedReasonsDisplay();
-                            updateSubmitButtonState();
-                        });
-                        
-                        selectedReasonsContainer.appendChild(tag);
-                    });
+                    alert('抱歉，您的瀏覽器不支援語音朗讀功能。');
                 }
             }
 
-            // 更新提交按鈕狀態
+            readAloudBtn.addEventListener('click', () => {
+                speak(mainInstruction.textContent);
+            });
+            
+            modalReadDescBtn.addEventListener('click', () => {
+                speak(modalDescription.textContent);
+            });
+
+            modalReadExBtn.addEventListener('click', () => {
+                speak(modalExamples.textContent);
+            });
+            
+            // 語音輸入 (Speech-to-Text) 邏輯
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            let recognition;
+
+            if (SpeechRecognition) {
+                recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.lang = 'cmn-Hant-TW';
+                recognition.interimResults = false;
+
+                micBtn.addEventListener('click', () => {
+                    recognition.start();
+                });
+
+                recognition.onstart = () => {
+                    micBtn.classList.add('is-recording');
+                    micStatus.textContent = '正在聆聽...';
+                    micStatus.classList.remove('hidden');
+                };
+
+                recognition.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript;
+                    reasonInput.value += transcript;
+                    updateSubmitButtonState();
+                };
+
+                recognition.onerror = (event) => {
+                    micStatus.textContent = `語音辨識錯誤: ${event.error}`;
+                };
+
+                recognition.onend = () => {
+                    micBtn.classList.remove('is-recording');
+                    setTimeout(() => micStatus.classList.add('hidden'), 2000);
+                };
+            } else {
+                micBtn.style.display = 'none';
+                console.log('瀏覽器不支援語音辨識功能。');
+            }
+
+            function openModal(emotionName, targetButton) {
+                const details = emotionDetails[emotionName];
+                if (!details) return;
+
+                modalTitle.textContent = emotionName;
+                modalDescription.innerHTML = details.desc; // 使用 innerHTML 讓 <u> 生效
+                modalExamples.innerHTML = details.ex;     // 使用 innerHTML 讓 <u> 生效
+                currentEmotionTarget = targetButton;
+
+                emotionModal.classList.remove('hidden');
+                setTimeout(() => emotionModal.classList.add('show'), 10);
+            }
+
+            function closeModal() {
+                window.speechSynthesis.cancel();
+                emotionModal.classList.remove('show');
+                setTimeout(() => emotionModal.classList.add('hidden'), 300);
+            }
+
+            emotionBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const emotionName = this.getAttribute('data-emotion');
+                    openModal(emotionName, this);
+                });
+            });
+
+            modalConfirmBtn.addEventListener('click', function() {
+                if (!currentEmotionTarget) return;
+                emotionBtns.forEach(b => b.classList.remove('selected'));
+                currentEmotionTarget.classList.add('selected');
+                selectedEmotion = currentEmotionTarget.getAttribute('data-emotion');
+                reasonSection.classList.remove('hidden');
+                submitBtn.classList.remove('hidden');
+                updateSubmitButtonState();
+                closeModal();
+            });
+
+            modalCloseBtn.addEventListener('click', closeModal);
+            emotionModal.addEventListener('click', function(event) {
+                if (event.target === emotionModal) closeModal();
+            });
+
+            reasonInput.addEventListener('input', updateSubmitButtonState);
+
             function updateSubmitButtonState() {
-                const hasEmotion = document.querySelector('.emotion-btn.selected') !== null;
-                const hasReasons = selectedReasons.length > 0;
-                
-                if (hasEmotion && hasReasons) {
+                const hasEmotion = selectedEmotion !== null;
+                const hasReason = reasonInput.value.trim() !== '';
+                if (hasEmotion && hasReason) {
                     submitBtn.disabled = false;
                     submitBtn.classList.remove('btn-disabled');
                     submitBtn.classList.add('btn-primary');
@@ -682,48 +541,27 @@
                 }
             }
 
-            // 提交按鈕事件
             submitBtn.addEventListener('click', function() {
                 if (this.disabled) return;
-
-                submitBtn.disabled = true;
-                submitBtn.textContent = "送出中...";
-                submitBtn.classList.add("btn-disabled");
-                submitBtn.classList.remove("btn-primary");
+                this.disabled = true;
+                this.textContent = "送出中...";
+                this.classList.add("btn-disabled");
+                this.classList.remove("btn-primary");
 
                 const grade = displayGrade.textContent;
                 const name = displayName.textContent;
-                const selectedEmotionBtn = document.querySelector('.emotion-btn.selected');
-                const emotion = selectedEmotionBtn ? selectedEmotionBtn.getAttribute('data-emotion') : null;
-
-                if (!emotion || selectedReasons.length === 0) {
-                    alert('請選擇心情和至少一個原因');
-                    // Re-enable button on error
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = "提交";
-                    updateSubmitButtonState(); // Reset style based on selections
-                    return;
-                }
-
-                const reasonsText = selectedReasons.join('; ');
+                const reasonsText = reasonInput.value.trim();
 
                 fetch('https://google-sheet-proxy.onrender.com/submit', {
                     method: 'POST',
                     body: JSON.stringify({
-                        date: currentDate,
-                        grade: grade,
-                        name: name,
-                        emotion: emotion,
-                        reasons: reasonsText
+                        date: currentDate, grade: grade, name: name,
+                        emotion: selectedEmotion, reasons: reasonsText
                     }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+                    headers: { 'Content-Type': 'application/json' }
                 })
                 .then(response => {
-                    if (!response.ok) {
-                        throw new Error('網路錯誤，請稍後再試');
-                    }
+                    if (!response.ok) throw new Error('網路錯誤，請稍後再試');
                     return response.text();
                 })
                 .then(result => {
@@ -734,14 +572,12 @@
                 })
                 .catch(error => {
                     alert('提交失敗：' + error.message);
-                    // Re-enable button on error
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = "提交";
-                    updateSubmitButtonState(); // Reset style based on selections
+                    this.disabled = false;
+                    this.textContent = "提交";
+                    updateSubmitButtonState();
                 });
             });
 
-            // 換下一個人按鈕事件
             document.getElementById('next-person-btn').addEventListener('click', function() {
                 resultPage.classList.add('hidden');
                 homePage.classList.remove('hidden');
@@ -750,38 +586,18 @@
                 nameSelect.disabled = true;
             });
 
-            // 重置情緒選擇
             function resetEmotionSelection() {
                 emotionBtns.forEach(btn => btn.classList.remove('selected'));
-                reasonOptions.forEach(opt => opt.classList.remove('selected'));
+                selectedEmotion = null;
+                currentEmotionTarget = null;
                 reasonSection.classList.add('hidden');
-                otherReasonSection.classList.add('hidden');
                 submitBtn.classList.add('hidden');
-                submitBtn.textContent = "提交"; // Reset button text
-                selectedReasons = [];
-                updateSelectedReasonsDisplay();
-                otherReasonInput.value = '';
-                
-                reasonCategories.forEach((category, index) => {
-                    const toggleIcon = category.querySelector('.toggle-icon');
-                    // Only expand the first category, collapse others
-                    if (index === 0) {
-                        category.classList.add('active');
-                        toggleIcon.textContent = '▲';
-                    } else {
-                        category.classList.remove('active');
-                        toggleIcon.textContent = '▼';
-                    }
-                });
+                reasonInput.value = '';
+                closeModal();
+                updateSubmitButtonState();
             }
-            
-            // 初始化時展開第一個分類
-            if (reasonCategories.length > 0) {
-                reasonCategories[0].classList.add('active');
-                reasonCategories[0].querySelector('.toggle-icon').textContent = '▲';
-            }
-
         });
     </script>
 </body>
 </html>
+
