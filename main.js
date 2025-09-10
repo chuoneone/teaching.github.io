@@ -4,20 +4,15 @@ function toggleMenu() {
     navLinks.classList.toggle('active');
 }
 
-// 🧩 切換內容區塊顯示 + 高亮當前按鈕
+// 🧩 (8下數學) 切換內容區塊顯示 + 高亮當前按鈕
 function showSection(id, clickedBtn = null) {
-    // 隱藏所有 section
     document.querySelectorAll('.section-content').forEach(section => {
         section.classList.remove('active-section');
     });
-
-    // 顯示目標 section
     const target = document.getElementById(id);
     if (target) {
         target.classList.add('active-section');
     }
-
-    // 處理按鈕 active 樣式
     if (clickedBtn) {
         document.querySelectorAll('.section-button').forEach(btn => {
             btn.classList.remove('active');
@@ -26,9 +21,26 @@ function showSection(id, clickedBtn = null) {
     }
 }
 
-// 🕒 倒數計時功能（目標日：2025-07-01）
+// 📚 (8上數學) 切換章節內容顯示 + 高亮當前按鈕 (從 HTML 移入)
+function showChapterContent(chapterId, button) {
+    document.querySelectorAll('.chapter-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    const selectedChapterContent = document.getElementById(chapterId);
+    if (selectedChapterContent) {
+        selectedChapterContent.classList.add('active');
+    }
+    document.querySelectorAll('.chapter-button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    if (button) {
+        button.classList.add('active');
+    }
+}
+
+// 🕒 倒數計時功能
 function countdown() {
-    const countDate = new Date("2026-01-24T00:00:00").getTime();
+        const countDate = new Date("2026-01-24T00:00:00").getTime();
     const now = new Date().getTime();
     const gap = countDate - now;
 
@@ -53,14 +65,9 @@ function countdown() {
     setText("seconds", textSecond);
 }
 
-// 🚀 頁面載入後初始化
+// 🚀 頁面載入後初始化 (整合後的版本)
 document.addEventListener('DOMContentLoaded', () => {
-    // 預設不顯示任何 section（可改成顯示 section1）
-    document.querySelectorAll('.section-content').forEach(section => {
-        section.classList.remove('active-section');
-    });
-
-    // 自動高亮當前頁的導覽列
+    // 1. 自動高亮當前頁的導覽列
     const currentPage = location.pathname.split("/").pop();
     const navLinks = document.querySelectorAll(".nav-links a");
     navLinks.forEach(link => {
@@ -69,7 +76,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 啟動倒數計時
-    countdown();
-    setInterval(countdown, 1000);
+    // 2. 啟動倒數計時
+    // 檢查頁面上是否有倒數計時器元素，有的話才啟動
+    if (document.getElementById('days')) {
+        countdown();
+        setInterval(countdown, 1000);
+    }
+    
+    // 3. 設定 8上數學預設顯示第一章
+    const firstChapterButton = document.querySelector('.chapter-button:first-of-type');
+    if (firstChapterButton) {
+        document.getElementById('chapter1').classList.add('active');
+        firstChapterButton.classList.add('active');
+    }
+
+    // 4. 設定 8下數學預設顯示第一個區塊 (解題區)
+    const firstSectionButton = document.querySelector('.section-button:first-of-type');
+    if(firstSectionButton) {
+        document.getElementById('section4').classList.add('active-section');
+        firstSectionButton.classList.add('active');
+    }
 });

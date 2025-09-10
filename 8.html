@@ -22,6 +22,11 @@
             border-radius: 5px;
             background-color: #f0f0f0;
             cursor: pointer;
+            /* --- 以下為新增的屬性 --- */
+            text-decoration: none; /* 移除 a 標籤的底線 */
+            color: #dbdbdb; /* 設定統一的文字顏色 */
+            display: inline-block; /* 讓 a 標籤表現得像按鈕 */
+            vertical-align: middle; /* 確保垂直對齊一致 */
         }
         .chapter-content {
             display: none;
@@ -49,23 +54,7 @@
             align-items: center; /* 新增此行 */
             justify-content: center; /* 新增此行 */
         }
-        /* 新增課本影片按鈕的樣式 */
-        .video-button {
-            position: absolute; /* 新增此行 */
-            right: 0; /* 新增此行 */
-            padding: 8px 16px;
-            font-size: 16px;
-            background-color: #007bff;
-            color: #fff;
-            border: 2px solid #007bff;
-            border-radius: 20px;
-            text-decoration: none;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-        }
-        .video-button:hover {
-            background-color: #0056b3;
-            border-color: #0056b3;
-        }
+
     </style>
 </head>
 
@@ -94,17 +83,17 @@
         </div>
     </header>
 
-    <div class="section-title text-lg font-bold">
-        <i class="fas fa-compass mr-2"></i> 8上數學
-        <a href="https://mathvideo.hle.com.tw/52/" class="video-button" target="_blank">課本影片</a>
+<div class="section-title text-lg font-bold">
+    <i class="fas fa-compass mr-2"></i> 8上數學
     </div>
 
-    <div id="chapterMenu" class="chapter-menu">
-        <button class="chapter-button" onclick="showChapterContent('chapter1', this)">第1章</button>
-        <button class="chapter-button" onclick="showChapterContent('chapter2', this)">第2章</button>
-        <button class="chapter-button" onclick="showChapterContent('chapter3', this)">第3章</button>
-        <button class="chapter-button" onclick="showChapterContent('chapter4', this)">第4章</button>
-    </div>
+<div id="chapterMenu" class="chapter-menu">
+    <button class="chapter-button" onclick="showChapterContent('chapter1', this)">第1章</button>
+    <button class="chapter-button" onclick="showChapterContent('chapter2', this)">第2章</button>
+    <button class="chapter-button" onclick="showChapterContent('chapter3', this)">第3章</button>
+    <button class="chapter-button" onclick="showChapterContent('chapter4', this)">第4章</button>
+    <a href="https://mathvideo.hle.com.tw/52/" class="chapter-button" target="_blank">課本影片</a>
+</div>
     
     <div id="chapter-container" class="social-container">
         <div id="chapter1" class="chapter-content active">
@@ -344,64 +333,7 @@
     </div>
     
     <script src="main.js"></script>
-    <script>
-        function toggleMenu() {
-            const nav = document.querySelector('nav');
-            nav.classList.toggle('active');
-        }
-
-        // 8下數學的函式，維持不變
-        function showSection(sectionId, button) {
-            const sections = document.querySelectorAll('.section-content');
-            sections.forEach(section => {
-                section.classList.remove('active-section');
-            });
-            const selectedSection = document.getElementById(sectionId);
-            if (selectedSection) {
-                selectedSection.classList.add('active-section');
-            }
-            const buttons = document.querySelectorAll('.section-button');
-            buttons.forEach(btn => {
-                btn.classList.remove('active');
-            });
-            button.classList.add('active');
-        }
-
-        // 修正後的章節按鈕函式
-        function showChapterContent(chapterId, button) {
-            const allChapterContents = document.querySelectorAll('.chapter-content');
-            allChapterContents.forEach(content => {
-                content.classList.remove('active');
-            });
-            const selectedChapterContent = document.getElementById(chapterId);
-            if (selectedChapterContent) {
-                selectedChapterContent.classList.add('active');
-            }
-
-            // 移除所有章節按鈕的 active 樣式
-            const chapterButtons = document.querySelectorAll('.chapter-button');
-            chapterButtons.forEach(btn => {
-                btn.classList.remove('active');
-            });
-            // 為被點擊的按鈕加上 active 樣式
-            if (button) {
-                button.classList.add('active');
-            }
-        }
-
-        // 頁面載入時執行，自動顯示「第1章」內容並高亮按鈕
-        window.onload = function() {
-            const firstChapterButton = document.querySelector('.chapter-button:first-of-type');
-            if (firstChapterButton) {
-                document.getElementById('chapter1').classList.add('active');
-                firstChapterButton.classList.add('active');
-            }
-            
-            // 由於 8下數學的區塊預設沒有 active 類別，這裡手動為第一個區塊加上
-            document.getElementById('section4').classList.add('active-section');
-            document.querySelector('[onclick="showSection(\'section4\', this)"]').classList.add('active');
-        };
-    </script>
+  
 </body>
 <footer>
     <a href="index.html">

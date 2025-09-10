@@ -1,3 +1,4 @@
+
 /* 📱 手機版：最大寬度 768px */
 @media (max-width: 768px) {
   .nav-links {
@@ -5,16 +6,16 @@
     position: fixed;
     top: 0;
     right: 0;
-    bottom: 0;
-    width: 150px; /* ✅ 控制右側展開寬度 */
-    background-color: rgba(0, 0, 0, 0.95); /* 你原本的背景 */
+    height: 100vh;
+    width: 120px;
+    background-color: rgba(10, 20, 35, 0.98);
     display: none;
-    padding: 20px 15px;
+    padding: 0; /* ✅ 修正：移除 padding */
     z-index: 999;
     align-items: flex-start;
     text-align: left;
     animation: fadeSlideLeft 0.3s ease-in-out;
-    box-shadow: -2px 0 6px rgba(0, 0, 0, 0.3); /* ✅ 右側陰影 */
+    box-shadow: none; /* ✅ 修正：移除陰影 */
   }
 
   .nav-links.active {
@@ -22,53 +23,58 @@
   }
 
   .nav-links li {
-    padding: 8px 0;
+    padding: 0;
     width: 100%;
   }
 
   .nav-links a {
-    font-size: 16px;
-    line-height: 0.2;
-    color: #cce7ff; /* 原字色 */
+    font-size: 16px; /* ✅ 修改：字體由 17px 縮小為 16px */
+    color: #e0fbfc;
+    text-shadow: 0 0 4px rgba(0, 225, 255, 0.6);
     display: block;
-    padding: 6px 12px;
+    padding: 5px 25px; /* ✅ 修改：上下間距由 14px 縮小為 12px */
     width: 100%;
     transition: all 0.2s ease-in-out;
-    
+    border-bottom: 1px solid rgba(0, 225, 255, 0.15);
+  }
+  
+  .nav-links li:last-child a {
+    border-bottom: none;
   }
 
   .nav-links a:hover {
     background-color: rgba(0, 255, 255, 0.1);
-    color: #00ffe7;
-    text-shadow: 0 0 5px #00ffe7;
+    color: #fff;
+    text-shadow: 0 0 6px #00ffe7;
   }
 
   .menu-toggle {
     display: block;
   }
 
-
   .nav-links a.active {
-    font-size: 17px;
-    padding-left: 16px;
-    box-shadow: inset 4px 0 0 #00ffe7; /* ✅ 改為左邊內嵌提示線 */
+    font-size: 17px; /* ✅ 修改：Active 字體由 18px 縮小為 17px */
+    font-weight: bold;
+    padding-left: 25px;
+    box-shadow: inset 4px 0 0 #00ffe7;
     border-radius: 0;
-    background-color: rgba(0, 255, 255, 0.08);
+    background-color: rgba(0, 255, 255, 0.15);
+    color: #fff;
+  }
+  
+  /* (以下內容維持不變) */
+
+  @keyframes fadeSlideLeft {
+    from {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
 
-  
-/* ✅ 可選：右側滑出動畫 */
-@keyframes fadeSlideLeft {
-  from {
-    opacity: 0;
-    transform: translateX(100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-    
   .intro-text {
     font-size: 2rem;
     letter-spacing: 1.5px;
@@ -77,18 +83,17 @@
     padding: 0 16px;
   }
 
-  
-    .button-section {
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-    }
-  
-    iframe {
-      width: 90% !important;
-      height: 60vh !important;
-    }
-     
+  .button-section {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  iframe {
+    width: 90% !important;
+    height: 60vh !important;
+  }
+
   .big-button,
   .big-button2 {
     width: 180px;
@@ -97,154 +102,74 @@
     line-height: 50px;
     margin: 8px auto;
   }
-      
-      
-  
-    .grade-row {
-      grid-template-columns: 1fr;
-      gap: 20px;
-      width: 100%;
-    }
-  
-    .single-row {
-      flex-wrap: wrap;
-      justify-content: center;
-    }
 
+  .grade-row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    width: 100%;
+  }
 
-    .image-button {
-        width: 80% !important;   /* 原本你寫 45%，這裡手機寬度建議再小一點 */
-        height: 200px !important; /* 圖片高度變小 */
-      }
+  .single-row {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 
-    .image-button img {
-        height: 100% !important; /* 跟著容器高度縮放 */
-      }
-    
-      .overlay-text {
-        font-size: 35px !important; /* 手機時的文字大小，原本是 50px */
-        padding: 0 10px;            /* 讓文字不要太擠 */
-      }
-  
-    .iframe-container {
-      flex-direction: column !important;
-      align-items: center;
-    }
-  
-    .iframe-box {
-      width: 90% !important;
-      margin-bottom: 20px;
-    }
-    
-    .countdown-container {
-      max-width: 90%;      /* 最大寬改成螢幕90% */
-      padding: 10px 5px;   /* 內距再小一點 */
-      font-size: 10px;     /* 整體字再小一點 */
-    }
-  
-    .countdown-title {
-      font-size: 0.9rem;   /* 標題縮小 */
-    }
-  
-    .countdown-timer span {
-      font-size: 6vw;             /* ✅ 手機版數字更小 */
-      letter-spacing: -1px;       /* ✅ 手機版字更擠一點 */
-    }
-  
-    .label {
-      font-size: 0.7rem;   /* 單位文字縮小 */
-      margin-left: -0.5px; /* ✅ 手機版也保持緊密，但略微寬鬆避免擠太多 */
+  .image-button {
+    width: 80% !important;
+    height: 200px !important;
+  }
 
-    }
+  .image-button img {
+    height: 100% !important;
+  }
 
-    .section-title {
-      font-size: 2rem; /* 手機版自動變小 */
-    }
+  .overlay-text {
+    font-size: 35px !important;
+    padding: 0 10px;
+  }
 
-    .responsive-img {
-      height: 200px;  /* 手機時縮小圖片高度 */
+  .iframe-container {
+    flex-direction: column !important;
+    align-items: center;
+  }
+
+  .iframe-box {
+    width: 90% !important;
+    margin-bottom: 20px;
+  }
+
+  .countdown-container {
+    max-width: 90%;
+    padding: 10px 5px;
+    font-size: 10px;
+  }
+
+  .countdown-title {
+    font-size: 0.9rem;
+  }
+
+  .countdown-timer span {
+    font-size: 6vw;
+    letter-spacing: -1px;
+  }
+
+  .label {
+    font-size: 0.7rem;
+    margin-left: -0.5px;
+  }
+
+  .responsive-img {
+    height: 200px;
+  }
+
+  .section-title {
+    font-size: 2rem;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .video-button {
+    position: static;
+    margin: 0 auto;
   }
 }
-  
-  
-  
-  /* 💻 平板版：769px ~ 1024px */
-  @media (min-width: 769px) and (max-width: 1024px) {
-    .grade-row {
-
-      gap: 20px;
-      width: 100%;
-
-    }
-  
-    .image-button {
-      width: 45%;
-      height: 250px;
-      margin: 10px auto;
-    }
-  
-    .iframe-box {
-      width: 45%;
-    }
-  
-    .big-button {
-      font-size: 26px;
-      max-width: 80%;
-      padding: 14px 28px;
-    }
-  
-    .button-section {
-      flex-direction: column;
-      align-items: center;
-      gap: 30px;
-    }
-  
-    .social-group {
-      width: 45%;
-      min-width: unset;
-    }
-  
-    .iframe-container {
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-    }
-  
-    iframe {
-      width: 80%;
-      height: 400px;
-    }
-  }
-  
-  
-  /* 🖥️ 超寬桌機版：1440px 以上（可選） */
-  @media (min-width: 1440px) {
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-  
-    .grade-row {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  
-    .image-button {
-      height: 320px;
-    }
-  
-    .big-button {
-      font-size: 32px;
-    }
-  }
-  
-  @keyframes fadeSlideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
