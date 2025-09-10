@@ -10,9 +10,64 @@
     <link rel="icon" href="images/dog.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
-
+    <style>
+        .chapter-menu {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .chapter-button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+            cursor: pointer;
+        }
+        .chapter-content {
+            display: none;
+            margin-top: 20px;
+        }
+        .chapter-content.active {
+            display: block;
+        }
+        .chapter-button.active {
+            background-color: #007bff;
+            color: #fff;
+            border-color: #007bff;
+        }
+        .chapter-sub-sections {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        /* 調整 section-title 的樣式 */
+        .section-title {
+            position: relative; /* 新增此行 */
+            display: flex; /* 新增此行 */
+            align-items: center; /* 新增此行 */
+            justify-content: center; /* 新增此行 */
+        }
+        /* 新增課本影片按鈕的樣式 */
+        .video-button {
+            position: absolute; /* 新增此行 */
+            right: 0; /* 新增此行 */
+            padding: 8px 16px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: 2px solid #007bff;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .video-button:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+    </style>
 </head>
-
 
 <body>
     <header class="navbar">
@@ -27,13 +82,12 @@
                 <li><a href="7eng.html">7英</a></li>
                 <li><a href="8eng.html">8英</a></li>
                 <li><a href="9eng.html">9英</a></li>
-                <li><a href="https://chuone.my.canva.site/spedchb2">7國</a></li>
-                <li><a href="https://chuone.my.canva.site/spedchb4">8國</a></li>
+                <li><a href="https://chuone.my.canva.site/spedchb2" target="_blank">7國</a></li>
+                <li><a href="https://chuone.my.canva.site/spedchb4" target="_blank">8國</a></li>
                 <li><a href="9ch.html">9國</a></li>
                 <li><a href="bigtest.html">會考專區</a></li>
-                <li><a href="learningstrategy.html">學習策略</a></li>                
+                <li><a href="learningstrategy.html">學習策略</a></li>
             </ul>
-
         </nav>
         <div class="menu-toggle" onclick="toggleMenu()">
             <i class="fas fa-bars"></i>
@@ -42,84 +96,130 @@
 
     <div class="section-title text-lg font-bold">
         <i class="fas fa-compass mr-2"></i> 8上數學
-      </div> 
-    
-      <div style="text-align:center; margin-top: 40px;">
-            <button class="section-button" onclick="showSection('section1', this)">1.學習區</button><button class="section-button" onclick="window.location.href='https://mathvideo.hle.com.tw/52/'">3.影片區</button>
+        <a href="https://mathvideo.hle.com.tw/52/" class="video-button" target="_blank">課本影片</a>
+    </div>
+
+    <div id="chapterMenu" class="chapter-menu">
+        <button class="chapter-button" onclick="showChapterContent('chapter1', this)">第1章</button>
+        <button class="chapter-button" onclick="showChapterContent('chapter2', this)">第2章</button>
+        <button class="chapter-button" onclick="showChapterContent('chapter3', this)">第3章</button>
+        <button class="chapter-button" onclick="showChapterContent('chapter4', this)">第4章</button>
     </div>
     
-    <div id="section1" class="section-content active-section">   
-        <div class="social-container">
-            <div class="single-row">
+    <div id="chapter-container" class="social-container">
+        <div id="chapter1" class="chapter-content active">
+            <div class="chapter-sub-sections">
                 <div class="social-group">
-                    <h3 style="text-align: center;">第1章 乘法公式多項式</h3>                    
-                    <h4 style="text-align: center;">1-1 乘法公式</h3>
-                    <div class="btn-group">                        
-                        <a href="https://g.co/gemini/share/b71562d883e1" class="btn">一、分配律</a>                        
-                        <a href="https://g.co/gemini/share/5d479239587c" class="btn">二、利用分配律求值</a>                                              
-                        <a href="https://g.co/gemini/share/d819d4fca35e" class="btn">三、和的平方公式</a>                                           
-                        <a href="https://g.co/gemini/share/83f953e80024" class="btn">四、差的平方公式</a>                                          
-                        <a href="https://g.co/gemini/share/6a0f70eae694" class="btn">五、平方差</a>                                        
-                        <a href="https://g.co/gemini/share/21dda8ff1abe" class="btn">六、應用題</a>
-
-                        
+                    <h3 style="text-align: center;">1-1 乘法公式</h3>
+                    <div class="btn-group">
+                        <a href="https://g.co/gemini/share/b71562d883e1" class="btn" target="_blank">一、分配律</a>
+                        <a href="https://g.co/gemini/share/5d479239587c" class="btn" target="_blank">二、利用分配律求值</a>
+                        <a href="https://g.co/gemini/share/d819d4fca35e" class="btn" target="_blank">三、和的平方公式</a>
+                        <a href="https://g.co/gemini/share/83f953e80024" class="btn" target="_blank">四、差的平方公式</a>
+                        <a href="https://g.co/gemini/share/6a0f70eae694" class="btn" target="_blank">五、平方差</a>
+                        <a href="https://g.co/gemini/share/21dda8ff1abe" class="btn" target="_blank">六、應用題</a>
                     </div>
                 </div>
-        
                 <div class="social-group">
-                   <h3 style="text-align: center;">第2章 平方根與畢氏定理</h3>
+                    <h3 style="text-align: center;">1-2 多項式的加減</h3>
                     <div class="btn-group">
-                        </div>
+                        <a href="https://wordwall.net/play/97205/944/857" class="btn" target="_blank">一、項、係數與次數</a>
+                        <a href="https://g.co/gemini/share/bfbce4d2040c" class="btn" target="_blank">二、升冪與降冪</a>
+                        <a href="https://gemini.google.com/share/30c2a98dccde" class="btn" target="_blank">三、同類項</a>
+                        <a href="https://wordwall.net/play/97210/039/105" class="btn" target="_blank">四、多項式的加法</a>
+                        <a href="https://wordwall.net/play/97210/162/818" class="btn" target="_blank">五、多項式的減法</a>
+                        <a href="https://wordwall.net/play/97210/276/873" class="btn" target="_blank">六、多項式的加減法</a>
+                    </div>
                 </div>
-        
                 <div class="social-group">
-                    <h3 style="text-align: center;">第3章 因式分解</h3>
+                    <h3 style="text-align: center;">1-3 多項式的乘除</h3>
                     <div class="btn-group">
-                        </div>
-                </div>
-        
-                <div class="social-group">                          
-                   <h3 style="text-align: center;">第4章 一元二次方程式</h3>
-                    <div class="btn-group">
-                        </div>
+                        <a href="#" class="btn">一、多項式乘法</a>
+                        <a href="#" class="btn">二、多項式除法</a>
+                        <a href="#" class="btn">三、應用問題</a>
+                    </div>
                 </div>
             </div>
-
-            <div class="single-row">
+        </div>
+    
+        <div id="chapter2" class="chapter-content">
+            <div class="chapter-sub-sections">
                 <div class="social-group">
-                    <h3 style="text-align: center;">1-2</h3>
+                    <h3 style="text-align: center;">2-1 平方根的意義</h3>
                     <div class="btn-group">
-                        
-                        </div>
+                        <a href="#" class="btn">一、平方根</a>
+                        <a href="#" class="btn">二、根式的化簡</a>
+                        <a href="#" class="btn">三、應用問題</a>
+                    </div>
                 </div>
-        
                 <div class="social-group">
-                   <h3 style="text-align: center;">2-2</h3>
+                    <h3 style="text-align: center;">2-2 根式的運算</h3>
                     <div class="btn-group">
-                        </div>
+                        <a href="#" class="btn">一、根式的乘除</a>
+                        <a href="#" class="btn">二、根式的加減</a>
+                        <a href="#" class="btn">三、有理化</a>
+                        <a href="#" class="btn">四、比較大小</a>
+                    </div>
                 </div>
-        
                 <div class="social-group">
-                    <h3 style="text-align: center;">3-2</h3>
+                    <h3 style="text-align: center;">2-3 畢氏定理</h3>
                     <div class="btn-group">
-                        </div>
+                        <a href="#" class="btn">一、畢氏定理</a>
+                        <a href="#" class="btn">二、應用問題</a>
+                    </div>
                 </div>
-        
-                <div class="social-group">                          
-                   <h3 style="text-align: center;">4-2</h3>
+            </div>
+        </div>
+    
+        <div id="chapter3" class="chapter-content">
+            <div class="chapter-sub-sections">
+                <div class="social-group">
+                    <h3 style="text-align: center;">3-1 提公因式與乘法公式作因式分解</h3>
                     <div class="btn-group">
-                        </div>
+                        <a href="#" class="btn">一、提公因式法</a>
+                        <a href="#" class="btn">二、利用乘法公式作因式分解</a>
+                    </div>
+                </div>
+                <div class="social-group">
+                    <h3 style="text-align: center;">3-2 利用十字交乘法作因式分解</h3>
+                    <div class="btn-group">
+                        <a href="#" class="btn">一、十字交乘法</a>
+                        <a href="#" class="btn">二、應用問題</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div id="chapter4" class="chapter-content">
+            <div class="chapter-sub-sections">
+                <div class="social-group">
+                    <h3 style="text-align: center;">4-1 因式分解法解一元二次方程式</h3>
+                    <div class="btn-group">
+                        <a href="#" class="btn">一、因式分解法</a>
+                        <a href="#" class="btn">二、應用問題</a>
+                    </div>
+                </div>
+                <div class="social-group">
+                    <h3 style="text-align: center;">4-2 配方法與公式解</h3>
+                    <div class="btn-group">
+                        <a href="#" class="btn">一、配方法</a>
+                        <a href="#" class="btn">二、公式解</a>
+                    </div>
+                </div>
+                <div class="social-group">
+                    <h3 style="text-align: center;">4-3 應用問題</h3>
+                    <div class="btn-group">
+                        <a href="#" class="btn">應用問題</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    
-    
 
 
     <div style="text-align: center; margin-bottom: 20px; margin-top: 10px;">
         <a href="index.html">
-          <img src="images/dog.png" alt="Logo" style="height: 100px;">
+            <img src="images/dog.png" alt="Logo" style="height: 100px;">
         </a>
     </div>
 
@@ -135,123 +235,174 @@
 
     <div id="section4" class="section-content active-section">
         <div class="social-container">
-        <div class="single-row">
-            <div class="social-group">
-                <h3 style="text-align: center;">第1章 數列與級數</h3>
-                <div class="btn-group">
+            <div class="single-row">
+                <div class="social-group">
+                    <h3 style="text-align: center;">第1章 數列與級數</h3>
+                    <div class="btn-group">
                     </div>
-            </div>
-
-            <div class="social-group">
-                <h3 style="text-align: center;">第2章 線型函數圖形</h3>
-                <div class="btn-group">
+                </div>
+                <div class="social-group">
+                    <h3 style="text-align: center;">第2章 線型函數圖形</h3>
+                    <div class="btn-group">
                     </div>
-            </div>
-
-            <div class="social-group">
-                <h3 style="text-align: center;">第3章 內角與外角</h3>
-                <div class="btn-group">
-                    <a href="https://chuone.my.canva.site/3-3" class="btn">3-1內角與外角</a>
-                    <a href="https://chuone.my.canva.site/3-3" class="btn">3-2基本尺規作圖</a>
-                    <a href="https://chuone.my.canva.site/3-3" class="btn">3-3三角形全等</a>
-                    <a href="https://chuone.my.canva.site/3-4" class="btn">3-4中垂線角平分線</a>
-                    <a href="https://chuone.my.canva.site/3-5" class="btn">3-5三角形邊角</a>
+                </div>
+                <div class="social-group">
+                    <h3 style="text-align: center;">第3章 內角與外角</h3>
+                    <div class="btn-group">
+                        <a href="https://chuone.my.canva.site/3-3" class="btn" target="_blank">3-1內角與外角</a>
+                        <a href="https://chuone.my.canva.site/3-3" class="btn" target="_blank">3-2基本尺規作圖</a>
+                        <a href="https://chuone.my.canva.site/3-3" class="btn" target="_blank">3-3三角形全等</a>
+                        <a href="https://chuone.my.canva.site/3-4" class="btn" target="_blank">3-4中垂線角平分線</a>
+                        <a href="https://chuone.my.canva.site/3-5" class="btn" target="_blank">3-5三角形邊角</a>
+                    </div>
+                </div>
+                <div class="social-group">
+                    <h3 style="text-align: center;">第4章 平行與四邊形</h3>
+                    <div class="btn-group">
+                    </div>
                 </div>
             </div>
-
-            <div class="social-group">
-                <h3 style="text-align: center;">第4章 平行與四邊形</h3>
-                <div class="btn-group">
-                    </div>
-            </div>
         </div>
-    </div>
     </div>
 
     <div id="section5" class="section-content">
-    <div class="social-container">
-        <div class="single-row">
-            <div class="social-group">
-                <h3 style="text-align: center;">第1章 挑戰區</h3>
-                <div class="btn-group">
-                    <a href="https://chuone.my.canva.site/8-2-1-1" target="_blank" class="btn">1-1認識數列等差數列</a>
-                    <a href="https://wordwall.net/play/87983/306/680" target="_blank" class="btn">1-2等差級數</a>
-                    <a href="https://chuone.my.canva.site/8-2-1-3" target="_blank" class="btn">1-3等比數列</a>
+        <div class="social-container">
+            <div class="single-row">
+                <div class="social-group">
+                    <h3 style="text-align: center;">第1章 挑戰區</h3>
+                    <div class="btn-group">
+                        <a href="https://chuone.my.canva.site/8-2-1-1" target="_blank" class="btn">1-1認識數列等差數列</a>
+                        <a href="https://wordwall.net/play/87983/306/680" target="_blank" class="btn">1-2等差級數</a>
+                        <a href="https://chuone.my.canva.site/8-2-1-3" target="_blank" class="btn">1-3等比數列</a>
+                    </div>
                 </div>
-            </div>
-            <div class="social-group">
-                <h3 style="text-align: center;">第2章 挑戰區</h3>
-                <div class="btn-group">
-                    <a href="https://wordwall.net/play/88285/785/792" target="_blank" class="btn">01求函數值</a>
-                    <a href="https://wordwall.net/play/88516/563/380" target="_blank" class="btn">02函數值相等</a>
+                <div class="social-group">
+                    <h3 style="text-align: center;">第2章 挑戰區</h3>
+                    <div class="btn-group">
+                        <a href="https://wordwall.net/play/88285/785/792" target="_blank" class="btn">01求函數值</a>
+                        <a href="https://wordwall.net/play/88516/563/380" target="_blank" class="btn">02函數值相等</a>
+                    </div>
                 </div>
-            </div>
-            <div class="social-group">
-                <h3 style="text-align: center;">第3章 挑戰區</h3>
-                <div class="btn-group">
-                    <a href="https://chuone.my.canva.site/8-2-3-1" target="_blank" class="btn">3-1內角與外角</a>
-                    <a href="https://chuone.my.canva.site/8-2-3-3" target="_blank" class="btn">3-3三角形全等</a>
-                     <a href="https://wordwall.net/play/92577/051/925" target="_blank" class="btn">3-5三角形邊角</a>
+                <div class="social-group">
+                    <h3 style="text-align: center;">第3章 挑戰區</h3>
+                    <div class="btn-group">
+                        <a href="https://chuone.my.canva.site/8-2-3-1" target="_blank" class="btn">3-1內角與外角</a>
+                        <a href="https://chuone.my.canva.site/8-2-3-3" target="_blank" class="btn">3-3三角形全等</a>
+                        <a href="https://wordwall.net/play/92577/051/925" target="_blank" class="btn">3-5三角形邊角</a>
+                    </div>
                 </div>
-            </div>
-            <div class="social-group">
-                <h3 style="text-align: center;">第4章 挑戰區</h3>
-                <div class="btn-group">
-                    <a href="https://chuone.my.canva.site/8-2-4-1" target="_blank" class="btn">4-1平行線與截角</a>
-                    <a href="https://chuone.my.canva.site/8-2-4-2" target="_blank" class="btn">4-2平行四邊形</a>
-                    <a href="https://chuone.my.canva.site/8-2-4-3" target="_blank" class="btn">4-3特殊四邊形</a>
+                <div class="social-group">
+                    <h3 style="text-align: center;">第4章 挑戰區</h3>
+                    <div class="btn-group">
+                        <a href="https://chuone.my.canva.site/8-2-4-1" target="_blank" class="btn">4-1平行線與截角</a>
+                        <a href="https://chuone.my.canva.site/8-2-4-2" target="_blank" class="btn">4-2平行四邊形</a>
+                        <a href="https://chuone.my.canva.site/8-2-4-3" target="_blank" class="btn">4-3特殊四邊形</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 
     <div id="section6" class="section-content">
         <div class="social-container">
-        <div class="single-row">
-            <div class="social-group">
-               <h3 style="text-align: center;">第1章 例題影片</h3>
-                <div class="btn-group">
-                    <a href="https://mathvideo.hle.com.tw/2B/1-1/" target="_blank" class="btn">1-1認識數列等差數列</a>
-                    <a href="https://mathvideo.hle.com.tw/2B/1-2/" target="_blank" class="btn">1-2等差級數</a>
-                    <a href="https://mathvideo.hle.com.tw/2B/1-3/" target="_blank" class="btn">1-3等比數列</a>
+            <div class="single-row">
+                <div class="social-group">
+                    <h3 style="text-align: center;">第1章 例題影片</h3>
+                    <div class="btn-group">
+                        <a href="https://mathvideo.hle.com.tw/2B/1-1/" target="_blank" class="btn">1-1認識數列等差數列</a>
+                        <a href="https://mathvideo.hle.com.tw/2B/1-2/" target="_blank" class="btn">1-2等差級數</a>
+                        <a href="https://mathvideo.hle.com.tw/2B/1-3/" target="_blank" class="btn">1-3等比數列</a>
+                    </div>
                 </div>
-            </div>
-
-            <div class="social-group">
-                <h3 style="text-align: center;">第2章 例題影片</h3>
-                <div class="btn-group">
-                    <a href="https://mathvideo.hle.com.tw/2B/CH2/" target="_blank" class="btn">2線型函數與其圖形</a>
+                <div class="social-group">
+                    <h3 style="text-align: center;">第2章 例題影片</h3>
+                    <div class="btn-group">
+                        <a href="https://mathvideo.hle.com.tw/2B/CH2/" target="_blank" class="btn">2線型函數與其圖形</a>
+                    </div>
                 </div>
-            </div>
-
-            <div class="social-group">
-                <h3 style="text-align: center;">第3章 例題影片</h3>
-                <div class="btn-group">
-                    <a href="https://mathvideo.hle.com.tw/2B/3-1/" class="btn">3-1內角與外角</a>
-                    <a href="https://mathvideo.hle.com.tw/2B/3-2SC/" class="btn">3-2基本尺規作圖</a>
-                    <a href="https://www.notion.so/3-2-L-1d84c52ff8d0802baff8fbff41374465?pvs=4" class="btn">3-2基本尺規作圖L</a>
-                    <a href="https://mathvideo.hle.com.tw/2B/3-3/" class="btn">3-3三角形全等</a>
-                    <a href="https://mathvideo.hle.com.tw/2B/3-4/" class="btn">3-4中垂線角平分線</a>
-                    <a href="https://mathvideo.hle.com.tw/2B/3-5/" class="btn">3-5三角形邊角</a>
+                <div class="social-group">
+                    <h3 style="text-align: center;">第3章 例題影片</h3>
+                    <div class="btn-group">
+                        <a href="https://mathvideo.hle.com.tw/2B/3-1/" class="btn" target="_blank">3-1內角與外角</a>
+                        <a href="https://mathvideo.hle.com.tw/2B/3-2SC/" class="btn" target="_blank">3-2基本尺規作圖</a>
+                        <a href="https://www.notion.so/3-2-L-1d84c52ff8d0802baff8fbff41374465?pvs=4" class="btn" target="_blank">3-2基本尺規作圖L</a>
+                        <a href="https://mathvideo.hle.com.tw/2B/3-3/" class="btn" target="_blank">3-3三角形全等</a>
+                        <a href="https://mathvideo.hle.com.tw/2B/3-4/" class="btn" target="_blank">3-4中垂線角平分線</a>
+                        <a href="https://mathvideo.hle.com.tw/2B/3-5/" class="btn" target="_blank">3-5三角形邊角</a>
+                    </div>
                 </div>
-            </div>
-
-            <div class="social-group">
-                <h3 style="text-align: center;">第4章 例題影片</h3>
-                <div class="btn-group">
-                    <a href="https://mathvideo.hle.com.tw/2B/4-1/" target="_blank" class="btn">4-1平行線截角性質</a>
-                    <a href="https://mathvideo.hle.com.tw/2B/4-2/" target="_blank" class="btn">4-2平行四邊形</a>
-                    <a href="https://mathvideo.hle.com.tw/2B/4-3/" target="_blank" class="btn">4-3特殊四邊與梯形</a>
+                <div class="social-group">
+                    <h3 style="text-align: center;">第4章 例題影片</h3>
+                    <div class="btn-group">
+                        <a href="https://mathvideo.hle.com.tw/2B/4-1/" target="_blank" class="btn">4-1平行線截角性質</a>
+                        <a href="https://mathvideo.hle.com.tw/2B/4-2/" target="_blank" class="btn">4-2平行四邊形</a>
+                        <a href="https://mathvideo.hle.com.tw/2B/4-3/" target="_blank" class="btn">4-3特殊四邊與梯形</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    </div>
-<script src="main.js"></script>
+    
+    <script src="main.js"></script>
+    <script>
+        function toggleMenu() {
+            const nav = document.querySelector('nav');
+            nav.classList.toggle('active');
+        }
 
+        // 8下數學的函式，維持不變
+        function showSection(sectionId, button) {
+            const sections = document.querySelectorAll('.section-content');
+            sections.forEach(section => {
+                section.classList.remove('active-section');
+            });
+            const selectedSection = document.getElementById(sectionId);
+            if (selectedSection) {
+                selectedSection.classList.add('active-section');
+            }
+            const buttons = document.querySelectorAll('.section-button');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            button.classList.add('active');
+        }
+
+        // 修正後的章節按鈕函式
+        function showChapterContent(chapterId, button) {
+            const allChapterContents = document.querySelectorAll('.chapter-content');
+            allChapterContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            const selectedChapterContent = document.getElementById(chapterId);
+            if (selectedChapterContent) {
+                selectedChapterContent.classList.add('active');
+            }
+
+            // 移除所有章節按鈕的 active 樣式
+            const chapterButtons = document.querySelectorAll('.chapter-button');
+            chapterButtons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            // 為被點擊的按鈕加上 active 樣式
+            if (button) {
+                button.classList.add('active');
+            }
+        }
+
+        // 頁面載入時執行，自動顯示「第1章」內容並高亮按鈕
+        window.onload = function() {
+            const firstChapterButton = document.querySelector('.chapter-button:first-of-type');
+            if (firstChapterButton) {
+                document.getElementById('chapter1').classList.add('active');
+                firstChapterButton.classList.add('active');
+            }
+            
+            // 由於 8下數學的區塊預設沒有 active 類別，這裡手動為第一個區塊加上
+            document.getElementById('section4').classList.add('active-section');
+            document.querySelector('[onclick="showSection(\'section4\', this)"]').classList.add('active');
+        };
+    </script>
 </body>
-</html>
 <footer>
     <a href="index.html">
         <img src="images/dog.png" alt="Logo" style="height: 100px; vertical-align: middle; margin-right: 10px;">
@@ -259,3 +410,4 @@
     <br>
     <p style="display: inline;">Created by Chu Pei Yi</p>
 </footer>
+</html>
