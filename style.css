@@ -464,6 +464,43 @@
     width: auto;
 }
 
+/* Chapter buttons */
+.chapter-button {
+  margin: 10px;
+  padding: 15px 30px;
+  font-size: 20px;
+  font-family: 'Orbitron', sans-serif;
+  background: linear-gradient(145deg, #0f172a, #1e293b);
+  color: #00ffff;
+  border: 2px solid #00ffff;
+  border-radius: 12px;
+  /* box-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, inset 0 0 10px #0ff; <-- 移除此行 */
+  /* text-shadow: 0 0 3px #00ffff, 0 0 6px #ff00ff; <-- 移除此行 */
+  letter-spacing: 2px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.chapter-button:hover {
+  background: linear-gradient(135deg, #00ffe7, #8f00ff);
+  color: #ffffff;
+  /* box-shadow: 0 0 8px #00ffe7, 0 0 16px #8f00ff, inset 0 0 6px rgba(255, 255, 255, 0.2); <-- 移除此行 */
+  transform: scale(1.06);
+  border: 2px solid rgba(0, 255, 231, 0.6);
+}
+
+.chapter-button.active {
+  background: linear-gradient(to right, #00ffe7, #8f00ff);
+  color: #ffffff;
+  font-weight: bold;
+  border: 2px solid #00ffe7;
+  border-radius: 12px;
+  transform: scale(1.08);
+  /* box-shadow: 0 0 12px #00ffe7, 0 0 24px #8f00ff, inset 0 0 10px rgba(255, 255, 255, 0.2); <-- 移除此行 */
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
 @keyframes pulse {
     0% {
         opacity: 1;
@@ -479,6 +516,8 @@
         opacity: 1;
         transform: scale(1);
     }
+
+    
 
 
 }
