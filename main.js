@@ -21,26 +21,9 @@ function showSection(id, clickedBtn = null) {
     }
 }
 
-// 📚 (8上數學) 切換章節內容顯示 + 高亮當前按鈕 (從 HTML 移入)
-function showChapterContent(chapterId, button) {
-    document.querySelectorAll('.chapter-content').forEach(content => {
-        content.classList.remove('active');
-    });
-    const selectedChapterContent = document.getElementById(chapterId);
-    if (selectedChapterContent) {
-        selectedChapterContent.classList.add('active');
-    }
-    document.querySelectorAll('.chapter-button').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    if (button) {
-        button.classList.add('active');
-    }
-}
-
 // 🕒 倒數計時功能
 function countdown() {
-        const countDate = new Date("2026-01-24T00:00:00").getTime();
+    const countDate = new Date("2026-01-24T00:00:00").getTime();
     const now = new Date().getTime();
     const gap = countDate - now;
 
@@ -83,17 +66,15 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(countdown, 1000);
     }
     
-    // 3. 設定 8上數學預設顯示第一章
-    const firstChapterButton = document.querySelector('.chapter-button:first-of-type');
-    if (firstChapterButton) {
-        document.getElementById('chapter1').classList.add('active');
-        firstChapterButton.classList.add('active');
-    }
-
+    
     // 4. 設定 8下數學預設顯示第一個區塊 (解題區)
     const firstSectionButton = document.querySelector('.section-button:first-of-type');
     if(firstSectionButton) {
-        document.getElementById('section4').classList.add('active-section');
+
+        const firstSectionContent = document.getElementById('section5');
+        if (firstSectionContent) {
+            firstSectionContent.classList.add('active-section');
+        }
         firstSectionButton.classList.add('active');
     }
 });

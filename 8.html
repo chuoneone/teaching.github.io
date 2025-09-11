@@ -10,52 +10,6 @@
     <link rel="icon" href="images/dog.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
-    <style>
-        .chapter-menu {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .chapter-button {
-            padding: 10px 20px;
-            margin: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f0f0f0;
-            cursor: pointer;
-            /* --- 以下為新增的屬性 --- */
-            text-decoration: none; /* 移除 a 標籤的底線 */
-            color: #dbdbdb; /* 設定統一的文字顏色 */
-            display: inline-block; /* 讓 a 標籤表現得像按鈕 */
-            vertical-align: middle; /* 確保垂直對齊一致 */
-        }
-        .chapter-content {
-            display: none;
-            margin-top: 20px;
-        }
-        .chapter-content.active {
-            display: block;
-        }
-        .chapter-button.active {
-            background-color: #007bff;
-            color: #fff;
-            border-color: #007bff;
-        }
-        .chapter-sub-sections {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-        }
-        /* 調整 section-title 的樣式 */
-        .section-title {
-            position: relative; /* 新增此行 */
-            display: flex; /* 新增此行 */
-            align-items: center; /* 新增此行 */
-            justify-content: center; /* 新增此行 */
-        }
-
-    </style>
 </head>
 
 <body>
@@ -83,21 +37,21 @@
         </div>
     </header>
 
-<div class="section-title text-lg font-bold">
-    <i class="fas fa-compass mr-2"></i> 8上數學
+    <div class="section-title text-lg font-bold">
+        <i class="fas fa-compass mr-2"></i> 8上數學
     </div>
 
-<div id="chapterMenu" class="chapter-menu">
-    <button class="chapter-button" onclick="showChapterContent('chapter1', this)">第1章</button>
-    <button class="chapter-button" onclick="showChapterContent('chapter2', this)">第2章</button>
-    <button class="chapter-button" onclick="showChapterContent('chapter3', this)">第3章</button>
-    <button class="chapter-button" onclick="showChapterContent('chapter4', this)">第4章</button>
-    <a href="https://mathvideo.hle.com.tw/52/" class="chapter-button" target="_blank">課本影片</a>
-</div>
-    
-    <div id="chapter-container" class="social-container">
-        <div id="chapter1" class="chapter-content active">
-            <div class="chapter-sub-sections">
+    <div style="text-align:center; margin-top: 40px;">
+        <button class="section-button" onclick="showSection('section1', this)">第1章</button>
+        <button class="section-button" onclick="showSection('section2', this)">第2章</button>
+        <button class="section-button" onclick="showSection('section3', this)">第3章</button>
+        <button class="section-button" onclick="showSection('section4', this)">第4章</button>
+        <a href="https://mathvideo.hle.com.tw/52/" class="section-button" target="_blank">課本影片</a>
+    </div>
+
+    <div id="section1" class="section-content active-section">
+        <div class="social-container">
+            <div class="single-row">
                 <div class="social-group">
                     <h3 style="text-align: center;">1-1 乘法公式</h3>
                     <div class="btn-group">
@@ -130,9 +84,11 @@
                 </div>
             </div>
         </div>
-    
-        <div id="chapter2" class="chapter-content">
-            <div class="chapter-sub-sections">
+    </div>
+
+    <div id="section2" class="section-content">
+        <div class="social-container">
+            <div class="single-row">
                 <div class="social-group">
                     <h3 style="text-align: center;">2-1 平方根的意義</h3>
                     <div class="btn-group">
@@ -159,9 +115,11 @@
                 </div>
             </div>
         </div>
-    
-        <div id="chapter3" class="chapter-content">
-            <div class="chapter-sub-sections">
+    </div>
+
+    <div id="section3" class="section-content">
+        <div class="social-container">
+            <div class="single-row">
                 <div class="social-group">
                     <h3 style="text-align: center;">3-1 提公因式與乘法公式作因式分解</h3>
                     <div class="btn-group">
@@ -178,9 +136,11 @@
                 </div>
             </div>
         </div>
-    
-        <div id="chapter4" class="chapter-content">
-            <div class="chapter-sub-sections">
+    </div>
+
+    <div id="section4" class="section-content">
+        <div class="social-container">
+            <div class="single-row">
                 <div class="social-group">
                     <h3 style="text-align: center;">4-1 因式分解法解一元二次方程式</h3>
                     <div class="btn-group">
@@ -205,7 +165,6 @@
         </div>
     </div>
 
-
     <div style="text-align: center; margin-bottom: 20px; margin-top: 10px;">
         <a href="index.html">
             <img src="images/dog.png" alt="Logo" style="height: 100px;">
@@ -217,12 +176,12 @@
     </div>
 
     <div style="text-align:center; margin-top: 40px;">
-        <button class="section-button" onclick="showSection('section4', this)">1.解題區</button>
-        <button class="section-button" onclick="showSection('section5', this)">2.挑戰區</button>
-        <button class="section-button" onclick="showSection('section6', this)">3.影片區</button>
+        <button class="section-button" onclick="showSection('section5', this)">1.解題區</button>
+        <button class="section-button" onclick="showSection('section6', this)">2.挑戰區</button>
+        <button class="section-button" onclick="showSection('section7', this)">3.影片區</button>
     </div>
 
-    <div id="section4" class="section-content active-section">
+    <div id="section5" class="section-content active-section">
         <div class="social-container">
             <div class="single-row">
                 <div class="social-group">
@@ -254,7 +213,7 @@
         </div>
     </div>
 
-    <div id="section5" class="section-content">
+    <div id="section6" class="section-content">
         <div class="social-container">
             <div class="single-row">
                 <div class="social-group">
@@ -292,7 +251,7 @@
         </div>
     </div>
 
-    <div id="section6" class="section-content">
+    <div id="section7" class="section-content">
         <div class="social-container">
             <div class="single-row">
                 <div class="social-group">
@@ -333,7 +292,7 @@
     </div>
     
     <script src="main.js"></script>
-  
+
 </body>
 <footer>
     <a href="index.html">
