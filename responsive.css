@@ -1,7 +1,8 @@
-
 /* 📱 手機版：最大寬度 768px */
 @media (max-width: 768px) {
   .nav-links {
+    /* --- 佈局與樣式 (來自您的原始碼) --- */
+    display: flex; /* ✅ 新增: 設定為 flex 容器 */
     flex-direction: column;
     position: fixed;
     top: 0;
@@ -9,18 +10,29 @@
     height: 100vh;
     width: 120px;
     background-color: #e6f7ff;
-    display: none;
-    padding: 0; /* ✅ 修正：移除 padding */
+    padding: 0;
     z-index: 999;
     align-items: flex-start;
     text-align: left;
-    animation: fadeSlideLeft 0.3s ease-in-out;
-    box-shadow: none; /* ✅ 修正：移除陰影 */
+    box-shadow: none;
+
+    /* --- 滑動效果核心 (採用新邏輯) --- */
+    /* 1. 預設狀態：將選單移出畫面右側 */
+    transform: translateX(100%);
+    /* 2. 增加過渡動畫，讓 transform 變化時更平滑 */
+    transition: transform 0.3s ease-in-out;
+    /* 3. (建議) 隱藏時讓元素無法被互動 */
+    visibility: hidden;
   }
 
   .nav-links.active {
-    display: flex;
+    /* ✅ 修改: 選單啟用時，將其移回畫面內 */
+    transform: translateX(0);
+    /* ✅ 新增: 恢復元素的互動性 */
+    visibility: visible;
   }
+  
+  /* --- 以下是您其他的樣式，全部保留不變 --- */
 
   .nav-links li {
     padding: 0;
@@ -28,10 +40,10 @@
   }
 
   .nav-links a {
-    font-size: 16px; /* ✅ 修改：字體由 17px 縮小為 16px */
+    font-size: 16px;
     color: #000000;
     display: block;
-    padding: 5px 25px; /* ✅ 修改：上下間距由 14px 縮小為 12px */
+    padding: 5px 25px;
     width: 100%;
     transition: all 0.2s ease-in-out;
     border-bottom: 1px solid rgba(0, 225, 255, 0.15);
@@ -52,26 +64,13 @@
   }
 
   .nav-links a.active {
-    font-size: 17px; /* ✅ 修改：Active 字體由 18px 縮小為 17px */
+    font-size: 17px;
     font-weight: bold;
     padding-left: 25px;
     box-shadow: inset 4px 0 0 #00ccff;
     border-radius: 0;
     background-color: rgba(0, 255, 255, 0.15);
     color: #ff5757;
-  }
-  
-  /* (以下內容維持不變) */
-
-  @keyframes fadeSlideLeft {
-    from {
-      opacity: 0;
-      transform: translateX(100%);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
   }
 
   .intro-text {
@@ -87,6 +86,9 @@
     align-items: center;
     gap: 20px;
   }
+
+
+
 
   iframe {
     width: 90% !important;
@@ -171,4 +173,47 @@
     position: static;
     margin: 0 auto;
   }
+
+    .button-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* 設定每一行(row)最多有 3 個等寬的欄(column) */
+        gap: 10px;           /* 按鈕間距 */
+        width: 90%;          /* 容器寬度 */
+        margin: 0 auto;      /* 容器置中 */
+    }
+
+    /* 步驟二：微調按鈕本身的樣式 */
+    .button-container .section-button {
+        /* 保留之前讓按鈕等大且處理文字溢出的樣式 */
+        box-sizing: border-box;
+        height: 50px;
+        padding: 0 15px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 50px;
+        text-align: center;
+        display: inline-block;
+
+        /* 寬度設為 100% 來填滿 Grid 分配的空間 */
+        width: 100%;
+
+        /* margin 可以由 Grid 的 gap 屬性取代，這裡可以設為 0 或移除 */
+        margin-bottom: 0;
+    }
+    
+    
+    /* 調整 section-button 的間距 */
+    .section-button {
+        margin-bottom: 25px; /* 增加底部間距 */
+        margin-top: 25px; /* 增加頂部間距 */
+    }
+
+    /* 調整 social-group 的間距 */
+    .social-group {
+        margin-top: 30px; /* 增加頂部間距 */
+        margin-bottom: 10px; /* 增加底部間距 */
+    }
+
+    
 }

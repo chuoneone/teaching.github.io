@@ -26,8 +26,8 @@
                 <li><a href="7eng.html">7英</a></li>
                 <li><a href="8eng.html">8英</a></li>
                 <li><a href="9eng.html">9英</a></li>
-                <li><a href="https://chuone.my.canva.site/spedchb2">7國</a></li>
-                <li><a href="https://chuone.my.canva.site/spedchb4">8國</a></li>
+                <li><a href="7ch.html">7國</a></li>
+                <li><a href="8ch.html">8國</a></li>
                 <li><a href="9ch.html">9國</a></li>
                 <li><a href="bigtest.html">會考專區</a></li>
                 <li><a href="learningstrategy.html">學習策略</a></li>                
@@ -39,7 +39,31 @@
         </div>
     </header>
 
-    <!-- 社交链接区域（保持原样） -->
+<div class="section-title text-lg font-bold">
+        <i class="fas fa-compass mr-2"></i> 8年級國文
+</div> 
+
+    <div style="text-align:center; margin-top: 40px;">
+        <div class="button-container">
+            <button class="section-button" onclick="showSection('chapter1', this)">8上</button>
+            <button class="section-button" onclick="showSection('chapter2', this)">8下</button>
+        </div>
+    </div>
+
+<div id="chapter1" class="section-content active-section">  
+    <div class="social-container">
+        <div class="single-row">
+            <div class="social-group">
+                <h3 style="text-align: center;">按下面按鈕︰</h3>
+                <div class="btn-group">
+                    <a href="https://chuone.my.canva.site/spedchb3" target="_blank" class="btn">8上國文</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="chapter2" class="section-content">
     <div class="social-container">
         <div class="single-row">
             <div class="social-group">
@@ -49,8 +73,6 @@
                     <a href="https://wordwall.net/play/67128/320/609" target="_blank" class="btn">02課文排列</a>
                     <a href="https://wordwall.net/play/70205/821/199" target="_blank" class="btn">03詞語填空</a>
                     <a href="https://oneexam.oneclass.com.tw/quiz/91881574" target="_blank" class="btn">04選擇題</a>
-
-
                 </div>
             </div>
 
@@ -140,13 +162,10 @@
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        function toggleMenu() {
-            const navLinks = document.querySelector('.nav-links');
-            navLinks.classList.toggle('active');
-        }
-    </script>
+    <script src="main.js"></script>
+
 
 </body>
 </html>
