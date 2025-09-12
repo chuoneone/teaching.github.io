@@ -1,77 +1,100 @@
-/* 📱 手機版：最大寬度 768px */
+/* 📱 手機版：最大寬度 768px (已套用電腦版風格) */
 @media (max-width: 768px) {
+    
+  /* --- 導覽列下拉選單 (新風格) --- */
   .nav-links {
-    /* --- 佈局與樣式 (來自您的原始碼) --- */
-    display: flex; /* ✅ 新增: 設定為 flex 容器 */
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
     position: fixed;
-    top: 0;
-    right: 0;
-    height: 100vh;
-    width: 120px;
-    background-color: #e6f7ff;
-    padding: 0;
-    z-index: 999;
-    align-items: flex-start;
-    text-align: left;
-    box-shadow: none;
+    top: 60px; /* 請根據您導覽列的實際高度微調 */
+    left: 0; 
+    width: 100%;
+    
+    /* ✅ 風格套用: 背景色改為哆啦A夢藍 */
+    background-color: #008cff; 
+    /* ✅ 風格套用: 增加與導覽列一致的圓角 */
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
 
-    /* --- 滑動效果核心 (採用新邏輯) --- */
-    /* 1. 預設狀態：將選單移出畫面右側 */
-    transform: translateX(100%);
-    /* 2. 增加過渡動畫，讓 transform 變化時更平滑 */
-    transition: transform 0.3s ease-in-out;
-    /* 3. (建議) 隱藏時讓元素無法被互動 */
+    padding: 15px 10px;
+    z-index: 999;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+
+    /* --- 動畫效果不變 --- */
+    transform: translateY(-150%);
+    transition: transform 0.3s ease-in-out, visibility 0.3s;
     visibility: hidden;
   }
 
   .nav-links.active {
-    /* ✅ 修改: 選單啟用時，將其移回畫面內 */
-    transform: translateX(0);
-    /* ✅ 新增: 恢復元素的互動性 */
+    transform: translateY(0);
     visibility: visible;
   }
   
-  /* --- 以下是您其他的樣式，全部保留不變 --- */
-
   .nav-links li {
     padding: 0;
-    width: 100%;
+    width: auto;
   }
 
+  /* ✅ 選單連結按鈕 (套用新風格) */
   .nav-links a {
-    font-size: 16px;
-    color: #000000;
+    /* ✅ 風格套用: 文字顏色改為淺藍色 */
+    color: #e6f7ff; 
+    /* ✅ 風格套用: 字體設定 */
+    font-family: 'Comic Sans MS', 'Microsoft JhengHei', sans-serif; 
+    /* ✅ 風格套用: 移除舊的按鈕底色，回歸預設 */
+    background-color: transparent; 
+    
+    font-size: 18px; 
     display: block;
-    padding: 5px 25px;
+    padding: 12px 5px; 
     width: 100%;
     transition: all 0.2s ease-in-out;
-    border-bottom: 1px solid rgba(0, 225, 255, 0.15);
+    border-bottom: none; 
+    border-radius: 5px; /* 保留輕微圓角以區分按鈕 */
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
   .nav-links li:last-child a {
     border-bottom: none;
   }
 
+  /* ✅ 滑鼠滑過效果 (套用新風格) */
   .nav-links a:hover {
-    background-color: rgba(0, 255, 255, 0.1);
-    color: #ff5757;
-    text-shadow: 0 0 6px #ff5757;
+    /* ✅ 風格套用: 文字變為純白 */
+    color: #fff;
+    /* ✅ 風格套用: 增加半透明白色背景，在藍色底上更明顯 */
+    background-color: rgba(255, 255, 255, 0.15); 
+    text-shadow: none; /* 移除舊的光暈 */
   }
 
+  /* ✅ 當前頁面連結 (完全套用電腦版 .active 風格) */
+  .nav-links a.active {
+    /* ✅ 風格套用: 背景改為領巾紅 */
+    background-color: #ff5757; 
+    /* ✅ 風格套用: 文字為純白 */
+    color: #fff;
+    /* ✅ 風格套用: 圓角改為藥丸狀 */
+    border-radius: 20px;
+    /* ✅ 風格套用: 調整 padding 以符合藥丸形狀 */
+    padding: 6px 12px;
+    font-weight: bold;
+    box-shadow: none;
+  }
+
+  /* 確保漢堡圖在最上層 */
   .menu-toggle {
     display: block;
+    position: relative;
+    z-index: 1000;
   }
 
-  .nav-links a.active {
-    font-size: 17px;
-    font-weight: bold;
-    padding-left: 25px;
-    box-shadow: inset 4px 0 0 #00ccff;
-    border-radius: 0;
-    background-color: rgba(0, 255, 255, 0.15);
-    color: #ff5757;
-  }
+  /* --- 以下是您其他的樣式 (保持不變) --- */
 
   .intro-text {
     font-size: 2rem;
@@ -81,14 +104,12 @@
     padding: 0 16px;
   }
 
+  /* ... (您其他的 CSS 樣式將會繼續保留在此) ... */
   .button-section {
     flex-direction: column;
     align-items: center;
     gap: 20px;
   }
-
-
-
 
   iframe {
     width: 90% !important;
@@ -174,46 +195,35 @@
     margin: 0 auto;
   }
 
-    .button-container {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr); /* 設定每一行(row)最多有 3 個等寬的欄(column) */
-        gap: 10px;           /* 按鈕間距 */
-        width: 90%;          /* 容器寬度 */
-        margin: 0 auto;      /* 容器置中 */
-    }
+  .button-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    width: 90%;
+    margin: 0 auto;
+  }
 
-    /* 步驟二：微調按鈕本身的樣式 */
-    .button-container .section-button {
-        /* 保留之前讓按鈕等大且處理文字溢出的樣式 */
-        box-sizing: border-box;
-        height: 50px;
-        padding: 0 15px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        line-height: 50px;
-        text-align: center;
-        display: inline-block;
+  .button-container .section-button {
+    box-sizing: border-box;
+    height: 50px;
+    padding: 0 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 50px;
+    text-align: center;
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 0;
+  }
+  
+  .section-button {
+    margin-bottom: 25px;
+    margin-top: 25px;
+  }
 
-        /* 寬度設為 100% 來填滿 Grid 分配的空間 */
-        width: 100%;
-
-        /* margin 可以由 Grid 的 gap 屬性取代，這裡可以設為 0 或移除 */
-        margin-bottom: 0;
-    }
-    
-    
-    /* 調整 section-button 的間距 */
-    .section-button {
-        margin-bottom: 25px; /* 增加底部間距 */
-        margin-top: 25px; /* 增加頂部間距 */
-    }
-
-    /* 調整 social-group 的間距 */
-    .social-group {
-        margin-top: 30px; /* 增加頂部間距 */
-        margin-bottom: 10px; /* 增加底部間距 */
-    }
-
-    
+  .social-group {
+    margin-top: 30px;
+    margin-bottom: 10px;
+  }
 }
