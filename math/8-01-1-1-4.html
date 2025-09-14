@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>四、差的平方公式</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="dog.png" type="image/png"> 
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f0f4f8; }
+        .concept-box { background-color: #ffffff; border: 1px solid #e2e8f0; padding: 2rem; border-radius: 0.75rem; display: flex; flex-direction: column; justify-content: space-between; min-height: 550px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
+        .formula-input { width: 100px; text-align: center; font-size: 1.25rem; font-weight: bold; border: 1px solid #cbd5e1; border-radius: 0.25rem; padding: 0.25rem; margin: 0 0.25rem; transition: all 0.2s ease; }
+        .formula-input.grid-input { width: 100%; height: 100%; border: none; background: transparent; border-radius: 0; }
+        .formula-input:focus { background-color: #eef2ff; box-shadow: inset 0 0 0 2px #3b82f6; }
+        .formula-input.correct { border-color: #22c55e; background-color: #f0fdf4; color: #166534; }
+        .formula-input.grid-input.correct { background-color: #dcfce7 !important; }
+        .formula-input.incorrect { border-color: #ef4444; background-color: #fef2f2; color: #991b1b; }
+        .formula-input.grid-input.incorrect { background-color: #fee2e2 !important; }
+        .formula-input:disabled { background-color: #f8fafc; }
+        .formula-display { font-family: 'Courier New', monospace; background-color: #eef2ff; padding: 1rem 1.5rem; border-radius: 0.5rem; font-size: 1.5rem; font-weight: bold; text-align: center; color: #4338ca; min-height: 70px; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; margin: 1rem 0; line-height: 2.5rem; }
+        .problem-btn { transition: all 0.2s ease-in-out; border: 2px solid transparent; width: 100%; text-align: left; }
+        .problem-btn.active { border-color: #3b82f6; background-color: #eff6ff; color: #1e3a8a; transform: scale(1.02); }
+        .action-btn { background-color: #3b82f6; color: white; padding: 0.75rem 2rem; border-radius: 0.5rem; font-weight: bold; transition: all 0.2s ease-in-out; border: none; cursor: pointer; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); align-self: center; margin-top: auto; }
+        .action-btn:hover:not(:disabled) { background-color: #2563eb; transform: translateY(-2px); }
+        .action-btn:disabled { background-color: #9ca3af; cursor: not-allowed; transform: none; }
+        .reveal-content { transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out; opacity: 1; transform: translateY(0); }
+        .hidden-content { opacity: 0; transform: translateY(10px); }
+        .explanation { font-size: 1.1rem; text-align: center; color: #475569; background-color: #f1f5f9; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; min-height: 80px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .message-box { min-height: 2.5rem; text-align: center; font-weight: bold; margin-top: 1rem; padding: 0.5rem; }
+        .message-correct { color: #16a34a; }
+        .message-incorrect { color: #dc2626; }
+        .grid-container { display: grid; grid-template-columns: 60px 1fr; gap: 1rem; align-items: center; justify-content: center; margin: 1.5rem auto 1rem; width: 350px; }
+        .multiplication-grid { display: grid; border: 2px solid #333; }
+        .grid-cell { display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; min-width: 100px; min-height: 100px; border: 1px solid #9ca3af; position: relative; }
+        .grid-cell .calculation { position: absolute; top: 4px; left: 4px; font-size: 0.75rem; color: #64748b; font-weight: normal; }
+        .side-labels, .top-labels { display: flex; font-size: 1.5rem; font-weight: bold; color: #1e3a8a; }
+        .side-labels { flex-direction: column; justify-content: space-around; align-items: center; height: 100%; }
+        .top-labels { grid-column: 2 / 3; justify-content: space-around; padding-bottom: 0.5rem; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-blue-700">四、利用差的平方公式求值</h1>
+        </header>
+
+        <main class="md:flex md:gap-8">
+            <aside class="md:w-1/3 lg:w-1/4 mb-8 md:mb-0">
+                <div id="problem-menu" class="flex flex-col gap-3">
+                    <button data-target="problem-1" class="problem-btn p-4 bg-white rounded-lg shadow font-semibold text-lg text-gray-700 border">🦾 範例 1: 78²</button>
+                    <button data-target="problem-2" class="problem-btn p-4 bg-white rounded-lg shadow font-semibold text-lg text-gray-700 border">🦾 範例 2: (29.8)²</button>
+                    <button data-target="problem-3" class="problem-btn p-4 bg-white rounded-lg shadow font-semibold text-lg text-gray-700 border">🦾 範例 3: 155² - 2×155×5 + 5²</button>
+                    <button data-target="problem-4" class="problem-btn p-4 bg-white rounded-lg shadow font-semibold text-lg text-gray-700 border">🧠 練習 1: 37²</button>
+                    <button data-target="problem-5" class="problem-btn p-4 bg-white rounded-lg shadow font-semibold text-lg text-gray-700 border">🧠 練習 2: 96²</button>
+                    <button data-target="problem-6" class="problem-btn p-4 bg-white rounded-lg shadow font-semibold text-lg text-gray-700 border">🧠 練習 3: 495²</button>
+                </div>
+            </aside>
+
+            <section class="md:w-2/3 lg:w-3/4">
+                <div id="solutions-container">
+                    <div id="problem-1" class="problem-content hidden" data-type="static">
+                        <div class="concept-box">
+                            <div>
+                                <h2 class="text-3xl font-bold text-center mb-4">範例 1: 78²</h2>
+                                <div class="explanation reveal-content hidden-content" data-step="1">
+                                    <p>將 78 拆解成 <strong class="text-indigo-700">(80 - 2)</strong>，再看成 <strong class="text-red-600">[80 + (-2)]</strong> 來計算。</p>
+                                </div>
+                                <div class="grid-container reveal-content hidden-content" data-step="1">
+                                    <div></div> <div class="top-labels"><span>80</span><span>-2</span></div>
+                                    <div class="side-labels"><span>80</span><span>-2</span></div>
+                                    <div class="multiplication-grid" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;">
+                                        <div class="grid-cell bg-orange-100"><span class="calculation">80×80</span><span data-step="2" class="reveal-content hidden-content">6400</span></div>
+                                        <div class="grid-cell bg-red-100"><span class="calculation">80×(-2)</span><span data-step="3" class="reveal-content hidden-content">-160</span></div>
+                                        <div class="grid-cell bg-red-100"><span class="calculation">(-2)×80</span><span data-step="3" class="reveal-content hidden-content">-160</span></div>
+                                        <div class="grid-cell bg-yellow-100"><span class="calculation">(-2)×(-2)</span><span data-step="4" class="reveal-content hidden-content">4</span></div>
+                                    </div>
+                                </div>
+                                <div class="formula-display">
+                                    <span data-step="2" class="reveal-content hidden-content">6400</span>
+                                    <span data-step="3" class="reveal-content hidden-content">&nbsp;- 320</span>
+                                    <span data-step="4" class="reveal-content hidden-content">&nbsp;+ 4</span>
+                                    <span data-step="5" class="font-bold text-green-700 reveal-content hidden-content">&nbsp;= 6084</span>
+                                </div>
+                            </div>
+                            <button class="action-btn" data-problem="problem-1" data-max-steps="5">下一步</button>
+                        </div>
+                    </div>
+
+                    <div id="problem-2" class="problem-content hidden" data-type="static">
+                        <div class="concept-box">
+                            <div>
+                                <h2 class="text-3xl font-bold text-center mb-4">範例 2: (29.8)²</h2>
+                                <div class="explanation reveal-content hidden-content" data-step="1">
+                                    <p>將 29.8 拆解成 <strong class="text-indigo-700">(30 - 0.2)</strong>，再看成 <strong class="text-red-600">[30 + (-0.2)]</strong>。</p>
+                                </div>
+                                <div class="grid-container reveal-content hidden-content" data-step="1">
+                                    <div></div> <div class="top-labels"><span>30</span><span>-0.2</span></div>
+                                    <div class="side-labels"><span>30</span><span>-0.2</span></div>
+                                    <div class="multiplication-grid" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;">
+                                        <div class="grid-cell bg-orange-100"><span class="calculation">30×30</span><span data-step="2" class="reveal-content hidden-content">900</span></div>
+                                        <div class="grid-cell bg-red-100"><span class="calculation">30×(-0.2)</span><span data-step="3" class="reveal-content hidden-content">-6</span></div>
+                                        <div class="grid-cell bg-red-100"><span class="calculation">(-0.2)×30</span><span data-step="3" class="reveal-content hidden-content">-6</span></div>
+                                        <div class="grid-cell bg-yellow-100"><span class="calculation">(-0.2)²</span><span data-step="4" class="reveal-content hidden-content">0.04</span></div>
+                                    </div>
+                                </div>
+                                <div class="formula-display">
+                                    <span data-step="2" class="reveal-content hidden-content">900</span>
+                                    <span data-step="3" class="reveal-content hidden-content">&nbsp;- 12</span>
+                                    <span data-step="4" class="reveal-content hidden-content">&nbsp;+ 0.04</span>
+                                    <span data-step="5" class="font-bold text-green-700 reveal-content hidden-content">&nbsp;= 888.04</span>
+                                </div>
+                            </div>
+                            <button class="action-btn" data-problem="problem-2" data-max-steps="5">下一步</button>
+                        </div>
+                    </div>
+
+                    <div id="problem-3" class="problem-content hidden" data-type="static">
+                        <div class="concept-box">
+                            <div>
+                                <h2 class="text-3xl font-bold text-center mb-4">範例 3: 155² - 2×155×5 + 5²</h2>
+                                <div class="explanation reveal-content hidden-content" data-step="1">
+                                    <p>觀察此算式符合 <strong class="text-indigo-700">a² - 2ab + b²</strong> 的形式</p>
+                                    <p class="mt-2">其中 a = 155, b = 5</p>
+                                </div>
+                                <div class="formula-display reveal-content hidden-content" data-step="2"> = (155 - 5)² </div>
+                                <div class="formula-display reveal-content hidden-content" data-step="3"> = 150² </div>
+                                <div class="formula-display reveal-content hidden-content" data-step="4"> <span class="font-bold text-green-700">= 22500</span> </div>
+                            </div>
+                            <button class="action-btn" data-problem="problem-3" data-max-steps="4">下一步</button>
+                        </div>
+                    </div>
+                    
+                    <div id="problem-4" class="problem-content hidden" data-type="interactive" data-answers='[40, 3, 1600, -120, -120, 9, 1369]'>
+                        <div class="concept-box">
+                            <div>
+                                <h2 class="text-3xl font-bold text-center mb-4">練習 1: 37²</h2>
+                                <div class="explanation"> <p>1. 請將 37 拆解成 (a - b) 的形式：</p> </div>
+                                <div class="text-2xl text-center"> 37² = (<input type="text" class="formula-input" data-idx="0" placeholder="a"> - <input type="text" class="formula-input" data-idx="1" placeholder="b">)² </div>
+                                <div class="grid-container hidden" id="p4-grid">
+                                    <div></div> <div class="top-labels"><span>?</span><span>?</span></div>
+                                    <div class="side-labels"><span>?</span><span>?</span></div>
+                                    <div class="multiplication-grid" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;">
+                                        <div class="grid-cell bg-orange-100"><input type="text" class="formula-input grid-input" data-idx="2" disabled></div>
+                                        <div class="grid-cell bg-red-100"><input type="text" class="formula-input grid-input" data-idx="3" disabled></div>
+                                        <div class="grid-cell bg-red-100"><input type="text" class="formula-input grid-input" data-idx="4" disabled></div>
+                                        <div class="grid-cell bg-yellow-100"><input type="text" class="formula-input grid-input" data-idx="5" disabled></div>
+                                    </div>
+                                </div>
+                                <div class="formula-display hidden" id="p4-sum"> <span id="formula-p4">...</span> </div>
+                                <div id="message-box-problem-4" class="message-box"></div>
+                            </div>
+                            <button class="action-btn" data-problem="problem-4" data-action="check_step1">檢核拆解</button>
+                        </div>
+                    </div>
+
+                    <div id="problem-5" class="problem-content hidden" data-type="interactive" data-answers='[100, 4, 10000, -400, -400, 16, 9216]'>
+                        <div class="concept-box">
+                            <div>
+                                <h2 class="text-3xl font-bold text-center mb-4">練習 2: 96²</h2>
+                                <div class="explanation"> <p>1. 請將 96 拆解成 (a - b) 的形式：</p> </div>
+                                <div class="text-2xl text-center"> 96² = (<input type="text" class="formula-input" data-idx="0" placeholder="a"> - <input type="text" class="formula-input" data-idx="1" placeholder="b">)² </div>
+                                <div class="grid-container hidden" id="p5-grid">
+                                    <div></div> <div class="top-labels"><span>?</span><span>?</span></div>
+                                    <div class="side-labels"><span>?</span><span>?</span></div>
+                                    <div class="multiplication-grid" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;">
+                                        <div class="grid-cell bg-orange-100"><input type="text" class="formula-input grid-input" data-idx="2" disabled></div>
+                                        <div class="grid-cell bg-red-100"><input type="text" class="formula-input grid-input" data-idx="3" disabled></div>
+                                        <div class="grid-cell bg-red-100"><input type="text" class="formula-input grid-input" data-idx="4" disabled></div>
+                                        <div class="grid-cell bg-yellow-100"><input type="text" class="formula-input grid-input" data-idx="5" disabled></div>
+                                    </div>
+                                </div>
+                                <div class="formula-display hidden" id="p5-sum"> <span id="formula-p5">...</span> </div>
+                                <div id="message-box-problem-5" class="message-box"></div>
+                            </div>
+                            <button class="action-btn" data-problem="problem-5" data-action="check_step1">檢核拆解</button>
+                        </div>
+                    </div>
+
+                    <div id="problem-6" class="problem-content hidden" data-type="interactive" data-answers='[500, 5, 250000, -2500, -2500, 25, 245025]'>
+                        <div class="concept-box">
+                            <div>
+                                <h2 class="text-3xl font-bold text-center mb-4">練習 3: 495²</h2>
+                                <div class="explanation"> <p>1. 請將 495 拆解成 (a - b) 的形式：</p> </div>
+                                <div class="text-2xl text-center"> 495² = (<input type="text" class="formula-input" data-idx="0" placeholder="a"> - <input type="text" class="formula-input" data-idx="1" placeholder="b">)² </div>
+                                <div class="grid-container hidden" id="p6-grid">
+                                    <div></div> <div class="top-labels"><span>?</span><span>?</span></div>
+                                    <div class="side-labels"><span>?</span><span>?</span></div>
+                                    <div class="multiplication-grid" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;">
+                                        <div class="grid-cell bg-orange-100"><input type="text" class="formula-input grid-input" data-idx="2" disabled></div>
+                                        <div class="grid-cell bg-red-100"><input type="text" class="formula-input grid-input" data-idx="3" disabled></div>
+                                        <div class="grid-cell bg-red-100"><input type="text" class="formula-input grid-input" data-idx="4" disabled></div>
+                                        <div class="grid-cell bg-yellow-100"><input type="text" class="formula-input grid-input" data-idx="5" disabled></div>
+                                    </div>
+                                </div>
+                                <div class="formula-display hidden" id="p6-sum"> <span id="formula-p6">...</span> </div>
+                                <div id="message-box-problem-6" class="message-box"></div>
+                            </div>
+                            <button class="action-btn" data-problem="problem-6" data-action="check_step1">檢核拆解</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const problemBtns = document.querySelectorAll('.problem-btn');
+            const problemContents = document.querySelectorAll('.problem-content');
+            const solutionsContainer = document.getElementById('solutions-container');
+            const stepCounters = {};
+            let rapidClickTracker = { lastTime: 0, count: 0, problem: null };
+
+            // ----- Reset and State Management -----
+            function resetProblemState(problemId) {
+                const problemElement = document.getElementById(problemId);
+                if (!problemElement) return;
+                const problemType = problemElement.dataset.type;
+                const actionBtn = problemElement.querySelector('.action-btn');
+
+                if (problemType === 'static') {
+                    stepCounters[problemId] = 0;
+                    problemElement.querySelectorAll('.reveal-content').forEach(el => el.classList.add('hidden-content'));
+                    if (actionBtn) {
+                        actionBtn.disabled = false;
+                        actionBtn.textContent = '下一步';
+                    }
+                } else if (problemType === 'interactive') {
+                    problemElement.querySelectorAll('.formula-input').forEach(input => {
+                        input.value = '';
+                        input.classList.remove('correct', 'incorrect');
+                        input.readOnly = false;
+                        const idx = parseInt(input.dataset.idx, 10);
+                        input.disabled = idx > 1;
+                    });
+                    
+                    const grid = problemElement.querySelector(`#${problemId.replace('problem-', 'p')}-grid`);
+                    const sum = problemElement.querySelector(`#${problemId.replace('problem-', 'p')}-sum`);
+                    if(grid) {
+                        grid.classList.add('hidden');
+                        grid.querySelectorAll('.top-labels span, .side-labels span').forEach(s => s.textContent = '?');
+                    }
+                    if(sum) {
+                        sum.classList.add('hidden');
+                        const formulaSpan = sum.querySelector('span');
+                        if (formulaSpan) formulaSpan.innerHTML = '...';
+                    }
+
+                    if (actionBtn) {
+                        actionBtn.disabled = false;
+                        actionBtn.textContent = '檢核拆解';
+                        actionBtn.dataset.action = 'check_step1';
+                    }
+                    const messageBox = problemElement.querySelector('.message-box');
+                    if (messageBox) messageBox.textContent = '';
+                }
+            }
+            
+            // ----- Event Listeners -----
+            problemBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetId = btn.dataset.target;
+                    problemContents.forEach(content => {
+                        if (!content.classList.contains('hidden')) resetProblemState(content.id);
+                        content.classList.add('hidden');
+                    });
+                    problemBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const targetContent = document.getElementById(targetId);
+                    if (targetContent) {
+                        targetContent.classList.remove('hidden');
+                        resetProblemState(targetId);
+                    }
+                });
+            });
+
+            solutionsContainer.addEventListener('click', (e) => {
+                if (!e.target.classList.contains('action-btn')) return;
+                const btn = e.target;
+                const problemId = btn.dataset.problem;
+                const problemElement = document.getElementById(problemId);
+                const problemType = problemElement.dataset.type;
+
+                // Anti-spam check
+                const now = Date.now();
+                if (rapidClickTracker.problem === problemId && now - rapidClickTracker.lastTime < 600) {
+                    rapidClickTracker.count++;
+                } else {
+                    rapidClickTracker.count = 1;
+                    rapidClickTracker.problem = problemId;
+                }
+                rapidClickTracker.lastTime = now;
+
+                if (rapidClickTracker.count > 3) {
+                    showSpamAlert(problemId);
+                    rapidClickTracker.count = 0;
+                    return;
+                }
+
+                if (problemType === 'static') {
+                    handleStaticProblem(btn, problemId);
+                } else if (problemType === 'interactive') {
+                    handleInteractiveProblem(btn, problemElement);
+                }
+            });
+
+            solutionsContainer.addEventListener('keydown', (e) => {
+                if (e.key !== 'Enter' || !e.target.classList.contains('formula-input')) return;
+                e.preventDefault(); 
+                const problemElement = e.target.closest('.problem-content');
+                if (problemElement) {
+                    const actionBtn = problemElement.querySelector('.action-btn:not(:disabled)');
+                    if (actionBtn) actionBtn.click();
+                }
+            });
+
+            // ----- Logic Handlers -----
+            function handleStaticProblem(btn, problemId) {
+                stepCounters[problemId] = (stepCounters[problemId] || 0) + 1;
+                const currentStep = stepCounters[problemId];
+                const maxSteps = parseInt(btn.dataset.maxSteps, 10);
+                document.querySelectorAll(`#${problemId} [data-step]`).forEach(el => {
+                    if (parseInt(el.dataset.step) <= currentStep) {
+                        el.classList.remove('hidden-content');
+                    }
+                });
+                if (currentStep >= maxSteps) {
+                    btn.textContent = '完成！';
+                    btn.disabled = true;
+                }
+            }
+            
+            function handleInteractiveProblem(btn, problemElement) {
+                const action = btn.dataset.action;
+                const messageBox = problemElement.querySelector('.message-box');
+                const problemId = problemElement.id;
+                messageBox.textContent = '';
+                const answers = JSON.parse(problemElement.dataset.answers);
+
+                switch (action) {
+                    case 'check_step1':
+                        if (validateInputs(problemElement, [0, 1])) {
+                            messageBox.textContent = '拆解正確！請計算網格中的四個面積。';
+                            messageBox.className = 'message-box message-correct';
+                            
+                            const grid = problemElement.querySelector(`#${problemId.replace('problem-', 'p')}-grid`);
+                            const topLabels = grid.querySelectorAll('.top-labels span');
+                            const sideLabels = grid.querySelectorAll('.side-labels span');
+                            topLabels[0].textContent = answers[0];
+                            topLabels[1].textContent = `-${answers[1]}`;
+                            sideLabels[0].textContent = answers[0];
+                            sideLabels[1].textContent = `-${answers[1]}`;
+                            grid.classList.remove('hidden');
+
+                            problemElement.querySelectorAll('[data-idx="0"], [data-idx="1"]').forEach(i => i.readOnly = true);
+                            problemElement.querySelectorAll('.grid-input').forEach(i => i.disabled = false);
+                            problemElement.querySelector('[data-idx="2"]').focus();
+                            btn.textContent = '檢核網格';
+                            btn.dataset.action = 'check_grid';
+                        } else {
+                            messageBox.textContent = '拆解錯誤，請換個方式試試！';
+                            messageBox.className = 'message-box message-incorrect';
+                        }
+                        break;
+                    
+                    case 'check_grid':
+                        if (validateInputs(problemElement, [2, 3, 4, 5])) {
+                            messageBox.textContent = '網格計算正確！請在下方填入最終總和。';
+                            messageBox.className = 'message-box message-correct';
+                            problemElement.querySelectorAll('.grid-input').forEach(i => i.readOnly = true);
+                            
+                            const sumContainer = problemElement.querySelector(`#${problemId.replace('problem-', 'p')}-sum`);
+                            const formulaSpan = problemElement.querySelector(`#formula-${problemId.replace('problem-', 'p')}`);
+                            formulaSpan.innerHTML = `${answers[2]} + (${answers[3]}) + (${answers[4]}) + ${answers[5]} = <input type="text" class="formula-input" data-idx="6" placeholder="總和">`;
+                            sumContainer.classList.remove('hidden');
+
+                            setTimeout(() => problemElement.querySelector('[data-idx="6"]').focus(), 100);
+                            btn.textContent = '檢核總和';
+                            btn.dataset.action = 'check_sum';
+                        } else {
+                            messageBox.textContent = '網格中的計算有誤喔，再檢查一下！';
+                            messageBox.className = 'message-box message-incorrect';
+                        }
+                        break;
+                    
+                    case 'check_sum':
+                        if (validateInputs(problemElement, [6])) {
+                            const finalAnswerInput = problemElement.querySelector('[data-idx="6"]');
+                            finalAnswerInput.readOnly = true;
+                            messageBox.textContent = '完全正確，恭喜你！';
+                            messageBox.className = 'message-box message-correct';
+                            btn.textContent = '答對了！';
+                            btn.disabled = true;
+                            btn.dataset.action = 'done';
+                        } else {
+                            messageBox.textContent = '總和算錯了，再加一次看看！';
+                            messageBox.className = 'message-box message-incorrect';
+                        }
+                        break;
+                }
+            }
+
+            // ----- Interactive Validation -----
+            function validateInputs(problemElement, indicesToCheck) {
+                const answers = JSON.parse(problemElement.dataset.answers);
+                let isAllCorrect = true;
+                indicesToCheck.forEach(idx => {
+                    const input = problemElement.querySelector(`[data-idx="${idx}"]`);
+                    if (!input) return;
+                    
+                    const isCorrect = (input.value !== '' && Math.abs(parseFloat(input.value) - answers[idx]) < 0.001);
+                    
+                    if (!isCorrect) {
+                        isAllCorrect = false;
+                        input.classList.remove('correct');
+                        input.classList.add('incorrect');
+                    } else {
+                        input.classList.remove('incorrect');
+                        input.classList.add('correct');
+                    }
+                });
+                return isAllCorrect;
+            }
+
+            function showSpamAlert(problemId) {
+                let modal = document.createElement('div');
+                modal.className = 'spam-modal';
+                modal.innerHTML = `<div class="spam-modal-content">我知道你想利用程式快速解題！<br>請慢慢思考練習！</div>`;
+                document.body.appendChild(modal);
+                setTimeout(() => {
+                    document.body.removeChild(modal);
+                    // No need to reset state here, just clear the tracker
+                }, 2000);
+            }
+
+            // Initial load
+            if (problemBtns.length > 0) problemBtns[0].click();
+        });
+    </script>
+</body>
+</html>

@@ -3,161 +3,285 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>撿便便好主人</title>
-    <link rel="icon" href="dog.png" type="image/png">
+    <title>撿便便好主人 ✨</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐕</text></svg>">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
 
+        /* --- 🎨 顏色與主題變數 --- */
         :root {
-            --grass-green: #95e049; /* 草綠色 */
-            --sky-blue: #87CEEB;   /* 天藍色 */
-            --earth-brown: #A0522D; /* 土棕色 (便便) */
-            --dog-brown: #D2B48C;   /* 狗狗棕褐色 */
+            --sky-top: #a1d9ff;
+            --sky-bottom: #f0f8ff;
+            --grass-green: #98d85b;
+            --grass-border: #5c913b;
+            --earth-brown: #8b572a;
+            --dog-brown: #D2B48C;
             --text-color: #333;
-            --button-color: #4CAF50;
-            --button-hover-color: #45a049;
-            --popup-bg: rgba(255, 255, 255, 0.9);
+            --button-color: #5cb85c;
+            --button-hover-color: #4cae4c;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --popup-bg: rgba(255, 255, 255, 0.95);
+            --correct-color: #28a745;
+            --wrong-color: #dc3545;
         }
 
+        /* --- 🌟 全局與佈局 --- */
         body {
             font-family: 'Noto Sans TC', sans-serif;
-            background-color: var(--sky-blue);
+            background: linear-gradient(to bottom, var(--sky-top), var(--sky-bottom));
             color: var(--text-color);
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start; /* 從頂部開始排列 */
+            justify-content: flex-start;
             min-height: 100vh;
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
-            overflow: hidden; /* 避免狗狗跑出邊界時出現滾動條 */
+            overflow-x: hidden; 
+            position: relative;
+        }
+        
+        /* --- ☀️ 場景元素 --- */
+        .sun {
+            position: absolute;
+            top: 40px;
+            left: 50px;
+            width: 80px;
+            height: 80px;
+            background-color: #ffeb3b;
+            border-radius: 50%;
+            box-shadow: 0 0 20px 5px #ffeb3b88;
+            animation: sun-glow 5s infinite ease-in-out;
         }
 
+        /* --- 新增: 右上角計數器樣式 --- */
+        .cleaned-counter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: var(--card-bg);
+            padding: 10px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--earth-brown);
+            z-index: 100;
+        }
+        
+        /* --- 🎮 遊戲主要區域 --- */
         .game-title {
-            font-size: 2.5em;
+            font-size: 3em;
             color: var(--earth-brown);
             margin-bottom: 20px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            z-index: 10;
         }
 
         .game-area {
             display: flex;
-            gap: 20px;
+            gap: 25px;
             width: 100%;
-            max-width: 900px;
+            max-width: 960px;
             align-items: flex-start;
+            z-index: 10;
         }
 
         .math-section {
-            background-color: rgba(255, 255, 255, 0.8);
-            border: 2px solid var(--button-color);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background-color: var(--card-bg);
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
             text-align: center;
-            width: 300px; /* 固定寬度 */
+            width: 320px;
+            flex-shrink: 0;
+            backdrop-filter: blur(5px);
+        }
+        
+        .math-section h2 {
+            margin-top: 0;
+            color: var(--earth-brown);
         }
 
         .stats-bar {
-            font-size: 1.2em;
-            margin-bottom: 15px;
+            font-size: 1.3em;
+            margin-bottom: 20px;
         }
 
         #bags-count {
             font-weight: bold;
             color: var(--button-color);
+            display: inline-block;
+        }
+        
+        #bags-count.earned {
+            animation: bounce 0.5s ease;
         }
 
         #problem-text {
-            font-size: 1.5em;
-            margin-bottom: 10px;
+            font-size: 1.6em;
+            margin-bottom: 15px;
             color: var(--earth-brown);
+            font-weight: 700;
         }
 
         #answer-input {
-            padding: 8px;
-            font-size: 1em;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 80px;
+            padding: 10px;
+            font-size: 1.1em;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            width: 100px;
             text-align: center;
-            margin-right: 5px;
+            margin-right: 10px;
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+        #answer-input:focus {
+            outline: none;
+            border-color: var(--button-color);
+        }
+        #answer-input:disabled {
+            background-color: #eee;
+            cursor: not-allowed;
         }
 
+
         .button {
-            padding: 10px 15px;
+            padding: 12px 20px;
             font-size: 1em;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             background-color: var(--button-color);
             color: white;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .button:hover {
             background-color: var(--button-hover-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+        .button:active {
+             transform: translateY(0);
+             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .button:disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         #feedback {
-            margin-top: 10px;
-            font-size: 0.9em;
-            min-height: 1.2em;
+            margin-top: 15px;
+            font-size: 1em;
+            min-height: 1.5em;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        #feedback.show {
+            opacity: 1;
         }
 
+        /* --- 🌱 草地與互動元素 --- */
         .grass-land {
-            flex-grow: 1; /* 佔據剩餘空間 */
-            height: 400px; /* 固定高度 */
+            flex-grow: 1;
+            height: 450px;
             background-color: var(--grass-green);
-            border: 3px solid #556B2F; /* 深綠色邊框 */
-            border-radius: 10px;
-            position: relative; /* 為了狗狗和便便的絕對定位 */
-            overflow: hidden; /* 確保狗狗和便便不會超出草地 */
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: 4px solid var(--grass-border);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
         }
 
         #dog {
-            font-size: 3em; /* 用 emoji */
+            font-size: 3.5em;
             position: absolute;
-            bottom: 10px; /* 初始位置 */
+            bottom: 10px;
             left: 50%;
             transform: translateX(-50%);
-            transition: left 1s ease-in-out, bottom 1s ease-in-out, transform 0.3s; /* 平滑移動和翻轉 */
+            transition: left 1s ease-in-out, bottom 1s ease-in-out, transform 0.3s;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
         }
 
         .poop {
-            font-size: 1.8em; /* 用 emoji */
+            font-size: 2em;
             position: absolute;
             cursor: pointer;
-            transition: transform 0.2s ease; /* 點擊時的微小動畫 */
+            transition: transform 0.2s ease, opacity 0.5s ease;
+            opacity: 0;
+            animation: appear 0.5s forwards;
         }
         .poop:hover {
             transform: scale(1.2);
         }
-
-        .popup-message {
-            display: none; /* 初始隱藏 */
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: var(--popup-bg);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            text-align: center;
-            z-index: 100;
-            font-size: 1.5em;
-            color: var(--button-color);
-            border: 2px solid var(--button-color);
+        .poop.cleaned {
+            animation: poof 0.5s forwards;
         }
-         .popup-message.show {
-            display: block;
+
+        /* --- 💬 彈出訊息 --- */
+        .popup-message {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s;
+            z-index: 1000;
+        }
+        .popup-message.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .popup-content {
+            background-color: var(--popup-bg);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+            font-size: 1.6em;
+            color: var(--correct-color);
+            border: 3px solid var(--correct-color);
+            transform: scale(0.8);
+            transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+        }
+        .popup-message.show .popup-content {
+            transform: scale(1);
+        }
+
+        /* --- 🎬 動畫效果 --- */
+        @keyframes sun-glow {
+            0%, 100% { box-shadow: 0 0 20px 5px #ffeb3b88; }
+            50% { box-shadow: 0 0 35px 10px #ffeb3ba3; }
+        }
+        @keyframes bounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
+        @keyframes appear { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
+        @keyframes poof { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
+
+        /* --- 📱 響應式設計 --- */
+        @media (max-width: 768px) {
+            .cleaned-counter { font-size: 1em; top: 10px; right: 10px; }
+            .game-area { flex-direction: column; align-items: center; }
+            .math-section { width: 90%; max-width: 400px; margin-bottom: 20px; }
+            .grass-land { width: 90%; max-width: 400px; height: 350px; }
+            .game-title { font-size: 2.2em; }
+            .sun { width: 50px; height: 50px; top: 20px; left: 20px; }
         }
     </style>
 </head>
 <body>
+    <div class="sun"></div>
+    <div class="cleaned-counter">已清理 💩: <span id="cleaned-count">0</span></div>
 
     <h1 class="game-title">🐶 便便好主人 💩</h1>
 
@@ -165,7 +289,7 @@
         <div class="math-section">
             <h2>數學挑戰</h2>
             <div class="stats-bar">
-                塑膠袋: <span id="bags-count">0</span> 個
+                撿便袋: <span id="bags-count">0</span> 個
             </div>
             <p id="problem-text">問題載入中...</p>
             <input type="number" id="answer-input" placeholder="答案">
@@ -175,12 +299,19 @@
 
         <div class="grass-land" id="grass-land">
             <div id="dog">🐕</div>
-            <!-- 便便會動態添加到這裡 -->
         </div>
     </div>
 
     <div class="popup-message" id="virtue-popup">
-        你真是有品德的主人！👍<br>草地乾淨溜溜！
+        <div class="popup-content">
+            你真是有公德心的好主人！👍<br>草地變得好乾淨！
+        </div>
+    </div>
+
+    <div class="popup-message" id="win-popup">
+        <div class="popup-content">
+            哇！蹓狗結束，你真是棒！🎉
+        </div>
     </div>
 
     <script>
@@ -192,37 +323,38 @@
         const grassLand = document.getElementById('grass-land');
         const dog = document.getElementById('dog');
         const virtuePopup = document.getElementById('virtue-popup');
+        
+        /* --- 新增: 獲取新元素 --- */
+        const cleanedCountDisplay = document.getElementById('cleaned-count');
+        const winPopup = document.getElementById('win-popup');
 
         let bags = 0;
         let currentAnswer = 0;
         let dogIsMoving = false;
-        let poopCount = 0; // 計算畫面上的便便數量
-        let dogDirection = 1; // 1 for right, -1 for left
+        let poopCount = 0;
+        let hasPoopedBefore = false;
 
-        const GRASS_WIDTH = grassLand.offsetWidth;
-        const GRASS_HEIGHT = grassLand.offsetHeight;
-        const DOG_WIDTH = dog.offsetWidth;
-        const DOG_HEIGHT = dog.offsetHeight;
-
+        /* --- 新增: 計數器與遊戲狀態變數 --- */
+        let poopsCleanedCount = 0;
+        const WIN_CONDITION = 10;
+        let gameInterval; // 用來儲存計時器ID，以便結束遊戲
 
         function getRandomInt(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
 
         function generateProblem() {
-            const num1 = getRandomInt(-15, 15);
-            const num2 = getRandomInt(-15, 15);
-            const operatorChance = Math.random();
-            let operator = '+';
-            
-            if (operatorChance < 0.5) {
+            // ... (此函數無變動)
+            const num1 = getRandomInt(-20, 20);
+            const num2 = getRandomInt(-20, 20);
+            const operator = Math.random() < 0.5 ? '+' : '-';
+
+            if (operator === '+') {
                 currentAnswer = num1 + num2;
-                operator = '+';
-                problemText.textContent = `${num1} ${operator} (${num2}) = ?`;
+                problemText.textContent = `${num1} + (${num2}) = ?`;
             } else {
                 currentAnswer = num1 - num2;
-                operator = '-';
-                problemText.textContent = `${num1} ${operator} (${num2}) = ?`;
+                problemText.textContent = `${num1} - (${num2}) = ?`;
             }
             answerInput.value = '';
             answerInput.focus();
@@ -233,142 +365,146 @@
         }
 
         function showFeedback(message, isCorrect) {
+            // ... (此函數無變動)
             feedbackText.textContent = message;
-            feedbackText.style.color = isCorrect ? 'green' : 'red';
+            feedbackText.style.color = isCorrect ? 'var(--correct-color)' : 'var(--wrong-color)';
+            feedbackText.classList.add('show');
+            setTimeout(() => {
+                feedbackText.classList.remove('show');
+            }, 2000);
         }
 
         submitAnswerButton.addEventListener('click', () => {
-            const userAnswer = parseInt(answerInput.value);
-            if (isNaN(userAnswer)) {
-                showFeedback('請輸入數字！', false);
-                return;
+            // ... (此函數無變動)
+            if (answerInput.value === '') {
+                 showFeedback('請輸入數字！', false);
+                 return;
             }
-
+            const userAnswer = parseInt(answerInput.value, 10);
+            
             if (userAnswer === currentAnswer) {
                 bags++;
-                showFeedback('答對了！獲得一個塑膠袋！', true);
+                showFeedback('答對了！獲得一個撿便袋！', true);
+                bagsCountDisplay.classList.add('earned');
+                setTimeout(() => bagsCountDisplay.classList.remove('earned'), 500);
             } else {
-                showFeedback(`答錯了！答案是 ${currentAnswer}。`, false);
+                showFeedback(`答錯了！正確答案是 ${currentAnswer}。`, false);
             }
             updateStats();
             generateProblem();
         });
 
         answerInput.addEventListener('keypress', function(event) {
+            // ... (此函數無變動)
             if (event.key === 'Enter') {
                 submitAnswerButton.click();
             }
         });
 
         function moveDog() {
+            // ... (此函數無變動)
             if (dogIsMoving) return;
             dogIsMoving = true;
 
-            const grassRect = grassLand.getBoundingClientRect(); // 獲取草地實際大小和位置
-
-            // 隨機目標位置，限制在草地範圍內
+            const grassRect = grassLand.getBoundingClientRect();
             let targetX = getRandomInt(0, grassRect.width - dog.offsetWidth);
-            let targetY = getRandomInt(grassRect.height * 0.6, grassRect.height - dog.offsetHeight); // 狗狗主要在下半部活動
+            let targetY = getRandomInt(0, grassRect.height * 0.4);
 
-            // 判斷狗狗朝向
             const currentDogX = dog.offsetLeft;
-            if (targetX < currentDogX) { // 往左
-                dog.style.transform = 'translateX(-50%) scaleX(-1)'; // 水平翻轉
-            } else { // 往右
-                dog.style.transform = 'translateX(-50%) scaleX(1)';
-            }
+            dog.style.transform = `translateX(-50%) scaleX(${targetX < currentDogX ? -1 : 1})`;
             
             dog.style.left = targetX + 'px';
-            dog.style.bottom = targetY + 'px'; // 注意這裡是 bottom
+            dog.style.bottom = targetY + 'px';
 
             setTimeout(() => {
                 dogIsMoving = false;
-                // 有一定機率狗狗會大便
-                if (Math.random() < 0.3 && poopCount < 5) { // 最多5個便便
-                    makePoop(targetX, grassRect.height - targetY - dog.offsetHeight / 2); // 轉換bottom為top
+                if (Math.random() < 0.35 && poopCount < 5) {
+                    makePoop(targetX, grassRect.height - targetY - dog.offsetHeight);
                 }
-            }, 1200); // 移動動畫時間 + 短暫停留
+            }, 1500);
         }
 
-        function makePoop(dogX, dogY) {
+        function makePoop(dogX, dogY_top) {
+            // ... (此函數大部分無變動)
             poopCount++;
+            hasPoopedBefore = true;
             const poopElement = document.createElement('div');
             poopElement.classList.add('poop');
             poopElement.textContent = '💩';
             
-            // 便便位置稍微隨機偏移一點，不要完全在狗狗腳下
-            const poopOffsetX = getRandomInt(-10, 10);
-            const poopOffsetY = getRandomInt(5, 15); // 讓便便在狗狗偏後下方
-
-            let finalPoopX = dogX + poopOffsetX;
-            let finalPoopY = dogY + poopOffsetY; // 這是 top
-
-            // 確保便便在草地內
+            const poopOffsetX = getRandomInt(-20, 20);
             const grassRect = grassLand.getBoundingClientRect();
-            finalPoopX = Math.max(0, Math.min(finalPoopX, grassRect.width - poopElement.offsetWidth - 10)); // 減去便便寬度及一些邊距
-            finalPoopY = Math.max(0, Math.min(finalPoopY, grassRect.height - poopElement.offsetHeight - 10));
-
+            
+            let finalPoopX = Math.max(10, Math.min(dogX + poopOffsetX, grassRect.width - 40));
+            let finalPoopY = Math.max(10, Math.min(dogY_top, grassRect.height - 40));
 
             poopElement.style.left = finalPoopX + 'px';
-            poopElement.style.top = finalPoopY + 'px'; // 使用 top 定位
+            poopElement.style.top = finalPoopY + 'px';
 
             poopElement.addEventListener('click', () => {
+                if (poopElement.classList.contains('cleaned')) {
+                    return;
+                }
+
                 if (bags > 0) {
                     bags--;
                     updateStats();
-                    grassLand.removeChild(poopElement);
+                    
+                    poopElement.classList.add('cleaned');
+                    setTimeout(() => {
+                        if (poopElement.parentNode) {
+                            grassLand.removeChild(poopElement);
+                        }
+                    }, 500);
+                    
                     poopCount--;
                     showFeedback('清理成功！真是好主人！', true);
-                    checkAllCleaned();
+                    
+                    /* --- 新增: 更新計數並檢查勝利條件 --- */
+                    poopsCleanedCount++;
+                    cleanedCountDisplay.textContent = poopsCleanedCount;
+                    if (poopsCleanedCount >= WIN_CONDITION) {
+                        endGame();
+                    } else {
+                       checkAllCleaned(); 
+                    }
+                    
                 } else {
-                    showFeedback('沒有塑膠袋了！快去答題吧！', false);
+                    showFeedback('沒有撿便袋了！快去答題吧！', false);
                 }
             });
+            
             grassLand.appendChild(poopElement);
         }
         
         function checkAllCleaned() {
-            // 這裡的邏輯是：如果之前有便便 (poopCount曾經 > 0)，且現在沒有便便了
-            // 但更簡單的邏輯是，如果poopCount為0，且不是遊戲剛開始 (例如玩家已經清過一個)
-            // 暫時簡化：只要poopCount為0就彈出，但需要一個機制防止一開始就彈出。
-            // 讓我們修改：只有當玩家主動清理掉最後一個便便時才彈出。
-            // 上面的 event listener 裡已包含這個邏輯。如果 poopCount 變為0，表示最後一個被清了。
-            if (poopCount === 0 && bags >= 0) { // bags >= 0 確保不是一開始沒便便就觸發
-                const activePoops = grassLand.querySelectorAll('.poop');
-                if(activePoops.length === 0) { // 再次確認DOM上沒有便便
-                    virtuePopup.classList.add('show');
-                    setTimeout(() => {
-                        virtuePopup.classList.remove('show');
-                    }, 3000);
-                }
+            // ... (此函數無變動)
+            if (poopCount === 0 && hasPoopedBefore) {
+                virtuePopup.classList.add('show');
+                setTimeout(() => {
+                    virtuePopup.classList.remove('show');
+                }, 3000);
             }
         }
 
-        function initGame() {
-            bags = 0;
-            poopCount = 0;
-            updateStats();
-            generateProblem();
-            showFeedback('遊戲開始！答對問題獲得塑膠袋清理便便吧！', true);
-            
-            // 清理舊的便便 (如果有的話)
-            const oldPoops = grassLand.querySelectorAll('.poop');
-            oldPoops.forEach(p => grassLand.removeChild(p));
-
-            // 狗狗開始隨機走動
-            setInterval(moveDog, 2500); // 每2.5秒嘗試移動一次
+        /* --- 新增: 遊戲結束函數 --- */
+        function endGame() {
+            clearInterval(gameInterval); // 停止狗狗移動
+            answerInput.disabled = true; // 禁用輸入框
+            submitAnswerButton.disabled = true; // 禁用按鈕
+            winPopup.classList.add('show'); // 顯示勝利訊息
         }
 
-        // 確保在獲取 grassLand 寬高之前 DOM 已渲染
-        window.onload = () => {
-            // 更新 grassLand 尺寸變量，因為 CSS 加載和元素渲染可能需要時間
-            // GRASS_WIDTH = grassLand.offsetWidth; // 在此處更新可能更準確，但會變全域
-            // GRASS_HEIGHT = grassLand.offsetHeight;
-            // DOG_WIDTH = dog.offsetWidth;
-            // DOG_HEIGHT = dog.offsetHeight;
-            initGame();
-        };
+        function initGame() {
+            updateStats();
+            generateProblem();
+            showFeedback('遊戲開始！清理10個便便完成挑戰吧！', true);
+            
+            /* --- 修改: 儲存計時器ID --- */
+            gameInterval = setInterval(moveDog, 2500);
+        }
 
+        window.onload = initGame;
     </script>
 </body>
 </html>
