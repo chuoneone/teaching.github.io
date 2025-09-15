@@ -1,186 +1,523 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unit 1對話朗讀</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>七上U1朗讀</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        /* --- 整體頁面樣式 --- */
         body {
-            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            font-family: 'Noto Sans TC', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #333;
+            overflow: hidden;
         }
-        .speaker-bubble {
-            position: absolute;
-            top: -1.2rem;
-            left: 1.5rem;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-weight: 500;
-            font-size: 0.875rem;
+
+        /* --- 主要容器 --- */
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px 50px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            width: 90%;
+            max-width: 650px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .container.finished {
+            transform: scale(1.05);
+        }
+
+        .location-tag {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            font-weight: 700;
+        }
+
+        /* --- 對話內容 --- */
+        .speaker-line {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            min-height: 50px;
+        }
+
+        .speaker {
+            font-weight: 700;
+            color: #0056b3;
+            margin-right: 12px;
+            font-size: 1.6em;
+        }
+
+        .sentence {
+            font-size: 1.8em;
+            margin: 0;
+            color: #000;
+            font-weight: 400;
+            line-height: 1.4;
+        }
+        
+        .translation {
+            font-size: 1.2em;
+            color: #495057;
+            margin: 5px 0 25px 0;
+            min-height: 20px;
+        }
+
+        /* --- 按鈕樣式 --- */
+        button {
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        #play-btn {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+        }
+        
+        #play-chinese-btn {
+            background: linear-gradient(45deg, #fd7e14, #ffc107);
+            color: white;
+        }
+
+        #next-btn {
+            background: linear-gradient(45deg, #28a745, #218838);
+            color: white;
+        }
+        
+        /* --- 彈出視窗 --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 1000;
+        }
+
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 350px;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-overlay.visible .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        #listen-again-btn {
+            background-color: #ffc107;
+            color: #333;
+        }
+        
+        #record-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        #record-btn.recording {
+            background-color: #c82333;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(220, 53, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+        }
+
+        /* --- 回饋區 --- */
+        .feedback-area {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .feedback-area p {
+            margin: 8px 0;
+        }
+
+        #recognition-result {
+            font-style: italic;
+            color: #6c757d;
+        }
+
+        #score-result {
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+        
+        /* --- 隱藏/顯示 --- */
+        .hidden {
+            display: none;
+        }
+
+        /* --- 響應式設計 --- */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            .speaker, .sentence {
+                font-size: 1.3em;
+            }
+            .sentence {
+                font-size: 1.4em;
+            }
+            .translation {
+                font-size: 1.1em;
+            }
+            .modal-content {
+                width: 85%;
+            }
+            button {
+                padding: 12px 24px;
+                font-size: 1em;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen">
+<body>
 
-    <div class="w-full max-w-2xl mx-auto p-4 md:p-6">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
-            <div class="p-6 bg-blue-600 text-white">
-                <h1 class="text-2xl font-bold text-center">Unit 1對話練習</h1>
-                <p class="text-center mt-1 text-blue-200">點擊按鈕即可朗讀</p>
+    <!-- 主要內容區 -->
+    <div class="container" id="main-container">
+        <p class="location-tag" id="location-text"></p>
+        <div class="speaker-line">
+            <span class="speaker" id="speaker-text"></span>
+            <p class="sentence" id="sentence-text"></p>
+        </div>
+        <p class="translation" id="translation-text"></p>
+        <button id="play-btn">朗讀英文 ▶</button>
+        <button id="play-chinese-btn">朗讀中文 🇹🇼</button>
+    </div>
+
+    <!-- 彈出視窗 -->
+    <div id="modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="modal-title">聽完了！</h2>
+            <div id="modal-buttons">
+                <button id="listen-again-btn">再聽一次 🔁</button>
+                <button id="record-btn">換我唸 🎙️</button>
             </div>
-
-            <!-- 對話卡片容器 -->
-            <div id="dialogue-container" class="p-6 md:p-8 min-h-[250px] flex flex-col justify-center items-center">
-                <!-- 句子將會動態插入此處 -->
-            </div>
-
-            <!-- 進度條和導航 -->
-            <div class="px-6 md:px-8 pb-6">
-                 <!-- 進度條 -->
-                <div class="flex justify-between items-center mb-4 text-sm font-medium text-gray-500 dark:text-gray-400">
-                    <span>進度</span>
-                    <span id="progress-text">1 / 19</span>
-                </div>
-                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mb-4">
-                    <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full" style="width: 5%"></div>
-                </div>
-                
-                <!-- 導航按鈕 -->
-                <div class="flex justify-between items-center">
-                    <button id="prev-btn" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-bold py-2 px-4 rounded-lg transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
-                        上一句
-                    </button>
-                    <button id="next-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
-                        下一句
-                    </button>
-                </div>
+            <div id="feedback" class="feedback-area hidden">
+                <p id="sentence-to-read" style="font-size: 1.2em; font-weight: bold; color: #0056b3; margin-bottom: 15px;"></p>
+                <p id="feedback-instruction">請對著麥克風唸出上面的句子...</p>
+                <p id="recognition-result"></p>
+                <p id="score-result"></p>
+                <button id="next-btn" class="hidden" style="margin-top: 15px;">下一句 →</button>
             </div>
         </div>
-        <p class="text-center text-xs text-gray-400 mt-4">佳音翰林國中英語一上Dialogue</p>
     </div>
 
     <script>
-        const dialogueContainer = document.getElementById('dialogue-container');
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
-        const progressBar = document.getElementById('progress-bar');
-        const progressText = document.getElementById('progress-text');
+        // --- 1. 資料準備 ---
 
-        // 填充對話內容
         const dialogue = [
-            { speaker: '場景', english: 'At the park', chinese: '在公園' },
-            { speaker: 'Jamie', english: 'Good morning, Yuki.', chinese: '早安，Yuki。' },
-            { speaker: 'Yuki', english: 'Good morning, Jamie.', chinese: '早安，Jamie。' },
-            { speaker: 'Jamie', english: 'Look at that boy. Who is he?', chinese: '看看那個男孩。他是誰？' },
-            { speaker: 'Yuki', english: 'That’s Zac, our new neighbor.', chinese: '那是 Zac，我們的新鄰居。' },
-            { speaker: 'Jamie', english: 'And the girl?', chinese: '那那個女孩呢？' },
-            { speaker: 'Yuki', english: 'That’s Zac’s sister, Sophie. She’s a student.', chinese: '那是 Zac 的妹妹，Sophie。她是一位學生。' },
-            { speaker: 'Jamie', english: 'She’s very tall.', chinese: '她很高。' },
-            { speaker: 'Yuki', english: 'She’s pretty, too.', chinese: '她也很漂亮。' },
-            { speaker: '場景', english: 'In the classroom', chinese: '在教室裡' },
-            { speaker: 'Zac', english: 'Hi, I’m Zac Hugo. Nice to meet you.', chinese: '嗨，我是 Zac Hugo。很高興認識你。' },
-            { speaker: 'Jamie', english: 'I’m Jamie Parker. Nice to meet you, too.', chinese: '我是 Jamie Parker。我也很高興認識你。' },
-            { speaker: 'Zac', english: 'Who’s this, Jamie? Is he your brother?', chinese: '這位是誰，Jamie？他是你哥哥嗎？' },
-            { speaker: 'Jamie', english: 'No, he isn’t. He’s my cousin, Max. Max Banker.', chinese: '不，他不是。他是我的表哥，Max。Max Banker。' },
-            { speaker: 'Zac', english: 'Is Max a student?', chinese: 'Max 是學生嗎？' },
-            { speaker: 'Jamie', english: 'No, he isn’t. He’s a doctor.', chinese: '不，他不是。他是一位醫生。' },
-            { speaker: 'Zac', english: 'Really? How old is he?', chinese: '真的嗎？他幾歲？' },
-            { speaker: 'Jamie', english: 'He’s twenty-eight years old.', chinese: '他二十八歲。' },
-            { speaker: 'Zac', english: 'I see.', chinese: '我明白了。' }
+            { location: '(At school)', speaker: 'Jamie:', sentence: 'Good morning, Yuki.', translation: '早安，Yuki。' },
+            { location: '(At school)', speaker: 'Yuki:', sentence: 'Good morning, Jamie.', translation: '早安，Jamie。' },
+            { location: '(At school)', speaker: 'Jamie:', sentence: 'Look at that boy. Who is he?', translation: '看看那個男孩。他是誰？' },
+            { location: '(At school)', speaker: 'Yuki:', sentence: 'That’s Zac, our new classmate.', translation: '那是Zac，我們的新同學。' },
+            { location: '(At school)', speaker: 'Jamie:', sentence: 'And the girl?', translation: '那那個女孩呢？' },
+            { location: '(At school)', speaker: 'Yuki:', sentence: 'That’s Zac’s sister, Sophie. She’s a student.', translation: '那是Zac的妹妹，Sophie。她是一位學生。' },
+            { location: '(At school)', speaker: 'Jamie:', sentence: 'She’s very tall.', translation: '她非常高。' },
+            { location: '(At school)', speaker: 'Yuki:', sentence: 'She’s smart, too.', translation: '她也很聰明。' },
+            { location: '(In the classroom)', speaker: 'Zac:', sentence: 'Hi, I’m Zac Hugo. Nice to meet you.', translation: '嗨，我是Zac Hugo。很高興認識你。' },
+            { location: '(In the classroom)', speaker: 'Jamie:', sentence: 'I’m Jamie Parker. Nice to meet you, too.', translation: '我是Jamie Parker。我也很高興認識你。' },
+            { location: '(In the classroom)', speaker: 'Zac:', sentence: 'Who’s this, Jamie? Is he your brother?', translation: '這是誰，Jamie？他是你的兄弟嗎？' },
+            { location: '(In the classroom)', speaker: 'Jamie:', sentence: 'No, he isn’t. He’s my friend, Max. Max Banker.', translation: '不，他不是。他是我的朋友，Max。Max Banker。' },
+            { location: '(In the classroom)', speaker: 'Zac:', sentence: 'Is Max a student?', translation: 'Max是學生嗎？' },
+            { location: '(In the classroom)', speaker: 'Jamie:', sentence: 'No, he isn’t. He’s a teacher.', translation: '不，他不是。他是一位老師。' },
+            { location: '(In the classroom)', speaker: 'Zac:', sentence: 'Really? How old is he?', translation: '真的嗎？他幾歲？' },
+            { location: '(In the classroom)', speaker: 'Jamie:', sentence: 'He’s twenty-five years old.', translation: '他二十五歲。' },
+            { location: '(In the classroom)', speaker: 'Zac:', sentence: 'I see.', translation: '我明白了。' }
         ];
 
-        let currentIndex = 0;
+        // --- 2. 獲取頁面元素 ---
 
-        // 朗讀功能
-        function speak(text, lang = 'en-US') {
-            if ('speechSynthesis' in window) {
-                // 如果正在朗讀，先取消
-                window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = lang;
-                window.speechSynthesis.speak(utterance);
-            } else {
-                console.error('瀏覽器不支援語音合成功能');
-            }
+        const locationText = document.getElementById('location-text');
+        const speakerText = document.getElementById('speaker-text');
+        const sentenceText = document.getElementById('sentence-text');
+        const translationText = document.getElementById('translation-text');
+        const playBtn = document.getElementById('play-btn');
+        const playChineseBtn = document.getElementById('play-chinese-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalButtons = document.getElementById('modal-buttons');
+        const listenAgainBtn = document.getElementById('listen-again-btn');
+        const recordBtn = document.getElementById('record-btn');
+        const feedback = document.getElementById('feedback');
+        const feedbackInstruction = document.getElementById('feedback-instruction');
+        const recognitionResult = document.getElementById('recognition-result');
+        const scoreResult = document.getElementById('score-result');
+        const mainContainer = document.getElementById('main-container');
+        const sentenceToRead = document.getElementById('sentence-to-read');
+
+        // --- 3. 狀態管理 ---
+
+        let currentIndex = 0;
+        let speechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition;
+        
+        if (!speechRecognition) {
+            alert("抱歉，您的瀏覽器不支援語音辨識功能。推薦使用 Chrome 或 Edge。");
+            recordBtn.disabled = true;
         }
 
-        // 顯示當前句子
-        function showSentence(index) {
-            const item = dialogue[index];
-            let cardHtml = '';
-            const speakerIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.414z" clip-rule="evenodd" /></svg>`;
-    
-            const buttonsHtml = (alignClass = 'justify-end') => `
-                <div class="mt-6 flex ${alignClass} gap-3">
-                    <button class="speak-en-btn bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition flex items-center">
-                        ${speakerIconSvg} 英文
-                    </button>
-                    <button class="speak-zh-btn bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition flex items-center">
-                        ${speakerIconSvg} 中文
-                    </button>
-                </div>
-            `;
+        // --- 4. 核心功能函式 ---
 
-            if (item.speaker === '場景') {
-                 cardHtml = `
-                    <div class="text-center w-full">
-                        <p class="text-lg italic text-gray-500 dark:text-gray-400">${item.english}</p>
-                        <p class="text-md text-gray-400 dark:text-gray-500 mt-2">${item.chinese}</p>
-                        ${buttonsHtml('justify-center')}
-                    </div>
-                `;
-            } else {
-                const bgColor = item.speaker === 'Jamie' || item.speaker === 'Zac' ? 'bg-blue-100 dark:bg-blue-900' : 'bg-green-100 dark:bg-green-900';
-                const speakerColor = item.speaker === 'Jamie' || item.speaker === 'Zac' ? 'bg-blue-500 text-white' : 'bg-green-500 text-white';
-                
-                cardHtml = `
-                    <div class="relative w-full p-6 pt-8 rounded-xl shadow-md ${bgColor}">
-                        <div class="speaker-bubble ${speakerColor}">${item.speaker}</div>
-                        <p class="text-2xl font-semibold text-gray-800 dark:text-gray-100">${item.english}</p>
-                        <p class="text-lg text-gray-600 dark:text-gray-300 mt-3">${item.chinese}</p>
-                        ${buttonsHtml('justify-end')}
-                    </div>
-                `;
-            }
-            
-            dialogueContainer.innerHTML = cardHtml;
-            
-            dialogueContainer.querySelector('.speak-en-btn')?.addEventListener('click', () => speak(item.english, 'en-US'));
-            dialogueContainer.querySelector('.speak-zh-btn')?.addEventListener('click', () => speak(item.chinese, 'zh-TW'));
+        // 顯示句子
+        function displaySentence() {
+            const currentLine = dialogue[currentIndex];
+            locationText.textContent = currentLine.location;
+            speakerText.textContent = currentLine.speaker;
+            sentenceText.textContent = currentLine.sentence;
+            translationText.textContent = currentLine.translation;
+        }
 
-            updateControls();
+        // 朗讀英文句子 (TTS)
+        function speakSentence() {
+            const sentence = sentenceText.textContent;
+            const utterance = new SpeechSynthesisUtterance(sentence);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.5; // 語速調整為 0.5 倍
+            
+            utterance.onstart = () => {
+                playBtn.disabled = true;
+                playBtn.textContent = '朗讀中...';
+            };
+
+            utterance.onend = () => {
+                playBtn.disabled = false;
+                playBtn.textContent = '朗讀英文 ▶';
+                showModal();
+            };
+
+            speechSynthesis.speak(utterance);
         }
         
-        // 更新按鈕和進度條狀態
-        function updateControls() {
-            // 更新進度條
-            const progressPercentage = ((currentIndex + 1) / dialogue.length) * 100;
-            progressBar.style.width = `${progressPercentage}%`;
-            progressText.textContent = `${currentIndex + 1} / ${dialogue.length}`;
+        // 朗讀中文句子 (TTS)
+        function speakChineseSentence() {
+            const sentence = translationText.textContent;
+            const utterance = new SpeechSynthesisUtterance(sentence);
+            utterance.lang = 'zh-TW';
+            utterance.rate = 1.0; 
+            
+            utterance.onstart = () => {
+                playChineseBtn.disabled = true;
+                playChineseBtn.textContent = '朗讀中...';
+            };
 
-            // 更新按鈕狀態
-            prevBtn.disabled = currentIndex === 0;
-            nextBtn.disabled = currentIndex === dialogue.length - 1;
+            utterance.onend = () => {
+                playChineseBtn.disabled = false;
+                playChineseBtn.textContent = '朗讀中文 🇹🇼';
+            };
+
+            speechSynthesis.speak(utterance);
         }
 
-        // 事件監聽
+        // 顯示彈出視窗
+        function showModal() {
+            modalTitle.textContent = '聽完了！';
+            modalButtons.classList.remove('hidden');
+            feedback.classList.add('hidden');
+            modal.classList.add('visible');
+        }
+
+        // 隱藏彈出視窗
+        function hideModal() {
+            modal.classList.remove('visible');
+        }
+
+        // 開始錄音與辨識
+        function startRecording() {
+            recognition = new speechRecognition();
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            
+            recognition.onstart = () => {
+                recordBtn.classList.add('recording');
+                recordBtn.textContent = '正在聆聽... 🎙️';
+                recordBtn.disabled = true;
+                listenAgainBtn.disabled = true;
+                feedbackInstruction.textContent = '請對著麥克風唸出句子...';
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                recognitionResult.textContent = '您唸的是: 「' + transcript + '」';
+                calculateScore(transcript);
+            };
+            
+            recognition.onerror = (event) => {
+                 if(event.error == 'no-speech') {
+                    feedbackInstruction.textContent = "聽不到聲音，請再試一次。";
+                } else {
+                    feedbackInstruction.textContent = '發生錯誤: ' + event.error;
+                }
+            };
+
+            recognition.onend = () => {
+                recordBtn.classList.remove('recording');
+                recordBtn.textContent = '換我唸 🎙️';
+                recordBtn.disabled = false;
+                listenAgainBtn.disabled = false;
+                nextBtn.classList.remove('hidden'); // 顯示下一句按鈕
+            };
+            
+            sentenceToRead.textContent = sentenceText.textContent;
+            modalButtons.classList.add('hidden');
+            feedback.classList.remove('hidden');
+            feedbackInstruction.textContent = '請開始說話...';
+            recognitionResult.textContent = '';
+            scoreResult.textContent = '';
+            
+            recognition.start();
+        }
+
+        // 計算分數 (依字母相似度)
+        function calculateScore(transcript) {
+            const original = sentenceText.textContent.toLowerCase().replace(/[^a-z0-9]/g, '');
+            const spoken = transcript.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+            if (original.length === 0) {
+                 scoreResult.textContent = `太棒了！ (100分)`;
+                 return;
+            }
+
+            const lcsLength = findLCSLength(original, spoken);
+            const score = Math.round((lcsLength / original.length) * 100);
+            
+            let feedbackText = '';
+            if (score >= 90) {
+                feedbackText = `太棒了！ (${score}分)`;
+            } else if (score >= 70) {
+                feedbackText = `不錯喔！ (${score}分)`;
+            } else if (score >= 50) {
+                feedbackText = `還有進步空間！ (${score}分)`;
+            } else {
+                feedbackText = `再試一次看看吧！ (${score}分)`;
+            }
+            scoreResult.textContent = feedbackText;
+        }
+
+        // 尋找最長公共子序列 (LCS) 長度
+        function findLCSLength(s1, s2) {
+            const m = s1.length;
+            const n = s2.length;
+            const dp = Array(m + 1).fill(0).map(() => Array(n + 1).fill(0));
+
+            for (let i = 1; i <= m; i++) {
+                for (let j = 1; j <= n; j++) {
+                    if (s1[i - 1] === s2[j - 1]) {
+                        dp[i][j] = dp[i - 1][j - 1] + 1;
+                    } else {
+                        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                    }
+                }
+            }
+            return dp[m][n];
+        }
+
+
+        // --- 5. 事件監聽 ---
+
+        playBtn.addEventListener('click', speakSentence);
+        playChineseBtn.addEventListener('click', speakChineseSentence);
+
+        listenAgainBtn.addEventListener('click', () => {
+            hideModal();
+            setTimeout(speakSentence, 300);
+        });
+
+        recordBtn.addEventListener('click', startRecording);
+        
         nextBtn.addEventListener('click', () => {
-            if (currentIndex < dialogue.length - 1) {
+            hideModal();
+            setTimeout(() => {
                 currentIndex++;
-                showSentence(currentIndex);
+                if (currentIndex < dialogue.length) {
+                    displaySentence();
+                } else {
+                    locationText.textContent = 'Congratulations!';
+                    speakerText.textContent = '';
+                    sentenceText.textContent = '您已完成所有對話！';
+                    translationText.textContent = '';
+                    mainContainer.classList.add('finished');
+                    playBtn.classList.add('hidden');
+                    playChineseBtn.classList.add('hidden');
+                    nextBtn.classList.add('hidden');
+                }
+            }, 300);
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                hideModal();
             }
         });
 
-        prevBtn.addEventListener('click', () => {
-            if (currentIndex > 0) {
-                currentIndex--;
-                showSentence(currentIndex);
-            }
-        });
 
-        // 初始顯示第一句
-        showSentence(currentIndex);
+        // --- 6. 初始設定 ---
+
+        window.onload = () => {
+            displaySentence();
+            speechSynthesis.getVoices(); 
+        };
+
     </script>
 </body>
 </html>
