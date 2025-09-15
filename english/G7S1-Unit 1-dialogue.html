@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 1對話朗讀</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+        }
+        .speaker-bubble {
+            position: absolute;
+            top: -1.2rem;
+            left: 1.5rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen">
+
+    <div class="w-full max-w-2xl mx-auto p-4 md:p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
+            <div class="p-6 bg-blue-600 text-white">
+                <h1 class="text-2xl font-bold text-center">Unit 1對話練習</h1>
+                <p class="text-center mt-1 text-blue-200">點擊按鈕即可朗讀</p>
+            </div>
+
+            <!-- 對話卡片容器 -->
+            <div id="dialogue-container" class="p-6 md:p-8 min-h-[250px] flex flex-col justify-center items-center">
+                <!-- 句子將會動態插入此處 -->
+            </div>
+
+            <!-- 進度條和導航 -->
+            <div class="px-6 md:px-8 pb-6">
+                 <!-- 進度條 -->
+                <div class="flex justify-between items-center mb-4 text-sm font-medium text-gray-500 dark:text-gray-400">
+                    <span>進度</span>
+                    <span id="progress-text">1 / 19</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mb-4">
+                    <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full" style="width: 5%"></div>
+                </div>
+                
+                <!-- 導航按鈕 -->
+                <div class="flex justify-between items-center">
+                    <button id="prev-btn" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-bold py-2 px-4 rounded-lg transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                        上一句
+                    </button>
+                    <button id="next-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
+                        下一句
+                    </button>
+                </div>
+            </div>
+        </div>
+        <p class="text-center text-xs text-gray-400 mt-4">佳音翰林國中英語一上Dialogue</p>
+    </div>
+
+    <script>
+        const dialogueContainer = document.getElementById('dialogue-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+
+        // 填充對話內容
+        const dialogue = [
+            { speaker: '場景', english: 'At the park', chinese: '在公園' },
+            { speaker: 'Jamie', english: 'Good morning, Yuki.', chinese: '早安，Yuki。' },
+            { speaker: 'Yuki', english: 'Good morning, Jamie.', chinese: '早安，Jamie。' },
+            { speaker: 'Jamie', english: 'Look at that boy. Who is he?', chinese: '看看那個男孩。他是誰？' },
+            { speaker: 'Yuki', english: 'That’s Zac, our new neighbor.', chinese: '那是 Zac，我們的新鄰居。' },
+            { speaker: 'Jamie', english: 'And the girl?', chinese: '那那個女孩呢？' },
+            { speaker: 'Yuki', english: 'That’s Zac’s sister, Sophie. She’s a student.', chinese: '那是 Zac 的妹妹，Sophie。她是一位學生。' },
+            { speaker: 'Jamie', english: 'She’s very tall.', chinese: '她很高。' },
+            { speaker: 'Yuki', english: 'She’s pretty, too.', chinese: '她也很漂亮。' },
+            { speaker: '場景', english: 'In the classroom', chinese: '在教室裡' },
+            { speaker: 'Zac', english: 'Hi, I’m Zac Hugo. Nice to meet you.', chinese: '嗨，我是 Zac Hugo。很高興認識你。' },
+            { speaker: 'Jamie', english: 'I’m Jamie Parker. Nice to meet you, too.', chinese: '我是 Jamie Parker。我也很高興認識你。' },
+            { speaker: 'Zac', english: 'Who’s this, Jamie? Is he your brother?', chinese: '這位是誰，Jamie？他是你哥哥嗎？' },
+            { speaker: 'Jamie', english: 'No, he isn’t. He’s my cousin, Max. Max Banker.', chinese: '不，他不是。他是我的表哥，Max。Max Banker。' },
+            { speaker: 'Zac', english: 'Is Max a student?', chinese: 'Max 是學生嗎？' },
+            { speaker: 'Jamie', english: 'No, he isn’t. He’s a doctor.', chinese: '不，他不是。他是一位醫生。' },
+            { speaker: 'Zac', english: 'Really? How old is he?', chinese: '真的嗎？他幾歲？' },
+            { speaker: 'Jamie', english: 'He’s twenty-eight years old.', chinese: '他二十八歲。' },
+            { speaker: 'Zac', english: 'I see.', chinese: '我明白了。' }
+        ];
+
+        let currentIndex = 0;
+
+        // 朗讀功能
+        function speak(text, lang = 'en-US') {
+            if ('speechSynthesis' in window) {
+                // 如果正在朗讀，先取消
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = lang;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                console.error('瀏覽器不支援語音合成功能');
+            }
+        }
+
+        // 顯示當前句子
+        function showSentence(index) {
+            const item = dialogue[index];
+            let cardHtml = '';
+            const speakerIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.414z" clip-rule="evenodd" /></svg>`;
+    
+            const buttonsHtml = (alignClass = 'justify-end') => `
+                <div class="mt-6 flex ${alignClass} gap-3">
+                    <button class="speak-en-btn bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition flex items-center">
+                        ${speakerIconSvg} 英文
+                    </button>
+                    <button class="speak-zh-btn bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition flex items-center">
+                        ${speakerIconSvg} 中文
+                    </button>
+                </div>
+            `;
+
+            if (item.speaker === '場景') {
+                 cardHtml = `
+                    <div class="text-center w-full">
+                        <p class="text-lg italic text-gray-500 dark:text-gray-400">${item.english}</p>
+                        <p class="text-md text-gray-400 dark:text-gray-500 mt-2">${item.chinese}</p>
+                        ${buttonsHtml('justify-center')}
+                    </div>
+                `;
+            } else {
+                const bgColor = item.speaker === 'Jamie' || item.speaker === 'Zac' ? 'bg-blue-100 dark:bg-blue-900' : 'bg-green-100 dark:bg-green-900';
+                const speakerColor = item.speaker === 'Jamie' || item.speaker === 'Zac' ? 'bg-blue-500 text-white' : 'bg-green-500 text-white';
+                
+                cardHtml = `
+                    <div class="relative w-full p-6 pt-8 rounded-xl shadow-md ${bgColor}">
+                        <div class="speaker-bubble ${speakerColor}">${item.speaker}</div>
+                        <p class="text-2xl font-semibold text-gray-800 dark:text-gray-100">${item.english}</p>
+                        <p class="text-lg text-gray-600 dark:text-gray-300 mt-3">${item.chinese}</p>
+                        ${buttonsHtml('justify-end')}
+                    </div>
+                `;
+            }
+            
+            dialogueContainer.innerHTML = cardHtml;
+            
+            dialogueContainer.querySelector('.speak-en-btn')?.addEventListener('click', () => speak(item.english, 'en-US'));
+            dialogueContainer.querySelector('.speak-zh-btn')?.addEventListener('click', () => speak(item.chinese, 'zh-TW'));
+
+            updateControls();
+        }
+        
+        // 更新按鈕和進度條狀態
+        function updateControls() {
+            // 更新進度條
+            const progressPercentage = ((currentIndex + 1) / dialogue.length) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+            progressText.textContent = `${currentIndex + 1} / ${dialogue.length}`;
+
+            // 更新按鈕狀態
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === dialogue.length - 1;
+        }
+
+        // 事件監聽
+        nextBtn.addEventListener('click', () => {
+            if (currentIndex < dialogue.length - 1) {
+                currentIndex++;
+                showSentence(currentIndex);
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                showSentence(currentIndex);
+            }
+        });
+
+        // 初始顯示第一句
+        showSentence(currentIndex);
+    </script>
+</body>
+</html>
+
