@@ -19,6 +19,8 @@
             --text-color: #333;
             --button-color: #5cb85c;
             --button-hover-color: #4cae4c;
+            --option-button-bg: #f0ad4e;
+            --option-button-hover-bg: #ec971f;
             --card-bg: rgba(255, 255, 255, 0.85);
             --popup-bg: rgba(255, 255, 255, 0.95);
             --correct-color: #28a745;
@@ -55,7 +57,6 @@
             animation: sun-glow 5s infinite ease-in-out;
         }
 
-        /* --- 新增: 右上角計數器樣式 --- */
         .cleaned-counter {
             position: absolute;
             top: 20px;
@@ -83,7 +84,7 @@
             display: flex;
             gap: 25px;
             width: 100%;
-            max-width: 960px;
+            max-width: 1080px;
             align-items: flex-start;
             z-index: 10;
         }
@@ -95,7 +96,7 @@
             padding: 25px;
             box-shadow: 0 8px 16px rgba(0,0,0,0.1);
             text-align: center;
-            width: 320px;
+            width: 400px;
             flex-shrink: 0;
             backdrop-filter: blur(5px);
         }
@@ -121,63 +122,55 @@
         }
 
         #problem-text {
-            font-size: 1.6em;
-            margin-bottom: 15px;
+            font-size: 2.5em;
+            margin-bottom: 20px;
             color: var(--earth-brown);
             font-weight: 700;
+            min-height: 2.5em; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        #answer-input {
-            padding: 10px;
-            font-size: 1.1em;
-            border: 2px solid #ccc;
-            border-radius: 8px;
-            width: 100px;
-            text-align: center;
-            margin-right: 10px;
-            transition: border-color 0.3s, background-color 0.3s;
-        }
-        #answer-input:focus {
-            outline: none;
-            border-color: var(--button-color);
-        }
-        #answer-input:disabled {
-            background-color: #eee;
-            cursor: not-allowed;
+        #options-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
         }
 
-
-        .button {
-            padding: 12px 20px;
-            font-size: 1em;
+        .option-button {
+            padding: 15px;
+            font-size: 1.3em;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
-            background-color: var(--button-color);
+            background-color: var(--option-button-bg);
             color: white;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            font-weight: bold;
         }
 
-        .button:hover {
-            background-color: var(--button-hover-color);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        .option-button:hover {
+            background-color: var(--option-button-hover-bg);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 10px rgba(0,0,0,0.15);
         }
-        .button:active {
-             transform: translateY(0);
-             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        .option-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .button:disabled {
-            background-color: #aaa;
+         .option-button:disabled {
+            background-color: #ccc;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
 
         #feedback {
-            margin-top: 15px;
-            font-size: 1em;
+            margin-top: 20px;
+            font-size: 1.1em;
             min-height: 1.5em;
             font-weight: bold;
             opacity: 0;
@@ -187,10 +180,9 @@
             opacity: 1;
         }
 
-        /* --- 🌱 草地與互動元素 --- */
         .grass-land {
             flex-grow: 1;
-            height: 450px;
+            height: 550px;
             background-color: var(--grass-green);
             border: 4px solid var(--grass-border);
             border-radius: 15px;
@@ -200,7 +192,7 @@
         }
 
         #dog {
-            font-size: 3.5em;
+            font-size: 5em;
             position: absolute;
             bottom: 10px;
             left: 50%;
@@ -210,7 +202,7 @@
         }
 
         .poop {
-            font-size: 2em;
+            font-size: 3em;
             position: absolute;
             cursor: pointer;
             transition: transform 0.2s ease, opacity 0.5s ease;
@@ -258,6 +250,39 @@
         .popup-message.show .popup-content {
             transform: scale(1);
         }
+        
+        /* --- 開始視窗特定樣式 --- */
+        #start-popup .popup-content {
+            color: var(--earth-brown);
+            border-color: var(--earth-brown);
+            max-width: 500px;
+        }
+        #start-popup h2 {
+             margin-top: 0;
+             font-size: 1.5em;
+        }
+        #start-popup p {
+            font-size: 0.8em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        #start-game-button {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background-color: var(--button-color);
+            color: white;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+         #start-game-button:hover {
+             background-color: var(--button-hover-color);
+             transform: translateY(-3px);
+         }
+
 
         /* --- 🎬 動畫效果 --- */
         @keyframes sun-glow {
@@ -269,13 +294,17 @@
         @keyframes poof { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
 
         /* --- 📱 響應式設計 --- */
+        @media (max-width: 900px) {
+            .game-area { flex-direction: column; align-items: center; }
+            .math-section { width: 90%; max-width: 450px; margin-bottom: 20px; }
+            .grass-land { width: 90%; max-width: 450px; height: 450px; }
+        }
         @media (max-width: 768px) {
             .cleaned-counter { font-size: 1em; top: 10px; right: 10px; }
-            .game-area { flex-direction: column; align-items: center; }
-            .math-section { width: 90%; max-width: 400px; margin-bottom: 20px; }
-            .grass-land { width: 90%; max-width: 400px; height: 350px; }
             .game-title { font-size: 2.2em; }
             .sun { width: 50px; height: 50px; top: 20px; left: 20px; }
+            #problem-text { font-size: 2em; }
+            .option-button { font-size: 1.1em; padding: 12px; }
         }
     </style>
 </head>
@@ -291,9 +320,8 @@
             <div class="stats-bar">
                 撿便袋: <span id="bags-count">0</span> 個
             </div>
-            <p id="problem-text">問題載入中...</p>
-            <input type="number" id="answer-input" placeholder="答案">
-            <button id="submit-answer" class="button">提交</button>
+            <p id="problem-text">等待遊戲開始...</p>
+            <div id="options-container"></div>
             <p id="feedback"></p>
         </div>
 
@@ -301,50 +329,61 @@
             <div id="dog">🐕</div>
         </div>
     </div>
-
-    <div class="popup-message" id="virtue-popup">
+    
+    <div class="popup-message show" id="start-popup">
         <div class="popup-content">
-            你真是有公德心的好主人！👍<br>草地變得好乾淨！
+            <h2>準備好了嗎？</h2>
+            <p>
+                <b>遊戲規則：</b><br>
+                1. 回答數學問題來獲得「撿便袋」。<br>
+                2. 點擊草地上的便便 💩 進行清理。<br>
+                3. 清理一個便便需要消耗一個撿便袋。<br>
+                4. 目標是成功清理 <b>10</b> 個便便，帶狗狗回家！
+            </p>
+            <button id="start-game-button">開始遊戲</button>
         </div>
     </div>
 
     <div class="popup-message" id="win-popup">
         <div class="popup-content">
-            哇！蹓狗結束，你真是棒！🎉
+            哇！蹓狗結束，你真的是一個很愛護境的主人！🎉
         </div>
     </div>
 
+    <audio id="pickup-sound" src="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2LjQwLjEwMQAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAA/9A0Q'EAAACAAABsAAAAgAAAaQABAIsAAAdAALsADAAAAAEAAAGsAAAAAAAAAAAA/9A0RBgEAY8AAAAfAAABsAABkAACPAAEsAAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAA/9A0Q'EAAACAAABsAAAAgAAAaQABAIsAAAdAALsADAAAAAEAAAGsAAAAAAAAAAAA/9A0RBgEAY8AAAAfAAABsAABkAACPAAEsAAAAAFVFqR2/dG5lVLxUf3aG+99cAAAAA//tAwMAAAAAAAADNAAAAAABMQA1daW4gRWRpdDAuNzhhAAAAAAAAAAAA//tAwQAAAAAAMAABAAAaQABAIAAAHgAALcADAAAAAEAAAGsAAAAAAAAAAAA/9A0RCAAK7sAAADwAAAAgAAAaQABAFQAAAcAAK0ADAAAAAEAAAGsAAAAAAAAAAAA/9A0Q+AEAYMAAAAAgAAAaQABAJAAAAYAAK0ADAAAAAEAAAGsAAAAAAAAAAAA/9A0RGAEAasAAAA+AAABrAAAaQABAFQAAAYAAK0ADAAAAAEAAAGsAAAAAAAAAAAA/9A0RMAEAYMAAAAAgAAAaQABAJAAAAYAAK0ADAAAAAEAAAGsAAAAAAAAAAAA/9A0Q+AEAYMAAAAAgAAAaQABAJAAAAYAAK0ADAAAAAEAAAGsAAAAAAAAAAAA/9A0RCAAK7sAAADwAAAAgAAAaQABAFQAAAcAAK0ADAAAAAEAAAGsAAAAAAAAAAAA/9A0RBgEAY8AAAAfAAABsAABkAACPAAEsAAAAAAAAAAAAAAA//tAwoPAAAAAAAAMgAAABAAAASwADf5uLSAgAEsAAm4AAB2AEWn//8A//8A//8A//8A//8A//8A//8A//+A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8AIlAmVmYgAAAAAAAAAAAABJbmZvAAAADwAAAEMAAAABVVZERQAAANd0/9A0Q'BAAAANIAAAAAAgAAAaQABAEsAAAhAAIoADAAAAAEAAAGsAAAAAAAAAAAA/9A0RBgEAY8AAAAfAAABsAABkAACPAAEsAAAAAAAAAAAAAAA//tAwoPAAAAAAAAMgAAABAAAASwADf5uLSAgAEsAAm4AAB2AEWn//8A//8A//8A//8A//8A//8A//8A//+A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8A//8-BQTzAAAAAAAAAGFsdW0AAAAAAAAAAAAARW5jb2RlZCBieSBXaW4gRWRpdDAuNzhhAAA="></audio>
+
     <script>
+        // --- 獲取所有元素 ---
         const bagsCountDisplay = document.getElementById('bags-count');
         const problemText = document.getElementById('problem-text');
-        const answerInput = document.getElementById('answer-input');
-        const submitAnswerButton = document.getElementById('submit-answer');
         const feedbackText = document.getElementById('feedback');
         const grassLand = document.getElementById('grass-land');
         const dog = document.getElementById('dog');
-        const virtuePopup = document.getElementById('virtue-popup');
-        
-        /* --- 新增: 獲取新元素 --- */
         const cleanedCountDisplay = document.getElementById('cleaned-count');
         const winPopup = document.getElementById('win-popup');
+        const optionsContainer = document.getElementById('options-container');
+        const startPopup = document.getElementById('start-popup');
+        const startGameButton = document.getElementById('start-game-button');
+        const pickupSound = document.getElementById('pickup-sound');
 
+        // --- 遊戲狀態變數 ---
         let bags = 0;
         let currentAnswer = 0;
         let dogIsMoving = false;
         let poopCount = 0;
-        let hasPoopedBefore = false;
-
-        /* --- 新增: 計數器與遊戲狀態變數 --- */
         let poopsCleanedCount = 0;
         const WIN_CONDITION = 10;
-        let gameInterval; // 用來儲存計時器ID，以便結束遊戲
+        let gameInterval; 
 
+        // --- 數學與隨機函數 ---
         function getRandomInt(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
 
+        // --- 遊戲核心邏輯 ---
         function generateProblem() {
-            // ... (此函數無變動)
+            optionsContainer.innerHTML = '';
+            
             const num1 = getRandomInt(-20, 20);
             const num2 = getRandomInt(-20, 20);
             const operator = Math.random() < 0.5 ? '+' : '-';
@@ -356,31 +395,30 @@
                 currentAnswer = num1 - num2;
                 problemText.textContent = `${num1} - (${num2}) = ?`;
             }
-            answerInput.value = '';
-            answerInput.focus();
-        }
-
-        function updateStats() {
-            bagsCountDisplay.textContent = bags;
-        }
-
-        function showFeedback(message, isCorrect) {
-            // ... (此函數無變動)
-            feedbackText.textContent = message;
-            feedbackText.style.color = isCorrect ? 'var(--correct-color)' : 'var(--wrong-color)';
-            feedbackText.classList.add('show');
-            setTimeout(() => {
-                feedbackText.classList.remove('show');
-            }, 2000);
-        }
-
-        submitAnswerButton.addEventListener('click', () => {
-            // ... (此函數無變動)
-            if (answerInput.value === '') {
-                 showFeedback('請輸入數字！', false);
-                 return;
+            
+            const options = new Set([currentAnswer]);
+            while (options.size < 4) {
+                const wrongAnswer = currentAnswer + getRandomInt(-15, 15);
+                if (wrongAnswer !== currentAnswer) {
+                    options.add(wrongAnswer);
+                }
             }
-            const userAnswer = parseInt(answerInput.value, 10);
+
+            const shuffledOptions = Array.from(options).sort(() => Math.random() - 0.5);
+
+            shuffledOptions.forEach(option => {
+                const button = document.createElement('button');
+                button.classList.add('option-button');
+                button.textContent = option;
+                button.addEventListener('click', handleAnswer);
+                optionsContainer.appendChild(button);
+            });
+        }
+        
+        function handleAnswer(event) {
+            document.querySelectorAll('.option-button').forEach(btn => btn.disabled = true);
+
+            const userAnswer = parseInt(event.target.textContent, 10);
             
             if (userAnswer === currentAnswer) {
                 bags++;
@@ -391,24 +429,30 @@
                 showFeedback(`答錯了！正確答案是 ${currentAnswer}。`, false);
             }
             updateStats();
-            generateProblem();
-        });
+            
+            setTimeout(generateProblem, 1500);
+        }
 
-        answerInput.addEventListener('keypress', function(event) {
-            // ... (此函數無變動)
-            if (event.key === 'Enter') {
-                submitAnswerButton.click();
-            }
-        });
+        function updateStats() {
+            bagsCountDisplay.textContent = bags;
+        }
 
+        function showFeedback(message, isCorrect) {
+            feedbackText.textContent = message;
+            feedbackText.style.color = isCorrect ? 'var(--correct-color)' : 'var(--wrong-color)';
+            feedbackText.classList.add('show');
+            setTimeout(() => {
+                feedbackText.classList.remove('show');
+            }, 2000);
+        }
+        
         function moveDog() {
-            // ... (此函數無變動)
             if (dogIsMoving) return;
             dogIsMoving = true;
 
             const grassRect = grassLand.getBoundingClientRect();
-            let targetX = getRandomInt(0, grassRect.width - dog.offsetWidth);
-            let targetY = getRandomInt(0, grassRect.height * 0.4);
+            let targetX = getRandomInt(dog.offsetWidth / 2, grassRect.width - dog.offsetWidth / 2);
+            let targetY = getRandomInt(10, grassRect.height * 0.5);
 
             const currentDogX = dog.offsetLeft;
             dog.style.transform = `translateX(-50%) scaleX(${targetX < currentDogX ? -1 : 1})`;
@@ -418,25 +462,24 @@
 
             setTimeout(() => {
                 dogIsMoving = false;
-                if (Math.random() < 0.35 && poopCount < 5) {
-                    makePoop(targetX, grassRect.height - targetY - dog.offsetHeight);
+                // --- 修改處: 增加便便機率 (0.45) 和上限 (10) ---
+                if (Math.random() < 0.45 && poopCount < 10) {
+                    makePoop(targetX, grassRect.height - targetY - dog.offsetHeight / 2);
                 }
             }, 1500);
         }
 
         function makePoop(dogX, dogY_top) {
-            // ... (此函數大部分無變動)
             poopCount++;
-            hasPoopedBefore = true;
             const poopElement = document.createElement('div');
             poopElement.classList.add('poop');
             poopElement.textContent = '💩';
             
-            const poopOffsetX = getRandomInt(-20, 20);
+            const poopOffsetX = getRandomInt(-30, 30);
             const grassRect = grassLand.getBoundingClientRect();
             
-            let finalPoopX = Math.max(10, Math.min(dogX + poopOffsetX, grassRect.width - 40));
-            let finalPoopY = Math.max(10, Math.min(dogY_top, grassRect.height - 40));
+            let finalPoopX = Math.max(20, Math.min(dogX + poopOffsetX, grassRect.width - 60));
+            let finalPoopY = Math.max(20, Math.min(dogY_top, grassRect.height - 60));
 
             poopElement.style.left = finalPoopX + 'px';
             poopElement.style.top = finalPoopY + 'px';
@@ -447,6 +490,9 @@
                 }
 
                 if (bags > 0) {
+                    pickupSound.currentTime = 0;
+                    pickupSound.play();
+
                     bags--;
                     updateStats();
                     
@@ -460,48 +506,41 @@
                     poopCount--;
                     showFeedback('清理成功！真是好主人！', true);
                     
-                    /* --- 新增: 更新計數並檢查勝利條件 --- */
                     poopsCleanedCount++;
                     cleanedCountDisplay.textContent = poopsCleanedCount;
                     if (poopsCleanedCount >= WIN_CONDITION) {
                         endGame();
-                    } else {
-                       checkAllCleaned(); 
                     }
                     
                 } else {
-                    showFeedback('沒有撿便袋了！快去答題吧！', false);
+                    showFeedback('沒袋子囉,快去答題', false);
                 }
             });
             
             grassLand.appendChild(poopElement);
         }
         
-        function checkAllCleaned() {
-            // ... (此函數無變動)
-            if (poopCount === 0 && hasPoopedBefore) {
-                virtuePopup.classList.add('show');
-                setTimeout(() => {
-                    virtuePopup.classList.remove('show');
-                }, 3000);
-            }
-        }
-
-        /* --- 新增: 遊戲結束函數 --- */
         function endGame() {
-            clearInterval(gameInterval); // 停止狗狗移動
-            answerInput.disabled = true; // 禁用輸入框
-            submitAnswerButton.disabled = true; // 禁用按鈕
-            winPopup.classList.add('show'); // 顯示勝利訊息
+            clearInterval(gameInterval); 
+            problemText.textContent = "挑戰完成！🎉";
+            optionsContainer.innerHTML = '';
+            winPopup.classList.add('show'); 
         }
 
-        function initGame() {
+        function startGame() {
             updateStats();
             generateProblem();
             showFeedback('遊戲開始！清理10個便便完成挑戰吧！', true);
             
-            /* --- 修改: 儲存計時器ID --- */
-            gameInterval = setInterval(moveDog, 2500);
+            // --- 修改處: 加快狗狗移動和大便的頻率 ---
+            gameInterval = setInterval(moveDog, 1800);
+        }
+
+        function initGame() {
+            startGameButton.addEventListener('click', () => {
+                startPopup.classList.remove('show');
+                startGame();
+            }, { once: true });
         }
 
         window.onload = initGame;
