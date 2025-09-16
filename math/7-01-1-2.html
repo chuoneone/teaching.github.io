@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>正負數加減步驟學習</title>
+    <link rel="icon" href="dog.png" type="image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft JhengHei', sans-serif;
+            background: linear-gradient(135deg, #fef9e7 0%, #f9f2d7 50%, #fef9e7 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #4a5568;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+        
+        .menu-screen {
+            display: block;
+        }
+        
+        .game-screen {
+            display: none;
+        }
+        
+        .difficulty-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .difficulty-btn {
+            background: linear-gradient(45deg, #f4e4a6, #e6d68a);
+            color: #8b6914;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(244, 228, 166, 0.4);
+        }
+        
+        .difficulty-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(244, 228, 166, 0.5);
+            background: linear-gradient(45deg, #e6d68a, #d4c374);
+        }
+        
+        .difficulty-btn.h-group {
+            background: linear-gradient(45deg, #f0d982, #e6cc5e);
+            box-shadow: 0 4px 15px rgba(240, 217, 130, 0.4);
+        }
+        
+        .difficulty-btn.h-group:hover {
+            box-shadow: 0 6px 20px rgba(240, 217, 130, 0.5);
+            background: linear-gradient(45deg, #e6cc5e, #d4b84a);
+        }
+        
+        .problem-display {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 3px solid #e9ecef;
+        }
+        
+        .problem-text {
+            font-size: 2rem;
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .steps-container {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .step-column {
+            flex: 1;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .step-column.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        .step-indicator {
+            background: #fefcf0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid #e6d68a;
+        }
+        
+        .step-title {
+            font-size: 1.1rem;
+            color: #8b6914;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .step-description {
+            color: #424242;
+            font-size: 0.95rem;
+        }
+        
+        .answer-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .answer-btn {
+            background: #f4e4a6;
+            color: #8b6914;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        
+        .answer-btn:hover {
+            background: #e6d68a;
+            transform: translateY(-2px);
+        }
+        
+        .answer-btn.correct {
+            background: #4CAF50;
+        }
+        
+        .answer-btn.incorrect {
+            background: #f44336;
+        }
+        
+        .answer-btn.disabled {
+            background: #bdbdbd;
+            color: #757575;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .answer-btn.disabled:hover {
+            background: #bdbdbd;
+            transform: none;
+        }
+        
+        .input-section {
+            margin: 20px 0;
+        }
+        
+        .calculation-input {
+            font-size: 1.5rem;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            width: 200px;
+            text-align: center;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .calculation-input.correct {
+            border-color: #4CAF50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+        }
+        
+        .submit-btn {
+            background: #e6d68a;
+            color: #8b6914;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-left: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            background: #d4c374;
+            transform: translateY(-2px);
+        }
+        
+        .feedback {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .next-btn {
+            background: #f4e4a6;
+            color: #8b6914;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .next-btn:hover {
+            background: #e6d68a;
+            transform: translateY(-2px);
+        }
+        
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: #5a6268;
+        }
+        
+        .score-display {
+            background: #fefcf0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #e6d68a;
+        }
+        
+        .score-text {
+            color: #8b6914;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .progress-container {
+            background: #fefcf0;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #e6d68a;
+        }
+        
+        .progress-title {
+            color: #8b6914;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 3px;
+            margin-bottom: 5px;
+        }
+        
+        .progress-item {
+            aspect-ratio: 1;
+            border: 2px solid #e6d68a;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+            background: white;
+            color: #8b6914;
+            min-height: 10px;
+        }
+        
+        .progress-item.current {
+            background: #f4e4a6;
+            border-color: #d4c374;
+            box-shadow: 0 0 10px rgba(244, 228, 166, 0.5);
+        }
+        
+        .progress-item.correct {
+            background: #4CAF50;
+            color: white;
+            border-color: #45a049;
+        }
+        
+        .progress-item.incorrect {
+            background: #f44336;
+            color: white;
+            border-color: #da190b;
+        }
+        
+        .final-score {
+            background: #fefcf0;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 3px solid #e6d68a;
+            text-align: center;
+        }
+        
+        .final-score h2 {
+            color: #8b6914;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        
+        .score-details {
+            font-size: 1.3rem;
+            color: #424242;
+            margin-bottom: 20px;
+        }
+        
+        .score-percentage {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .score-percentage.excellent {
+            color: #4CAF50;
+        }
+        
+        .score-percentage.good {
+            color: #FF9800;
+        }
+        
+        .score-percentage.needs-improvement {
+            color: #f44336;
+        }
+        
+        .restart-btn {
+            background: #f4e4a6;
+            color: #8b6914;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .restart-btn:hover {
+            background: #e6d68a;
+            transform: translateY(-2px);
+        }
+        
+
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .difficulty-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .difficulty-btn {
+                padding: 15px 30px;
+                font-size: 1rem;
+            }
+            
+            .steps-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .problem-text {
+                font-size: 1.5rem;
+            }
+            
+            .answer-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .answer-btn {
+                min-width: 100px;
+                padding: 12px 20px;
+            }
+            
+            .calculation-input {
+                width: 150px;
+                font-size: 1.2rem;
+            }
+            
+            .submit-btn {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .problem-text {
+                font-size: 1.3rem;
+            }
+            
+            .step-title {
+                font-size: 1.1rem;
+            }
+            
+            .calculation-input {
+                width: 120px;
+            }
+            
+            .progress-grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 6px;
+            }
+            
+            .progress-item {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 選單畫面 -->
+        <div class="menu-screen" id="menuScreen">
+            <h1>正負數加減步驟學習</h1>
+            <p style="font-size: 1.2rem; color: #666; margin-bottom: 30px;">選擇你的挑戰等級</p>
+            
+            <div class="difficulty-buttons">
+                <button class="difficulty-btn" onclick="startGame('L')">
+                    <div style="font-size: 1.5rem; margin-bottom: 10px;">📚 基礎題</div>
+                </button>
+                
+                <button class="difficulty-btn h-group" onclick="startGame('H')">
+                    <div style="font-size: 1.5rem; margin-bottom: 10px;">🔥 進階題</div>
+                </button>
+            </div>
+            
+            <div style="background: #fefcf0; padding: 20px; border-radius: 15px; margin-top: 30px; border: 2px solid #e6d68a;">
+                <h3 style="color: #8b6914; margin-bottom: 15px;">學習步驟</h3>
+                <div style="text-align: left; color: #424242;">
+                    <p><strong>步驟一：</strong> 判斷正的大?負的大?</p>
+                    <p><strong>步驟二：</strong> 同號相加，異號相減</p>
+                </div>
+            </div>
+            <footer style="text-align: center; margin-top: 20px; font-size: 0.9rem; color: #aaa;">版權所有 &copy; spedmix2025</footer>
+        
+        </div>
+        
+        <!-- 遊戲畫面 -->
+        <div class="game-screen" id="gameScreen">
+            <button class="back-btn" onclick="backToMenu()">← 返回選單</button>
+            
+            <div class="progress-container">
+                <div class="progress-title">答題進度 (第 <span id="currentQuestion">1</span> 題 / 10 題)</div>
+                <div class="progress-grid" id="progressGrid">
+                    <!-- 進度格子會由JavaScript生成 -->
+                </div>
+            </div>
+            
+            <div class="problem-display">
+                <div class="problem-text" id="problemText"></div>
+            </div>
+            
+            <div class="steps-container" id="stepsContainer" style="display: none;">
+                <!-- 步驟一：判斷正負 -->
+                <div class="step-column" id="step1Column">
+                    <div class="step-indicator">
+                        <div class="step-title">步驟一：判斷答案的正負</div>
+                    </div>
+                    
+                    <div class="answer-buttons">
+                        <button class="answer-btn" onclick="checkSign('positive')">正的大</button>
+                        <button class="answer-btn" onclick="checkSign('negative')">負的大</button>
+                    </div>
+                </div>
+                
+                <!-- 步驟二：計算 -->
+                <div class="step-column disabled" id="step2Column">
+                    <div class="step-indicator">
+                        <div class="step-title">步驟二：進行計算</div>
+                        <div class="step-description" id="calculationRule"></div>
+                    </div>
+                    
+                    <div class="input-section">
+                        <span style="font-size: 1.3rem;">答案 = </span>
+                        <input type="number" class="calculation-input" id="answerInput" placeholder="輸入答案">
+                        <button class="submit-btn" onclick="checkAnswer()">提交答案</button>
+                    </div>
+                    
+
+                </div>
+            </div>
+            
+            <div class="feedback" id="feedback" style="display: none;"></div>
+            
+            <button class="next-btn" id="nextBtn" onclick="nextProblem()" style="display: none;">下一題</button>
+            
+            <!-- 最終分數畫面 -->
+            <div class="final-score" id="finalScore" style="display: none;">
+                <h2>🎉 測驗完成！</h2>
+                <div class="score-details">
+                    你總共答對了 <strong><span id="finalCorrect">0</span></strong> 題，共 <strong>10</strong> 題
+                </div>
+                <div class="score-percentage" id="scorePercentage">0%</div>
+                <div id="scoreMessage" style="font-size: 1.2rem; margin: 20px 0;"></div>
+                <div>
+                    <button class="restart-btn" onclick="restartGame()">重新開始</button>
+                    <button class="restart-btn" onclick="backToMenu()">返回選單</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentDifficulty = '';
+        let currentProblem = {};
+        let currentStep = 1;
+        let correctAnswers = 0;
+        let totalProblems = 0;
+        let questionResults = []; // 記錄每題的答題結果
+        const maxQuestions = 10;
+        
+        function startGame(difficulty) {
+            currentDifficulty = difficulty;
+            correctAnswers = 0;
+            totalProblems = 0;
+            questionResults = [];
+            
+            document.getElementById('menuScreen').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'block';
+            document.getElementById('finalScore').style.display = 'none';
+            
+            initializeProgressGrid();
+            generateProblem();
+        }
+        
+        function backToMenu() {
+            document.getElementById('menuScreen').style.display = 'block';
+            document.getElementById('gameScreen').style.display = 'none';
+            correctAnswers = 0;
+            totalProblems = 0;
+            questionResults = [];
+        }
+        
+        function initializeProgressGrid() {
+            const progressGrid = document.getElementById('progressGrid');
+            progressGrid.innerHTML = '';
+            
+            for (let i = 1; i <= maxQuestions; i++) {
+                const item = document.createElement('div');
+                item.className = 'progress-item';
+                item.textContent = i;
+                item.id = `progress-${i}`;
+                progressGrid.appendChild(item);
+            }
+            
+            // 標記第一題為當前題目
+            document.getElementById('progress-1').classList.add('current');
+        }
+        
+        function generateProblem() {
+            // 檢查是否已完成所有題目
+            if (totalProblems >= maxQuestions) {
+                showFinalScore();
+                return;
+            }
+            
+            const range = currentDifficulty === 'H' ? 50 : 10;
+            
+            // 生成兩個不為零的隨機數，且答案不為0
+            let num1, num2, answer;
+            do {
+                do {
+                    num1 = Math.floor(Math.random() * (range * 2 + 1)) - range;
+                } while (num1 === 0);
+                
+                do {
+                    num2 = Math.floor(Math.random() * (range * 2 + 1)) - range;
+                } while (num2 === 0);
+                
+                answer = num1 + num2;
+            } while (answer === 0); // 確保答案不為0
+            
+            currentProblem = {
+                num1: num1,
+                num2: num2,
+                answer: answer,
+                correctSign: answer >= 0 ? 'positive' : 'negative',
+                step1Correct: false,
+                selectedSign: null,
+                hasAnswered: false
+            };
+            
+            // 顯示題目
+            const sign2 = num2 >= 0 ? '+' : '';
+            document.getElementById('problemText').textContent = `${num1} ${sign2} ${num2} = ?`;
+            
+            // 更新當前題目顯示
+            document.getElementById('currentQuestion').textContent = totalProblems + 1;
+            
+            // 重置步驟
+            currentStep = 1;
+            showSteps();
+            hideElements(['feedback', 'nextBtn']);
+        }
+        
+        function showSteps() {
+            document.getElementById('stepsContainer').style.display = 'flex';
+            
+            // 重置步驟一
+            document.getElementById('step1Column').className = 'step-column';
+            document.getElementById('step2Column').className = 'step-column disabled';
+            
+            // 重置按鈕樣式
+            const buttons = document.querySelectorAll('#step1Column .answer-btn');
+            buttons.forEach(btn => {
+                btn.className = 'answer-btn';
+            });
+            
+            // 清空輸入框並重置樣式
+            const answerInput = document.getElementById('answerInput');
+            const submitBtn = document.querySelector('.submit-btn');
+            answerInput.value = '';
+            answerInput.classList.remove('correct');
+            answerInput.disabled = false;
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = '1';
+        }
+        
+        function checkSign(selectedSign) {
+            const buttons = document.querySelectorAll('#step1Column .answer-btn');
+            const feedback = document.getElementById('feedback');
+            
+            currentProblem.selectedSign = selectedSign;
+            
+            if (selectedSign === currentProblem.correctSign) {
+                // 正確
+                currentProblem.step1Correct = true;
+                buttons.forEach(btn => {
+                    if (btn.textContent === (selectedSign === 'positive' ? '正的大' : '負的大')) {
+                        btn.className = 'answer-btn correct';
+                    } else {
+                        btn.className = 'answer-btn disabled';
+                    }
+                });
+                
+                feedback.textContent = '✓ 步驟一正確！現在進行計算步驟';
+                feedback.className = 'feedback correct';
+                feedback.style.display = 'block';
+                
+                enableStep2();
+                
+            } else {
+                // 錯誤
+                currentProblem.step1Correct = false;
+                buttons.forEach(btn => {
+                    if (btn.textContent === (selectedSign === 'positive' ? '正的大' : '負的大')) {
+                        btn.className = 'answer-btn incorrect';
+                    } else {
+                        btn.className = 'answer-btn correct';
+                    }
+                });
+                
+                feedback.textContent = `✗ 步驟一錯誤！正確答案是${currentProblem.answer >= 0 ? '正的大' : '負的大'}。請重新選擇才能進入步驟二。`;
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                
+                // 2秒後重置按鈕，讓學生可以重新選擇
+                setTimeout(() => {
+                    buttons.forEach(btn => {
+                        btn.className = 'answer-btn';
+                    });
+                    feedback.style.display = 'none';
+                }, 2000);
+                
+                // 步驟一錯誤時不解鎖步驟二
+                // enableStep2(); // 移除這行，錯誤時不解鎖步驟二
+            }
+        }
+        
+        function enableStep2() {
+            document.getElementById('step2Column').className = 'step-column';
+            
+            // 判斷同號還是異號
+            const num1 = currentProblem.num1;
+            const num2 = currentProblem.num2;
+            const sameSign = (num1 > 0 && num2 > 0) || (num1 < 0 && num2 < 0);
+            
+            const ruleText = sameSign ? '同號相加：直接相加' : '異號相減：大數減小數';
+            document.getElementById('calculationRule').textContent = ruleText;
+            
+            // 根據學生選擇的正負號設定答案框的預設值
+            if (currentProblem.selectedSign === 'negative') {
+                document.getElementById('answerInput').value = '-';
+            } else {
+                document.getElementById('answerInput').value = '';
+            }
+            
+            document.getElementById('answerInput').focus();
+        }
+        
+        function checkAnswer() {
+            const userAnswer = parseInt(document.getElementById('answerInput').value);
+            const feedback = document.getElementById('feedback');
+            
+            if (isNaN(userAnswer)) {
+                feedback.textContent = '請輸入一個數字！';
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                return;
+            }
+            
+            if (userAnswer === currentProblem.answer) {
+                // 答對了 - 只有在還沒記錄過這題的情況下才計分
+                if (!currentProblem.hasAnswered) {
+                    totalProblems++;
+                    currentProblem.hasAnswered = true;
+                    
+                    const isFullyCorrect = currentProblem.step1Correct;
+                    
+                    if (isFullyCorrect) {
+                        // 步驟一也對，完全正確
+                        correctAnswers++;
+                        
+                        // 記錄結果並更新進度格子
+                        questionResults.push(true);
+                        updateProgressGrid(totalProblems, true);
+                    } else {
+                        // 步驟一錯但步驟二對
+                        
+                        // 記錄結果並更新進度格子
+                        questionResults.push(false);
+                        updateProgressGrid(totalProblems, false);
+                    }
+                }
+                
+                // 隱藏回饋文字
+                feedback.style.display = 'none';
+                
+                // 讓答案輸入框變綠色
+                document.getElementById('answerInput').classList.add('correct');
+                
+                // 禁用提交按鈕避免重複提交
+                document.getElementById('answerInput').disabled = true;
+                document.querySelector('.submit-btn').disabled = true;
+                document.querySelector('.submit-btn').style.opacity = '0.5';
+                
+                // 延遲顯示下一題按鈕
+                setTimeout(() => {
+                    if (totalProblems >= maxQuestions) {
+                        document.getElementById('nextBtn').textContent = '查看成績';
+                    } else {
+                        document.getElementById('nextBtn').textContent = '下一題';
+                    }
+                    document.getElementById('nextBtn').style.display = 'inline-block';
+                }, 800);
+                
+            } else {
+                // 答錯了，需要重做
+                feedback.textContent = `✗ 計算錯誤！請重新計算。提示：${currentProblem.num1} + (${currentProblem.num2})`;
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                
+                // 清空答案框讓學生重新輸入
+                if (currentProblem.selectedSign === 'negative') {
+                    document.getElementById('answerInput').value = '-';
+                } else {
+                    document.getElementById('answerInput').value = '';
+                }
+                document.getElementById('answerInput').focus();
+            }
+        }
+        
+        function nextProblem() {
+            generateProblem();
+        }
+        
+        function updateProgressGrid(questionNumber, isCorrect) {
+            // 移除當前題目標記
+            const currentItem = document.getElementById(`progress-${questionNumber}`);
+            currentItem.classList.remove('current');
+            
+            // 標記為正確或錯誤
+            if (isCorrect) {
+                currentItem.classList.add('correct');
+            } else {
+                currentItem.classList.add('incorrect');
+            }
+            
+            // 如果還有下一題，標記為當前題目
+            if (questionNumber < maxQuestions) {
+                const nextItem = document.getElementById(`progress-${questionNumber + 1}`);
+                nextItem.classList.add('current');
+            }
+        }
+        
+        function showFinalScore() {
+            // 隱藏遊戲元素
+            document.getElementById('stepsContainer').style.display = 'none';
+            document.getElementById('problemText').parentElement.style.display = 'none';
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+            
+            // 顯示最終分數
+            document.getElementById('finalScore').style.display = 'block';
+            document.getElementById('finalCorrect').textContent = correctAnswers;
+            
+            const percentage = Math.round((correctAnswers / maxQuestions) * 100);
+            const scorePercentageElement = document.getElementById('scorePercentage');
+            const scoreMessageElement = document.getElementById('scoreMessage');
+            
+            scorePercentageElement.textContent = `${percentage}%`;
+            
+            // 根據分數設定顏色和訊息
+            if (percentage >= 80) {
+                scorePercentageElement.className = 'score-percentage excellent';
+                scoreMessageElement.textContent = '🌟 太棒了！你對正負數的概念掌握得很好！';
+            } else if (percentage >= 60) {
+                scorePercentageElement.className = 'score-percentage good';
+                scoreMessageElement.textContent = '👍 不錯！繼續練習會更進步的！';
+            } else {
+                scorePercentageElement.className = 'score-percentage needs-improvement';
+                scoreMessageElement.textContent = '💪 加油！多練習正負數的判斷和計算！';
+            }
+        }
+        
+        function restartGame() {
+            startGame(currentDifficulty);
+        }
+        
+        function hideElements(ids) {
+            ids.forEach(id => {
+                document.getElementById(id).style.display = 'none';
+            });
+        }
+        
+
+
+        // 按Enter鍵提交答案
+        document.getElementById('answerInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9800852fc0c9a9c7',t:'MTc1ODAyNzM0OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
