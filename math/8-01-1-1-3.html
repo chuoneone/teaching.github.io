@@ -12,6 +12,7 @@
             font-family: 'Noto Sans TC', sans-serif;
             background-color: #f0f4f8;
         }
+        
         .concept-box {
             background-color: #ffffff;
             border: 1px solid #e2e8f0;
@@ -23,10 +24,13 @@
             min-height: 550px;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
+        .problem-content h2 { /* 針對標題進行縮放 */
+            font-size: clamp(1.5rem, 5vw, 2.25rem);
+        }
         .formula-input {
             width: 100px;
             text-align: center;
-            font-size: 1.25rem;
+            font-size: clamp(1.1rem, 3.5vw, 1.25rem); /* 字體縮放 */
             font-weight: bold;
             border: 1px solid #cbd5e1;
             border-radius: 0.25rem;
@@ -69,7 +73,7 @@
             background-color: #eef2ff;
             padding: 1rem 1.5rem;
             border-radius: 0.5rem;
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 4vw, 1.5rem); /* 字體縮放 */
             font-weight: bold;
             text-align: center;
             color: #4338ca;
@@ -137,6 +141,9 @@
             justify-content: center;
             align-items: center;
         }
+        .explanation p.text-2xl { /* 針對練習題中的算式進行縮放 */
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
+        }
         .message-box {
             min-height: 2.5rem;
             text-align: center;
@@ -162,7 +169,8 @@
             align-items: center;
             justify-content: center;
             margin: 1.5rem auto;
-            width: 350px;
+            width: 100%;
+            max-width: 350px;
         }
         .multiplication-grid {
             display: grid;
@@ -172,24 +180,23 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 5vw, 1.75rem); /* 字體縮放 */
             font-weight: bold;
-            min-width: 100px;
-            min-height: 100px;
             border: 1px solid #9ca3af;
             position: relative;
+            aspect-ratio: 1 / 1;
         }
         .grid-cell .calculation {
             position: absolute;
             top: 4px;
             left: 4px;
-            font-size: 0.75rem;
+            font-size: clamp(0.6rem, 2vw, 0.75rem); /* 字體縮放 */
             color: #64748b;
             font-weight: normal;
         }
         .side-labels, .top-labels {
             display: flex;
-            font-size: 1.5rem;
+            font-size: clamp(1.1rem, 3.5vw, 1.5rem); /* 字體縮放 */
             font-weight: bold;
             color: #1e3a8a;
         }
@@ -284,7 +291,7 @@
                                         <div class="grid-cell bg-yellow-100"><input type="text" class="formula-input grid-input" data-idx="5" disabled></div>
                                     </div>
                                 </div>
-                                <div class="formula-display">
+                                <div class="formula-display" id="formula-display-problem-3">
                                     <span>...</span>
                                 </div>
                                 <div id="message-box-problem-3" class="message-box"></div>
@@ -331,7 +338,6 @@
                             <button class="action-btn" data-problem="problem-2" data-max-steps="5">下一步</button>
                         </div>
                     </div>
-
                     <div id="problem-4" class="problem-content hidden" data-type="interactive" data-answers='[98, 100, 10000]'>
                         <div class="concept-box">
                             <div>
@@ -397,7 +403,7 @@
                     
                     if (problemId === 'problem-3') {
                         problemElement.querySelectorAll('.top-labels span, .side-labels span').forEach(s => s.textContent = '?');
-                        const formulaDisplay = problemElement.querySelector('.formula-display:last-of-type');
+                        const formulaDisplay = problemElement.querySelector('#formula-display-problem-3');
                         if (formulaDisplay) formulaDisplay.innerHTML = '<span>...</span>';
                     }
 
@@ -411,6 +417,25 @@
                 }
             }
             
+            // ----- [新功能] 即時更新 "練習一" 的算式顯示 -----
+            function updateFormulaDisplayProblem3(problemElement) {
+                const display = problemElement.querySelector('#formula-display-problem-3');
+                if (!display) return;
+
+                // 如果總和輸入框已出現，則不更新
+                if (problemElement.querySelector('[data-idx="6"]')) return;
+
+                const inputs = [
+                    problemElement.querySelector('[data-idx="2"]'),
+                    problemElement.querySelector('[data-idx="3"]'),
+                    problemElement.querySelector('[data-idx="4"]'),
+                    problemElement.querySelector('[data-idx="5"]')
+                ];
+                
+                const values = inputs.map(input => (input && input.value.trim() !== '') ? input.value : '?');
+                display.innerHTML = `<span>${values[0]} + ${values[1]} + ${values[2]} + ${values[3]} = ?</span>`;
+            }
+
             // ----- Event Listeners -----
             problemBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -469,6 +494,16 @@
                 }
             });
             
+            // ----- [新功能] 為 "練習一" 添加輸入事件監聽 -----
+            const problem3Element = document.getElementById('problem-3');
+            if(problem3Element) {
+                problem3Element.addEventListener('input', (e) => {
+                    if (e.target.classList.contains('grid-input')) {
+                        updateFormulaDisplayProblem3(problem3Element);
+                    }
+                });
+            }
+
             // ----- Logic Handlers -----
             function handleStaticProblem(btn, problemId) {
                 stepCounters[problemId] = (stepCounters[problemId] || 0) + 1;
@@ -492,7 +527,7 @@
                     const answers = JSON.parse(problemElement.dataset.answers);
                     const topLabels = problemElement.querySelectorAll('.top-labels span');
                     const sideLabels = problemElement.querySelectorAll('.side-labels span');
-                    const formulaDisplay = problemElement.querySelector('.formula-display:last-of-type');
+                    const formulaDisplay = problemElement.querySelector('#formula-display-problem-3');
                     
                     switch (action) {
                         case 'check_step1':
@@ -519,8 +554,10 @@
                                 messageBox.textContent = '網格計算正確！請在下方填入最終總和。';
                                 messageBox.className = 'message-box message-correct';
                                 problemElement.querySelectorAll('.grid-input').forEach(i => i.readOnly = true);
-                                formulaDisplay.innerHTML = `${answers[2]} + ${answers[3]} + ${answers[4]} + ${answers[5]} = <input type="text" class="formula-input" data-idx="6" placeholder="總和">`;
-                                setTimeout(() => problemElement.querySelector('[data-idx="6"]').focus(), 100);
+                                if (formulaDisplay) {
+                                    formulaDisplay.innerHTML = `<span>${answers[2]} + ${answers[3]} + ${answers[4]} + ${answers[5]} = </span><input type="text" class="formula-input" data-idx="6" placeholder="總和">`;
+                                    setTimeout(() => problemElement.querySelector('[data-idx="6"]').focus(), 100);
+                                }
                                 btn.textContent = '檢核總和';
                                 btn.dataset.action = 'check_sum';
                             } else {

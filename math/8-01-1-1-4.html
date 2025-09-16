@@ -10,7 +10,8 @@
     <style>
         body { font-family: 'Noto Sans TC', sans-serif; background-color: #f0f4f8; }
         .concept-box { background-color: #ffffff; border: 1px solid #e2e8f0; padding: 2rem; border-radius: 0.75rem; display: flex; flex-direction: column; justify-content: space-between; min-height: 550px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
-        .formula-input { width: 100px; text-align: center; font-size: 1.25rem; font-weight: bold; border: 1px solid #cbd5e1; border-radius: 0.25rem; padding: 0.25rem; margin: 0 0.25rem; transition: all 0.2s ease; }
+        .problem-content h2 { font-size: clamp(1.5rem, 5vw, 2.25rem); } /* 字體縮放 */
+        .formula-input { width: 100px; text-align: center; font-size: clamp(1.1rem, 3.5vw, 1.25rem); font-weight: bold; border: 1px solid #cbd5e1; border-radius: 0.25rem; padding: 0.25rem; margin: 0 0.25rem; transition: all 0.2s ease; } /* 字體縮放 */
         .formula-input.grid-input { width: 100%; height: 100%; border: none; background: transparent; border-radius: 0; }
         .formula-input:focus { background-color: #eef2ff; box-shadow: inset 0 0 0 2px #3b82f6; }
         .formula-input.correct { border-color: #22c55e; background-color: #f0fdf4; color: #166534; }
@@ -18,7 +19,7 @@
         .formula-input.incorrect { border-color: #ef4444; background-color: #fef2f2; color: #991b1b; }
         .formula-input.grid-input.incorrect { background-color: #fee2e2 !important; }
         .formula-input:disabled { background-color: #f8fafc; }
-        .formula-display { font-family: 'Courier New', monospace; background-color: #eef2ff; padding: 1rem 1.5rem; border-radius: 0.5rem; font-size: 1.5rem; font-weight: bold; text-align: center; color: #4338ca; min-height: 70px; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; margin: 1rem 0; line-height: 2.5rem; }
+        .formula-display { font-family: 'Courier New', monospace; background-color: #eef2ff; padding: 1rem 1.5rem; border-radius: 0.5rem; font-size: clamp(1.2rem, 4vw, 1.5rem); font-weight: bold; text-align: center; color: #4338ca; min-height: 70px; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; margin: 1rem 0; line-height: 2.5rem; } /* 字體縮放 */
         .problem-btn { transition: all 0.2s ease-in-out; border: 2px solid transparent; width: 100%; text-align: left; }
         .problem-btn.active { border-color: #3b82f6; background-color: #eff6ff; color: #1e3a8a; transform: scale(1.02); }
         .action-btn { background-color: #3b82f6; color: white; padding: 0.75rem 2rem; border-radius: 0.5rem; font-weight: bold; transition: all 0.2s ease-in-out; border: none; cursor: pointer; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); align-self: center; margin-top: auto; }
@@ -27,14 +28,15 @@
         .reveal-content { transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out; opacity: 1; transform: translateY(0); }
         .hidden-content { opacity: 0; transform: translateY(10px); }
         .explanation { font-size: 1.1rem; text-align: center; color: #475569; background-color: #f1f5f9; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; min-height: 80px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .explanation .text-2xl, .text-2xl.text-center { font-size: clamp(1.2rem, 4vw, 1.5rem); } /* 字體縮放 */
         .message-box { min-height: 2.5rem; text-align: center; font-weight: bold; margin-top: 1rem; padding: 0.5rem; }
         .message-correct { color: #16a34a; }
         .message-incorrect { color: #dc2626; }
-        .grid-container { display: grid; grid-template-columns: 60px 1fr; gap: 1rem; align-items: center; justify-content: center; margin: 1.5rem auto 1rem; width: 350px; }
+        .grid-container { display: grid; grid-template-columns: 60px 1fr; gap: 1rem; align-items: center; justify-content: center; margin: 1.5rem auto 1rem; width: 100%; max-width: 350px; } /* 修正跑版 */
         .multiplication-grid { display: grid; border: 2px solid #333; }
-        .grid-cell { display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; min-width: 100px; min-height: 100px; border: 1px solid #9ca3af; position: relative; }
-        .grid-cell .calculation { position: absolute; top: 4px; left: 4px; font-size: 0.75rem; color: #64748b; font-weight: normal; }
-        .side-labels, .top-labels { display: flex; font-size: 1.5rem; font-weight: bold; color: #1e3a8a; }
+        .grid-cell { display: flex; align-items: center; justify-content: center; font-size: clamp(1.2rem, 5vw, 1.75rem); font-weight: bold; border: 1px solid #9ca3af; position: relative; aspect-ratio: 1 / 1; } /* 修正跑版 & 字體縮放 */
+        .grid-cell .calculation { position: absolute; top: 4px; left: 4px; font-size: clamp(0.6rem, 2vw, 0.75rem); color: #64748b; font-weight: normal; } /* 字體縮放 */
+        .side-labels, .top-labels { display: flex; font-size: clamp(1.1rem, 3.5vw, 1.5rem); font-weight: bold; color: #1e3a8a; } /* 字體縮放 */
         .side-labels { flex-direction: column; justify-content: space-around; align-items: center; height: 100%; }
         .top-labels { grid-column: 2 / 3; justify-content: space-around; padding-bottom: 0.5rem; }
     </style>
@@ -211,9 +213,7 @@
             const problemContents = document.querySelectorAll('.problem-content');
             const solutionsContainer = document.getElementById('solutions-container');
             const stepCounters = {};
-            let rapidClickTracker = { lastTime: 0, count: 0, problem: null };
-
-            // ----- Reset and State Management -----
+            
             function resetProblemState(problemId) {
                 const problemElement = document.getElementById(problemId);
                 if (!problemElement) return;
@@ -258,7 +258,18 @@
                 }
             }
             
-            // ----- Event Listeners -----
+            function updateInteractiveFormula(problemElement) {
+                const problemId = problemElement.id;
+                const shortId = problemId.replace('problem-', 'p');
+                const formulaSpan = problemElement.querySelector(`#formula-${shortId}`);
+                if (!formulaSpan || problemElement.querySelector('[data-idx="6"]')) return;
+
+                const inputs = [2, 3, 4, 5].map(idx => problemElement.querySelector(`[data-idx="${idx}"]`));
+                const values = inputs.map(input => (input && input.value.trim() !== '') ? input.value : '?');
+                
+                formulaSpan.innerHTML = `<span>${values[0]} + (${values[1]}) + (${values[2]}) + ${values[3]} = ?</span>`;
+            }
+            
             problemBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
                     const targetId = btn.dataset.target;
@@ -276,28 +287,21 @@
                 });
             });
 
+            solutionsContainer.addEventListener('input', (e) => {
+                if (e.target.classList.contains('grid-input')) {
+                    const problemElement = e.target.closest('.problem-content');
+                    if (problemElement && problemElement.dataset.type === 'interactive') {
+                        updateInteractiveFormula(problemElement);
+                    }
+                }
+            });
+            
             solutionsContainer.addEventListener('click', (e) => {
                 if (!e.target.classList.contains('action-btn')) return;
                 const btn = e.target;
                 const problemId = btn.dataset.problem;
                 const problemElement = document.getElementById(problemId);
                 const problemType = problemElement.dataset.type;
-
-                // Anti-spam check
-                const now = Date.now();
-                if (rapidClickTracker.problem === problemId && now - rapidClickTracker.lastTime < 600) {
-                    rapidClickTracker.count++;
-                } else {
-                    rapidClickTracker.count = 1;
-                    rapidClickTracker.problem = problemId;
-                }
-                rapidClickTracker.lastTime = now;
-
-                if (rapidClickTracker.count > 3) {
-                    showSpamAlert(problemId);
-                    rapidClickTracker.count = 0;
-                    return;
-                }
 
                 if (problemType === 'static') {
                     handleStaticProblem(btn, problemId);
@@ -316,7 +320,6 @@
                 }
             });
 
-            // ----- Logic Handlers -----
             function handleStaticProblem(btn, problemId) {
                 stepCounters[problemId] = (stepCounters[problemId] || 0) + 1;
                 const currentStep = stepCounters[problemId];
@@ -373,7 +376,7 @@
                             
                             const sumContainer = problemElement.querySelector(`#${problemId.replace('problem-', 'p')}-sum`);
                             const formulaSpan = problemElement.querySelector(`#formula-${problemId.replace('problem-', 'p')}`);
-                            formulaSpan.innerHTML = `${answers[2]} + (${answers[3]}) + (${answers[4]}) + ${answers[5]} = <input type="text" class="formula-input" data-idx="6" placeholder="總和">`;
+                            formulaSpan.innerHTML = `<span>${answers[2]} + (${answers[3]}) + (${answers[4]}) + ${answers[5]} = </span><input type="text" class="formula-input" data-idx="6" placeholder="總和">`;
                             sumContainer.classList.remove('hidden');
 
                             setTimeout(() => problemElement.querySelector('[data-idx="6"]').focus(), 100);
@@ -402,7 +405,6 @@
                 }
             }
 
-            // ----- Interactive Validation -----
             function validateInputs(problemElement, indicesToCheck) {
                 const answers = JSON.parse(problemElement.dataset.answers);
                 let isAllCorrect = true;
@@ -422,17 +424,6 @@
                     }
                 });
                 return isAllCorrect;
-            }
-
-            function showSpamAlert(problemId) {
-                let modal = document.createElement('div');
-                modal.className = 'spam-modal';
-                modal.innerHTML = `<div class="spam-modal-content">我知道你想利用程式快速解題！<br>請慢慢思考練習！</div>`;
-                document.body.appendChild(modal);
-                setTimeout(() => {
-                    document.body.removeChild(modal);
-                    // No need to reset state here, just clear the tracker
-                }, 2000);
             }
 
             // Initial load
