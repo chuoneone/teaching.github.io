@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>學生情緒紀錄系統</title>    
+    <title>學生情緒紀錄系統</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="responsive.css">
@@ -12,6 +12,41 @@
     <link rel="icon" href="images/dog.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
    <style>
+    /* --- 新增登入畫面樣式 START --- */
+    #login-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.75);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        opacity: 1;
+        transition: opacity 0.5s ease;
+    }
+    #login-box {
+        background-color: #ffffff;
+        padding: 2.5rem;
+        border-radius: 1rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
+        border: 1px solid #cbd5e1;
+    }
+    #login-box h2 {
+        color: #334155;
+    }
+    #password-input {
+        /* 樣式與現有 select 元素對齊 */
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    /* --- 新增登入畫面樣式 END --- */
+
+
     /* ✅ 風格替換: 整體字體、背景與文字顏色 */
     body {
         font-family: 'Comic Sans MS', 'Microsoft JhengHei', sans-serif;
@@ -28,7 +63,7 @@
         background-color: rgba(255, 255, 255, 0.95);
         border-radius: 1rem;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-        border: 1px solid #cbd5e1; /* 風格替換: 邊框顏色 */        
+        border: 1px solid #cbd5e1; /* 風格替換: 邊框顏色 */
         padding-top: 80px; /* 為固定的導覽列預留空間 */
     }
     select, button, textarea {
@@ -113,7 +148,7 @@
         border: 2px solid #cbd5e1; /* 風格替換: 邊框顏色 */
         padding: 10px; border-radius: 1rem;
     }
-    
+
     /* ⭐⭐⭐ Quadrant 排列方式修改 ⭐⭐⭐ */
     .quadrant {
         padding: 1rem;
@@ -126,9 +161,6 @@
         gap: 5px; /* 按鈕間距 */
         transition: all 0.3s ease;
     }
-    /* 移除不再需要的 button-row */
-    /* .button-row { display: flex; justify-content: center; } */
-
     .quadrant:hover { transform: scale(1.02); box-shadow: 0 8px 16px rgba(0,0,0,0.05); }
     /* 注意：以下四象限的背景色因代表不同情緒，予以保留，不進行風格替換 */
     .q1 { background-color: #fef3c7; grid-area: 1 / 2 / 2 / 3; } /* 右上 */
@@ -191,7 +223,6 @@
     }
     #mic-status { color: #334155; } /* 風格替換: 狀態文字顏色 */
 
-
     @media (max-width: 700px) {
         #emotion-quadrant-container { width: 100%; grid-template-columns: 1fr; grid-template-rows: auto; }
         .q1 { grid-area: auto; }
@@ -203,6 +234,15 @@
     }
 </style>
 </head>
+<body>
+    <div id="login-overlay">
+        <div id="login-box">
+            <h2 class="text-2xl font-bold mb-6">請輸入密碼登入</h2>
+            <input type="password" id="password-input" placeholder="請輸入密碼" class="w-full p-3 border border-blue-300 rounded-lg text-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <button id="login-btn" class="btn-primary w-full font-bold py-3 px-6 rounded-lg text-lg">登入</button>
+        </div>
+    </div>
+
     <header class="navbar">
         <div class="logo">SPED</div>
         <nav>
@@ -219,16 +259,15 @@
                 <li><a href="8ch.html">8國</a></li>
                 <li><a href="9ch.html">9國</a></li>
                 <li><a href="bigtest.html">會考專區</a></li>
-                <li><a href="learningstrategy.html">學習策略</a></li>                
+                <li><a href="learningstrategy.html">學習策略</a></li>
             </ul>
-
         </nav>
         <div class="menu-toggle" onclick="toggleMenu()">
             <i class="fas fa-bars"></i>
         </div>
     </header>
-<body class="py-8">
-    <div class="container relative">
+
+    <div class="container relative py-8">
         <div id="home-page" class="text-center">
             <h1 class="text-5xl font-bold mb-8 text-blue-800">學生情緒紀錄系統</h1>
             <div class="mb-6">
@@ -249,7 +288,6 @@
             <button id="start-btn" class="btn-primary font-bold py-3 px-6 rounded-lg text-lg transition-all">
                 開始紀錄
             </button>
-
             <div class="mt-8">
                 <img src="images/twodogs.png" alt="兩隻可愛的狗狗" class="mx-auto rounded-lg w-40">
             </div>
@@ -263,13 +301,11 @@
             <div class="mb-4">
                 <p class="text-lg"><span id="display-grade" class="font-medium"></span> - <span id="display-name" class="font-medium"></span></p>
             </div>
-            
-            
             <div class="mb-6">
                 <div class="flex justify-center items-center">
                     <p id="main-instruction" class="text-lg font-medium mb-3 text-center">請點選你今天的心情</p>
                     <button id="read-aloud-btn" class="speech-btn" title="朗讀說明">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.a75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" /></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" /></svg>
                     </button>
                 </div>
                 <div class="quadrant-layout-wrapper">
@@ -301,14 +337,14 @@
                             <div class="quadrant q4">
                                 <div class="emotion-btn bg-lime-100" data-emotion="放鬆"><div class="emoji">😌</div><div class="text">放鬆</div></div>
                                 <div class="emotion-btn bg-green-100" data-emotion="滿足"><div class="emoji">😊</div><div class="text">滿足</div></div>
-                            </div>
+                                <div class="emotion-btn bg-emerald-100" data-emotion="平靜"><div class="emoji">🧘‍♀️</div><div class="text">平靜</div></div>
+                                </div>
                         </div>
                         <span class="axis-label x-axis-right">好的感受</span>
                     </div>
                     <span class="axis-label y-axis-bottom">低能量</span>
                 </div>
             </div>
-            
             <div id="reason-section" class="mb-8 hidden">
                 <label for="reason-input" class="block text-lg font-medium mb-3">請說明你今天有這個心情的原因：</label>
                 <div class="relative">
@@ -319,7 +355,6 @@
                 </div>
                  <p id="mic-status" class="text-sm text-center mt-1 hidden"></p>
             </div>
-            
             <div class="flex justify-between">
                 <button id="back-btn" class="btn-secondary font-bold py-2 px-4 rounded-lg">返回</button>
                 <button id="submit-btn" class="btn-disabled font-bold py-2 px-4 rounded-lg hidden" disabled>提交</button>
@@ -350,7 +385,6 @@
                     </button>
                 </div>
                 <p id="modal-description" class="modal-text"></p>
-                
                 <div class="flex justify-between items-center mt-6">
                     <h3 class="modal-section-title">生活舉例</h3>
                     <button id="modal-read-ex-btn" class="speech-btn" title="朗讀舉例">
@@ -367,6 +401,47 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // --- LOGIN FUNCTIONALITY START ---
+            const loginOverlay = document.getElementById('login-overlay');
+            const passwordInput = document.getElementById('password-input');
+            const loginBtn = document.getElementById('login-btn');
+            const mainHeader = document.querySelector('.navbar');
+            const mainContainer = document.querySelector('.container');
+
+            // 初始隱藏主內容
+            mainHeader.style.display = 'none';
+            mainContainer.style.display = 'none';
+
+            function attemptLogin() {
+                if (passwordInput.value === '520') {
+                    // 密碼正確，淡出登入畫面
+                    loginOverlay.style.opacity = '0';
+                    setTimeout(() => {
+                        loginOverlay.style.display = 'none';
+                    }, 500); // 等待動畫結束後再隱藏
+
+                    // 顯示主內容
+                    mainHeader.style.display = ''; // 恢復預設顯示
+                    mainContainer.style.display = ''; // 恢復預設顯示
+                } else {
+                    alert('密碼錯誤，請再試一次！');
+                    passwordInput.value = '';
+                }
+            }
+
+            loginBtn.addEventListener('click', attemptLogin);
+
+            // 允許按 Enter 鍵登入
+            passwordInput.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    attemptLogin();
+                }
+            });
+            // --- LOGIN FUNCTIONALITY END ---
+
+
+            // --- 原有的程式碼 ---
             const currentDate = new Date().toLocaleDateString('zh-TW');
             document.getElementById('current-date').textContent = currentDate;
             let selectedEmotion = null;
@@ -393,7 +468,7 @@
             const modalExamples = document.getElementById('modal-examples');
             const modalCloseBtn = document.getElementById('modal-close-btn');
             const modalConfirmBtn = document.getElementById('modal-confirm-btn');
-            
+
             // 語音功能相關元素
             const readAloudBtn = document.getElementById('read-aloud-btn');
             const mainInstruction = document.getElementById('main-instruction');
@@ -419,7 +494,10 @@
                 '尷尬': { desc: '當眾做了一些你覺得<u>很糗、很笨拙</u>的事，讓你臉上發熱，恨不得找個地洞鑽進去。', ex: '當你在走廊上不小心滑倒、當你在安靜的教室裡肚子突然叫了一聲、當你不小心把老師叫成「媽媽」。' },
                 '沒自信': { desc: '一種<u>懷疑自己</u>、覺得自己<u>不夠好</u>或能力不足的感覺。當有這種感覺時，你可能會害怕嘗試，或是不敢表達自己的真實想法。', ex: '上課時明明知道答案，卻因為害怕說錯而不敢舉手、在分組活動時，總覺得自己的意見不重要、看到別人很輕鬆做到某件事，心裡想著「我一定辦不到」。' },
                 '放鬆': { desc: '<u>沒有任何壓力</u>和煩惱，身心都處於非常平靜、舒展的狀態。', ex: '當你做完所有功課躺在床上聽音樂、當你沉浸在自己的興趣中（例如畫畫或閱讀）、當你泡在溫暖的浴缸裡。' },
-                '滿足': { desc: '一種內心感到<u>充實、溫暖</u>的平靜喜悅，覺得「這樣就夠了」、「很美好」。', ex: '當你吃到一頓非常好吃的晚餐、當你完成一件作品並對它感到很滿意、當你和家人或朋友度過了一段溫馨的時光。' }
+                '滿足': { desc: '一種內心感到<u>充實、溫暖</u>的平靜喜悅，覺得「這樣就夠了」、「很美好」。', ex: '當你吃到一頓非常好吃的晚餐、當你完成一件作品並對它感到很滿意、當你和家人或朋友度過了一段溫馨的時光。' },
+                // ⭐⭐⭐ 新增的心情說明 START ⭐⭐⭐
+                '平靜': { desc: '一種內心沒有波瀾，像平靜的湖水一樣，<u>安靜又穩定</u>的狀態。', ex: '當你專心做一件事不受打擾、當你在舒服的環境裡靜靜待著、當你深呼吸，把所有煩惱都暫時拋開的時候。' }
+                // ⭐⭐⭐ 新增的心情說明 END ⭐⭐⭐
             };
 
             const studentsByGrade = {
@@ -466,7 +544,7 @@
                 homePage.classList.remove('hidden');
                 resetEmotionSelection();
             });
-            
+
             // 語音朗讀 (TTS) 邏輯
             function speak(text) {
                 if ('speechSynthesis' in window) {
@@ -483,7 +561,7 @@
             readAloudBtn.addEventListener('click', () => {
                 speak(mainInstruction.textContent);
             });
-            
+
             modalReadDescBtn.addEventListener('click', () => {
                 speak(modalDescription.textContent);
             });
@@ -491,7 +569,7 @@
             modalReadExBtn.addEventListener('click', () => {
                 speak(modalExamples.textContent);
             });
-            
+
             // 語音輸入 (Speech-to-Text) 邏輯
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             let recognition;
@@ -646,7 +724,6 @@
             }
         });
     </script>
-
-        <script src="main.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
