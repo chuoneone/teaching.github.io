@@ -192,6 +192,7 @@
     letter-spacing: 1.5px;
     font-weight: bold;
     max-width: 250px;
+    animation: popIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 .button-container {
@@ -208,6 +209,20 @@
 .big-button i {
     margin-right: 10px;
     font-size: 0.9em;
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.5); /* 初始狀態：完全透明且只有 50% 大小 */
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.1); /* 中間狀態：稍微放大超過 100%，製造彈力感 */
+  }
+  100% {
+    transform: scale(1); /* 結束狀態：回到正常大小 */
+  }
 }
 
 .section-content {
@@ -538,3 +553,4 @@ footer {
         transform: scale(1);
     }
 }
+
