@@ -192,7 +192,8 @@
     letter-spacing: 1.5px;
     font-weight: bold;
     max-width: 250px;
-    animation: popIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    animation: fadeIn 0.4s ease-in forwards, 
+               scaleIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .button-container {
@@ -201,9 +202,9 @@
 }
 
 .big-button:hover {
-    transform: scale(1.05) translateY(-3px); /* 懸停時縮放並上浮 */
     background: linear-gradient(135deg, #ff5757, #ff9494); /* 柔和紅色漸層 */
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 懸停時增強陰影 */
+    transform: scale(1.05) translateY(-5px); /* 懸停時縮放並上浮 */
 }
 
 .big-button i {
@@ -211,19 +212,28 @@
     font-size: 0.9em;
 }
 
-@keyframes popIn {
-  0% {
+/* 新增的 keyframes */
+@keyframes fadeIn {
+  from {
     opacity: 0;
-    transform: scale(0.5); /* 初始狀態：完全透明且只有 50% 大小 */
   }
-  70% {
+  to {
     opacity: 1;
-    transform: scale(1.1); /* 中間狀態：稍微放大超過 100%，製造彈力感 */
-  }
-  100% {
-    transform: scale(1); /* 結束狀態：回到正常大小 */
   }
 }
+
+@keyframes scaleIn {
+  0% {
+    transform: scale(0.5);
+  }
+  70% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 
 .section-content {
     display: none;
