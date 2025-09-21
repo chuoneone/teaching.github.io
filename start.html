@@ -110,35 +110,6 @@
 
     <script src="main.js"></script>
 
-    <script>
-        function updateVisitorCount() {
-            // 這是一個您網站專屬的名稱，用來區分計數器
-            const namespace = 'sped-chu-pei-yi-site'; 
-            const countKey = 'page-visits';
-
-            // 呼叫外部 API 來增加計數並取得最新數字
-            fetch(`https://api.countapi.xyz/hit/${namespace}/${countKey}`)
-                .then(response => response.json())
-                .then(data => {
-                    // 成功後，將數字更新到網頁上
-                    const countElement = document.getElementById('visitor-count');
-                    if (countElement) {
-                        countElement.innerText = data.value;
-                    }
-                })
-                .catch(error => {
-                    // 如果失敗，顯示錯誤訊息
-                    const countElement = document.getElementById('visitor-count');
-                    if (countElement) {
-                        countElement.innerText = '無法載入';
-                    }
-                    console.error('Error fetching visitor count:', error);
-                });
-        }
-
-        // 當整個網頁都載入完成後，才執行計數功能
-        document.addEventListener('DOMContentLoaded', updateVisitorCount);
-    </script>
     </body>
 
 <footer>
@@ -147,9 +118,6 @@
     </a>
     <br>
     <p style="display: inline;">Created by Chu Pei Yi</p>
-
-    <p>本站總拜訪人次：<span id="visitor-count">載入中...</span></p>
-
 </footer>
 
 </html>
