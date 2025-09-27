@@ -39,8 +39,8 @@
     </script>
     <style>
         :root {
-            --transition-duration-fast: 0.3s;
-            --transition-duration-normal: 0.5s;
+            --transition-duration-fast: 0.2s;
+            --transition-duration-normal: 0.3s;
         }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
@@ -85,13 +85,13 @@
         .subject-image-button::before { 
             content: ''; position: absolute; inset: 0; 
             background-image: url('images/button.jpg'); background-size: cover; background-position: center; 
-            filter: blur(2px) brightness(80%); 
+            filter: blur(2px); 
             transition: filter var(--transition-duration-fast) ease-in-out, transform var(--transition-duration-fast) ease-in-out; 
             z-index: 1; 
         }
         .subject-image-button span { position: relative; z-index: 2; }
         .subject-image-button:hover { box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); }
-        .subject-image-button:hover::before { filter: blur(0px) brightness(100%); transform: scale(1.03); }
+        .subject-image-button:hover::before { filter: blur(0px) brightness(100%); transform: scale(1.09); }
         .subject-image-button.active-button { 
             box-shadow: 0 10px 15px rgba(56, 163, 165, 0.3); 
             border-color: #38A3A5;
@@ -109,14 +109,7 @@
             
             <div id="desktop-nav" class="hidden md:flex items-center space-x-4 lg:space-x-6">
                 <a href="#" class="nav-link text-text-light dark:text-text-dark hover:text-primary transition-colors duration-200">首頁</a>
-                <a href="#chinese" class="nav-link text-text-light dark:text-text-dark hover:text-primary transition-colors duration-200">國語文</a>
-                <a href="#math" class="nav-link text-text-light dark:text-text-dark hover:text-primary transition-colors duration-200">數學</a>
-                <a href="#english" class="nav-link text-text-light dark:text-text-dark hover:text-primary transition-colors duration-200">英語文</a>
-                <a href="#social-skills" class="nav-link text-text-light dark:text-text-dark hover:text-primary transition-colors duration-200">社會技巧</a>
-                <a href="#learning-strategies" class="nav-link text-text-light dark:text-text-dark hover:text-primary transition-colors duration-200">學習策略</a>
-                <a href="#life-management" class="nav-link text-text-light dark:text-text-dark hover:text-primary transition-colors duration-200">其它工具</a>
-                <a href="#advocacy" class="nav-link text-text-light dark:text-text-dark hover:text-primary transition-colors duration-200">融合教育</a>
-                <a href="#ai-tools" class="nav-link text-text-light dark:text-text-dark hover:text-primary transition-colors duration-200">行政工具</a>
+                <a href="https://www.instagram.com/spedmix2025/" target="_blank" rel="noopener noreferrer" class="nav-link text-text-light dark:text-text-dark hover:text-primary transition-colors duration-200">Instagram</a>
             </div>
             
             <button id="mobile-menu-button" class="md:hidden text-text-light dark:text-text-dark" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
@@ -126,14 +119,7 @@
 
         <div id="mobile-menu" class="hidden md:hidden bg-surface-light dark:bg-surface-dark absolute w-full shadow-lg">
             <a href="#" class="block py-3 px-4 text-text-light dark:text-text-dark hover:bg-background-light dark:hover:bg-surface-dark/80">首頁</a>
-            <a href="#chinese" class="block py-3 px-4 text-text-light dark:text-text-dark hover:bg-background-light dark:hover:bg-surface-dark/80">國語文</a>
-            <a href="#math" class="block py-3 px-4 text-text-light dark:text-text-dark hover:bg-background-light dark:hover:bg-surface-dark/80">數學</a>
-            <a href="#english" class="block py-3 px-4 text-text-light dark:text-text-dark hover:bg-background-light dark:hover:bg-surface-dark/80">英語文</a>
-            <a href="#social-skills" class="block py-3 px-4 text-text-light dark:text-text-dark hover:bg-background-light dark:hover:bg-surface-dark/80">社會技巧</a>
-            <a href="#learning-strategies" class="block py-3 px-4 text-text-light dark:text-text-dark hover:bg-background-light dark:hover:bg-surface-dark/80">學習策略</a>
-            <a href="#life-management" class="block py-3 px-4 text-text-light dark:text-text-dark hover:bg-background-light dark:hover:bg-surface-dark/80">其它工具</a>
-            <a href="#advocacy" class="block py-3 px-4 text-text-light dark:text-text-dark hover:bg-background-light dark:hover:bg-surface-dark/80">融合教育</a>
-            <a href="#ai-tools" class="block py-3 px-4 text-text-light dark:text-text-dark hover:bg-background-light dark:hover:bg-surface-dark/80">行政工具</a>
+            <a href="https://www.instagram.com/spedmix2025/" target="_blank" rel="noopener noreferrer" class="block py-3 px-4 text-text-light dark:text-text-dark hover:bg-background-light dark:hover:bg-surface-dark/80">Instagram</a>
         </div>
     </header>
 
@@ -337,7 +323,7 @@
             const mobileMenu = document.getElementById('mobile-menu');
             let isAnimating = false;
             let currentView = 'hero';
-            const animationDuration = 500;
+            const animationDuration = 300;
 
             const smoothScrollTo = (element) => { 
                 const headerOffset = document.querySelector('header').offsetHeight; 
@@ -368,13 +354,10 @@
                 setTimeout(() => { 
                     heroSection.style.display = 'none'; 
                     heroSection.classList.remove('is-hiding'); 
+                    isAnimating = false;
                 }, animationDuration); 
                 subjectNavContainer.classList.remove('hidden'); 
                 subjectNavContainer.classList.add('is-showing'); 
-                setTimeout(() => { 
-                    subjectNavContainer.classList.remove('is-showing'); 
-                    isAnimating = false; 
-                }, animationDuration); 
                 updateActiveStates(null); 
                 smoothScrollTo(subjectNavContainer); 
             };
@@ -399,11 +382,11 @@
                     isAnimating = false; 
                 }, animationDuration); 
                 sections.forEach(section => section.classList.remove('active', 'is-exiting')); 
+                sectionsWrapper.style.height = ''; 
                 updateActiveStates('home'); 
                 window.scrollTo({ top: 0, behavior: 'smooth' }); 
             };
             
-            // --- CORRECTED SCRIPT ---
             const showSubjectMenu = () => {
                 if (isAnimating) return;
                 isAnimating = true;
@@ -421,20 +404,16 @@
                     if (currentSection) {
                         currentSection.classList.remove('is-exiting');
                     }
+                    isAnimating = false;
                 }, animationDuration);
 
                 subjectNavContainer.classList.remove('hidden');
                 subjectNavContainer.classList.add('is-showing');
-                setTimeout(() => {
-                    subjectNavContainer.classList.remove('is-showing');
-                    isAnimating = false;
-                }, animationDuration);
                 
                 updateActiveStates(null); 
                 smoothScrollTo(subjectNavContainer); 
             };
 
-            // --- CORRECTED SCRIPT ---
             const showSection = (id) => {
                 const nextSection = document.getElementById(id);
                 const currentSection = document.querySelector('.section.active');
@@ -449,26 +428,23 @@
                 
                 isAnimating = true;
                 
-                // Make parent container visible BEFORE measurement
                 sectionsContainer.classList.remove('hidden');
                 
-                // Measure height and set wrapper height
-                const newHeight = nextSection.scrollHeight;
-                sectionsWrapper.style.height = `${newHeight}px`;
-
-                if (currentSection) { 
+                if (currentSection) {
                     currentSection.classList.add('is-exiting');
                     currentSection.classList.remove('active');
+                    sectionsWrapper.style.height = `${currentSection.scrollHeight}px`;
                 }
-                
+
+                subjectNavContainer.classList.add('hidden');
+
                 setTimeout(() => {
-                    subjectNavContainer.classList.add('is-hiding');
                     nextSection.classList.add('active'); 
+                    const newHeight = nextSection.scrollHeight;
+                    sectionsWrapper.style.height = `${newHeight}px`;
                 }, 50);
 
                 setTimeout(() => {
-                    subjectNavContainer.classList.add('hidden');
-                    subjectNavContainer.classList.remove('is-hiding');
                     if (currentSection) {
                         currentSection.classList.remove('is-exiting');
                     }
@@ -496,6 +472,7 @@
                     if (href === '#') { 
                         switchToHeroView(); 
                     } else { 
+                        // Because only the home page is left in the navigation bar, this branch will not be triggered in practice
                         showSection(href.substring(1)); 
                     } 
                 } 
