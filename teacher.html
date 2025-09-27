@@ -16,17 +16,16 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: "#8B5E3C",
-                        "background-light": "#FDFBF7",
-                        "background-dark": "#1A1A1A",
-                        "surface-light": "#FFFFFF",
-                        "surface-dark": "#2B2B2B",
-                        "text-light": "#333333",
-                        "text-dark": "#E0E0E0",
-                        "accent-light": "#A1887F",
-                        "accent-dark": "#C7B299",
-                        "button-bg": "#4A4A4A",
-                        "button-text": "#FFFFFF",
+                        'primary': '#38A3A5',
+                        'background-light': '#F0F4F8',
+                        'background-dark': '#1A202C',
+                        'surface-light': '#FFFFFF',
+                        'surface-dark': '#2D3748',
+                        'text-light': '#2D3748',
+                        'text-dark': '#E2E8F0',
+                        'accent-dark': '#80CBC4',
+                        'button-bg': '#38A3A5',
+                        'button-text': '#FFFFFF',
                     },
                     fontFamily: {
                         display: ["Noto Sans TC", "sans-serif"],
@@ -47,31 +46,64 @@
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
         @keyframes slideInFromRight { 0% { opacity: 0; transform: translateX(30px); } 100% { opacity: 1; transform: translateX(0); } }
         @keyframes slideOutToLeft { 0% { opacity: 1; transform: translateX(0); } 100% { opacity: 0; transform: translateX(-30px); } }
+        
         .is-showing { animation: fadeIn var(--transition-duration-normal) ease-out forwards; }
         .is-hiding { animation: fadeOut var(--transition-duration-normal) ease-out forwards; }
-        .sections-wrapper { position: relative; min-height: 50vh; overflow: hidden; }
-        .section { position: absolute; width: 100%; top: 0; left: 0; opacity: 0; visibility: hidden; pointer-events: none; }
-        .section.active { opacity: 1; visibility: visible; pointer-events: auto; animation: slideInFromRight var(--transition-duration-normal) ease-out; }
-        .section.is-exiting { visibility: visible; pointer-events: none; animation: slideOutToLeft var(--transition-duration-normal) ease-out; }
+        
+        .sections-wrapper { 
+            position: relative; 
+            overflow: hidden; 
+            transition: height var(--transition-duration-normal) ease-out;
+        }
+        .section { 
+            position: absolute; 
+            width: 100%; top: 0; left: 0; 
+            opacity: 0; visibility: hidden; pointer-events: none; 
+        }
+        .section.active { 
+            opacity: 1; visibility: visible; pointer-events: auto; 
+            animation: slideInFromRight var(--transition-duration-normal) ease-out forwards;
+        }
+        .section.is-exiting { 
+            position: absolute; visibility: visible; pointer-events: none; 
+            animation: slideOutToLeft var(--transition-duration-normal) ease-out forwards;
+        }
         .content-container.hidden { display: none; }
-        .hero-full-bg { background-image: url('images/mountaion.jpg'); background-size: cover; background-position: center; min-height: 100vh; display: flex; align-items: center; }
-        .hero-overlay { background-color: rgba(255, 255, 255, 0.2); }
-        .dark .hero-overlay { background-color: rgba(0, 0, 0, 0.3); }
-        .subject-image-button { position: relative; color: white; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); overflow: hidden; display: flex; justify-content: center; align-items: center; font-size: 1.75rem; font-weight: bold; min-height: 120px; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); cursor: pointer; border: 3px solid transparent; transition: box-shadow var(--transition-duration-fast) ease-in-out, border-color var(--transition-duration-fast) ease-in-out; }
-        .subject-image-button::before { content: ''; position: absolute; inset: 0; background-image: url('images/ai.png'); background-size: cover; background-position: center; filter: blur(2px) brightness(80%); transition: filter var(--transition-duration-fast) ease-in-out, transform var(--transition-duration-fast) ease-in-out; z-index: 1; }
+        
+        .hero-full-bg { background-image: url('images/house.jpg'); background-size: cover; background-position: center; min-height: 100vh; display: flex; align-items: center; }
+        .hero-overlay { background-color: rgba(240, 244, 248, 0.3); } 
+        .dark .hero-overlay { background-color: rgba(26, 32, 44, 0.4); } 
+        
+        .subject-image-button { 
+            position: relative; color: white; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); 
+            overflow: hidden; display: flex; justify-content: center; align-items: center; 
+            font-size: 1.5rem; font-weight: bold; min-height: 100px; 
+            border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+            cursor: pointer; border: 3px solid transparent; 
+            transition: box-shadow var(--transition-duration-fast) ease-in-out, border-color var(--transition-duration-fast) ease-in-out; 
+        }
+        .subject-image-button::before { 
+            content: ''; position: absolute; inset: 0; 
+            background-image: url('images/button.jpg'); background-size: cover; background-position: center; 
+            filter: blur(2px) brightness(80%); 
+            transition: filter var(--transition-duration-fast) ease-in-out, transform var(--transition-duration-fast) ease-in-out; 
+            z-index: 1; 
+        }
         .subject-image-button span { position: relative; z-index: 2; }
         .subject-image-button:hover { box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); }
         .subject-image-button:hover::before { filter: blur(0px) brightness(100%); transform: scale(1.03); }
-        .subject-image-button.active-button { box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3); border-color: #8B5E3C; }
+        .subject-image-button.active-button { 
+            box-shadow: 0 10px 15px rgba(56, 163, 165, 0.3); 
+            border-color: #38A3A5;
+        }
         .subject-image-button.active-button::before { filter: blur(0px) brightness(100%); transform: scale(1.05); }
     </style>
 </head>
 
 <body class="bg-background-light dark:bg-background-dark font-display text-text-light dark:text-text-dark transition-colors duration-300">
-    <header class="bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-sm sticky top-0 z-50">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+    <header class="bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <a href="#" id="spedmix-logo" class="flex items-center gap-2">
-                <img src="images/sped2.png" alt="SPEDMIX Logo" class="h-8 w-auto">
                 <span class="text-2xl font-bold text-primary dark:text-accent-dark">SPEDMIX</span>
             </a>
             
@@ -82,42 +114,38 @@
                 <a href="#english" class="nav-link text-text-light dark:text-text-dark hover:text-primary transition-colors duration-200">英語文</a>
                 <a href="#social-skills" class="nav-link text-text-light dark:text-text-dark hover:text-primary transition-colors duration-200">社會技巧</a>
                 <a href="#learning-strategies" class="nav-link text-text-light dark:text-text-dark hover:text-primary transition-colors duration-200">學習策略</a>
-                <a href="#life-management" class="nav-link text-text-light dark:text-text-dark hover:text-primary transition-colors duration-200">生活管理</a>
+                <a href="#life-management" class="nav-link text-text-light dark:text-text-dark hover:text-primary transition-colors duration-200">其它工具</a>
                 <a href="#advocacy" class="nav-link text-text-light dark:text-text-dark hover:text-primary transition-colors duration-200">融合教育</a>
                 <a href="#ai-tools" class="nav-link text-text-light dark:text-text-dark hover:text-primary transition-colors duration-200">行政工具</a>
             </div>
+            
             <button id="mobile-menu-button" class="md:hidden text-text-light dark:text-text-dark" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
                 <span class="material-icons">menu</span>
             </button>
         </nav>
 
-        <div id="mobile-menu" class="hidden md:hidden bg-surface-light dark:bg-surface-dark absolute w-full">
-            <a href="#" class="block py-2 px-4 text-sm text-text-light dark:text-text-dark hover:bg-gray-100 dark:hover:bg-surface-dark/80">首頁</a>
-            <a href="#chinese" class="block py-2 px-4 text-sm text-text-light dark:text-text-dark hover:bg-gray-100 dark:hover:bg-surface-dark/80">國語文</a>
-            <a href="#math" class="block py-2 px-4 text-sm text-text-light dark:text-text-dark hover:bg-gray-100 dark:hover:bg-surface-dark/80">數學</a>
-            <a href="#english" class="block py-2 px-4 text-sm text-text-light dark:text-text-dark hover:bg-gray-100 dark:hover:bg-surface-dark/80">英語文</a>
-            <a href="#social-skills" class="block py-2 px-4 text-sm text-text-light dark:text-text-dark hover:bg-gray-100 dark:hover:bg-surface-dark/80">社會技巧</a>
-            <a href="#learning-strategies" class="block py-2 px-4 text-sm text-text-light dark:text-text-dark hover:bg-gray-100 dark:hover:bg-surface-dark/80">學習策略</a>
-            <a href="#life-management" class="block py-2 px-4 text-sm text-text-light dark:text-text-dark hover:bg-gray-100 dark:hover:bg-surface-dark/80">生活管理</a>
-            <a href="#advocacy" class="block py-2 px-4 text-sm text-text-light dark:text-text-dark hover:bg-gray-100 dark:hover:bg-surface-dark/80">融合教育</a>
-            <a href="#ai-tools" class="block py-2 px-4 text-sm text-text-light dark:text-text-dark hover:bg-gray-100 dark:hover:bg-surface-dark/80">行政工具</a>
-            <div class="flex justify-center space-x-4 py-2">
-                <a href="https://www.instagram.com/spedmix2025/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="text-text-light dark:text-text-dark hover:text-primary">
-                    <span class="material-icons">camera_alt</span>
-                </a>
-            </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-surface-light dark:bg-surface-dark absolute w-full shadow-lg">
+            <a href="#" class="block py-3 px-4 text-text-light dark:text-text-dark hover:bg-background-light dark:hover:bg-surface-dark/80">首頁</a>
+            <a href="#chinese" class="block py-3 px-4 text-text-light dark:text-text-dark hover:bg-background-light dark:hover:bg-surface-dark/80">國語文</a>
+            <a href="#math" class="block py-3 px-4 text-text-light dark:text-text-dark hover:bg-background-light dark:hover:bg-surface-dark/80">數學</a>
+            <a href="#english" class="block py-3 px-4 text-text-light dark:text-text-dark hover:bg-background-light dark:hover:bg-surface-dark/80">英語文</a>
+            <a href="#social-skills" class="block py-3 px-4 text-text-light dark:text-text-dark hover:bg-background-light dark:hover:bg-surface-dark/80">社會技巧</a>
+            <a href="#learning-strategies" class="block py-3 px-4 text-text-light dark:text-text-dark hover:bg-background-light dark:hover:bg-surface-dark/80">學習策略</a>
+            <a href="#life-management" class="block py-3 px-4 text-text-light dark:text-text-dark hover:bg-background-light dark:hover:bg-surface-dark/80">其它工具</a>
+            <a href="#advocacy" class="block py-3 px-4 text-text-light dark:text-text-dark hover:bg-background-light dark:hover:bg-surface-dark/80">融合教育</a>
+            <a href="#ai-tools" class="block py-3 px-4 text-text-light dark:text-text-dark hover:bg-background-light dark:hover:bg-surface-dark/80">行政工具</a>
         </div>
-        </header>
+    </header>
 
     <main>
         <section id="hero-section" class="hero-full-bg relative">
             <div class="absolute inset-0 hero-overlay"></div>
-            <div class="container mx-auto px-6 py-24 relative z-10 text-left">
+            <div class="container mx-auto px-4 sm:px-6 py-24 relative z-10 text-left">
                 <p class="text-xl md:text-2xl text-text-light dark:text-text-dark mb-4 italic">高效教學輔助，專為教材調整設計</p>
-                <h1 class="text-6xl md:text-8xl font-bold text-primary dark:text-accent-dark leading-none">SPEDMIX</h1>
-                <p class="text-3xl md:text-4xl text-text-light dark:text-text-dark mt-4">教師備課幫手</p>
+                <h1 class="text-5xl sm:text-6xl md:text-8xl font-bold text-primary dark:text-accent-dark leading-tight">SPEDMIX</h1>
+                <p class="text-2xl sm:text-3xl md:text-4xl text-text-light dark:text-text-dark mt-4">教師備課幫手</p>
                 <div class="mt-12">
-                    <button id="scroll-to-subject-nav" class="bg-button-bg text-button-text font-bold py-3 px-8 rounded shadow hover:bg-button-bg/80 transition-colors duration-200">
+                    <button id="scroll-to-subject-nav" class="bg-button-bg text-button-text font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-opacity-80 transition-all duration-300 transform hover:scale-105">
                         找幫手
                     </button>
                 </div>
@@ -125,8 +153,8 @@
         </section>
 
         <div id="subject-navigation-buttons" class="content-container container mx-auto p-4 md:p-8 mt-8 hidden">
-            <h2 class="text-4xl font-bold text-center mb-10 text-primary dark:text-accent-dark">教學工具分類</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-10 text-primary dark:text-accent-dark">教學工具分類</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
                 <button class="subject-image-button" data-subject-id="chinese"><span>國語文</span></button>
                 <button class="subject-image-button" data-subject-id="math"><span>數學</span></button>
                 <button class="subject-image-button" data-subject-id="english"><span>英語文</span></button>
@@ -134,7 +162,7 @@
                 <button class="subject-image-button" data-subject-id="ai-tools"><span>行政工具</span></button>
                 <button class="subject-image-button" data-subject-id="social-skills"><span>社會技巧</span></button>
                 <button class="subject-image-button" data-subject-id="learning-strategies"><span>學習策略</span></button>
-                <button class="subject-image-button" data-subject-id="life-management"><span>生活管理</span></button>
+                <button class="subject-image-button" data-subject-id="life-management"><span>其它工具</span></button>
             </div>
         </div>
 
@@ -142,49 +170,58 @@
             <div class="sections-wrapper">
                 
                 <div id="chinese" class="section">
-                    <div class="bg-surface-light dark:bg-surface-dark p-6 rounded-lg shadow-lg">
+                    <div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-lg shadow-lg">
                         <button class="back-to-menu-button mb-4 flex items-center text-sm font-semibold text-text-light dark:text-text-dark hover:text-primary dark:hover:text-accent-dark transition-colors duration-200">
                             <span class="material-icons mr-1">arrow_back</span>
                             返回科目選單
                         </button>
-                        <h2 class="text-3xl font-bold mb-4 text-primary dark:text-accent-dark">國語文工具</h2>
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">國語文工具</h2>
                         <p class="mb-6">提供文本簡化、朗讀輔助等國語文教學工具。</p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <a href="teacher/chinesereading.html" class="block p-6 bg-background-light dark:bg-surface-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                            <a href="teacher/chinesereading.html" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                                 <h3 class="font-bold text-primary dark:text-accent-dark text-lg">文章逐句朗讀</h3>
                                 <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">將長篇文章轉位逐句顯示，並提供朗讀，輔助閱讀理解。</p>
                             </a>
-                            <a href="https://gemini.google.com/share/e60b11e0ff7e" target="_blank" rel="noopener noreferrer" class="block p-6 bg-background-light dark:bg-surface-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                            <a href="https://gemini.google.com/share/e60b11e0ff7e" target="_blank" rel="noopener noreferrer" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                                 <h3 class="font-bold text-primary dark:text-accent-dark text-lg">課文簡化系統</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">利用 AI 簡化複雜課文，一鍵生成段落摘要、四格漫畫、測驗，使學生更易理解，適合不同程度的學生。</p>
+                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">利用 AI 簡化複雜課文，一鍵生成摘要、漫畫、測驗，使學生更易理解。</p>
+                            </a>
+
+                            <a href="https://gemini.google.com/share/e60b11e0ff7e" target="_blank" rel="noopener noreferrer" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">課文簡化系統</h3>
+                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">利用 AI 簡化複雜課文，一鍵生成摘要、漫畫、測驗，使學生更易理解。</p>
                             </a>
                         </div>
                     </div>
                 </div>
 
                 <div id="math" class="section">
-                    <div class="bg-surface-light dark:bg-surface-dark p-6 rounded-lg shadow-lg">
+                    <div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-lg shadow-lg">
                         <button class="back-to-menu-button mb-4 flex items-center text-sm font-semibold text-text-light dark:text-text-dark hover:text-primary dark:hover:text-accent-dark transition-colors duration-200">
                             <span class="material-icons mr-1">arrow_back</span>
                             返回科目選單
                         </button>
-                        <h2 class="text-3xl font-bold mb-4 text-primary dark:text-accent-dark">數學工具</h2>
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">數學工具</h2>
                         <p class="mb-6">包含互動式教具、視覺化概念等數學輔助工具。</p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                             <a href="#" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                                 <h3 class="font-bold text-primary dark:text-accent-dark text-lg">互動式時鐘</h3>
+                                 <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">可拖動指針的時鐘，幫助學生學習時間概念。</p>
+                             </a>
                         </div>
                     </div>
                 </div>
 
                 <div id="english" class="section">
-                    <div class="bg-surface-light dark:bg-surface-dark p-6 rounded-lg shadow-lg">
+                    <div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-lg shadow-lg">
                         <button class="back-to-menu-button mb-4 flex items-center text-sm font-semibold text-text-light dark:text-text-dark hover:text-primary dark:hover:text-accent-dark transition-colors duration-200">
                             <span class="material-icons mr-1">arrow_back</span>
                             返回科目選單
                         </button>
-                        <h2 class="text-3xl font-bold mb-4 text-primary dark:text-accent-dark">英語文工具</h2>
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">英語文工具</h2>
                         <p class="mb-6">提供發音練習、單字卡等英語文教學輔助。</p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <a href="teacher/englishreading.html" class="block p-6 bg-background-light dark:bg-surface-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                            <a href="teacher/englishreading.html" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                                 <h3 class="font-bold text-primary dark:text-accent-dark text-lg">英文朗讀教練</h3>
                                 <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">提供即時發音回饋，幫助學生練習並改善英文口說能力。</p>
                             </a>
@@ -193,15 +230,15 @@
                 </div>
 
                 <div id="advocacy" class="section">
-                    <div class="bg-surface-light dark:bg-surface-dark p-6 rounded-lg shadow-lg">
+                    <div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-lg shadow-lg">
                         <button class="back-to-menu-button mb-4 flex items-center text-sm font-semibold text-text-light dark:text-text-dark hover:text-primary dark:hover:text-accent-dark transition-colors duration-200">
                             <span class="material-icons mr-1">arrow_back</span>
                             返回科目選單
                         </button>
-                        <h2 class="text-3xl font-bold mb-4 text-primary dark:text-accent-dark">融合教育</h2>
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">融合教育</h2>
                         <p class="mb-6">彙整特教新知、法規與教學策略等專業資源。</p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <a href="teacher/learningdisability.html" class="block p-6 bg-background-light dark:bg-surface-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                            <a href="teacher/learningdisability.html" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                                 <h3 class="font-bold text-primary dark:text-accent-dark text-lg">學障體驗</h3>
                                 <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">模擬閱讀障礙者的視覺感受，提升同理心與教學調整意識。</p>
                             </a>
@@ -210,32 +247,32 @@
                 </div>
 
                 <div id="ai-tools" class="section">
-                    <div class="bg-surface-light dark:bg-surface-dark p-6 rounded-lg shadow-lg">
-                         <button class="back-to-menu-button mb-4 flex items-center text-sm font-semibold text-text-light dark:text-text-dark hover:text-primary dark:hover:text-accent-dark transition-colors duration-200">
+                     <div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-lg shadow-lg">
+                        <button class="back-to-menu-button mb-4 flex items-center text-sm font-semibold text-text-light dark:text-text-dark hover:text-primary dark:hover:text-accent-dark transition-colors duration-200">
                             <span class="material-icons mr-1">arrow_back</span>
                             返回科目選單
                         </button>
-                        <h2 class="text-3xl font-bold mb-4 text-primary dark:text-accent-dark">行政工具</h2>
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">行政工具</h2>
                         <p class="mb-6">運用 AI 技術生成教材、簡化文本，提升行政效率。</p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <a href="https://www.notion.so/spedmix2025/IEP-2744c52ff8d08069962fe2aa5053fae0?source=copy_link" target="_blank" rel="noopener noreferrer" class="block p-6 bg-background-light dark:bg-surface-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                            <a href="https://www.notion.so/spedmix2025/IEP-2744c52ff8d08069962fe2aa5053fae0?source=copy_link" target="_blank" rel="noopener noreferrer" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                                 <h3 class="font-bold text-primary dark:text-accent-dark text-lg">IEP 目標產生</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">根據學生需求，快速生成個別化教育計畫的學期與學年目標(請注意！生成內容僅提供方向)。</p>
+                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">根據學生需求，快速生成 IEP 學期與學年目標 (僅供參考)。</p>
                             </a>
                         </div>
                     </div>
                 </div>
                 
                 <div id="social-skills" class="section">
-                    <div class="bg-surface-light dark:bg-surface-dark p-6 rounded-lg shadow-lg">
+                    <div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-lg shadow-lg">
                         <button class="back-to-menu-button mb-4 flex items-center text-sm font-semibold text-text-light dark:text-text-dark hover:text-primary dark:hover:text-accent-dark transition-colors duration-200">
                             <span class="material-icons mr-1">arrow_back</span>
                             返回科目選單
                         </button>
-                        <h2 class="text-3xl font-bold mb-4 text-primary dark:text-accent-dark">社會技巧工具</h2>
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">社會技巧工具</h2>
                         <p class="mb-6">提供社交情境故事、情緒識別等互動練習。</p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <a href="https://g.co/gemini/share/448c25a01644" target="_blank" rel="noopener noreferrer" class="block p-6 bg-background-light dark:bg-surface-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                            <a href="https://g.co/gemini/share/448c25a01644" target="_blank" rel="noopener noreferrer" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                                 <h3 class="font-bold text-primary dark:text-accent-dark text-lg">情緒圖片生成</h3>
                                 <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">輸入情緒詞彙，AI 生成對應的人物表情圖片，用於情緒識別教學。</p>
                             </a>
@@ -244,31 +281,38 @@
                 </div>
 
                 <div id="learning-strategies" class="section">
-                    <div class="bg-surface-light dark:bg-surface-dark p-6 rounded-lg shadow-lg">
+                    <div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-lg shadow-lg">
                         <button class="back-to-menu-button mb-4 flex items-center text-sm font-semibold text-text-light dark:text-text-dark hover:text-primary dark:hover:text-accent-dark transition-colors duration-200">
                             <span class="material-icons mr-1">arrow_back</span>
                             返回科目選單
                         </button>
-                        <h2 class="text-3xl font-bold mb-4 text-primary dark:text-accent-dark">學習策略工具</h2>
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">學習策略工具</h2>
                         <p class="mb-6">包含時間管理、筆記技巧、心智圖等學習方法。</p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                             <a href="#" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                                 <h3 class="font-bold text-primary dark:text-accent-dark text-lg">心智圖產生器</h3>
+                                 <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">輸入主題，AI 自動生成心智圖，幫助整理思緒。</p>
+                             </a>
                         </div>
                     </div>
                 </div>
 
                 <div id="life-management" class="section">
-                    <div class="bg-surface-light dark:bg-surface-dark p-6 rounded-lg shadow-lg">
+                    <div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-lg shadow-lg">
                         <button class="back-to-menu-button mb-4 flex items-center text-sm font-semibold text-text-light dark:text-text-dark hover:text-primary dark:hover:text-accent-dark transition-colors duration-200">
                             <span class="material-icons mr-1">arrow_back</span>
                             返回科目選單
                         </button>
-                        <h2 class="text-3xl font-bold mb-4 text-primary dark:text-accent-dark">生活管理工具</h2>
-                        <p class="mb-6">提供日常自理、金錢管理等生活技能訓練工具。</p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">其它工具</h2>
+                        <p class="mb-6">其他常用工具</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                            <a href="https://www.notion.so/spedmix2025/AI-2744c52ff8d08022b1e3c3a7577d7312?source=copy_link" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">視覺化流程圖</h3>
+                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">建立步驟化的視覺提示，引導學生完成任務。</p>
+                            </a>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </main>
@@ -286,6 +330,7 @@
             const scrollToSubjectNavButton = document.getElementById('scroll-to-subject-nav');
             const subjectNavContainer = document.getElementById('subject-navigation-buttons');
             const sectionsContainer = document.getElementById('sections-container');
+            const sectionsWrapper = document.querySelector('.sections-wrapper');
             const sections = document.querySelectorAll('.section');
             const desktopNav = document.getElementById('desktop-nav');
             const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -293,25 +338,86 @@
             let isAnimating = false;
             let currentView = 'hero';
             const animationDuration = 500;
-            const smoothScrollTo = (element) => { const headerOffset = document.querySelector('header').offsetHeight; const elementPosition = element.getBoundingClientRect().top + window.pageYOffset; const offsetPosition = elementPosition - headerOffset - 20; window.scrollTo({ top: offsetPosition, behavior: 'smooth' }); };
-            const updateActiveStates = (activeId) => { document.querySelectorAll('.nav-link, #mobile-menu a').forEach(link => { const href = link.getAttribute('href'); let isActive = (activeId === 'home' && href === '#') || (href === `#${activeId}`); link.classList.toggle('font-bold', isActive); link.classList.toggle('text-primary', isActive && link.classList.contains('nav-link')); link.classList.toggle('bg-gray-100', isActive && !link.classList.contains('nav-link')); link.classList.toggle('dark:bg-surface-dark/80', isActive && !link.classList.contains('nav-link')); }); subjectNavContainer.querySelectorAll('.subject-image-button').forEach(button => { button.classList.toggle('active-button', button.dataset.subjectId === activeId); }); };
-            const switchToContentView = () => { if (isAnimating || currentView === 'content') return; isAnimating = true; currentView = 'content'; heroSection.classList.add('is-hiding'); setTimeout(() => { heroSection.style.display = 'none'; heroSection.classList.remove('is-hiding'); }, animationDuration); subjectNavContainer.classList.remove('hidden'); subjectNavContainer.classList.add('is-showing'); setTimeout(() => { subjectNavContainer.classList.remove('is-showing'); isAnimating = false; }, animationDuration); updateActiveStates(null); smoothScrollTo(subjectNavContainer); };
-            const switchToHeroView = () => { if (isAnimating || currentView === 'hero') return; isAnimating = true; currentView = 'hero';[subjectNavContainer, sectionsContainer].forEach(container => { if (!container.classList.contains('hidden')) { container.classList.add('is-hiding'); setTimeout(() => { container.classList.add('hidden'); container.classList.remove('is-hiding'); }, animationDuration); } }); heroSection.style.display = 'flex'; heroSection.classList.add('is-showing'); setTimeout(() => { heroSection.classList.remove('is-showing'); isAnimating = false; }, animationDuration); sections.forEach(section => section.classList.remove('active', 'is-exiting')); updateActiveStates('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+
+            const smoothScrollTo = (element) => { 
+                const headerOffset = document.querySelector('header').offsetHeight; 
+                const elementPosition = element.getBoundingClientRect().top + window.pageYOffset; 
+                const offsetPosition = elementPosition - headerOffset - 20; 
+                window.scrollTo({ top: offsetPosition, behavior: 'smooth' }); 
+            };
+
+            const updateActiveStates = (activeId) => { 
+                document.querySelectorAll('.nav-link, #mobile-menu a').forEach(link => { 
+                    const href = link.getAttribute('href'); 
+                    let isActive = (activeId === 'home' && href === '#') || (href === `#${activeId}`); 
+                    link.classList.toggle('font-bold', isActive); 
+                    link.classList.toggle('text-primary', isActive && link.classList.contains('nav-link')); 
+                    link.classList.toggle('bg-background-light', isActive && !link.classList.contains('nav-link')); 
+                    link.classList.toggle('dark:bg-surface-dark/80', isActive && !link.classList.contains('nav-link')); 
+                }); 
+                subjectNavContainer.querySelectorAll('.subject-image-button').forEach(button => { 
+                    button.classList.toggle('active-button', button.dataset.subjectId === activeId); 
+                }); 
+            };
+
+            const switchToContentView = () => { 
+                if (isAnimating || currentView === 'content') return; 
+                isAnimating = true; 
+                currentView = 'content'; 
+                heroSection.classList.add('is-hiding'); 
+                setTimeout(() => { 
+                    heroSection.style.display = 'none'; 
+                    heroSection.classList.remove('is-hiding'); 
+                }, animationDuration); 
+                subjectNavContainer.classList.remove('hidden'); 
+                subjectNavContainer.classList.add('is-showing'); 
+                setTimeout(() => { 
+                    subjectNavContainer.classList.remove('is-showing'); 
+                    isAnimating = false; 
+                }, animationDuration); 
+                updateActiveStates(null); 
+                smoothScrollTo(subjectNavContainer); 
+            };
+
+            const switchToHeroView = () => { 
+                if (isAnimating || currentView === 'hero') return; 
+                isAnimating = true; 
+                currentView = 'hero';
+                [subjectNavContainer, sectionsContainer].forEach(container => { 
+                    if (!container.classList.contains('hidden')) { 
+                        container.classList.add('is-hiding'); 
+                        setTimeout(() => { 
+                            container.classList.add('hidden'); 
+                            container.classList.remove('is-hiding'); 
+                        }, animationDuration); 
+                    } 
+                }); 
+                heroSection.style.display = 'flex'; 
+                heroSection.classList.add('is-showing'); 
+                setTimeout(() => { 
+                    heroSection.classList.remove('is-showing'); 
+                    isAnimating = false; 
+                }, animationDuration); 
+                sections.forEach(section => section.classList.remove('active', 'is-exiting')); 
+                updateActiveStates('home'); 
+                window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            };
             
+            // --- CORRECTED SCRIPT ---
             const showSubjectMenu = () => {
                 if (isAnimating) return;
                 isAnimating = true;
 
-                sectionsContainer.classList.add('is-hiding');
                 const currentSection = document.querySelector('.section.active');
                 if (currentSection) {
                     currentSection.classList.add('is-exiting');
                     currentSection.classList.remove('active');
                 }
+                
+                sectionsWrapper.style.height = '0px';
 
                 setTimeout(() => {
                     sectionsContainer.classList.add('hidden');
-                    sectionsContainer.classList.remove('is-hiding');
                     if (currentSection) {
                         currentSection.classList.remove('is-exiting');
                     }
@@ -328,55 +434,78 @@
                 smoothScrollTo(subjectNavContainer); 
             };
 
-const showSection = (id) => {
-    const nextSection = document.getElementById(id);
-    const currentSection = document.querySelector('.section.active');
-    
-    if (isAnimating || !nextSection || nextSection === currentSection) return;
-    
-    if (currentView !== 'content') {
-        switchToContentView();
-        setTimeout(() => showSection(id), animationDuration);
-        return;
-    }
-    
-    isAnimating = true;
+            // --- CORRECTED SCRIPT ---
+            const showSection = (id) => {
+                const nextSection = document.getElementById(id);
+                const currentSection = document.querySelector('.section.active');
+                
+                if (isAnimating || !nextSection || nextSection === currentSection) return;
+                
+                if (currentView !== 'content') {
+                    switchToContentView();
+                    setTimeout(() => showSection(id), animationDuration);
+                    return;
+                }
+                
+                isAnimating = true;
+                
+                // Make parent container visible BEFORE measurement
+                sectionsContainer.classList.remove('hidden');
+                
+                // Measure height and set wrapper height
+                const newHeight = nextSection.scrollHeight;
+                sectionsWrapper.style.height = `${newHeight}px`;
 
-    subjectNavContainer.classList.add('is-hiding');
-    if (currentSection) { 
-        currentSection.classList.add('is-exiting');
-        currentSection.classList.remove('active');
-    }
+                if (currentSection) { 
+                    currentSection.classList.add('is-exiting');
+                    currentSection.classList.remove('active');
+                }
+                
+                setTimeout(() => {
+                    subjectNavContainer.classList.add('is-hiding');
+                    nextSection.classList.add('active'); 
+                }, 50);
 
-    setTimeout(() => {
-        subjectNavContainer.classList.add('hidden');
-        subjectNavContainer.classList.remove('is-hiding');
-        if (currentSection) {
-            currentSection.classList.remove('is-exiting');
-        }
+                setTimeout(() => {
+                    subjectNavContainer.classList.add('hidden');
+                    subjectNavContainer.classList.remove('is-hiding');
+                    if (currentSection) {
+                        currentSection.classList.remove('is-exiting');
+                    }
+                    isAnimating = false;
+                }, animationDuration + 50);
 
-        sectionsContainer.classList.remove('hidden');
-        nextSection.classList.add('active'); 
-        
-        smoothScrollTo(sectionsContainer); 
-        
-        updateActiveStates(id);
-
-        isAnimating = false;
-
-    }, animationDuration);
-
-    mobileMenu.classList.add('hidden');
-    mobileMenuButton.setAttribute('aria-expanded', 'false');
-};
+                smoothScrollTo(sectionsContainer); 
+                updateActiveStates(id);
+                mobileMenu.classList.add('hidden');
+                mobileMenuButton.setAttribute('aria-expanded', 'false');
+            };
 
             spedmixLogo.addEventListener('click', (e) => { e.preventDefault(); switchToHeroView(); });
             scrollToSubjectNavButton.addEventListener('click', switchToContentView);
-            mobileMenuButton.addEventListener('click', () => { const isExpanded = mobileMenu.classList.toggle('hidden'); mobileMenuButton.setAttribute('aria-expanded', !isExpanded); });
-            const handleNavClick = (e) => { const link = e.target.closest('a[href^="#"]'); if (link) { e.preventDefault(); const href = link.getAttribute('href'); if (href === '#') { switchToHeroView(); } else { showSection(href.substring(1)); } } };
+            mobileMenuButton.addEventListener('click', () => { 
+                const isExpanded = mobileMenu.classList.toggle('hidden'); 
+                mobileMenuButton.setAttribute('aria-expanded', !isExpanded); 
+            });
+            
+            const handleNavClick = (e) => { 
+                const link = e.target.closest('a[href^="#"]'); 
+                if (link) { 
+                    e.preventDefault(); 
+                    const href = link.getAttribute('href'); 
+                    if (href === '#') { 
+                        switchToHeroView(); 
+                    } else { 
+                        showSection(href.substring(1)); 
+                    } 
+                } 
+            };
             desktopNav.addEventListener('click', handleNavClick);
             mobileMenu.addEventListener('click', handleNavClick);
-            subjectNavContainer.addEventListener('click', (e) => { const button = e.target.closest('.subject-image-button'); if (button) showSection(button.dataset.subjectId); });
+            subjectNavContainer.addEventListener('click', (e) => { 
+                const button = e.target.closest('.subject-image-button'); 
+                if (button) showSection(button.dataset.subjectId); 
+            });
             
             sectionsContainer.addEventListener('click', (e) => {
                 const backButton = e.target.closest('.back-to-menu-button');
