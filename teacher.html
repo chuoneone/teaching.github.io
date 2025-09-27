@@ -74,29 +74,64 @@
         .hero-overlay { background-color: rgba(240, 244, 248, 0.3); } 
         .dark .hero-overlay { background-color: rgba(26, 32, 44, 0.4); } 
         
-        .subject-image-button { 
-            position: relative; color: white; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); 
-            overflow: hidden; display: flex; justify-content: center; align-items: center; 
-            font-size: 1.5rem; font-weight: bold; min-height: 100px; 
-            border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-            cursor: pointer; border: 3px solid transparent; 
-            transition: box-shadow var(--transition-duration-fast) ease-in-out, border-color var(--transition-duration-fast) ease-in-out; 
+        .subject-image-button {
+            position: relative;
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            min-height: 100px;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: box-shadow var(--transition-duration-fast) ease-in-out,
+                        border-color var(--transition-duration-fast) ease-in-out,
+                        transform var(--transition-duration-fast) ease-in-out; /* 新增 transform 屬性 */
         }
-        .subject-image-button::before { 
-            content: ''; position: absolute; inset: 0; 
-            background-image: url('images/button.jpg'); background-size: cover; background-position: center; 
-            filter: blur(2px); 
-            transition: filter var(--transition-duration-fast) ease-in-out, transform var(--transition-duration-fast) ease-in-out; 
-            z-index: 1; 
+
+        .subject-image-button::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url('images/button.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: blur(2px);
+            transition: filter var(--transition-duration-fast) ease-in-out,
+                        transform var(--transition-duration-fast) ease-in-out;
+            z-index: 1;
         }
-        .subject-image-button span { position: relative; z-index: 2; }
-        .subject-image-button:hover { box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); }
-        .subject-image-button:hover::before { filter: blur(0px) brightness(100%); transform: scale(1.09); }
-        .subject-image-button.active-button { 
-            box-shadow: 0 10px 15px rgba(56, 163, 165, 0.3); 
+
+        .subject-image-button span {
+            position: relative;
+            z-index: 2;
+        }
+
+        .subject-image-button:hover {
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px); /* 新增：讓按鈕向上移動 5px */
+        }
+
+        .subject-image-button:hover::before {
+            filter: blur(0px) brightness(100%);
+            transform: scale(1.09);
+        }
+
+        .subject-image-button.active-button {
+            box-shadow: 0 10px 15px rgba(56, 163, 165, 0.3);
             border-color: #38A3A5;
+            transform: translateY(-3px); /* 新增：讓 active 狀態的按鈕也稍微上浮 */
         }
-        .subject-image-button.active-button::before { filter: blur(0px) brightness(100%); transform: scale(1.05); }
+
+        .subject-image-button.active-button::before {
+            filter: blur(0px) brightness(100%);
+            transform: scale(1.05);
+        }
     </style>
 </head>
 
@@ -107,7 +142,7 @@
                 <span class="text-2xl font-bold text-primary dark:text-accent-dark">SPEDMIX</span>
             </a>
             
-            <div id="desktop-nav" class="hidden md:flex items-center space-x-4 lg:space-x-6">
+            <div id="desktop-nav" class="hidden md:flex items-center space-x-4 lg:space-x-6 ">
                 <a href="#" class="nav-link text-text-light dark:text-text-dark hover:text-primary transition-colors duration-200">首頁</a>
                 <a href="https://www.instagram.com/spedmix2025/" target="_blank" rel="noopener noreferrer" class="nav-link text-text-light dark:text-text-dark hover:text-primary transition-colors duration-200">Instagram</a>
             </div>
