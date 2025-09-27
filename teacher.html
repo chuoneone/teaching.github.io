@@ -74,9 +74,33 @@
         .hero-overlay { background-color: rgba(240, 244, 248, 0.3); } 
         .dark .hero-overlay { background-color: rgba(26, 32, 44, 0.4); } 
         
-        .subject-image-button {
+/* 英雄欄位文字效果：外白內黑 */
+.text-stroke-dark {
+    color: #2D3748; /* 內層為黑色 */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); /* 輕微陰影讓文字更突出 */
+}
+/* 針對深色模式調整文字顏色 */
+.dark .text-stroke-dark {
+    color: #E2E8F0; /* 深色模式下內層為淺灰色 */
+    -webkit-text-stroke-color: #2D3748; /* 深色模式外框改為深色 */
+}
+
+/* SPEDMIX 文字效果：藍綠色加白框 */
+.text-stroke {
+    color: #38A3A5; /* 內層藍綠色 */
+    -webkit-text-stroke-width: 0.5px; /* 白色外圈粗細 */
+    -webkit-text-stroke-color: #FFFFFF; /* 白色外圈顏色 */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); /* 輕微陰影讓文字更突出 */
+}
+/* 針對深色模式調整文字顏色 */
+.dark .text-stroke {
+    color: #80CBC4; /* 深色模式下內層為淺藍綠 */
+    -webkit-text-stroke-color: #2D3748; /* 深色模式外框改為深色 */
+}
+
+        /* 統一科目按鈕和返回按鈕的樣式 */
+        .gradient-button {
             position: relative;
-            color: white;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
             overflow: hidden;
             display: flex;
@@ -88,49 +112,44 @@
             border-radius: 0.5rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             cursor: pointer;
-            border: 3px solid transparent;
-            transition: box-shadow var(--transition-duration-fast) ease-in-out,
-                        border-color var(--transition-duration-fast) ease-in-out,
-                        transform var(--transition-duration-fast) ease-in-out; /* 新增 transform 屬性 */
+            color: #FFFFFF;
+            background-image: linear-gradient(to right, #38A3A5, #80CBC4);
+            background-size: 200% auto;
+            background-position: left center;
+            transition: background-position 0.4s ease-out, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border 0.3s ease-in-out;
+            border: 3px solid transparent; 
         }
 
-        .subject-image-button::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image: url('images/button.jpg');
-            background-size: cover;
-            background-position: center;
-            filter: blur(2px);
-            transition: filter var(--transition-duration-fast) ease-in-out,
-                        transform var(--transition-duration-fast) ease-in-out;
-            z-index: 1;
-        }
-
-        .subject-image-button span {
-            position: relative;
-            z-index: 2;
-        }
-
-        .subject-image-button:hover {
-            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
-            transform: translateY(-5px); /* 新增：讓按鈕向上移動 5px */
-        }
-
-        .subject-image-button:hover::before {
-            filter: blur(0px) brightness(100%);
-            transform: scale(1.09);
-        }
-
-        .subject-image-button.active-button {
+        .gradient-button.active-button {
+            background-position: right center; 
+            transform: translateY(-3px);
             box-shadow: 0 10px 15px rgba(56, 163, 165, 0.3);
             border-color: #38A3A5;
-            transform: translateY(-3px); /* 新增：讓 active 狀態的按鈕也稍微上浮 */
         }
 
-        .subject-image-button.active-button::before {
-            filter: blur(0px) brightness(100%);
-            transform: scale(1.05);
+        .gradient-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+            background-position: right center; 
+        }
+
+        .gradient-button-small {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            background: linear-gradient(to right, #38A3A5, #80CBC4);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all var(--transition-duration-fast) ease-in-out;
+        }
+        .gradient-button-small:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            opacity: 0.9;
         }
     </style>
 </head>
@@ -162,9 +181,9 @@
         <section id="hero-section" class="hero-full-bg relative">
             <div class="absolute inset-0 hero-overlay"></div>
             <div class="container mx-auto px-4 sm:px-6 py-24 relative z-10 text-left">
-                <p class="text-xl md:text-2xl text-text-light dark:text-text-dark mb-4 italic">高效教學輔助，專為教材調整設計</p>
-                <h1 class="text-5xl sm:text-6xl md:text-8xl font-bold text-primary dark:text-accent-dark leading-tight">SPEDMIX</h1>
-                <p class="text-2xl sm:text-3xl md:text-4xl text-text-light dark:text-text-dark mt-4">教師備課幫手</p>
+                <p class="text-xl md:text-2xl text-stroke-dark mb-4 italic">高效教學輔助，專為教材調整設計</p>
+                <h1 class="text-5xl sm:text-6xl md:text-8xl font-bold text-primary leading-tight text-stroke">SPEDMIX</h1>
+                <p class="text-2xl sm:text-3xl md:text-4xl text-stroke-dark mt-4">教師備課幫手</p>
                 <div class="mt-12">
                     <button id="scroll-to-subject-nav" class="bg-button-bg text-button-text font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-opacity-80 transition-all duration-300 transform hover:scale-105">
                         找幫手
@@ -176,14 +195,14 @@
         <div id="subject-navigation-buttons" class="content-container container mx-auto p-4 md:p-8 mt-8 hidden">
             <h2 class="text-3xl md:text-4xl font-bold text-center mb-10 text-primary dark:text-accent-dark">教學工具分類</h2>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                <button class="subject-image-button" data-subject-id="chinese"><span>國語文</span></button>
-                <button class="subject-image-button" data-subject-id="math"><span>數學</span></button>
-                <button class="subject-image-button" data-subject-id="english"><span>英語文</span></button>
-                <button class="subject-image-button" data-subject-id="advocacy"><span>融合教育</span></button>
-                <button class="subject-image-button" data-subject-id="ai-tools"><span>行政工具</span></button>
-                <button class="subject-image-button" data-subject-id="social-skills"><span>社會技巧</span></button>
-                <button class="subject-image-button" data-subject-id="learning-strategies"><span>學習策略</span></button>
-                <button class="subject-image-button" data-subject-id="life-management"><span>其它工具</span></button>
+                <button class="gradient-button" data-subject-id="chinese"><span>國語文</span></button>
+                <button class="gradient-button" data-subject-id="math"><span>數學</span></button>
+                <button class="gradient-button" data-subject-id="english"><span>英語文</span></button>
+                <button class="gradient-button" data-subject-id="advocacy"><span>融合教育</span></button>
+                <button class="gradient-button" data-subject-id="ai-tools"><span>行政工具</span></button>
+                <button class="gradient-button" data-subject-id="social-skills"><span>社會技巧</span></button>
+                <button class="gradient-button" data-subject-id="learning-strategies"><span>學習策略</span></button>
+                <button class="gradient-button" data-subject-id="life-management"><span>其它工具</span></button>
             </div>
         </div>
 
@@ -192,7 +211,7 @@
                 
                 <div id="chinese" class="section">
                     <div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-lg shadow-lg">
-                        <button class="back-to-menu-button mb-4 flex items-center text-sm font-semibold text-text-light dark:text-text-dark hover:text-primary dark:hover:text-accent-dark transition-colors duration-200">
+                        <button class="gradient-button-small mb-4 flex items-center">
                             <span class="material-icons mr-1">arrow_back</span>
                             返回科目選單
                         </button>
@@ -207,35 +226,30 @@
                                 <h3 class="font-bold text-primary dark:text-accent-dark text-lg">課文簡化系統</h3>
                                 <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">利用 AI 簡化複雜課文，一鍵生成摘要、漫畫、測驗，使學生更易理解。</p>
                             </a>
-
-                            <a href="https://gemini.google.com/share/e60b11e0ff7e" target="_blank" rel="noopener noreferrer" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">課文簡化系統</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">利用 AI 簡化複雜課文，一鍵生成摘要、漫畫、測驗，使學生更易理解。</p>
-                            </a>
                         </div>
                     </div>
                 </div>
 
                 <div id="math" class="section">
                     <div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-lg shadow-lg">
-                        <button class="back-to-menu-button mb-4 flex items-center text-sm font-semibold text-text-light dark:text-text-dark hover:text-primary dark:hover:text-accent-dark transition-colors duration-200">
+                        <button class="gradient-button-small mb-4 flex items-center">
                             <span class="material-icons mr-1">arrow_back</span>
                             返回科目選單
                         </button>
                         <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">數學工具</h2>
                         <p class="mb-6">包含互動式教具、視覺化概念等數學輔助工具。</p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                             <a href="#" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                                 <h3 class="font-bold text-primary dark:text-accent-dark text-lg">互動式時鐘</h3>
-                                 <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">可拖動指針的時鐘，幫助學生學習時間概念。</p>
-                             </a>
+                            <a href="#" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">互動式時鐘</h3>
+                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">可拖動指針的時鐘，幫助學生學習時間概念。</p>
+                            </a>
                         </div>
                     </div>
                 </div>
 
                 <div id="english" class="section">
                     <div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-lg shadow-lg">
-                        <button class="back-to-menu-button mb-4 flex items-center text-sm font-semibold text-text-light dark:text-text-dark hover:text-primary dark:hover:text-accent-dark transition-colors duration-200">
+                        <button class="gradient-button-small mb-4 flex items-center">
                             <span class="material-icons mr-1">arrow_back</span>
                             返回科目選單
                         </button>
@@ -252,7 +266,7 @@
 
                 <div id="advocacy" class="section">
                     <div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-lg shadow-lg">
-                        <button class="back-to-menu-button mb-4 flex items-center text-sm font-semibold text-text-light dark:text-text-dark hover:text-primary dark:hover:text-accent-dark transition-colors duration-200">
+                        <button class="gradient-button-small mb-4 flex items-center">
                             <span class="material-icons mr-1">arrow_back</span>
                             返回科目選單
                         </button>
@@ -268,8 +282,8 @@
                 </div>
 
                 <div id="ai-tools" class="section">
-                     <div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-lg shadow-lg">
-                        <button class="back-to-menu-button mb-4 flex items-center text-sm font-semibold text-text-light dark:text-text-dark hover:text-primary dark:hover:text-accent-dark transition-colors duration-200">
+                    <div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-lg shadow-lg">
+                        <button class="gradient-button-small mb-4 flex items-center">
                             <span class="material-icons mr-1">arrow_back</span>
                             返回科目選單
                         </button>
@@ -286,7 +300,7 @@
                 
                 <div id="social-skills" class="section">
                     <div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-lg shadow-lg">
-                        <button class="back-to-menu-button mb-4 flex items-center text-sm font-semibold text-text-light dark:text-text-dark hover:text-primary dark:hover:text-accent-dark transition-colors duration-200">
+                        <button class="gradient-button-small mb-4 flex items-center">
                             <span class="material-icons mr-1">arrow_back</span>
                             返回科目選單
                         </button>
@@ -303,24 +317,24 @@
 
                 <div id="learning-strategies" class="section">
                     <div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-lg shadow-lg">
-                        <button class="back-to-menu-button mb-4 flex items-center text-sm font-semibold text-text-light dark:text-text-dark hover:text-primary dark:hover:text-accent-dark transition-colors duration-200">
+                        <button class="gradient-button-small mb-4 flex items-center">
                             <span class="material-icons mr-1">arrow_back</span>
                             返回科目選單
                         </button>
                         <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">學習策略工具</h2>
                         <p class="mb-6">包含時間管理、筆記技巧、心智圖等學習方法。</p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                             <a href="#" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                                 <h3 class="font-bold text-primary dark:text-accent-dark text-lg">心智圖產生器</h3>
-                                 <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">輸入主題，AI 自動生成心智圖，幫助整理思緒。</p>
-                             </a>
+                            <a href="#" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">心智圖產生器</h3>
+                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">輸入主題，AI 自動生成心智圖，幫助整理思緒。</p>
+                            </a>
                         </div>
                     </div>
                 </div>
 
                 <div id="life-management" class="section">
                     <div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-lg shadow-lg">
-                        <button class="back-to-menu-button mb-4 flex items-center text-sm font-semibold text-text-light dark:text-text-dark hover:text-primary dark:hover:text-accent-dark transition-colors duration-200">
+                        <button class="gradient-button-small mb-4 flex items-center">
                             <span class="material-icons mr-1">arrow_back</span>
                             返回科目選單
                         </button>
@@ -376,7 +390,7 @@
                     link.classList.toggle('bg-background-light', isActive && !link.classList.contains('nav-link')); 
                     link.classList.toggle('dark:bg-surface-dark/80', isActive && !link.classList.contains('nav-link')); 
                 }); 
-                subjectNavContainer.querySelectorAll('.subject-image-button').forEach(button => { 
+                subjectNavContainer.querySelectorAll('.gradient-button').forEach(button => { 
                     button.classList.toggle('active-button', button.dataset.subjectId === activeId); 
                 }); 
             };
@@ -507,7 +521,6 @@
                     if (href === '#') { 
                         switchToHeroView(); 
                     } else { 
-                        // Because only the home page is left in the navigation bar, this branch will not be triggered in practice
                         showSection(href.substring(1)); 
                     } 
                 } 
@@ -515,12 +528,12 @@
             desktopNav.addEventListener('click', handleNavClick);
             mobileMenu.addEventListener('click', handleNavClick);
             subjectNavContainer.addEventListener('click', (e) => { 
-                const button = e.target.closest('.subject-image-button'); 
+                const button = e.target.closest('.gradient-button'); 
                 if (button) showSection(button.dataset.subjectId); 
             });
             
             sectionsContainer.addEventListener('click', (e) => {
-                const backButton = e.target.closest('.back-to-menu-button');
+                const backButton = e.target.closest('.gradient-button-small');
                 if (backButton) {
                     showSubjectMenu();
                 }
