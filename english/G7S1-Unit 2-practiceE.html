@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNIT2-習作E</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter for English, Noto Sans TC for Chinese -->     
+    <link rel="icon" href="dog.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* 自定義樣式 */
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+        }
+
+        /* 互動單字樣式 */
+        .word {
+            position: relative;
+            cursor: pointer;
+            border-bottom: 1px dotted #a8a29e; /* stone-400 */
+            transition: color 0.2s;
+        }
+
+        .word:hover {
+            color: #d97706; /* amber-600 */
+        }
+
+        /* 中文翻譯提示框 (Tooltip) */
+        .word .tooltip {
+            visibility: hidden;
+            width: max-content;
+            background-color: #1f2937; /* gray-800 */
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 10px;
+            position: absolute;
+            z-index: 10;
+            bottom: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none; /* 避免提示框干擾滑鼠事件 */
+        }
+
+        .word:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-amber-50 flex items-center justify-center min-h-screen p-4">
+
+    <!-- 測驗主容器 -->
+    <div id="quiz-container" class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg w-full max-w-3xl">
+        <h1 class="text-2xl sm:text-3xl font-bold text-stone-800 text-center mb-4">七上英文U2-習作E</h1>
+        
+        <!-- 進度條 -->
+        <div class="w-full bg-stone-200 rounded-full h-2.5 mb-6">
+            <div id="progress-bar" class="bg-amber-500 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+        </div>
+        
+        <!-- 題目將由 JavaScript 動態生成於此 -->
+        <div id="questions-wrapper"></div>
+
+        <!-- 功能按鈕與分數顯示區 -->
+        <div id="controls" class="mt-8 text-center">
+            <!-- 按鈕將由 JavaScript 動態生成 -->
+        </div>
+        <div id="score-display" class="mt-6 text-center hidden"></div>
+    </div>
+
+    <!-- 提示訊息 Modal -->
+    <div id="alert-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-20">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm text-center">
+            <p id="alert-message" class="text-lg text-gray-800 mb-4"></p>
+            <button id="close-alert-btn" class="bg-amber-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-amber-600 transition-colors">知道了</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- 資料定義區 ---
+            const translations = {
+                "what's": "什麼是", "what": "什麼", "the": "這個", "today": "今天", "it's": "它是", "may": "五月",
+                "time": "時間", "day": "天", "month": "月份", "date": "日期", "when": "何時", "is": "是", "her": "她的",
+                "school": "學校", "november": "十一月", "on": "在", "in": "在...裡面", "your": "你的", "birthday": "生日",
+                "oh": "哦", "also": "也", "new": "新的", "year's": "年的", "at": "在", "nine": "九", "thirty": "三十",
+                "january": "一月", "first": "第一", "december": "十二月", "this": "這個", "boy": "男孩", "has": "有",
+                "beautiful": "美麗的", "eyes": "眼睛", "and": "和", "long": "長的", "hair": "頭髮", "i": "我",
+                "like": "喜歡", "him": "他(受格)", "very": "非常", "much": "很多", "he": "他(主格)", "his": "他的", "he's": "他是",
+                "hi": "嗨", "i'm": "我是", "nice": "高興的", "to": "去", "meet": "遇見", "you": "你", "too": "也", "see": "看到",
+                "you're": "你是", "welcome": "不客氣", "excuse": "請問", "me": "我", "are": "是", "mr.": "先生", "walker": "沃克",
+                "yes": "是的", "larry": "賴瑞", "no": "不是", "not": "不", "friend": "朋友", "who's": "誰是", "that": "那個",
+                "girl": "女孩", "she": "她", "really": "真的", "tall": "高的", "a": "一個", "happy": "快樂的", "she's": "她是",
+                "ariel": "愛麗兒", "our": "我們的", "classmate": "同學", "eric's": "艾瑞克的", "aunt": "阿姨", "writer": "作家",
+                "doctor": "醫生", "housewife": "家庭主婦", "how": "如何", "old": "年老的", "alice": "愛麗絲", "brad": "布萊德",
+                "they": "他們", "my": "我的", "family": "家庭", "ten": "十", "twelve": "十二", "cook": "廚師", "nurse": "護士",
+                "they're": "他們是", "erasers": "橡皮擦", "where": "在哪裡", "those": "那些", "these": "這些", "pens": "筆(複數)", 
+                "aren't": "不是", "for": "給/為了", "desk": "書桌", "where's": "在哪裡", "notebook": "筆記本", "from": "從", 
+                "uncle": "叔叔/伯伯", "under": "在...下面", "chair": "椅子", "enough": "足夠的", "one": "一", "person": "人", 
+                "favorite": "最喜歡的", "color": "顏色", "gray": "灰色", "purple": "紫色", "table": "桌子", "isn't": "不是", 
+                "red": "紅色", "watch": "手錶", "special": "特別的", "parents": "父母", "home": "家", "we": "我們", "park": "公園", 
+                "house": "房子", "maybe": "也許", "kitchen": "廚房"
+            };
+
+            const quizData = [
+                {
+                    question: "A: __________ B: They're erasers.",
+                    options: ["Where are they?", "What are those?", "How old are they?"],
+                    answer: "B",
+                    hint: "回答是物品 (erasers)，所以問題應該是在問「那是什麼？」。"
+                },
+                {
+                    question: "A: Are these your pens? B: __________",
+                    options: ["No, they aren't.", "Yes, they are for you.", "No, they're not on the desk."],
+                    answer: "A",
+                    hint: "用 Are... 開頭的問句，最直接的回答是 Yes 或 No。"
+                },
+                {
+                    question: "A: Where's your notebook? B: __________",
+                    options: ["It's from my uncle.", "It's under the chair.", "It's enough for one person."],
+                    answer: "B",
+                    hint: "問題是「在哪裡？(Where)」，所以回答應該是一個地點或位置。"
+                },
+                {
+                    question: "A: What's your favorite color? B: __________",
+                    options: ["It's gray.", "It's a purple table.", "Isn't that red watch special?"],
+                    answer: "A",
+                    hint: "問題是「你最喜歡的顏色是什麼？」，所以應該直接回答一個顏色。"
+                },
+                {
+                    question: "A: Are your parents at home? B: __________",
+                    options: ["Yes. We are at the park.", "Yes. They're in the house.", "No. Maybe they're in the kitchen."],
+                    answer: "B",
+                    hint: "選項 A 和 C 的回答前後矛盾。如果父母在家 (Yes)，他們就在房子裡。"
+                }
+            ];
+
+            // --- 狀態變數 ---
+            let currentQuestionIndex = 0;
+            let score = 0;
+
+            // --- DOM 元素 ---
+            const questionsWrapper = document.getElementById('questions-wrapper');
+            const controlsContainer = document.getElementById('controls');
+            const scoreDisplay = document.getElementById('score-display');
+            const progressBar = document.getElementById('progress-bar');
+            const quizTitle = document.querySelector('#quiz-container h1');
+            const alertModal = document.getElementById('alert-modal');
+            const alertMessage = document.getElementById('alert-message');
+            const closeAlertBtn = document.getElementById('close-alert-btn');
+
+            // --- 功能函式區 ---
+
+            /**
+             * 將文字轉換為包含互動式單字的 HTML
+             */
+            function createInteractiveText(text) {
+                const parts = text.split(/([a-zA-Z'’]+)/);
+                return parts.map(part => {
+                    const cleanPart = part.toLowerCase().replace(/’/g, "'");
+                    if (translations[cleanPart]) {
+                        return `<span class="word">${part}<span class="tooltip">${translations[cleanPart]}</span></span>`;
+                    }
+                    return part;
+                }).join('');
+            }
+
+            /**
+             * 使用瀏覽器 API 朗讀文字
+             */
+            function speak(text) {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'en-US';
+                    utterance.rate = 0.9;
+                    window.speechSynthesis.speak(utterance);
+                } else {
+                    console.error("此瀏覽器不支援語音合成功能。");
+                }
+            }
+
+            /**
+             * 顯示指定索引的題目
+             */
+            function displayQuestion(index) {
+                questionsWrapper.innerHTML = '';
+                controlsContainer.innerHTML = '';
+
+                const progressPercentage = (index / quizData.length) * 100;
+                progressBar.style.width = `${progressPercentage}%`;
+
+                const q = quizData[index];
+                const questionBlock = document.createElement('div');
+                questionBlock.id = `q-${index}`;
+
+                const questionText = document.createElement('p');
+                questionText.className = 'text-lg text-stone-700 mb-4';
+                questionText.innerHTML = `<strong>${index + 1}.</strong> ${createInteractiveText(q.question)}`;
+                
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
+                
+                q.options.forEach((option, i) => {
+                    const optionChar = String.fromCharCode(65 + i);
+                    const optionContainer = document.createElement('div');
+                    optionContainer.className = 'flex items-center p-3 border border-stone-300 rounded-lg transition-all cursor-pointer hover:bg-amber-50';
+                    
+                    const radio = document.createElement('input');
+                    radio.type = 'radio';
+                    radio.id = `q${index}-opt${optionChar}`;
+                    radio.name = `q${index}`;
+                    radio.value = optionChar;
+                    radio.className = 'h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300';
+
+                    const label = document.createElement('label');
+                    label.htmlFor = `q${index}-opt${optionChar}`;
+                    label.className = 'ml-3 block text-md text-stone-900 flex-1 cursor-pointer';
+                    label.innerHTML = `(${optionChar}) ${createInteractiveText(option)}`;
+
+                    optionContainer.onclick = () => { radio.checked = true; };
+                    optionContainer.appendChild(radio);
+                    optionContainer.appendChild(label);
+                    optionsGrid.appendChild(optionContainer);
+                });
+
+                const hintContainer = document.createElement('div');
+                hintContainer.className = 'mt-4';
+                const hintButton = document.createElement('button');
+                hintButton.className = 'text-sm text-amber-600 hover:text-amber-800';
+                hintButton.textContent = '💡 提示';
+                const hintText = document.createElement('p');
+                hintText.className = 'hint-content hidden mt-2 text-sm text-stone-600 bg-yellow-100 p-2 rounded-md';
+                hintText.textContent = q.hint;
+                hintButton.onclick = () => hintText.classList.toggle('hidden');
+                hintContainer.appendChild(hintButton);
+                hintContainer.appendChild(hintText);
+                
+                questionBlock.appendChild(questionText);
+                questionBlock.appendChild(optionsGrid);
+                questionBlock.appendChild(hintContainer);
+                questionsWrapper.appendChild(questionBlock);
+
+                const submitButton = document.createElement('button');
+                submitButton.className = 'w-full sm:w-auto bg-amber-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-amber-600 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-opacity-50';
+                submitButton.textContent = '檢查答案';
+                submitButton.onclick = () => checkCurrentAnswer(index);
+                controlsContainer.appendChild(submitButton);
+            }
+
+            /**
+             * 檢查當前題目的答案
+             */
+            function checkCurrentAnswer(index) {
+                const selectedRadio = document.querySelector(`input[name="q${index}"]:checked`);
+
+                if (!selectedRadio) {
+                    alertMessage.textContent = '請先選擇一個答案！';
+                    alertModal.classList.remove('hidden');
+                    return;
+                }
+
+                const q = quizData[index];
+                const questionBlock = document.getElementById(`q-${index}`);
+                questionBlock.querySelectorAll('input[type="radio"]').forEach(radio => { radio.disabled = true; });
+                questionBlock.querySelectorAll('div.flex.items-center').forEach(div => { div.onclick = null; div.classList.remove('hover:bg-amber-50'); div.style.cursor = 'default'; });
+
+
+                const correctOptionValue = q.answer;
+                const correctLabel = document.querySelector(`label[for="q${index}-opt${correctOptionValue}"]`);
+                const userLabel = selectedRadio.nextElementSibling;
+                
+                if (selectedRadio.value === correctOptionValue) {
+                    score++;
+                    userLabel.parentElement.classList.add('bg-yellow-100', 'border-yellow-400', 'ring-2', 'ring-yellow-300');
+                    userLabel.innerHTML += ' <span class="text-green-600 font-bold">✔️</span>';
+                } else {
+                    userLabel.parentElement.classList.add('bg-red-100', 'border-red-400', 'ring-2', 'ring-red-300');
+                    userLabel.innerHTML += ' <span class="text-red-600 font-bold">❌</span>';
+                    correctLabel.parentElement.classList.add('bg-yellow-100', 'border-yellow-400');
+                }
+
+                controlsContainer.innerHTML = '';
+                const nextButton = document.createElement('button');
+                nextButton.className = 'w-full sm:w-auto bg-amber-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-amber-600 transition-colors';
+
+                if (currentQuestionIndex < quizData.length - 1) {
+                    nextButton.textContent = '下一題';
+                    nextButton.onclick = () => {
+                        currentQuestionIndex++;
+                        displayQuestion(currentQuestionIndex);
+                    };
+                } else {
+                    nextButton.textContent = '完成測驗';
+                    nextButton.onclick = showFinalScore;
+                }
+                controlsContainer.appendChild(nextButton);
+            }
+
+            /**
+             * 顯示最終分數
+             */
+            function showFinalScore() {
+                progressBar.style.width = '100%';
+                questionsWrapper.innerHTML = '';
+                controlsContainer.innerHTML = '';
+                quizTitle.textContent = '測驗完成！';
+
+                scoreDisplay.innerHTML = `
+                    <p class="text-xl text-stone-600">你的最終分數</p>
+                    <p class="text-5xl my-4 text-stone-800">${score} / ${quizData.length}</p>
+                `;
+                scoreDisplay.classList.remove('hidden');
+
+                const restartButton = document.createElement('button');
+                restartButton.className = 'mt-6 w-full sm:w-auto bg-amber-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-amber-600 transition-colors';
+                restartButton.textContent = '重新測驗';
+                restartButton.onclick = () => window.location.reload();
+                scoreDisplay.appendChild(restartButton);
+            }
+
+            // --- 事件監聽區 ---
+            questionsWrapper.addEventListener('click', (e) => {
+                if (e.target.classList.contains('word')) {
+                    speak(e.target.childNodes[0].nodeValue);
+                }
+            });
+
+            closeAlertBtn.addEventListener('click', () => {
+                alertModal.classList.add('hidden');
+            });
+
+            // --- 程式進入點 ---
+            displayQuestion(currentQuestionIndex);
+        });
+    </script>
+</body>
+</html>
+
