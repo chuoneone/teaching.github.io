@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>狗子冒險之旅 - 後山林道挑戰</title> 
+    <title>狗狗冒險之旅 - 後山林道挑戰</title> 
     <link rel="stylesheet" href="css/style.css"> 
     <link rel="stylesheet" href="css/quiz_page_styles.css"> 
 </head>
@@ -13,20 +13,18 @@
         <div class="player-info-bar">
             <span>角色：<strong id="player-char">未知夥伴</strong></span>
             <span class="meat-jerky-counter">🦴 肉乾：<strong id="meat-jerky-display">0</strong></span>
-        </div>
+        </div>       
         <div class="quiz-area" id="quiz-content-area">
             <h2 id="question-text">正在加載問題...</h2> 
             <form id="quiz-form">
                 <ul class="quiz-options-list" id="options-container">
-                    <!-- 選項會由 JS 動態生成 -->
-                </ul>
+                    </ul>
                 <button type="submit" class="quiz-submit-btn" id="submit-answer-btn">提交答案</button>
             </form>
             <p id="quiz-feedback" style="display: none;"></p> 
         </div>
         
         <div id="quiz-navigation" style="text-align: center; margin-top: 20px; display: none;">
-            <!-- "下一題" 按鈕 -->
             <button id="next-question-btn" class="quiz-navigation-link" style="background-color: #007bff;">下一題</button> 
             <a href="map_selection.html" class="quiz-navigation-link" id="back-to-map-link">返回地圖選擇</a>
         </div>
@@ -43,7 +41,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             // --- DOM Elements ---
             const playerCharSpan = document.getElementById('player-char');
-            const currentLocationSpan = document.getElementById('current-location');
             const quizPageTitle = document.getElementById('quiz-page-title');
             const meatJerkyDisplay = document.getElementById('meat-jerky-display');
             
@@ -55,8 +52,7 @@
             const feedbackEl = document.getElementById('quiz-feedback');
 
             const quizNavigationDiv = document.getElementById('quiz-navigation');
-            const nextQuestionBtn = document.getElementById('next-question-btn'); // 確保獲取
-            const backToMapLinkFromNav = document.getElementById('back-to-map-link');
+            const nextQuestionBtn = document.getElementById('next-question-btn'); 
 
             const quizCompleteMessageDiv = document.getElementById('quiz-complete-message');
             const quizCompleteTitle = document.getElementById('quiz-complete-title');
@@ -67,45 +63,28 @@
             let currentQuestionIndex = 0; 
             let meatJerkyCount = parseInt(localStorage.getItem('meatJerkyCount')) || 0;
             const MAX_MEAT_JERKY_TO_UNLOCK = 3;
-            let questionsAnsweredInThisSession = 0; // 跟蹤本次會話答對的題目數
+            let questionsAnsweredInThisSession = 0; 
 
-            // ******** 圖書館的多個題目數據 ********
             const questionsData = [
                 {
-                    question: "圖書館中記載「尾語之石」的古籍是什麼顏色封面的？",
-                    options: {
-                        a: "紅色羊皮封面",
-                        b: "深藍色硬殼封面",
-                        c: "破損的棕色皮革封面",
-                        d: "沒有封面，只有散頁"
-                    },
+                    question: "1+1等於多少？",
+                    options: { a: "0", b: "1", c: "2", d: "3" },
                     correctAnswer: "c",
-                    locationName: "圖書館" 
+                    locationName: "後山林道" 
                 },
                 {
-                    question: "在圖書館的歷史區，哪位著名校友的肖像畫作風格最為抽象？",
-                    options: {
-                        a: "創校校長 阿爾伯特·汪 (寫實派)",
-                        b: "發明家 艾拉·骨頭 (未來主義)",
-                        c: "探險家 巴克·毛毛 (印象派)",
-                        d: "藝術家 達利犬 (超現實主義)"
-                    },
+                    question: "2+2等於多少？",
+                    options: { a: "0", b: "1", c: "2", d: "4" },
                     correctAnswer: "d",
-                    locationName: "圖書館"
+                    locationName: "後山林道"
                 },
                 {
-                    question: "圖書館的禁書區傳聞藏有什麼秘密？",
-                    options: {
-                        a: "失落的食譜",
-                        b: "古老的魔法咒語",
-                        c: "校園建設的藍圖",
-                        d: "一本空白的日記"
-                    },
+                    question: "3+3等於多少？",
+                    options: { a: "1", b: "6", c: "9", d: "12" },
                     correctAnswer: "b",
-                    locationName: "圖書館"
+                    locationName: "後山林道"
                 }
             ];
-            // *****************************************
             
             // --- Initialization ---
             function initializeQuiz() {
@@ -130,7 +109,6 @@
                 }
                 
                 const displayLocation = questionsData[0].locationName || (locationNameParam ? decodeURIComponent(locationNameParam) : "未知地點");
-                currentLocationSpan.textContent = displayLocation;
                 if (quizPageTitle) {
                     quizPageTitle.textContent = `${displayLocation}挑戰`;
                 }
@@ -202,19 +180,51 @@
 
                     if (selectedAnswerInput) {
                         const userAnswer = selectedAnswerInput.value;
-                        const correctAnswer = questionsData[currentQuestionIndex].correctAnswer;
-                        if (userAnswer === correctAnswer) {
+                        const currentQuestionData = questionsData[currentQuestionIndex];
+                        const correctAnswer = currentQuestionData.correctAnswer;
+                        const isCorrect = (userAnswer === correctAnswer);
+
+                        if (isCorrect) {
                             feedbackEl.textContent = '答對了！獲得一個 🦴 肉乾！';
                             feedbackEl.classList.add('correct');
                             meatJerkyCount++;
-                            questionsAnsweredInThisSession++; // 本次答對題數增加
+                            questionsAnsweredInThisSession++;
                             localStorage.setItem('meatJerkyCount', meatJerkyCount); 
                             updateMeatJerkyDisplay();
                             checkBasementUnlock();
                         } else {
-                            feedbackEl.textContent = `答錯了。正確答案是：${questionsData[currentQuestionIndex].options[correctAnswer]}`;
+                            feedbackEl.textContent = `答錯了。正確答案是：${currentQuestionData.options[correctAnswer]}`;
                             feedbackEl.classList.add('incorrect');
                         }
+
+                        // ================== 傳送資料到 FIREBASE ==================
+                        try {
+                            const characterName = playerCharSpan.textContent || '未知角色';
+                            
+                            const answerRecord = {
+                                character: characterName,
+                                location: currentQuestionData.locationName,
+                                question: currentQuestionData.question,
+                                userAnswer: currentQuestionData.options[userAnswer],
+                                correctAnswer: currentQuestionData.options[correctAnswer],
+                                isCorrect: isCorrect,
+                                timestamp: new Date() 
+                            };
+
+                            // 使用我們在下面初始化的 db 物件來傳送資料
+                            db.collection("answers").add(answerRecord)
+                                .then((docRef) => {
+                                    console.log("紀錄成功儲存，ID: ", docRef.id);
+                                })
+                                .catch((error) => {
+                                    console.error("儲存紀錄時發生錯誤: ", error);
+                                });
+
+                        } catch(e) {
+                            console.error("無法傳送資料到 Firebase: ", e);
+                        }
+                        // =========================================================
+
                     } else {
                         feedbackEl.textContent = '請選擇一個答案！';
                         feedbackEl.classList.add('info');
@@ -226,13 +236,11 @@
                     if(quizNavigationDiv) quizNavigationDiv.style.display = 'block';
 
                     if (currentQuestionIndex >= questionsData.length - 1) {
-                        // 這是最後一題
                         if (nextQuestionBtn) nextQuestionBtn.textContent = "查看結果";
                     } else {
-                        // 還有下一題
                         if (nextQuestionBtn) {
                             nextQuestionBtn.textContent = "下一題";
-                            nextQuestionBtn.style.display = 'inline-block'; // 確保可見
+                            nextQuestionBtn.style.display = 'inline-block';
                         }
                     }
                 });
@@ -241,16 +249,13 @@
             if (nextQuestionBtn) {
                 nextQuestionBtn.addEventListener('click', () => {
                     if (currentQuestionIndex >= questionsData.length - 1) {
-                        // 如果按鈕是 "查看結果"
                         endQuiz();
                     } else {
-                        // 處理 "下一題"
                         currentQuestionIndex++;
                         loadQuestion(currentQuestionIndex);
                     }
                 });
             }
-
 
             // --- Game Logic ---
             function checkBasementUnlock() {
@@ -272,17 +277,35 @@
                      finalScoreMessage.textContent += ` 目前總共有 ${meatJerkyCount} 個肉乾。`;
                 }
 
-
-                if (localStorage.getItem('basementUnlocked') === 'true') {
+                if (localStorage.getItem('basementUnlocked') === 'true' || meatJerkyCount >= MAX_MEAT_JERKY_TO_UNLOCK) {
                     if(basementUnlockMessage) basementUnlockMessage.style.display = 'block';
-                } else if (meatJerkyCount >= MAX_MEAT_JERKY_TO_UNLOCK) {
-                     if(basementUnlockMessage) basementUnlockMessage.style.display = 'block';
                 }
             }
 
             // --- Start Quiz ---
             initializeQuiz();
         });
+    </script>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore.js"></script>
+    <script>
+      // 您的 Firebase 設定
+      const firebaseConfig = {
+        apiKey: "AIzaSyA_JPaac0v0ssMb2tAOGIZ_YCQYbcLKRLc", // 安全提醒：此金鑰已在對話中公開，建議專案完成後從Firebase後台更換一組新的
+        authDomain: "rpg-game-records.firebaseapp.com",
+        projectId: "rpg-game-records",
+        storageBucket: "rpg-game-records.appspot.com",
+        messagingSenderId: "490562660857",
+        appId: "1:490562660857:web:d1601081191e476cf53528"
+      };
+
+      // 初始化 Firebase
+      const app = firebase.initializeApp(firebaseConfig);
+      
+      // 取得 Firestore 資料庫的實例，並存到一個叫做 db 的變數中
+      // 上方的遊戲腳本會使用這個 'db' 變數來傳送資料
+      const db = firebase.firestore();
     </script>
 </body>
 </html>
