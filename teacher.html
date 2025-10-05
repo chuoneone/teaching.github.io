@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WMNZ6FESH7"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-WMNZ6FESH7');
-    </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>教師備課幫手</title>
@@ -18,6 +10,16 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5BBHYN77N9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-5BBHYN77N9');
+    </script>
+
     <script>
         tailwind.config = {
             darkMode: "class",
@@ -82,30 +84,25 @@
         .hero-overlay { background-color: rgba(240, 244, 248, 0.3); } 
         .dark .hero-overlay { background-color: rgba(26, 32, 44, 0.4); } 
         
-        /* 英雄欄位文字效果：外白內黑 */
         .text-stroke-dark {
-            color: #2D3748; /* 內層為黑色 */
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); /* 輕微陰影讓文字更突出 */
+            color: #2D3748;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
         }
-        /* 針對深色模式調整文字顏色 */
         .dark .text-stroke-dark {
-            color: #E2E8F0; /* 深色模式下內層為淺灰色 */
-            -webkit-text-stroke-color: #2D3748; /* 深色模式外框改為深色 */
+            color: #E2E8F0;
+            -webkit-text-stroke-color: #2D3748;
         }
 
-        /* SPEDMIX 文字效果：藍綠色加白框 */
         .text-stroke {
-            color: #38A3A5; /* 內層藍綠色 */
-            -webkit-text-stroke-width: 0.5px; /* 白色外圈粗細 */
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); /* 輕微陰影讓文字更突出 */
+            color: #38A3A5;
+            -webkit-text-stroke-width: 0.5px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
         }
-        /* 針對深色模式調整文字顏色 */
         .dark .text-stroke {
-            color: #80CBC4; /* 深色模式下內層為淺藍綠 */
-            -webkit-text-stroke-color: #2D3748; /* 深色模式外框改為深色 */
+            color: #80CBC4;
+            -webkit-text-stroke-color: #2D3748;
         }
 
-        /* 統一科目按鈕和返回按鈕的樣式 */
         .gradient-button {
             position: relative;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
@@ -225,11 +222,11 @@
                         <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">國語文工具</h2>
                         <p class="mb-6">提供文本簡化、朗讀輔助等國語文教學工具。</p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                            <a href="teacher/chinesereading.html" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                            <a href="teacher/chinesereading.html" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'chinese-sentence_reading')">
                                 <h3 class="font-bold text-primary dark:text-accent-dark text-lg">文章逐句朗讀</h3>
                                 <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">將長篇文章轉位逐句顯示，並提供朗讀，輔助閱讀理解。</p>
                             </a>
-                            <a href="https://gemini.google.com/share/e60b11e0ff7e" target="_blank" rel="noopener noreferrer" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                            <a href="https://gemini.google.com/share/e60b11e0ff7e" target="_blank" rel="noopener noreferrer" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'chinese-text_simplification')">
                                 <h3 class="font-bold text-primary dark:text-accent-dark text-lg">課文簡化系統</h3>
                                 <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">利用 AI 簡化複雜課文，一鍵生成摘要、漫畫、測驗，使學生更易理解。</p>
                             </a>
@@ -246,7 +243,7 @@
                         <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">數學工具</h2>
                         <p class="mb-6">包含互動式教具、視覺化概念等數學輔助工具。</p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                            <a href="https://g.co/gemini/share/ce02a1d69a3c" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                            <a href="https://g.co/gemini/share/ce02a1d69a3c" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'math-number_simplifier')">
                                 <h3 class="font-bold text-primary dark:text-accent-dark text-lg">題目數字簡化小幫手</h3>
                                 <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">貼上題目，即可產生簡化後的相同題型數題</p>
                             </a>
@@ -263,19 +260,19 @@
                         <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">英語文工具</h2>
                         <p class="mb-6">提供中英文發音以及朗讀練習的數位學習單等備課工具。</p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                            <a href="https://g.co/gemini/share/9d9f4d4c25ac" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                            <a href="https://g.co/gemini/share/9d9f4d4c25ac" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'english-listen_sentence_by_sentence')">
                                 <h3 class="font-bold text-primary dark:text-accent-dark text-lg">逐句聽</h3>
                                 <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">將長篇文章改為逐句呈現，並提供翻譯及中英文發音</p>
                             </a>
-                            <a href="https://g.co/gemini/share/81fa3194197f" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                            <a href="https://g.co/gemini/share/81fa3194197f" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'english-listen_and_speak')">
                                 <h3 class="font-bold text-primary dark:text-accent-dark text-lg">逐句聽與唸</h3>
                                 <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">有AI朗讀評分機制，並逐句呈現，並提供翻譯及中英文發音</p>
                             </a>
-                            <a href="https://g.co/gemini/share/7aa4f2a738e6" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                            <a href="https://g.co/gemini/share/7aa4f2a738e6" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'english-sentence_ordering_maker')">
                                 <h3 class="font-bold text-primary dark:text-accent-dark text-lg">句型排列製作</h3>
                                 <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">將手寫句子改為句型排列，降低書寫負荷，並提供即時發音。</p>
                             </a>
-                            <a href="https://gemini.google.com/share/b078fc29dd6e" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                            <a href="https://gemini.google.com/share/b078fc29dd6e" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'english-interactive_mcq_maker')">
                                 <h3 class="font-bold text-primary dark:text-accent-dark text-lg">互動式選擇題製作</h3>
                                 <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">提供學生即時翻譯、英文發音、提示及檢核答案功能。</p>
                             </a>
@@ -292,7 +289,7 @@
                         <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">融合教育</h2>
                         <p class="mb-6">彙整特教新知、法規與教學策略等專業資源。</p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                            <a href="teacher/learningdisability.html" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                            <a href="teacher/learningdisability.html" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'advocacy-ld_experience')">
                                 <h3 class="font-bold text-primary dark:text-accent-dark text-lg">學障體驗</h3>
                                 <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">模擬閱讀障礙者的視覺感受，提升同理心與教學調整意識。</p>
                             </a>
@@ -309,11 +306,11 @@
                         <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">行政工具</h2>
                         <p class="mb-6">運用 AI 技術生成教材、簡化文本，提升行政效率。</p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                            <a href="https://gemini.google.com/share/382386583155" target="_blank" rel="noopener noreferrer" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                            <a href="https://gemini.google.com/share/52c4c5f761a7" target="_blank" rel="noopener noreferrer" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'iep_generator-start')">
                                 <h3 class="font-bold text-primary dark:text-accent-dark text-lg">IEP 目標產生</h3>
                                 <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">根據學生需求，快速生成 IEP 學期與學年目標 (僅供參考)。</p>
                             </a>
-                                <a href="https://gemini.google.com/share/a9b5b397a802" target="_blank" rel="noopener noreferrer" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                                <a href="https://gemini.google.com/share/a9b5b397a802" target="_blank" rel="noopener noreferrer" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'ai_tools-behavior_intervention')">
                                 <h3 class="font-bold text-primary dark:text-accent-dark text-lg">行為功能介入</h3>
                                 <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">輸入行為事件，一鍵分析ABC，也提供普通班教師方法。</p>
                             </a>
@@ -330,7 +327,7 @@
                         <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">社會技巧工具</h2>
                         <p class="mb-6">提供社交情境故事、情緒識別等互動練習。</p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                            <a href="https://g.co/gemini/share/448c25a01644" target="_blank" rel="noopener noreferrer" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                            <a href="https://g.co/gemini/share/448c25a01644" target="_blank" rel="noopener noreferrer" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'social_skills-emotion_image_generator')">
                                 <h3 class="font-bold text-primary dark:text-accent-dark text-lg">情緒圖片生成</h3>
                                 <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">輸入情緒詞彙，AI 生成對應的人物表情圖片，用於情緒識別教學。</p>
                             </a>
@@ -347,7 +344,7 @@
                         <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">學習策略工具</h2>
                         <p class="mb-6">包含時間管理、筆記技巧、心智圖等學習方法。</p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                            <a href="#" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                            <a href="#" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'learning_strategies-mind_map_generator')">
                                 <h3 class="font-bold text-primary dark:text-accent-dark text-lg">心智圖產生器</h3>
                                 <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">輸入主題，AI 自動生成心智圖，幫助整理思緒。</p>
                             </a>
@@ -364,11 +361,11 @@
                         <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">其它工具</h2>
                         <p class="mb-6">其他常用工具</p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                            <a href="https://www.notion.so/spedmix2025/AI-2744c52ff8d08022b1e3c3a7577d7312?source=copy_link" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                            <a href="https://www.notion.so/spedmix2025/AI-2744c52ff8d08022b1e3c3a7577d7312?source=copy_link" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'other-visual_flowchart')">
                                 <h3 class="font-bold text-primary dark:text-accent-dark text-lg">視覺化流程圖</h3>
                                 <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">建立步驟化的視覺提示，引導學生完成任務。</p>
                             </a>
-                            <a href="https://gemini.google.com/share/b32ef7e41b73" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                            <a href="https://gemini.google.com/share/b32ef7e41b73" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'other-sticker_generator')">
                                 <h3 class="font-bold text-primary dark:text-accent-dark text-lg">一鍵生貼圖</h3>
                                 <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">上傳照片並選擇想要的風格和表情，一鍵產出貼圖。</p>
                             </a>
@@ -384,6 +381,8 @@
             <p>&copy; 2025 SPEDMIX.</p>
         </div>
     </footer>
+
+    <script src="tracking.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -554,9 +553,12 @@
             };
             desktopNav.addEventListener('click', handleNavClick);
             mobileMenu.addEventListener('click', handleNavClick);
+
             subjectNavContainer.addEventListener('click', (e) => { 
                 const button = e.target.closest('.gradient-button'); 
-                if (button) showSection(button.dataset.subjectId); 
+                if (button) {
+                    showSection(button.dataset.subjectId); 
+                }
             });
             
             sectionsContainer.addEventListener('click', (e) => {
