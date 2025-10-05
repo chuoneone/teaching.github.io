@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WMNZ6FESH7"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-WMNZ6FESH7');
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>7下數學</title>
@@ -18,7 +10,16 @@
     <link rel="icon" href="images/dog.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
-</head>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5BBHYN77N9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-5BBHYN77N9');
+    </script>
+    </head>
 
  
 <body>
@@ -26,16 +27,9 @@
         <div class="logo">SPED</div>
         <nav>
             <ul class="nav-links">
-                <li><a href="start.html">HOME</a></li>
-		        <li><a href="tt.html">情緒紀錄</a></li>
-                <li><a href="7.html">7數</a></li>
-                <li><a href="8.html">8數</a></li>
-                <li><a href="9.html">9數</a></li>
-                <li><a href="7eng.html">7英</a></li>
-                <li><a href="8eng.html">8英</a></li>
-                <li><a href="9eng.html">9英</a></li>
-                <li><a href="7ch.html">7國</a></li>
-                <li><a href="8ch.html">8國</a></li>
+                <li><a href="start.html" onclick="trackEvent('button_click', 'navbar_link', 'nav-home')">HOME</a></li>
+                <li><a href="tt.html" onclick="trackEvent('button_click', 'navbar_link', 'nav-emotion_log')">情緒紀錄</a></li>
+                <li><a href="7.html" onclick="trackEvent('button_click', 'navbar_link', 'nav-g7_math')">7數</a></li>
                 <li><a href="9ch.html">9國</a></li>
                 <li><a href="bigtest.html">會考專區</a></li>
                 <li><a href="learningstrategy.html">學習策略</a></li>                
@@ -53,11 +47,11 @@
 
     <div style="text-align:center; margin-top: 40px;">
         <div class="button-container">
-            <button class="section-button" onclick="showSection('chapter1', this)">第1章 </button>
-            <button class="section-button" onclick="showSection('chapter2', this)">第2章 </button>
-            <button class="section-button" onclick="showSection('chapter3', this)">第3章 </button>
-            <button class="section-button" onclick="showSection('chapter4', this)">第4章 </button>   
-            <a href="7.html" class="section-button">7上</a>
+            <button class="section-button" onclick="showSection('chapter1', this); trackEvent('button_click', 'chapter_select', 'g7-math-s2-ch1')">第1章 </button>
+            <button class="section-button" onclick="showSection('chapter2', this); trackEvent('button_click', 'chapter_select', 'g7-math-s2-ch2')">第2章 </button>
+            <button class="section-button" onclick="showSection('chapter3', this); trackEvent('button_click', 'chapter_select', 'g7-math-s2-ch3')">第3章 </button>
+            <button class="section-button" onclick="showSection('chapter4', this); trackEvent('button_click', 'chapter_select', 'g7-math-s2-ch4')">第4章 </button>   
+            <a href="7.html" class="section-button" onclick="trackEvent('button_click', 'semester_toggle', 'g7-math-s2-to-s1')">7上</a>
         </div>
     </div>
 
@@ -72,19 +66,19 @@
                 <div class="social-group">
                     <h3 style="text-align: center;">挑戰區</h3>
                     <div class="btn-group">
-                        <a href="https://wordwall.net/play/70607/680/874" target="_blank" class="btn">01列式</a>
-                        <a href="https://wordwall.net/play/70607/789/911" target="_blank" class="btn">02代入求值</a>
-                        <a href="https://wordwall.net/play/71329/146/264" target="_blank" class="btn">03合併同類項</a>
-                        <a href="https://wordwall.net/play/71329/146/264" target="_blank" class="btn">04去括號</a>
-                        <a href="https://wordwall.net/play/71329/146/264" target="_blank" class="btn">05列二元一次</a>
+                        <a href="https://wordwall.net/play/70607/680/874" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s2-ch1-challenge-formulation')">01列式</a>
+                        <a href="https://wordwall.net/play/70607/789/911" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s2-ch1-challenge-substitution')">02代入求值</a>
+                        <a href="https://wordwall.net/play/71329/146/264" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s2-ch1-challenge-combine_like_terms')">03合併同類項</a>
+                        <a href="https://wordwall.net/play/71329/146/264" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s2-ch1-challenge-remove_parentheses')">04去括號</a>
+                        <a href="https://wordwall.net/play/71329/146/264" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s2-ch1-challenge-formulate_two_variables')">05列二元一次</a>
                     </div>
                 </div>
                 <div class="social-group">
                     <h3 style="text-align: center;">影片區</h3>
                     <div class="btn-group">
-                        <a href="https://mathvideo.hle.com.tw/1B/1-1/" target="_blank" class="btn">1-1二元一次方程式</a>
-                        <a href="https://mathvideo.hle.com.tw/1B/1-2/" target="_blank" class="btn">1-2解二元一次</a>
-                        <a href="https://mathvideo.hle.com.tw/1B/1-3/" target="_blank" class="btn">1-3應用問題</a>
+                        <a href="https://mathvideo.hle.com.tw/1B/1-1/" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s2-ch1-video-1_1-two_var_equations')">1-1二元一次方程式</a>
+                        <a href="https://mathvideo.hle.com.tw/1B/1-2/" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s2-ch1-video-1_2-solve_two_var')">1-2解二元一次</a>
+                        <a href="https://mathvideo.hle.com.tw/1B/1-3/" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s2-ch1-video-1_3-application')">1-3應用問題</a>
                     </div>
                 </div>
             </div>
@@ -97,82 +91,23 @@
                 <div class="social-group">
                    <h3 style="text-align: center;">學習區</h3>
                     <div class="btn-group">
-                        <a href="https://chuone.my.canva.site/2-2" target="_blank" class="btn">2-2二元一次圖形</a>
+                        <a href="https://chuone.my.canva.site/2-2" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s2-ch2-learning-2_2-graphing')">2-2二元一次圖形</a>
                     </div>
                 </div>
                 <div class="social-group">
                     <h3 style="text-align: center;">挑戰區</h3>
                     <div class="btn-group">
-                        <a href="https://wordwall.net/play/68570/946/261" target="_blank" class="btn">01認識座標</a>
-                        <a href="https://wordwall.net/play/68570/803/750" target="_blank" class="btn">02座標平面描點</a>
-                        <a href="https://wordwall.net/play/68571/291/673" target="_blank" class="btn">03座標平移</a>
-                        <a href="https://wordwall.net/play/68571/703/346" target="_blank" class="btn">04判別象限</a>
+                        <a href="https://wordwall.net/play/68570/946/261" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s2-ch2-challenge-recognize_coordinates')">01認識座標</a>
+                        <a href="https://wordwall.net/play/68570/803/750" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s2-ch2-challenge-plotting_points')">02座標平面描點</a>
+                        <a href="https://wordwall.net/play/68571/291/673" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s2-ch2-challenge-coordinate_translation')">03座標平移</a>
+                        <a href="https://wordwall.net/play/68571/703/346" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s2-ch2-challenge-identify_quadrants')">04判別象限</a>
                     </div>
                 </div>
                 <div class="social-group">
                     <h3 style="text-align: center;">影片區</h3>
                     <div class="btn-group">
-                        <a href="https://mathvideo.hle.com.tw/1B/2-1/" target="_blank" class="btn">2-1直角坐標平面</a>
-                        <a href="https://mathvideo.hle.com.tw/1B/2-2/" target="_blank" class="btn">2-2二元一次圖形</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="chapter3" class="section-content">
-        <div class="social-container">
-            <div class="single-row">
-                <div class="social-group">
-                    <h3 style="text-align: center;">學習區</h3>
-                    <div class="btn-group">
-                        <a href="https://chuone.my.canva.site/3-1" target="_blank" class="btn">3-1比例式</a>
-                        <a href="https://chuone.my.canva.site/3-2" target="_blank" class="btn">3-2正比反比</a>
-                    </div>
-                </div>
-                <div class="social-group">
-                   <h3 style="text-align: center;">挑戰區</h3>
-                    <div class="btn-group">
-                        <a href="https://wordwall.net/play/70607/680/874" target="_blank" class="btn">01相等的比</a>
-                        <a href="https://wordwall.net/play/70607/789/911" target="_blank" class="btn">02最簡整數比</a>
-                        <a href="https://wordwall.net/play/71329/146/264" target="_blank" class="btn">03內內=外外</a>
-                        <a href="https://wordwall.net/play/90646/662/164" target="_blank" class="btn">04比例式應用</a>
-                        <a href="https://chuone.my.canva.site/spedmathb2ch3-2" target="_blank" class="btn">05正反比-學習</a>
-                    </div>
-                </div>
-                <div class="social-group">
-                    <h3 style="text-align: center;">影片區</h3>
-                    <div class="btn-group">
-                        <a href="https://mathvideo.hle.com.tw/1B/3-1/" target="_blank" class="btn">3-1比例式</a>
-                        <a href="https://mathvideo.hle.com.tw/1B/3-2/" target="_blank" class="btn">3-2正比反比</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="chapter4" class="section-content">
-        <div class="social-container">
-            <div class="single-row">
-                <div class="social-group">                          
-                   <h3 style="text-align: center;">學習區</h3>
-                    <div class="btn-group">
-                        <a href="math/7-02-4-1.html" target="_blank" class="btn">4-1不等式</a>
-                        <a href="https://chuone.my.canva.site/7-2-4-2-learning" target="_blank" class="btn">4-2解不等式</a>
-                    </div>
-                </div>
-                <div class="social-group">
-                    <h3 style="text-align: center;">挑戰區</h3>
-                    <div class="btn-group">
-                        <a href="https://chuone.my.canva.site/7-2-4-1" target="_blank" class="btn">4-1不等式</a>
-                        <a href="https://chuone.my.canva.site/7-2-4-2" target="_blank" class="btn">4-2解不等式</a>
-                    </div>
-                </div>
-                <div class="social-group">                          
-                    <h3 style="text-align: center;">影片區</h3>
-                    <div class="btn-group">
-                        <a href="https://mathvideo.hle.com.tw/1B/4-1/" target="_blank" class="btn">4-1不等式</a>
-                        <a href="https://mathvideo.hle.com.tw/1B/4-2/" target="_blank" class="btn">4-2解不等式</a>
+                        <a href="https://mathvideo.hle.com.tw/1B/2-1/" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s2-ch2-video-2_1-coordinate_plane')">2-1直角坐標平面</a>
+                        <a href="https://mathvideo.hle.com.tw/1B/2-2/" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s2-ch2-video-2_2-graphing')">2-2二元一次圖形</a>
                     </div>
                 </div>
             </div>
@@ -180,6 +115,8 @@
     </div>
 
     <script src="main.js"></script>
+
+    <script src="tracking.js"></script>
 
 </body>
 </html>
