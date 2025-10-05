@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WMNZ6FESH7"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-WMNZ6FESH7');
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>第二課 曲選</title>
@@ -18,26 +10,35 @@
     <link rel="icon" href="images/dog.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5BBHYN77N9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-5BBHYN77N9');
+    </script>
 </head>
 <body>
-    <!-- 頂部導覽列 -->
     <header class="navbar">
         <div class="logo">SPED</div>
         <nav>
             <ul class="nav-links">
-                <li><a href="start.html">HOME</a></li>
-		        <li><a href="tt.html">情緒紀錄</a></li>
-                <li><a href="7.html">7數</a></li>
-                <li><a href="8.html">8數</a></li>
-                <li><a href="9.html">9數</a></li>
-                <li><a href="7eng.html">7英</a></li>
-                <li><a href="8eng.html">8英</a></li>
-                <li><a href="9eng.html">9英</a></li>
-                <li><a href="7ch.html">7國</a></li>
-                <li><a href="8ch.html">8國</a></li>
-                <li><a href="9ch.html">9國</a></li>
-                <li><a href="bigtest.html">會考專區</a></li>
-                <li><a href="learningstrategy.html">學習策略</a></li>                
+                <li><a href="start.html" onclick="trackEvent('button_click', 'navbar_link', 'home')">HOME</a></li>
+                <li><a href="tt.html" onclick="trackEvent('button_click', 'navbar_link', 'emotion_log')">情緒紀錄</a></li>
+                <li><a href="7.html" onclick="trackEvent('button_click', 'subject_nav', 'g7-math')">7數</a></li>
+                <li><a href="8.html" onclick="trackEvent('button_click', 'subject_nav', 'g8-math')">8數</a></li>
+                <li><a href="9.html" onclick="trackEvent('button_click', 'subject_nav', 'g9-math')">9數</a></li>
+                <li><a href="7eng.html" onclick="trackEvent('button_click', 'subject_nav', 'g7-english')">7英</a></li>
+                <li><a href="8eng.html" onclick="trackEvent('button_click', 'subject_nav', 'g8-english')">8英</a></li>
+                <li><a href="9eng.html" onclick="trackEvent('button_click', 'subject_nav', 'g9-english')">9英</a></li>
+                <li><a href="7ch.html" onclick="trackEvent('button_click', 'subject_nav', 'g7-chinese')">7國</a></li>
+                <li><a href="8ch.html" onclick="trackEvent('button_click', 'subject_nav', 'g8-chinese')">8國</a></li>
+                <li><a href="9ch.html" onclick="trackEvent('button_click', 'subject_nav', 'g9-chinese')">9國</a></li>
+                <li><a href="bigtest.html" onclick="trackEvent('button_click', 'category_nav', 'exam_prep')">會考專區</a></li>
+                <li><a href="learningstrategy.html" onclick="trackEvent('button_click', 'category_nav', 'learning_strategy')">學習策略</a></li>
+                <li><a href="socialskill.html" onclick="trackEvent('button_click', 'category_nav', 'social_skills')">社會技巧</a></li>
             </ul>
         </nav>
         <div class="menu-toggle" onclick="toggleMenu()">
@@ -47,94 +48,50 @@
 
     <div class="intro-text">第二課曲選</div>
 
-    <!-- 第一排：識字區 -->
-    <div class="section-title">一、識字區</div>
-    <p style="text-align:center; font-size: 1rem; color:#aaa;">請依照步驟，先完成左邊的遊戲，再進行右邊練習</p>
-
-    <div class="iframe-container" style="align-items: center;">
-        <div class="iframe-box">
-            <div class="step-label">步驟1 圖片識字</div>
-            <iframe style="max-width:100%" src="https://wordwall.net/tc/embed/0808d02a962d456d8a458c7d82d65dce?themeId=64&templateId=76&fontStackId=12" width="100%" height="380" frameborder="0" allowfullscreen></iframe>
-        </div>
-
-        <div style="font-size: 2rem; color: #0ff; text-shadow: 0 0 5px #0ff;">➡️</div>
-
-        <div class="iframe-box">
-            <div class="step-label">步驟2 部件識字</div>
-            <iframe style="max-width:100%" src="https://wordwall.net/tc/embed/175061e5c9a8443a9ec2bb60c58acd8f?themeId=64&templateId=76&fontStackId=0" width="100%" height="380" frameborder="0" allowfullscreen></iframe>
-        </div>
+    <div class="section-title">四、大展身手</div>
+    <div class="single-row">
+        <a href="https://chuone.my.canva.site/9ch2q0" target="_blank" class="image-button" onclick="trackEvent('button_click', 'resource_link', 'g9-ch-s1-ch2-translation')">
+            <img src="images/trans.jpg" alt="01注釋背景">
+            <span class="overlay-text">古今對譯</span>
+        </a>
+        <a href="9ch2test1.html" target="_blank" class="image-button" onclick="trackEvent('button_click', 'resource_link', 'g9-ch-s1-ch2-test_start')">
+            <img src="images/start.png" alt="01注釋背景">
+            <span class="overlay-text">啟程題</span>
+        </a>
+        <a href="https://chuone.my.canva.site/9ch2q2" target="_blank" class="image-button" onclick="trackEvent('button_click', 'resource_link', 'g9-ch-s1-ch2-test_explore')">
+            <img src="images/medium.jpg" alt="01注釋背景">
+            <span class="overlay-text">探索題</span>
+        </a>
+        <a href="https://chuone.my.canva.site/9ch2q3" target="_blank" class="image-button" onclick="trackEvent('button_click', 'resource_link', 'g9-ch-s1-ch2-test_advanced')">
+            <img src="images/difficult.jpg" alt="01注釋背景">
+            <span class="overlay-text">飛躍題</span>
+        </a>
     </div>
 
-    <!-- 第二排：單字卡 -->
-    <div class="section-title">二、看圖學古文</div>
-    <div class="iframe-container">
-        <div class="iframe-box" style="width: 50%;">
-            <iframe src="https://wordwall.net/tc/embed/c1580bf4d8af4174b768716ef5e2f550?themeId=62&templateId=76&fontStackId=12"
-                    style="border:0; width:100%; height:400px;" frameborder="0" allowfullscreen></iframe>
-        </div>
+    <div class="section-title">四、大展身手-報讀版</div>
+    <div class="single-row">
+        <a href="https://wordwall.net/tc/embed/12e5ff9bc5804fd695db2715e67d6158?themeId=22&templateId=5&fontStackId=0" target="_blank" class="image-button" onclick="trackEvent('button_click', 'resource_link', 'g9-ch-s1-ch2-test_start_narrated')">
+            <img src="images/start.png" alt="01注釋背景">
+            <span class="overlay-text">啟程題</span>
+        </a>
+        <a href="https://wordwall.net/tc/embed/47cf4e43b6c54f81a185790848c5d923?themeId=22&templateId=5&fontStackId=0" target="_blank" class="image-button" onclick="trackEvent('button_click', 'resource_link', 'g9-ch-s1-ch2-test_explore_narrated')">
+            <img src="images/medium.jpg" alt="01注釋背景">
+            <span class="overlay-text">探索題</span>
+        </a>
+        <a href="https://wordwall.net/tc/embed/ec78c4207806414c84cff53dc1afeed2?themeId=22&templateId=5&fontStackId=0" target="_blank" class="image-button" onclick="trackEvent('button_click', 'resource_link', 'g9-ch-s1-ch2-test_advanced_narrated')">
+            <img src="images/difficult.jpg" alt="01注釋背景">
+            <span class="overlay-text">飛躍題</span>
+        </a>
     </div>
 
-    <!-- 第三排：選擇題 -->
-    <div class="section-title">三、看圖選文</div>
-    <div class="iframe-container">
-        <div class="iframe-box" style="width: 50%;">
-            <iframe src="https://wordwall.net/tc/embed/8faa4a3b0de2459383faab44b2c22cb2?themeId=62&templateId=5&fontStackId=12"
-                    style="border:0; width:100%; height:400px;" frameborder="0" allowfullscreen></iframe>
-        </div>
-    </div>
+    <script>
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('active');
+        }
+    </script>
 
-        <!-- 第四排：按鈕 -->
-        <div class="section-title">四、大展身手</div>
-        <div class="single-row">
-
-            <a href="https://chuone.my.canva.site/9ch2q0" target="_blank" class="image-button">
-                <img src="images/trans.jpg" alt="01注釋背景">
-                <span class="overlay-text">古今對譯</span>
-            </a>
-
-            <a href="9ch2test1.html" target="_blank" class="image-button">
-                <img src="images/start.png" alt="01注釋背景">
-                <span class="overlay-text">啟程題</span>
-            </a>
-
-            <a href="https://chuone.my.canva.site/9ch2q2" target="_blank" class="image-button">
-                <img src="images/medium.jpg" alt="01注釋背景">
-                <span class="overlay-text">探索題</span>
-            </a>
-
-            <a href="https://chuone.my.canva.site/9ch2q3" target="_blank" class="image-button">
-                <img src="images/difficult.jpg" alt="01注釋背景">
-                <span class="overlay-text">飛躍題</span>
-            </a>
-        </div>
-
-        <!-- 第五排：按鈕 -->
-        <div class="section-title">四、大展身手-報讀版</div>
-        <div class="single-row">
-
-            <a href="https://wordwall.net/tc/embed/12e5ff9bc5804fd695db2715e67d6158?themeId=22&templateId=5&fontStackId=0" target="_blank" class="image-button">
-                <img src="images/start.png" alt="01注釋背景">
-                <span class="overlay-text">啟程題</span>
-            </a>
-
-            <a href="https://wordwall.net/tc/embed/47cf4e43b6c54f81a185790848c5d923?themeId=22&templateId=5&fontStackId=0" target="_blank" class="image-button">
-                <img src="images/medium.jpg" alt="01注釋背景">
-                <span class="overlay-text">探索題</span>
-            </a>
-
-            <a href="https://wordwall.net/tc/embed/ec78c4207806414c84cff53dc1afeed2?themeId=22&templateId=5&fontStackId=0" target="_blank" class="image-button">
-                <img src="images/difficult.jpg" alt="01注釋背景">
-                <span class="overlay-text">飛躍題</span>
-            </a>
-        </div>
-
-
-        <script>
-            function toggleMenu() {
-                const navLinks = document.querySelector('.nav-links');
-                navLinks.classList.toggle('active');
-            }
-        </script>
+    <script src="tracking.js"></script>
 </body>
 </html>
 <footer>
@@ -144,4 +101,3 @@
     <br>
     <p style="display: inline;">Created by Chu Pei Yi</p>
 </footer>
-

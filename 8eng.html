@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WMNZ6FESH7"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-WMNZ6FESH7');
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>8年級英文</title>
@@ -18,26 +10,35 @@
     <link rel="icon" href="images/dog.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5BBHYN77N9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-5BBHYN77N9');
+    </script>
 </head>
 <body>
-    <!-- 頂部導覽列 -->
     <header class="navbar">
         <div class="logo">SPED</div>
         <nav>
             <ul class="nav-links">
-                <li><a href="start.html">HOME</a></li>
-		        <li><a href="tt.html">情緒紀錄</a></li>
-                <li><a href="7.html">7數</a></li>
-                <li><a href="8.html">8數</a></li>
-                <li><a href="9.html">9數</a></li>
-                <li><a href="7eng.html">7英</a></li>
-                <li><a href="8eng.html">8英</a></li>
-                <li><a href="9eng.html">9英</a></li>
-                <li><a href="7ch.html">7國</a></li>
-                <li><a href="8ch.html">8國</a></li>
-                <li><a href="9ch.html">9國</a></li>
-                <li><a href="bigtest.html">會考專區</a></li>
-                <li><a href="learningstrategy.html">學習策略</a></li>                
+                <li><a href="start.html" onclick="trackEvent('button_click', 'navbar_link', 'home')">HOME</a></li>
+                <li><a href="tt.html" onclick="trackEvent('button_click', 'navbar_link', 'emotion_log')">情緒紀錄</a></li>
+                <li><a href="7.html" onclick="trackEvent('button_click', 'subject_nav', 'g7-math')">7數</a></li>
+                <li><a href="8.html" onclick="trackEvent('button_click', 'subject_nav', 'g8-math')">8數</a></li>
+                <li><a href="9.html" onclick="trackEvent('button_click', 'subject_nav', 'g9-math')">9數</a></li>
+                <li><a href="7eng.html" onclick="trackEvent('button_click', 'subject_nav', 'g7-english')">7英</a></li>
+                <li><a href="8eng.html" onclick="trackEvent('button_click', 'subject_nav', 'g8-english')">8英</a></li>
+                <li><a href="9eng.html" onclick="trackEvent('button_click', 'subject_nav', 'g9-english')">9英</a></li>
+                <li><a href="7ch.html" onclick="trackEvent('button_click', 'subject_nav', 'g7-chinese')">7國</a></li>
+                <li><a href="8ch.html" onclick="trackEvent('button_click', 'subject_nav', 'g8-chinese')">8國</a></li>
+                <li><a href="9ch.html" onclick="trackEvent('button_click', 'subject_nav', 'g9-chinese')">9國</a></li>
+                <li><a href="bigtest.html" onclick="trackEvent('button_click', 'category_nav', 'exam_prep')">會考專區</a></li>
+                <li><a href="learningstrategy.html" onclick="trackEvent('button_click', 'category_nav', 'learning_strategy')">學習策略</a></li>
+                <li><a href="socialskill.html" onclick="trackEvent('button_click', 'category_nav', 'social_skills')">社會技巧</a></li>
             </ul>
         </nav>
         <div class="menu-toggle" onclick="toggleMenu()">
@@ -45,88 +46,21 @@
         </div>
     </header>
 
-    <!-- ==================== 8上英文 區塊 ==================== -->
     <div class="semester-block">
         <div class="section-title text-lg font-bold">
             <i class="fas fa-book-open mr-2"></i> 8上英文
         </div>
 
         <div style="text-align:center; margin-top: 40px;">
-            <button class="section-button" onclick="showSection('section1', this)">1. 單字區</button>
-            <button class="section-button" onclick="showSection('section2', this)">2. 文法區</button>
+            <button class="section-button" onclick="showSection('section1', this); trackEvent('button_click', 'category_select', 'g8-eng-s1-vocab')">1. 單字區</button>
+            <button class="section-button" onclick="showSection('section2', this); trackEvent('button_click', 'category_select', 'g8-eng-s1-grammar')">2. 文法區</button>
         </div>
         
-        <!-- 8上 單字區 -->
         <div id="section1" class="section-content active-section">   
-            <div class="social-container">
-                <!-- 第一排 -->
-                <div class="single-row">
-                    <div class="social-group">
-                        <h3 style="text-align: center;">Unit 1 單字</h3>
-                        <div class="btn-group"><!-- <a href="#" target="_blank" class="btn">練習</a> --></div>
-                    </div>
-                    <div class="social-group">
-                       <h3 style="text-align: center;">Unit 2 單字</h3>
-                        <div class="btn-group"><!-- <a href="#" target="_blank" class="btn">練習</a> --></div>
-                    </div>
-                    <div class="social-group">
-                        <h3 style="text-align: center;">Unit 3 單字</h3>
-                         <div class="btn-group"><!-- <a href="#" target="_blank" class="btn">練習</a> --></div>
-                     </div>
-                </div>
-                <!-- 第二排 -->
-                <div class="single-row">
-                    <div class="social-group">
-                        <h3 style="text-align: center;">Unit 4 單字</h3>
-                        <div class="btn-group"><!-- <a href="#" target="_blank" class="btn">練習</a> --></div>
-                    </div>
-                    <div class="social-group">
-                       <h3 style="text-align: center;">Unit 5 單字</h3>
-                        <div class="btn-group"><!-- <a href="#" target="_blank" class="btn">練習</a> --></div>
-                    </div>
-                    <div class="social-group">
-                        <h3 style="text-align: center;">Unit 6 單字</h3>
-                         <div class="btn-group"><!-- <a href="#" target="_blank" class="btn">練習</a> --></div>
-                     </div>
-                </div>
             </div>
-        </div>
         
-        <!-- 8上 文法區 -->
         <div id="section2" class="section-content">     
-            <div class="social-container">
-                 <!-- 第一排 -->
-                 <div class="single-row">
-                    <div class="social-group">
-                        <h3 style="text-align: center;">Unit 1 文法</h3>
-                        <div class="btn-group"><!-- <a href="#" target="_blank" class="btn">練習</a> --></div>
-                    </div>
-                    <div class="social-group">
-                       <h3 style="text-align: center;">Unit 2 文法</h3>
-                        <div class="btn-group"><!-- <a href="#" target="_blank" class="btn">練習</a> --></div>
-                    </div>
-                    <div class="social-group">
-                        <h3 style="text-align: center;">Unit 3 文法</h3>
-                         <div class="btn-group"><!-- <a href="#" target="_blank" class="btn">練習</a> --></div>
-                     </div>
-                </div>
-                <!-- 第二排 -->
-                <div class="single-row">
-                    <div class="social-group">
-                        <h3 style="text-align: center;">Unit 4 文法</h3>
-                        <div class="btn-group"><!-- <a href="#" target="_blank" class="btn">練習</a> --></div>
-                    </div>
-                    <div class="social-group">
-                       <h3 style="text-align: center;">Unit 5 文法</h3>
-                        <div class="btn-group"><!-- <a href="#" target="_blank" class="btn">練習</a> --></div>
-                    </div>
-                    <div class="social-group">
-                        <h3 style="text-align: center;">Unit 6 文法</h3>
-                         <div class="btn-group"><!-- <a href="#" target="_blank" class="btn">練習</a> --></div>
-                     </div>
-                </div>
             </div>
-        </div>
     </div>
 
     <div style="text-align: center; margin-bottom: 20px; margin-top: 10px;">
@@ -135,119 +69,90 @@
         </a>
     </div>
 
-    <!-- ==================== 8下英文 區塊 ==================== -->
     <div class="semester-block">
         <div class="section-title text-lg font-bold" style="margin-top: 350px;">
             <i class="fas fa-feather-alt mr-2"></i> 8下英文
         </div>
 
         <div style="text-align:center; margin-top: 40px;">
-            <button class="section-button" onclick="showSection('section3', this)">1. 單字區</button>
-            <button class="section-button" onclick="showSection('section4', this)">2. 文法區</button>
+            <button class="section-button" onclick="showSection('section3', this); trackEvent('button_click', 'category_select', 'g8-eng-s2-vocab')">1. 單字區</button>
+            <button class="section-button" onclick="showSection('section4', this); trackEvent('button_click', 'category_select', 'g8-eng-s2-grammar')">2. 文法區</button>
         </div>
         
-        <!-- 8下 單字區 -->
         <div id="section3" class="section-content active-section">
             <div class="social-container">
-                <!-- 第一排 -->
                 <div class="single-row">
                     <div class="social-group">
                         <img src="images/unit1.png" alt="Unit 1" style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
                         <div class="btn-group">
-                            <a href="https://wordwall.net/play/86876/476/973" target="_blank" class="btn">U1練習</a>
+                            <a href="https://wordwall.net/play/86876/476/973" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g8-eng-s2-vocab-u1')">U1練習</a>
                         </div>
                     </div>
                     <div class="social-group">
                         <img src="images/unit2.png" alt="Unit 2" style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
                         <div class="btn-group">
-                            <a href="https://wordwall.net/play/87823/419/406" target="_blank" class="btn">U2練習</a>
+                            <a href="https://wordwall.net/play/87823/419/406" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g8-eng-s2-vocab-u2')">U2練習</a>
                         </div>
                     </div>
                     <div class="social-group">
                         <img src="images/unit3.png" alt="Unit 3" style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
                         <div class="btn-group">
-                            <a href="https://wordwall.net/play/90042/351/778" target="_blank" class="btn">U3練習</a>
+                            <a href="https://wordwall.net/play/90042/351/778" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g8-eng-s2-vocab-u3')">U3練習</a>
                         </div>
                     </div>
                 </div>
-                <!-- 第二排 -->
                 <div class="single-row">
                     <div class="social-group">
                         <img src="images/unit4.png" alt="Unit 4" style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
                         <div class="btn-group">
-                            <a href="https://wordwall.net/play/70607/680/874" target="_blank" class="btn">U4練習</a>
+                            <a href="https://wordwall.net/play/70607/680/874" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g8-eng-s2-vocab-u4')">U4練習</a>
                         </div>
                     </div>
-                    <div class="social-group">
-                        <h3 style="text-align: center;">Unit 5 單字</h3>
-                        <div class="btn-group">
-                            <!-- <a href="#" target="_blank" class="btn">U5練習</a> -->
-                        </div>
                     </div>
-                    <div class="social-group">
-                        <h3 style="text-align: center;">Unit 6 單字</h3>
-                        <div class="btn-group">
-                            <!-- <a href="#" target="_blank" class="btn">U6練習</a> -->
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
-        <!-- 8下 文法區 -->
         <div id="section4" class="section-content">
             <div class="social-container">
-                <!-- 第一排 -->
                 <div class="single-row">
                     <div class="social-group">
                         <img src="images/unit1.png" alt="Unit 1" style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
                         <div class="btn-group">
-                            <a href="https://wordwall.net/play/86933/949/988" target="_blank" class="btn">練習1</a>
-                            <a href="https://wordwall.net/play/87390/353/808" target="_blank" class="btn">練習2</a>
+                            <a href="https://wordwall.net/play/86933/949/988" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g8-eng-s2-grammar-u1_practice1')">練習1</a>
+                            <a href="https://wordwall.net/play/87390/353/808" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g8-eng-s2-grammar-u1_practice2')">練習2</a>
                         </div>
                     </div>
                     <div class="social-group">
                         <img src="images/unit2.png" alt="Unit 2" style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
                         <div class="btn-group">
-                            <a href="https://wordwall.net/play/87824/366/470" target="_blank" class="btn">練習1</a>
-                            <a href="https://wordwall.net/play/87975/771/422" target="_blank" class="btn">練習2</a>
+                            <a href="https://wordwall.net/play/87824/366/470" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g8-eng-s2-grammar-u2_practice1')">練習1</a>
+                            <a href="https://wordwall.net/play/87975/771/422" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g8-eng-s2-grammar-u2_practice2')">練習2</a>
                         </div>
                     </div>
                     <div class="social-group">
                         <img src="images/unit3.png" alt="Unit 3" style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
                         <div class="btn-group">
-                            <a href="https://wordwall.net/play/90042/101/587" target="_blank" class="btn">練習1</a>
-                            <a href="https://wordwall.net/play/90197/407/246" target="_blank" class="btn">練習2</a>
+                            <a href="https://wordwall.net/play/90042/101/587" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g8-eng-s2-grammar-u3_practice1')">練習1</a>
+                            <a href="https://wordwall.net/play/90197/407/246" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g8-eng-s2-grammar-u3_practice2')">練習2</a>
                         </div>
                     </div>
                 </div>
-                <!-- 第二排 -->
                 <div class="single-row">
                     <div class="social-group">
                         <img src="images/unit4.png" alt="Unit 4" style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
                         <div class="btn-group">
-                            <a href="https://wordwall.net/play/71329/146/264" target="_blank" class="btn">練習1</a>
-                            <a href="https://wordwall.net/play/90197/407/246" target="_blank" class="btn">練習2</a>
+                            <a href="https://wordwall.net/play/71329/146/264" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g8-eng-s2-grammar-u4_practice1')">練習1</a>
+                            <a href="https://wordwall.net/play/90197/407/246" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g8-eng-s2-grammar-u4_practice2')">練習2</a>
                         </div>
                     </div>
-                    <div class="social-group">
-                        <h3 style="text-align: center;">Unit 5 文法</h3>
-                        <div class="btn-group">
-                            <!-- <a href="#" target="_blank" class="btn">練習1</a> -->
-                        </div>
                     </div>
-                    <div class="social-group">
-                        <h3 style="text-align: center;">Unit 6 文法</h3>
-                        <div class="btn-group">
-                            <!-- <a href="#" target="_blank" class="btn">練習1</a> -->
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 
     <script src="main.js"></script>
+    
+    <script src="tracking.js"></script>
 </body>
 </html>
 <footer>

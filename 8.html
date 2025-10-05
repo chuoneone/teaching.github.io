@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WMNZ6FESH7"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-WMNZ6FESH7');
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>8年級數學</title>
@@ -18,6 +10,15 @@
     <link rel="icon" href="images/dog.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5BBHYN77N9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-5BBHYN77N9');
+    </script>
 </head>
 
 <body>
@@ -25,19 +26,20 @@
         <div class="logo">SPED</div>
         <nav>
             <ul class="nav-links">
-                <li><a href="start.html">HOME</a></li>
-		        <li><a href="tt.html">情緒紀錄</a></li>
-                <li><a href="7.html">7數</a></li>
-                <li><a href="8.html">8數</a></li>
-                <li><a href="9.html">9數</a></li>
-                <li><a href="7eng.html">7英</a></li>
-                <li><a href="8eng.html">8英</a></li>
-                <li><a href="9eng.html">9英</a></li>
-                <li><a href="7ch.html">7國</a></li>
-                <li><a href="8ch.html">8國</a></li>
-                <li><a href="9ch.html">9國</a></li>
-                <li><a href="bigtest.html">會考專區</a></li>
-                <li><a href="learningstrategy.html">學習策略</a></li>                
+                <li><a href="start.html" onclick="trackEvent('button_click', 'navbar_link', 'home')">HOME</a></li>
+                <li><a href="tt.html" onclick="trackEvent('button_click', 'navbar_link', 'emotion_log')">情緒紀錄</a></li>
+                <li><a href="7.html" onclick="trackEvent('button_click', 'subject_nav', 'g7-math')">7數</a></li>
+                <li><a href="8.html" onclick="trackEvent('button_click', 'subject_nav', 'g8-math')">8數</a></li>
+                <li><a href="9.html" onclick="trackEvent('button_click', 'subject_nav', 'g9-math')">9數</a></li>
+                <li><a href="7eng.html" onclick="trackEvent('button_click', 'subject_nav', 'g7-english')">7英</a></li>
+                <li><a href="8eng.html" onclick="trackEvent('button_click', 'subject_nav', 'g8-english')">8英</a></li>
+                <li><a href="9eng.html" onclick="trackEvent('button_click', 'subject_nav', 'g9-english')">9英</a></li>
+                <li><a href="7ch.html" onclick="trackEvent('button_click', 'subject_nav', 'g7-chinese')">7國</a></li>
+                <li><a href="8ch.html" onclick="trackEvent('button_click', 'subject_nav', 'g8-chinese')">8國</a></li>
+                <li><a href="9ch.html" onclick="trackEvent('button_click', 'subject_nav', 'g9-chinese')">9國</a></li>
+                <li><a href="bigtest.html" onclick="trackEvent('button_click', 'category_nav', 'exam_prep')">會考專區</a></li>
+                <li><a href="learningstrategy.html" onclick="trackEvent('button_click', 'category_nav', 'learning_strategy')">學習策略</a></li>
+                <li><a href="socialskill.html" onclick="trackEvent('button_click', 'category_nav', 'social_skills')">社會技巧</a></li>
             </ul>
         </nav>
         <div class="menu-toggle" onclick="toggleMenu()">
@@ -50,15 +52,14 @@
     </div>
 
     <div style="text-align:center; margin-top: 40px;">
-        
         <div class="button-container">
-        <button class="section-button" onclick="showSection('section1', this)">第1章</button>
-        <button class="section-button" onclick="showSection('section2', this)">第2章</button>
-        <button class="section-button" onclick="showSection('section3', this)">第3章</button>
-        <button class="section-button" onclick="showSection('section4', this)">第4章</button>
-        <a href="https://mathvideo.hle.com.tw/52/" class="section-button" target="_blank">影片</a>        
-        <a href="8s2.html" class="section-button">8下</a>
-    </div>
+            <button class="section-button" onclick="showSection('section1', this); trackEvent('button_click', 'chapter_select', 'g8-math-s1-ch1')">第1章</button>
+            <button class="section-button" onclick="showSection('section2', this); trackEvent('button_click', 'chapter_select', 'g8-math-s1-ch2')">第2章</button>
+            <button class="section-button" onclick="showSection('section3', this); trackEvent('button_click', 'chapter_select', 'g8-math-s1-ch3')">第3章</button>
+            <button class="section-button" onclick="showSection('section4', this); trackEvent('button_click', 'chapter_select', 'g8-math-s1-ch4')">第4章</button>
+            <a href="https://mathvideo.hle.com.tw/52/" class="section-button" target="_blank" onclick="trackEvent('button_click', 'chapter_select', 'g8-math-s1-videos')">影片</a>
+            <a href="8s2.html" class="section-button" onclick="trackEvent('button_click', 'semester_toggle', 'g8-math-s1-to-s2')">8下</a>
+        </div>
     </div>
 
     <div id="section1" class="section-content active-section">
@@ -67,34 +68,26 @@
                 <div class="social-group">
                     <h3 style="text-align: center;">1-1 乘法公式</h3>
                     <div class="btn-group">
-                        <a href="math/8-01-1-1-1.html" class="btn" target="_blank">一、分配律</a>
-                        <a href="math/8-01-1-1-2.html" class="btn" target="_blank">二、利用分配律求值</a>
-                        <a href="math/8-01-1-1-3.html" class="btn" target="_blank">三、和的平方公式</a>
-                        <a href="math/8-01-1-1-4.html" class="btn" target="_blank">四、差的平方公式</a>
-                        <a href="math/8-01-1-1-5.html" class="btn" target="_blank">五、平方差</a>
-                        <a href="math/8-01-1-1-6.html" class="btn" target="_blank">六、應用題</a>
+                        <a href="math/8-01-1-1-1.html" class="btn" target="_blank" onclick="trackEvent('button_click', 'resource_link', 'g8-math-s1-ch1_1-distributive_law')">一、分配律</a>
+                        <a href="math/8-01-1-1-2.html" class="btn" target="_blank" onclick="trackEvent('button_click', 'resource_link', 'g8-math-s1-ch1_1-distributive_law_eval')">二、利用分配律求值</a>
+                        <a href="math/8-01-1-1-3.html" class="btn" target="_blank" onclick="trackEvent('button_click', 'resource_link', 'g8-math-s1-ch1_1-square_of_sum')">三、和的平方公式</a>
+                        <a href="math/8-01-1-1-4.html" class="btn" target="_blank" onclick="trackEvent('button_click', 'resource_link', 'g8-math-s1-ch1_1-square_of_diff')">四、差的平方公式</a>
+                        <a href="math/8-01-1-1-5.html" class="btn" target="_blank" onclick="trackEvent('button_click', 'resource_link', 'g8-math-s1-ch1_1-diff_of_squares')">五、平方差</a>
+                        <a href="math/8-01-1-1-6.html" class="btn" target="_blank" onclick="trackEvent('button_click', 'resource_link', 'g8-math-s1-ch1_1-application')">六、應用題</a>
                     </div>
                 </div>
                 <div class="social-group">
                     <h3 style="text-align: center;">1-2 多項式的加減</h3>
                     <div class="btn-group">
-                        <a href="https://wordwall.net/play/97205/944/857" class="btn" target="_blank">一、項、係數與次數</a>
-                        <a href="math/8-01-1-2-2.html" class="btn" target="_blank">二、升冪與降冪</a>
-                        <a href="math/8-01-1-2-3.html" class="btn" target="_blank">三、同類項</a>
-                        <a href="https://wordwall.net/play/97210/039/105" class="btn" target="_blank">四、多項式的加法</a>
-                        <a href="https://wordwall.net/play/97210/162/818" class="btn" target="_blank">五、多項式的減法</a>
-                        <a href="https://wordwall.net/play/97210/276/873" class="btn" target="_blank">六、多項式的加減法</a>
+                        <a href="https://wordwall.net/play/97205/944/857" class="btn" target="_blank" onclick="trackEvent('button_click', 'resource_link', 'g8-math-s1-ch1_2-terms_coeffs_degrees')">一、項、係數與次數</a>
+                        <a href="math/8-01-1-2-2.html" class="btn" target="_blank" onclick="trackEvent('button_click', 'resource_link', 'g8-math-s1-ch1_2-ascending_descending')">二、升冪與降冪</a>
+                        <a href="math/8-01-1-2-3.html" class="btn" target="_blank" onclick="trackEvent('button_click', 'resource_link', 'g8-math-s1-ch1_2-like_terms')">三、同類項</a>
+                        <a href="https://wordwall.net/play/97210/039/105" class="btn" target="_blank" onclick="trackEvent('button_click', 'resource_link', 'g8-math-s1-ch1_2-poly_addition')">四、多項式的加法</a>
+                        <a href="https://wordwall.net/play/97210/162/818" class="btn" target="_blank" onclick="trackEvent('button_click', 'resource_link', 'g8-math-s1-ch1_2-poly_subtraction')">五、多項式的減法</a>
+                        <a href="https://wordwall.net/play/97210/276/873" class="btn" target="_blank" onclick="trackEvent('button_click', 'resource_link', 'g8-math-s1-ch1_2-poly_add_subtract')">六、多項式的加減法</a>
                     </div>
                 </div>
-                <div class="social-group">
-                    <h3 style="text-align: center;">1-3 多項式的乘除</h3>
-                    <div class="btn-group">
-                        <a href="#" class="btn">一、多項式乘法</a>
-                        <a href="#" class="btn">二、多項式除法</a>
-                        <a href="#" class="btn">三、應用問題</a>
-                    </div>
                 </div>
-            </div>
         </div>
     </div>
 
@@ -104,81 +97,18 @@
                 <div class="social-group">
                     <h3 style="text-align: center;">2-1 平方根的意義</h3>
                     <div class="btn-group">
-                        <a href="math/8-01-2-1-1.html" class="btn">一、平方根與面積</a>
-                        <a href="https://wordwall.net/play/72496/152/894" class="btn">二、平方數1-20</a>
-                        <a href="https://wordwall.net/play/72496/056/617" class="btn">三、根式的化簡</a>
+                        <a href="math/8-01-2-1-1.html" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g8-math-s1-ch2_1-sqrt_and_area')">一、平方根與面積</a>
+                        <a href="https://wordwall.net/play/72496/152/894" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g8-math-s1-ch2_1-perfect_squares_1-20')">二、平方數1-20</a>
+                        <a href="https://wordwall.net/play/72496/056/617" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g8-math-s1-ch2_1-radical_simplification')">三、根式的化簡</a>
                     </div>
                 </div>
-                <div class="social-group">
-                    <h3 style="text-align: center;">2-2 根式的運算</h3>
-                    <div class="btn-group">
-                        <a href="#" class="btn">一、根式的乘除</a>
-                        <a href="#" class="btn">二、根式的加減</a>
-                        <a href="#" class="btn">三、有理化</a>
-                        <a href="#" class="btn">四、比較大小</a>
-                    </div>
                 </div>
-                <div class="social-group">
-                    <h3 style="text-align: center;">2-3 畢氏定理</h3>
-                    <div class="btn-group">
-                        <a href="#" class="btn">一、畢氏定理</a>
-                        <a href="#" class="btn">二、應用問題</a>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
-
-    <div id="section3" class="section-content">
-        <div class="social-container">
-            <div class="single-row">
-                <div class="social-group">
-                    <h3 style="text-align: center;">3-1 提公因式與乘法公式作因式分解</h3>
-                    <div class="btn-group">
-                        <a href="#" class="btn">一、提公因式法</a>
-                        <a href="#" class="btn">二、利用乘法公式作因式分解</a>
-                    </div>
-                </div>
-                <div class="social-group">
-                    <h3 style="text-align: center;">3-2 利用十字交乘法作因式分解</h3>
-                    <div class="btn-group">
-                        <a href="#" class="btn">一、十字交乘法</a>
-                        <a href="#" class="btn">二、應用問題</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="section4" class="section-content">
-        <div class="social-container">
-            <div class="single-row">
-                <div class="social-group">
-                    <h3 style="text-align: center;">4-1 因式分解法解一元二次方程式</h3>
-                    <div class="btn-group">
-                        <a href="#" class="btn">一、因式分解法</a>
-                        <a href="#" class="btn">二、應用問題</a>
-                    </div>
-                </div>
-                <div class="social-group">
-                    <h3 style="text-align: center;">4-2 配方法與公式解</h3>
-                    <div class="btn-group">
-                        <a href="#" class="btn">一、配方法</a>
-                        <a href="#" class="btn">二、公式解</a>
-                    </div>
-                </div>
-                <div class="social-group">
-                    <h3 style="text-align: center;">4-3 應用問題</h3>
-                    <div class="btn-group">
-                        <a href="#" class="btn">應用問題</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
 
     <script src="main.js"></script>
+    
+    <script src="tracking.js"></script>
 
 </body>
 <footer>
