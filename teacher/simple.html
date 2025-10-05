@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>課文簡化系統</title>
+    <link rel="icon" href="dog.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 10px 25px rgba(0, 150, 136, 0.1);
+        }
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 150, 136, 0.15);
+        }
+    </style>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5BBHYN77N9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-5BBHYN77N9');
+    </script>
+</head>
+<body class="gradient-bg min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <div class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-teal-800 mb-4">
+                課文教材簡化系統
+            </h1>
+            <p class="text-lg text-teal-700 max-w-3xl mx-auto leading-relaxed">
+                將複雜的課文內容簡化，自動生成摘要、圖解和隨堂測驗，讓學習更輕鬆有效。
+            </p>
+        </div>
+        
+        <div class="bg-white rounded-lg p-6 sm:p-8 mb-8 card-shadow hover-lift">
+            <div class="flex items-center mb-6">
+                <span class="text-3xl mr-4">🚀</span>
+                <h3 class="text-2xl font-bold text-teal-800">開始使用</h3>
+            </div>
+            <div class="space-y-6">
+                <div class="bg-teal-50 p-4 rounded-lg border border-teal-200">
+                    <p class="font-semibold text-teal-800 mb-2">推薦版 (統一風格)：</p>
+                    <p class="text-sm text-teal-700 mb-3">生成的圖片風格較為一致，適合製作系列教材。</p>
+                    <a href="https://g.co/gemini/share/0ad8b0296e5e" 
+                       target="_blank" rel="noopener noreferrer"
+                       class="inline-block bg-teal-600 hover:bg-teal-700 text-white px-5 py-2 rounded-lg transition-colors duration-300 font-semibold"
+                       onclick="trackEvent('button_click', 'tool_link', 'chinese-text_simplification')">
+                       Gemini - 課文簡化學習單系統
+                    </a>
+                </div>
+                
+                <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
+                    <p class="font-semibold text-orange-800 mb-2">彈性版 (可單一重來)：</p>
+                    <p class="text-sm text-orange-700 mb-3">生成的圖片風格可能多變，但優點是能針對不滿意的單一區塊重新生成。</p>
+                    <a href="https://gemini.google.com/share/9cab7869982d" 
+                       target="_blank" rel="noopener noreferrer"
+                       class="inline-block bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-lg transition-colors duration-300 font-semibold"
+                       onclick="trackEvent('button_click', 'tool_link', 'chinese-text_simplification')">
+                       Gemini - 課文簡化系統 (單一重來版)
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <div class="bg-blue-50 border-l-4 border-blue-400 p-6 rounded-r-lg card-shadow">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0"><span class="text-2xl">💡</span></div>
+                    <div class="ml-4">
+                        <h3 class="text-lg font-semibold text-blue-800 mb-2">AI 生成提醒</h3>
+                        <p class="text-blue-700 mb-3 text-sm">AI 生成結果可能每次都不同，品質雖佳但仍有調整空間。</p>
+                        <p class="text-blue-700 text-sm"><b>建議：</b>可複製 Canvas 自行修改，或貼上咒語從頭體驗。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-amber-50 border-l-4 border-amber-400 p-6 rounded-r-lg card-shadow">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0"><span class="text-2xl">⚠️</span></div>
+                    <div class="ml-4">
+                        <h3 class="text-lg font-semibold text-amber-800 mb-2">注意事項</h3>
+                        <p class="text-amber-700 text-sm">請避免輸入暴力或敏感內容，否則圖片可能會生成失敗。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-purple-50 rounded-lg p-6 mb-8 card-shadow">
+            <div class="flex items-start mb-4">
+                <span class="text-2xl mr-3">⚡</span>
+                <h3 class="text-xl font-semibold text-purple-800">快速版：生成自己的課程簡化系統</h3>
+            </div>
+            <div class="text-purple-700 space-y-3">
+                <ol class="list-decimal list-inside space-y-2">
+                    <li>右下角按「複製canvas」</li>
+                    <li>自動導入Gemini</li>
+                    <li>可自行繼續溝通，例如「再幫我加上填充題」「題目再難一點」…等</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="bg-gray-100 rounded-lg p-6 mb-8 card-shadow">
+            <div class="flex items-start mb-4">
+                <span class="text-2xl mr-3">🪄</span>
+                <h3 class="text-xl font-semibold text-gray-800">咒語參考</h3>
+            </div>
+            <div class="text-gray-700 space-y-4">
+                <p class="font-medium">不複製canvas也可以試試自己玩一次！</p>
+                
+                <div class="bg-white p-4 rounded-lg border border-gray-200 text-sm">
+                    <p class="mb-3">請你幫我用 <strong>HTML、Tailwind CSS 和原生 JavaScript</strong> 建立一個單頁式的網頁應用程式，叫做「<strong>課文簡化學習單系統</strong>」。這個系統能讓使用者貼上課文，然後透過 AI 自動生成<strong>各段摘要</strong>、<strong>課文圖解</strong>和<strong>隨堂測驗</strong>。</p>
+                    
+                    <div class="border-t border-gray-200 pt-3">
+                        <h4 class="font-semibold mb-2">詳細功能分解 (Detailed Breakdown)</h4>
+                        <p class="mb-2">請嚴格按照以下規格來實現：</p>
+                        
+                        <div class="space-y-3 text-xs">
+                            <div>
+                                <p class="font-semibold">1. 介面與外觀 (UI/UX):</p>
+                                <ul class="list-disc list-inside ml-4 space-y-1">
+                                    <li><strong>整體風格</strong>: 使用 <strong>Tailwind CSS</strong> 進行排版和美化，風格要簡潔、現代，卡片式設計搭配圓角和陰影。</li>
+                                    <li><strong>字體</strong>: 引入 Google Fonts 的「<strong>Noto Sans TC (思源黑體)</strong>」作為全站字體。</li>
+                                    <li><strong>主要輸入區</strong>: 一個大的 textarea 讓使用者貼上課文，一個主要的「<strong>生成學習單</strong>」按鈕。</li>
+                                    <li><strong>結果呈現區</strong>: 分成「各段摘要」、「課文圖解」、「隨堂測驗」、「答案與解析」四個卡片。</li>
+                                    <li><strong>互動按鈕</strong>: 每個區塊都要有「<strong>重新生成</strong>」的按鈕，摘要和測驗區要有「<strong>複製內容</strong>」的按鈕。</li>
+                                </ul>
+                            </div>
+                            
+                            <div>
+                                <p class="font-semibold">2. JavaScript 核心邏輯:</p>
+                                <ul class="list-disc list-inside ml-4 space-y-1">
+                                    <li><strong>不使用框架</strong>: 請用<strong>原生 JavaScript (Vanilla JS)</strong>。</li>
+                                    <li><strong>API 呼叫</strong>: 設計函式呼叫 Google Gemini API 和 Imagen API。</li>
+                                    <li><strong>功能實現</strong>: 主流程、重新生成、錯誤處理、複製與下載功能。</li>
+                                </ul>
+                            </div>
+                            
+                            <div>
+                                <p class="font-semibold">3. 頁面文字:</p>
+                                <p class="ml-4">所有使用者介面上的文字都必須使用<strong>繁體中文</strong>。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="text-center pt-8 border-t border-teal-200">
+            <div class="flex justify-center items-center space-x-4 mb-4">
+                <span class="text-teal-700 font-medium">by 特教米克師</span>
+                <a href="https://www.instagram.com/spedmix2025/" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   class="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-white hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-110"
+                   onclick="trackEvent('button_click', 'social_link', 'footer-instagram')">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                </a>
+            </div>
+            <p class="text-sm text-teal-600">©spedmix2025</p>
+        </footer>
+        </div>
+
+    <script src="tracking.js"></script>
+</body>
+</html>
