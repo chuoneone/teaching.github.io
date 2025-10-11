@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>多感官單字 Quiz</title>
+    <title>AI即時生圖測驗</title>
     <link rel="icon" href="dog.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -69,18 +69,25 @@
     <div class="container mx-auto px-4 py-8 max-w-4xl">
         <div class="text-center mb-10">
             <h1 class="text-4xl md:text-5xl font-bold text-primary mb-4">
-                多感官單字 Quiz
+                AI即時生圖測驗
             </h1>
             <p class="text-lg text-text-light max-w-2xl mx-auto leading-relaxed mb-8">
-                輕鬆製作個人化單字測驗！只需幾個步驟，就能為學生創建具有中英發音功能的互動式單字測驗。
+                輕鬆製作測驗！只需幾個步驟，就能為學生打造互動式圖文朗讀測驗。
             </p>
             
-            <a href="https://gemini.google.com/share/719e87be6cdd" 
+            <a href="https://g.co/gemini/share/3b5c94ea7d5a" 
+               target="_blank" 
+               rel="noopener noreferrer"
+               class="inline-block bg-primary hover:bg-opacity-90 text-white font-bold py-4 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
+               onclick="trackEvent('button_click', 'tool_link', 'chinese-multisensory_quiz')">
+                中文詞語版
+            </a>
+            <a href="https://g.co/gemini/share/43b7559db1c5" 
                target="_blank" 
                rel="noopener noreferrer"
                class="inline-block bg-primary hover:bg-opacity-90 text-white font-bold py-4 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
                onclick="trackEvent('button_click', 'tool_link', 'english-multisensory_quiz')">
-                🚀 開始使用
+                英文單字版
             </a>
         </div>
 
@@ -101,7 +108,7 @@
                     </div>
                     <div class="flex">
                         <span class="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 flex-shrink-0 mt-0.5">3</span>
-                        <span>輸入「請把單字換成...」，貼上您的單字清單後送出。</span>
+                        <span>輸入「請把內容換成...」，貼上您的語詞清單後送出。</span>
                     </div>
                     <div class="flex">
                         <span class="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 flex-shrink-0 mt-0.5">4</span>
@@ -116,9 +123,10 @@
                     <h3 class="text-lg font-semibold text-gray-800">學生體驗特色</h3>
                 </div>
                 <ul class="text-text-light space-y-2 text-sm list-none">
-                    <li class="flex"><span class="text-gray-500 mr-3">•</span><strong>預覽模式</strong>：點擊單字可聽中、英發音。</li>
-                    <li class="flex"><span class="text-gray-500 mr-3">•</span><strong>智慧測驗</strong>：看中文選英文，題目自動朗讀。</li>
-                    <li class="flex"><span class="text-gray-500 mr-3">•</span><strong>互動發音</strong>：滑鼠移過選項，自動播放英文。</li>
+                    <li class="flex"><span class="text-gray-500 mr-3">•</span><strong>預覽模式</strong>：點擊字卡可事先預習。</li>
+                    <li class="flex"><span class="text-gray-500 mr-3">•</span><strong>即時檢核</strong>：四選一題型，並自我檢核答案。</li>
+                    <li class="flex"><span class="text-gray-500 mr-3">•</span><strong>AI繪圖</strong>：即時生成圖片幫助理解。</li>
+                    <li class="flex"><span class="text-gray-500 mr-3">•</span><strong>互動發音</strong>：滑鼠移過選項，自動播放聲音。</li>
                     <li class="flex"><span class="text-gray-500 mr-3">•</span><strong>二次機會</strong>：答錯可重答一次，並刪除錯誤選項。</li>
                     <li class="flex"><span class="text-gray-500 mr-3">•</span><strong>完整回饋</strong>：提供分數、錯題重測與整份重測。</li>
                 </ul>
