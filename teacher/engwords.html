@@ -69,71 +69,132 @@
     <div class="container mx-auto px-4 py-8 max-w-4xl">
         <div class="text-center mb-10">
             <h1 class="text-4xl md:text-5xl font-bold text-primary mb-4">
-                AI即時生圖測驗
+                 AI即時生圖測驗
             </h1>
             <p class="text-lg text-text-light max-w-2xl mx-auto leading-relaxed mb-8">
-                輕鬆製作測驗！只需幾個步驟，就能為學生打造互動式圖文朗讀測驗。
+                 輕鬆製作測驗！只需幾個步驟，就能為學生打造互動式圖文朗讀測驗。
             </p>
             
-            <a href="https://g.co/gemini/share/a309f42440fa" 
-               target="_blank" 
-               rel="noopener noreferrer"
-               class="inline-block bg-primary hover:bg-opacity-90 text-white font-bold py-4 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
-               onclick="trackEvent('button_click', 'tool_link', 'chinese-multisensory_quiz')">
-                中文詞語版
-            </a>
-            <a href="https://g.co/gemini/share/32adc3a050ae" 
-               target="_blank" 
-               rel="noopener noreferrer"
-               class="inline-block bg-primary hover:bg-opacity-90 text-white font-bold py-4 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
-               onclick="trackEvent('button_click', 'tool_link', 'english-multisensory_quiz')">
-                英文單字版
-            </a>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="bg-surface-light border-l-4 border-primary p-6 rounded-r-lg card-shadow h-full">
-                <div class="flex items-center mb-4">
-                    <span class="text-2xl mr-3">📋</span>
-                    <h3 class="text-lg font-semibold text-primary">老師使用步驟</h3>
-                </div>
-                <div class="text-text-light space-y-4 text-sm">
-                    <div class="flex">
-                        <span class="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 flex-shrink-0 mt-0.5">1</span>
-                        <span>點擊「開始使用」，進入 Gemini 頁面。</span>
+            <div class="bg-surface-light p-6 rounded-lg card-shadow">
+                <div class="flex flex-col md:flex-row justify-center items-start gap-8">
+                    <!-- Chinese Buttons Section -->
+                    <div class="flex-1 w-full">
+                        <h3 class="text-xl font-semibold mb-4 text-primary border-b-2 border-primary pb-2">中文版本</h3>
+                        <div class="flex flex-wrap justify-center gap-4 pt-2">
+                             <a href="https://g.co/gemini/share/a309f42440fa" target="_blank" rel="noopener noreferrer" class="inline-block bg-primary hover:bg-opacity-90 text-white font-bold py-3 px-6 rounded-full text-base transition-all duration-300 transform hover:scale-105 shadow-lg" onclick="trackEvent('button_click', 'tool_link', 'chinese-multisensory_quiz_v1')">第一版</a>
+                             <a href="https://g.co/gemini/share/ff62e68b65c0" target="_blank" rel="noopener noreferrer" class="inline-block bg-primary hover:bg-opacity-90 text-white font-bold py-3 px-6 rounded-full text-base transition-all duration-300 transform hover:scale-105 shadow-lg" onclick="trackEvent('button_click', 'tool_link', 'chinese-multisensory_quiz_v2')">第二版</a>
+                             <a href="https://g.co/gemini/share/4e7d730e7059" target="_blank" rel="noopener noreferrer" class="inline-block bg-primary hover:bg-opacity-90 text-white font-bold py-3 px-6 rounded-full text-base transition-all duration-300 transform hover:scale-105 shadow-lg" onclick="trackEvent('button_click', 'tool_link', 'chinese-no-image')">無圖版</a>
+                        </div>
                     </div>
-                    <div class="flex">
-                        <span class="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 flex-shrink-0 mt-0.5">2</span>
-                        <span>按右下角「複製 Canvas」，自動跳轉至您的 Gemini。</span>
-                    </div>
-                    <div class="flex">
-                        <span class="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 flex-shrink-0 mt-0.5">3</span>
-                        <span>輸入「請把內容換成...」，貼上您的語詞清單後送出。</span>
-                    </div>
-                    <div class="flex">
-                        <span class="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 flex-shrink-0 mt-0.5">4</span>
-                        <span>按右上角「共用」→「分享」產生網址，即可分享給學生。</span>
-                    </div>
-
-                    <div class="flex">
-                        <span>（提供下載功能，可以輸出每一題以及整份pdf。）</span>
+                     <!-- English Buttons Section -->
+                    <div class="flex-1 w-full">
+                        <h3 class="text-xl font-semibold mb-4 text-primary border-b-2 border-primary pb-2">英文版本</h3>
+                         <div class="flex flex-wrap justify-center gap-4 pt-2">
+                            <a href="https://g.co/gemini/share/32adc3a050ae" target="_blank" rel="noopener noreferrer" class="inline-block bg-primary hover:bg-opacity-90 text-white font-bold py-3 px-6 rounded-full text-base transition-all duration-300 transform hover:scale-105 shadow-lg" onclick="trackEvent('button_click', 'tool_link', 'english-multisensory_quiz_v1')">第一版</a>
+                            <a href="https://g.co/gemini/share/514374b50c4e" target="_blank" rel="noopener noreferrer" class="inline-block bg-primary hover:bg-opacity-90 text-white font-bold py-3 px-6 rounded-full text-base transition-all duration-300 transform hover:scale-105 shadow-lg" onclick="trackEvent('button_click', 'tool_link', 'english-multisensory_quiz_v2')">第二版</a>
+                            <a href="https://g.co/gemini/share/64fa7d3264a5" target="_blank" rel="noopener noreferrer" class="inline-block bg-primary hover:bg-opacity-90 text-white font-bold py-3 px-6 rounded-full text-base transition-all duration-300 transform hover:scale-105 shadow-lg" onclick="trackEvent('button_click', 'tool_link', 'english-no-image')">無圖版</a>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div class="bg-surface-light border-l-4 border-gray-400 p-6 rounded-r-lg card-shadow h-full">
+        </div>
+        
+        <div class="space-y-8">
+            <!-- Update Card -->
+            <div class="bg-surface-light border-l-4 border-accent p-6 rounded-r-lg card-shadow">
                 <div class="flex items-center mb-4">
-                    <span class="text-2xl mr-3">🎓</span>
-                    <h3 class="text-lg font-semibold text-gray-800">學生體驗特色</h3>
+                    <span class="text-2xl mr-3">✨</span>
+                    <h3 class="text-lg font-semibold" style="color: #38A3A5;">最新更新</h3>
                 </div>
-                <ul class="text-text-light space-y-2 text-sm list-none">
-                    <li class="flex"><span class="text-gray-500 mr-3">•</span><strong>預覽模式</strong>：點擊字卡可事先預習。</li>
-                    <li class="flex"><span class="text-gray-500 mr-3">•</span><strong>即時檢核</strong>：四選一題型，並自我檢核答案。</li>
-                    <li class="flex"><span class="text-gray-500 mr-3">•</span><strong>AI繪圖</strong>：即時生成圖片幫助理解。</li>
-                    <li class="flex"><span class="text-gray-500 mr-3">•</span><strong>互動發音</strong>：滑鼠移過選項，自動播放聲音。</li>
-                    <li class="flex"><span class="text-gray-500 mr-3">•</span><strong>二次機會</strong>：答錯可重答一次，並刪除錯誤選項。</li>
-                    <li class="flex"><span class="text-gray-500 mr-3">•</span><strong>完整回饋</strong>：提供分數、錯題重測與整份重測。</li>
-                </ul>
+                <div class="text-text-light space-y-2 text-sm">
+                    <p><strong>圖片穩定度說明：</strong>由於不同使用者的帳號方案（免費版或付費版）、使用習慣與下指令方式皆不相同，我們無法預測圖片在生成過程中何時會開始出現錯亂。有時候它就是會有點「任性」😅，因此我們推出了第二版作為優化。</p>
+                    <p><strong>V2 版本優化：</strong>圖片生成指令更穩定，並新增預覽圖片功能。</p>
+                    <p><strong>無圖版本：</strong>無需等待圖片生成，讓測驗流程更快速、更順暢！</p>
+
+                    <hr class="my-4 border-gray-300">
+
+                    <h4 class="text-base font-semibold text-accent mt-4 mb-2">💡 常見問題 Q&A</h4>
+
+                    <p><strong>Q1：按下「共用」後，沒有出現分享的選項怎麼辦？</strong><br>
+                    A1：請確認您目前的帳號是否為「教育版帳號」。教育版帳號的共用功能會受限制，只會出現「複製內容」的選項。<br>
+                    若要正常分享，請切換成「個人帳號」再試一次，就能看到完整的分享功能。</p>
+
+                    <p><strong>Q2：為什麼圖片有時能生成，有時又會出錯？</strong><br>
+                    A2：圖片生成的穩定度受到多項因素影響，例如：<br>
+                    ‧ 使用的是免費版或付費版帳號<br>
+                    ‧ 同時間下達的生成請求數量<br>
+                    ‧ 指令是否太長或太頻繁<br>
+                    ‧ 有時系統本身也會出現不穩的情況（它真的有點任性😅）。<br>
+                    ‧ 建議一次生成量不要太多，若出錯可稍後再試或改用無圖版本。</p>
+
+                    <p><strong>Q3：為什麼之前成功的單元，後來又無法生成圖片？</strong><br>
+                    A3：每次執行測驗時，圖片都會重新生成，若當下系統忙碌或頻寬不足，就可能導致失敗。建議先以少量測試確認穩定，再批次製作。</p>
+                </div>
+            </div>
+
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-surface-light border-l-4 border-primary p-6 rounded-r-lg card-shadow h-full">
+                    <div class="flex items-center mb-4">
+                        <span class="text-2xl mr-3">📋</span>
+                        <h3 class="text-lg font-semibold text-primary">老師使用步驟</h3>
+                    </div>
+                    <div class="text-text-light space-y-4 text-sm">
+                        <div class="flex items-start">
+                            <span class="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 flex-shrink-0 mt-0.5">1</span>
+                            <span>點擊上方按鈕，進入 Gemini 頁面。</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 flex-shrink-0 mt-0.5">2</span>
+                            <span>按右下角「複製 Canvas」，自動跳轉至您的 Gemini。</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 flex-shrink-0 mt-0.5">3</span>
+                            <span>輸入「請把內容換成...」，貼上您的語詞清單後送出。</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 flex-shrink-0 mt-0.5">4</span>
+                            <span>按右上角「共用」→「分享」產生網址，即可分享給學生。</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-transparent rounded-full w-5 h-5 mr-3 flex-shrink-0 mt-0.5"></span>
+                            <span>（提供下載功能，可以輸出每一題以及整份pdf。）</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-surface-light border-l-4 border-gray-400 p-6 rounded-r-lg card-shadow h-full">
+                    <div class="flex items-center mb-4">
+                        <span class="text-2xl mr-3">🎓</span>
+                        <h3 class="text-lg font-semibold text-gray-800">學生體驗特色</h3>
+                    </div>
+                    <ul class="text-text-light space-y-2 text-sm list-none">
+                        <li class="flex items-start">
+                            <span class="text-gray-500 mr-3 flex-shrink-0">•</span>
+                            <div><strong>預覽模式</strong>：點擊字卡可事先預習。</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-gray-500 mr-3 flex-shrink-0">•</span>
+                            <div><strong>即時檢核</strong>：四選一題型，並自我檢核答案。</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-gray-500 mr-3 flex-shrink-0">•</span>
+                            <div><strong>AI繪圖</strong>：即時生成圖片幫助理解。</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-gray-500 mr-3 flex-shrink-0">•</span>
+                            <div><strong>互動發音</strong>：滑鼠移過選項，自動播放聲音。</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-gray-500 mr-3 flex-shrink-0">•</span>
+                            <div><strong>二次機會</strong>：答錯可重答一次，並刪除錯誤選項。</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-gray-500 mr-3 flex-shrink-0">•</span>
+                            <div><strong>完整回饋</strong>：提供分數、錯題重測與整份重測。</div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -145,3 +206,4 @@
     <script src="tracking.js"></script>
 </body>
 </html>
+
