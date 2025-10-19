@@ -69,7 +69,7 @@
     <div class="container mx-auto px-4 py-8 max-w-4xl">
         <div class="text-center mb-10">
             <h1 class="text-4xl md:text-5xl font-bold text-primary mb-4">
-                課文教材簡化系統
+                文本教材簡化系統
             </h1>
             <p class="text-lg text-text-light max-w-3xl mx-auto leading-relaxed">
                 將複雜的課文內容簡化，自動生成摘要、圖解和隨堂測驗，讓學習更輕鬆有效。
@@ -83,7 +83,7 @@
                     <p class="font-semibold text-primary mb-2">課文簡化學習單系統：</p>
                     <p class="text-sm text-text-light mb-3">⚡新增圖片辨識、難度選擇、下載word功能！！</p>
                     <p class="text-sm text-text-light mb-3">💡也是可以直接貼上文字開始生成喔！</p> 
-                    <a href="https://gemini.google.com/share/409850829009" 
+                    <a href="https://gemini.google.com/share/d58c6ef0377c" 
                        target="_blank" rel="noopener noreferrer"
                        class="inline-block bg-primary hover:bg-opacity-90 text-white px-5 py-2 rounded-lg transition-colors duration-300 font-semibold"
                        onclick="trackEvent('button_click', 'tool_link', 'chinese-text_simplification')">
@@ -101,7 +101,6 @@
                     <div class="ml-4">
                         <h3 class="text-lg font-semibold text-gray-800 mb-2">AI 生成提醒</h3>
                         <p class="text-text-light mb-3 text-sm">AI 生成結果可能每次都不同，品質雖佳但仍有調整空間。</p>
-                        <p class="text-text-light text-sm"><b>建議：</b>可複製 Canvas 自行修改，或貼上咒語從頭體驗。</p>
                     </div>
                 </div>
             </div>
@@ -117,68 +116,15 @@
             </div>
         </div>
 
-        <div class="bg-surface-light border-l-4 border-primary p-6 rounded-r-lg mb-8 card-shadow">
-            <div class="flex items-start mb-4">
-                <span class="text-2xl mr-3">⚡</span>
-                <h3 class="text-xl font-semibold text-primary">快速版：生成自己的課程簡化系統</h3>
-            </div>
-            <div class="text-text-light space-y-3">
-                <ol class="list-decimal list-inside space-y-2">
-                    <li>右下角按「複製canvas」</li>
-                    <li>自動導入Gemini</li>
-                    <li>可自行繼續溝通，例如「再幫我加上填充題」「題目再難一點」…等</li>
-                </ol>
-            </div>
-        </div>
 
-        <div class="bg-surface-light rounded-lg p-6 mb-8 card-shadow">
-            <div class="flex items-start mb-4">
-                <span class="text-2xl mr-3">🪄</span>
-                <h3 class="text-xl font-semibold text-primary">咒語參考</h3>
-            </div>
-            <div class="text-text-light space-y-4">
-                <p class="font-medium">不複製canvas也可以試試自己玩一次！</p>
-                
-                <div class="bg-background-light p-4 rounded-lg border border-gray-200 text-sm">
-                    <p class="mb-3">請你幫我用 <strong>HTML、Tailwind CSS 和原生 JavaScript</strong> 建立一個單頁式的網頁應用程式，叫做「<strong>課文簡化學習單系統</strong>」。這個系統能讓使用者貼上課文，然後透過 AI 自動生成<strong>各段摘要</strong>、<strong>課文圖解</strong>和<strong>隨堂測驗</strong>。</p>
-                    
-                    <div class="border-t border-gray-200 pt-3">
-                        <h4 class="font-semibold mb-2">詳細功能分解 (Detailed Breakdown)</h4>
-                        <p class="mb-2">請嚴格按照以下規格來實現：</p>
-                        
-                        <div class="space-y-3 text-xs">
-                            <div>
-                                <p class="font-semibold">1. 介面與外觀 (UI/UX):</p>
-                                <ul class="list-disc list-inside ml-4 space-y-1">
-                                    <li><strong>整體風格</strong>: 使用 <strong>Tailwind CSS</strong> 進行排版和美化，風格要簡潔、現代，卡片式設計搭配圓角和陰影。</li>
-                                    <li><strong>字體</strong>: 引入 Google Fonts 的「<strong>Noto Sans TC (思源黑體)</strong>」作為全站字體。</li>
-                                    <li><strong>主要輸入區</strong>: 一個大的 textarea 讓使用者貼上課文，一個主要的「<strong>生成學習單</strong>」按鈕。</li>
-                                    <li><strong>結果呈現區</strong>: 分成「各段摘要」、「課文圖解」、「隨堂測驗」、「答案與解析」四個卡片。</li>
-                                    <li><strong>互動按鈕</strong>: 每個區塊都要有「<strong>重新生成</strong>」的按鈕，摘要和測驗區要有「<strong>複製內容</strong>」的按鈕。</li>
-                                </ul>
-                            </div>
-                            
-                            <div>
-                                <p class="font-semibold">2. JavaScript 核心邏輯:</p>
-                                <ul class="list-disc list-inside ml-4 space-y-1">
-                                    <li><strong>不使用框架</strong>: 請用<strong>原生 JavaScript (Vanilla JS)</strong>。</li>
-                                    <li><strong>API 呼叫</strong>: 設計函式呼叫 Google Gemini API 和 Imagen API。</li>
-                                    <li><strong>功能實現</strong>: 主流程、重新生成、錯誤處理、複製與下載功能。</li>
-                                </ul>
-                            </div>
-                            
-                            <div>
-                                <p class="font-semibold">3. 頁面文字:</p>
-                                <p class="ml-4">所有使用者介面上的文字都必須使用<strong>繁體中文</strong>。</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <footer class="text-center pt-8 border-t border-gray-200">
-             <p class="text-sm text-text-light/70">©spedmix2025</p>
-        </footer>
+
+
+            <footer style="font-size:12px; color:gray; text-align:center;">
+            © 2025 特教米克師  
+            本作品採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh_TW" target="_blank">CC BY-NC-SA 4.0 創用CC授權</a>。  
+            歡迎非商業用途轉載、引用或改編，請保留「特教米克師」署名，並附上本作品原始連結。
+            </footer>
+
         </div>
 
     <script src="tracking.js"></script>
