@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>社會技巧</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="icon" href="images/dog.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
+    <style>
+        /* 確保連結樣式的按鈕與普通按鈕看起來一致 */
+        a.section-button {
+            text-decoration: none;
+            color: initial; /* 這裡可以根據你的 style.css 調整 */
+        }
+    </style>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5BBHYN77N9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-5BBHYN77N9');
+    </script>
+    </head>
+
+ 
+<body>
+    <header class="navbar">
+        <div class="logo">SPED</div>
+<nav>
+    <ul class="nav-links">
+        <li><a href="start.html" onclick="trackEvent('button_click', 'navbar_link', 'home')">HOME</a></li>
+        <li><a href="tt.html" onclick="trackEvent('button_click', 'navbar_link', 'emotion_log')">情緒紀錄</a></li>
+
+        <li><a href="7.html" onclick="trackEvent('button_click', 'subject_nav', 'g7-math')">7數</a></li>
+        <li><a href="8.html" onclick="trackEvent('button_click', 'subject_nav', 'g8-math')">8數</a></li>
+        <li><a href="9.html" onclick="trackEvent('button_click', 'subject_nav', 'g9-math')">9數</a></li>
+        <li><a href="7eng.html" onclick="trackEvent('button_click', 'subject_nav', 'g7-english')">7英</a></li>
+        <li><a href="8eng.html" onclick="trackEvent('button_click', 'subject_nav', 'g8-english')">8英</a></li>
+        <li><a href="9eng.html" onclick="trackEvent('button_click', 'subject_nav', 'g9-english')">9英</a></li>
+        <li><a href="7ch.html" onclick="trackEvent('button_click', 'subject_nav', 'g7-chinese')">7國</a></li>
+        <li><a href="8ch.html" onclick="trackEvent('button_click', 'subject_nav', 'g8-chinese')">8國</a></li>
+        <li><a href="9ch.html" onclick="trackEvent('button_click', 'subject_nav', 'g9-chinese')">9國</a></li>
+
+        <li><a href="bigtest.html" onclick="trackEvent('button_click', 'category_nav', 'exam_prep')">會考專區</a></li>
+        <li><a href="learningstrategy.html" onclick="trackEvent('button_click', 'category_nav', 'learning_strategy')">學習策略</a></li>
+        
+        <li><a href="socialskill.html" onclick="trackEvent('button_click', 'category_nav', 'social_skills')">社會技巧</a></li>
+    </ul>
+</nav>
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </div>
+    </header>
+
+    <div class="section-title text-lg font-bold">
+        <i class="fas fa-compass mr-2"></i>社會技巧
+    </div> 
+
+    <div style="text-align:center; margin-top: 40px;">
+        <div class="button-container">
+            <button class="section-button" onclick="showSection('people', this); trackEvent('button_click', 'chapter_select', 'socialskill-people')">處人</button>
+            <button class="section-button" onclick="showSection('self', this); trackEvent('button_click', 'chapter_select', 'socialskill-self')">處己</button>
+            <button class="section-button" onclick="showSection('environment', this); trackEvent('button_click', 'chapter_select', 'socialskill-environment')">處環境</button>
+        </div>
+    </div>
+
+    <div id="people" class="section-content active-section">  
+        <div class="social-container">
+            <div class="single-row">
+                <div class="social-group">                    
+                    <h3 style="text-align: center;">處人</h3>
+                    <div class="btn-group">
+                        <a href="https://gemini.google.com/share/61fae2c2c8cb" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'socialskill')">溝通卡關</a>
+                    </div>
+                </div>
+
+                
+            </div>
+ 
+        </div>
+    </div>
+    
+    <div id="self" class="section-content">
+        <div class="social-container">
+            <div class="single-row">
+                <div class="social-group">                    
+                    <h3 style="text-align: center;">處己</h3>
+                    <div class="btn-group">
+                        <a href="#" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'socialskill')">01</a>
+                    </div>
+                </div>
+
+
+
+
+                
+            </div>
+ 
+
+        </div>
+
+        </div>
+
+
+    <div id="environment" class="section-content">
+        <div class="social-container">
+            <div class="single-row">
+                <div class="social-group">
+                    <h3 style="text-align: center;">處環境</h3>
+                    <div class="btn-group">
+                        <a href="https://gemini.google.com/share/4237ae24a09e" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'socialskill-environment')">畢業旅行</a>
+                         <a href="https://gemini.google.com/share/e4facbd6f880" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'socialskill-environment')">校外教學</a>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-bottom: 20px;">
+      <a href="index.html">
+        <img src="images/dog.png" alt="Logo" style="height: 100px;">
+      </a>
+    </div>
+
+    <script src="main.js"></script>
+    
+    <script src="tracking.js"></script>
+
+</body>
+</html>
+<footer>
+    <p style="display: inline;">Created by Chu Pei Yi</p>
+</footer>
