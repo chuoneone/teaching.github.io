@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>個別化出題小幫手</title>
+    <link rel="icon" href="dog.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // 套用範本的顏色配置
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#38A3A5',
+                        'background-light': '#F0F4F8',
+                        'surface-light': '#FFFFFF',
+                        'text-light': '#2D3748',
+                        'accent': '#80CBC4',
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
+        body {
+            box-sizing: border-box;
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+        .card-shadow {
+            box-shadow: 0 10px 25px rgba(56, 163, 165, 0.1);
+        }
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(56, 163, 165, 0.15);
+        }
+        /* 為了美化步驟清單，增加一點樣式 */
+        .steps-list {
+            list-style-type: decimal; /* 顯示 1. 2. 3. */
+            list-style-position: inside; /* 讓編號在內部 */
+            padding-left: 0.5rem; /* 增加一點左側空間 */
+        }
+        .steps-list li {
+            margin-bottom: 0.5rem; /* 每個步驟的間距 */
+        }
+    </style>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5BBHYN77N9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-5BBHYN77N9');
+    </script>
+</head>
+<body class="bg-background-light min-h-screen text-text-light">
+
+    <nav class="bg-surface-light/80 backdrop-blur-sm shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="text-xl font-bold text-primary">特教米克師</div>
+            <a href="https://www.instagram.com/spedmix2025/"
+               target="_blank"
+               rel="noopener noreferrer"
+               class="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-white hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-110"
+               onclick="trackEvent('button_click', 'social_link', 'navbar-instagram')">
+                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                     <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0 3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                 </svg>
+            </a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <div class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-primary mb-4">
+                個別化出題小幫手
+            </h1>
+            <p class="text-lg text-text-light max-w-3xl mx-auto leading-relaxed">
+                運用AI的三大神技：拍照辨識、程度分層、多樣題型，快速生成個別化練習卷。
+            </p>
+        </div>
+        
+        <div class="bg-surface-light rounded-lg p-6 sm:p-8 mb-8 card-shadow hover-lift">
+
+            <div class="space-y-6">
+                <div class="bg-primary/10 p-5 rounded-lg border border-primary/20">
+                    <p class="font-semibold text-primary mb-3 text-lg">🚀 個別化出題小幫手 (三大神技)</p>
+                    
+                    <div class="mb-5 space-y-3">
+                        <p class="text-text-light">
+                            📸 <strong>拍照即出題，懶人新高度：</strong><br>
+                            <span class="text-sm">課本、講義隨手一拍，AI 自動讀取文字，直接變成你的題庫！</span>
+                        </p>
+                        <p class="text-text-light">
+                            🧩 <strong>程度分層，真正做到個別化：</strong><br>
+                            <span class="text-sm">從學前到高三都能選擇！依學生程度自動調整題型深淺。</span>
+                        </p>
+                        <p class="text-text-light">
+                            🧠 <strong>多樣化題型，檢核無死角：</strong><br>
+                            <span class="text-sm">從句子挖空、文意理解到簡答申論，全方位考察學生吸收了多少！</span>
+                        </p>
+                        <p class="text-text-light">
+                            📄 <strong>一鍵成卷，光速產出：</strong><br>
+                            <span class="text-sm">題目生成後，直接下載 Word / PDF 練習卷，格式完美對齊！</span>
+                        </p>
+                    </div>
+
+                    <p class="font-semibold text-primary/90 mt-6 mb-3 text-md">使用步驟：</p>
+                    <ol class="steps-list text-text-light space-y-2 mb-6 text-sm">
+                        <li><strong>貼上課文：</strong> 將您的課文內容貼入文字框（或使用拍照辨識功能）。</li>
+                        <li><strong>選擇設定：</strong> 選擇需要的「題型」與「學生程度」（例如：國小中年級）。</li>
+                        <li><strong>點擊生成：</strong> 按下「生成測驗卷」按鈕。</li>
+                        <li><strong>下載檔案：</strong> AI處理完畢後，即可下載格式精美的 Word 與 PDF 檔案！</li>
+                    </ol>
+
+                    <a href="https://gemini.google.com/share/79ed0014b0c7" 
+                       target="_blank" rel="noopener noreferrer"
+                       class="inline-block bg-primary hover:bg-opacity-90 text-white px-5 py-2 rounded-lg transition-colors duration-300 font-semibold text-base"
+                       onclick="trackEvent('button_click', 'tool_link', 'individual-quiz-generator')">
+                        開始使用出題小幫手！
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <div class="bg-surface-light border-l-4 border-gray-400 p-6 rounded-r-lg card-shadow">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0"><span class="text-2xl">💡</span></div>
+                    <div class="ml-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">AI 生成提醒</h3>
+                        <p class="text-text-light mb-3 text-sm">AI 生成結果可能每次都不同，品質雖佳但仍有調整空間，請老師務必再次校對！</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-amber-50 border-l-4 border-amber-400 p-6 rounded-r-lg card-shadow">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0"><span class="text-2xl">⚠️</span></div>
+                    <div class="ml-4">
+                        <h3 class="text-lg font-semibold text-amber-800 mb-2">注意事項</h3>
+                        <p class="text-amber-700 text-sm">請避免輸入或拍攝暴力、敏感內容，否則 AI 可能會拒絕生成或產出失敗。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer style="font-size:12px; color:gray; text-align:center;">
+        © 2025 特教米克師  
+        本作品採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh_TW" target="_blank">CC BY-NC-SA 4.0 創用CC授權</a>。  
+        歡迎非商業用途轉載、引用或改編，請保留「特教米克師」署名，並附上本作品原始連結。
+        </footer>
+
+    </div>
+
+    <script src="tracking.js"></script>
+</body>
+
+</html>
