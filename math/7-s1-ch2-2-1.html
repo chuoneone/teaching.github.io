@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>因數與公因數 互動練習</title>
+    <link rel="icon" href="dog.png" type="image/png">
+    
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 
+      *** 修正 ***
+      將 "xintegrity" 修正為 "integrity"。
+      "xintegrity" 不是一個標準的 HTML 屬性。
+      並為 <script> 標籤加上 "defer" 屬性，確保 DOM 載入後才執行。
+    -->
+    <!-- 引入 KaTeX (數學符號庫) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" xintegrity="sha384-KiWOVVjnN8qwKLnOfUAUPPU+RmmCgatMasLBIenUAKCLjFzFNTYoW+NLimr9C+GZ" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" xintegrity="sha384-hIoPscM/ceQ82HjGMngEvyA2xKMS/JDaIuATBXTBDkNp4RBGJcGsftS+LALBCGAd" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" xintegrity="sha384-+VBxd3r6UfDk4_D/OqIe/S0SvpLIfknWssHBsZqiVYRgbQn+IcsEzhCAsnBiE/fX" crossorigin="anonymous"></script>
+
+    <!-- 引入 字型 Chiron GoRound TC -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chiron+GoRound+TC:wght@200..900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 設置基本字型 */
+        body {
+            font-family: "Chiron GoRound TC", sans-serif;
+            font-weight: 500; /* 使用稍粗的字重增加易讀性 */
+            font-style: normal;
+            background-color: #f8f9fa; /* 柔和的背景色 */
+        }
+        
+        /* 隱藏的步驟 */
+        .step.hidden {
+            display: none;
+        }
+
+        /* 關鍵字螢光筆效果 */
+        .highlight {
+            background: linear-gradient(to top, #fff380 50%, transparent 50%);
+            padding: 0 2px;
+        }
+        
+        /* 專為特教設計的按鈕樣式 (用於步驟 5 & 9) */
+        .btn-check {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .btn-check-default {
+            background-color: #0ea5e9;
+            color: white;
+        }
+        .btn-check-default:hover {
+            background-color: #0284c7;
+        }
+        .btn-check-default:disabled {
+            background-color: #e0f2fe;
+            color: #7dd3fc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .btn-check-success {
+            background-color: #22c55e;
+            color: white;
+        }
+        .btn-check-error {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        /* 步驟 5 & 9 的輸入框樣式 */
+        .input-answer {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 1.1rem;
+            border-radius: 12px;
+            border: 2px solid #cbd5e1;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .input-answer:focus {
+            outline: none;
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+        }
+
+        /* --- 格子的樣式 --- */
+        .factor-input {
+            width: 4rem; /* 64px */
+            height: 4rem; /* 64px */
+            text-align: center;
+            font-size: 1.25rem; /* text-lg */
+            font-weight: 700; /* font-bold */
+            border-radius: 8px; /* rounded-lg */
+            border: 2px solid #cbd5e1; /* slate-300 */
+            transition: all 0.2s;
+            -moz-appearance: textfield; /* 隱藏 Firefox 的 number arrows */
+        }
+        .factor-input:focus {
+            outline: none;
+            border-color: #0ea5e9; /* sky-500 */
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+        }
+        .factor-input.correct {
+            background-color: #dcfce7; /* green-100 */
+            border-color: #22c55e; /* green-500 */
+            color: #166534; /* green-800 */
+            pointer-events: none; /* 答對後鎖定 */
+        }
+        /* 隱藏 Chrome, Safari, Edge 的 number arrows */
+        .factor-input::-webkit-outer-spin-button,
+        .factor-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- 主要內容容器 -->
+    <main class="max-w-2xl mx-auto p-4 md:p-8 min-h-screen pb-24">
+        
+        <!-- 標題區 -->
+        <header class="mb-6 border-b-2 border-gray-200 pb-4">
+            <h1 class="text-3xl font-bold text-sky-700">因數與公因數</h1>
+            <p class="text-lg text-gray-600 mt-2">我們來一步一步找出 (30, 60, 90) 和 (24, 32) 的<span class="highlight">因數</span>與<span class="highlight">公因數</span>吧！</p>
+        </header>
+
+        <!-- *** 新增：快速導覽按鈕 *** -->
+        <nav class="flex justify-center gap-4 mb-6">
+            <button onclick="jumpToSection(1)" class="w-full md:w-auto flex-1 px-6 py-3 bg-white border-2 border-sky-500 text-sky-600 font-bold rounded-xl shadow-sm hover:bg-sky-50 transition-all focus:outline-none focus:ring-2 focus:ring-sky-300">
+                跳至第一題 (30, 60, 90)
+            </button>
+            <button onclick="jumpToSection(2)" class="w-full md:w-auto flex-1 px-6 py-3 bg-white border-2 border-gray-400 text-gray-600 font-bold rounded-xl shadow-sm hover:bg-gray-100 transition-all focus:outline-none focus:ring-2 focus:ring-gray-300">
+                跳至第二題 (24, 32)
+            </button>
+        </nav>
+
+        <!-- 進度提示 -->
+        <div id="progress-indicator" class="text-center text-lg font-semibold text-gray-600 mb-6 p-3 bg-white rounded-xl shadow-sm border border-gray-200">
+            載入中...
+        </div>
+
+        <!-- 學習步驟區 -->
+        <div class="space-y-8">
+            
+            <!-- 步驟 1: 30 的因數 -->
+            <section id="step-1" class="step p-6 bg-white rounded-2xl shadow-lg border border-gray-200 space-y-5">
+                <h2 class="text-xl font-bold">第一題 (1)：找出 30 的因數 (共 8 個)</h2>
+                <p class="text-gray-700 text-lg">
+                    請找出 <span class="highlight">30</span> 的所有因數。
+                    <br>
+                    <small class="text-gray-500">提示：請由小到大，一個一個填入下方的格子中。</small>
+                </p>
+                <div id="input-grid-1" class="flex flex-wrap gap-3 justify-center">
+                    <!-- 輸入框將由 JS 自動生成 -->
+                </div>
+                <div id="feedback-1" class="text-center text-lg font-bold min-h-[1.5em] mt-2"></div>
+            </section>
+
+            <!-- 步驟 2: 60 的因數 -->
+            <section id="step-2" class="step hidden p-6 bg-white rounded-2xl shadow-lg border border-gray-200 space-y-5">
+                <h2 class="text-xl font-bold">第一題 (1)：找出 60 的因數 (共 12 個)</h2>
+                <p class="text-gray-700 text-lg">
+                    請找出 <span class="highlight">60</span> 的所有因數。
+                    <br>
+                    <small class="text-gray-500">提示：請由小到大，一個一個填入下方的格子中。</small>
+                </p>
+                <div id="input-grid-2" class="flex flex-wrap gap-3 justify-center">
+                    <!-- 輸入框將由 JS 自動生成 -->
+                </div>
+                <div id="feedback-2" class="text-center text-lg font-bold min-h-[1.5em] mt-2"></div>
+            </section>
+
+            <!-- 步驟 3: 90 的因數 -->
+            <section id="step-3" class="step hidden p-6 bg-white rounded-2xl shadow-lg border border-gray-200 space-y-5">
+                <h2 class="text-xl font-bold">第一題 (1)：找出 90 的因數 (共 12 個)</h2>
+                <p class="text-gray-700 text-lg">
+                    請找出 <span class="highlight">90</span> 的所有因數。
+                    <br>
+                    <small class="text-gray-500">提示：請由小到大，一個一個填入下方的格子中。</small>
+                </p>
+                <div id="input-grid-3" class="flex flex-wrap gap-3 justify-center">
+                    <!-- 輸入框將由 JS 自動生成 -->
+                </div>
+                <div id="feedback-3" class="text-center text-lg font-bold min-h-[1.5em] mt-2"></div>
+            </section>
+
+            <!-- 步驟 4: 找出 (30, 60, 90) 公因數 -->
+            <section id="step-4" class="step hidden p-6 bg-white rounded-2xl shadow-lg border border-gray-200 space-y-5">
+                <h2 class="text-xl font-bold">第一題 (2)：列出 (30, 60, 90) 公因數 (共 8 個)</h2>
+                <p class="text-gray-700 text-lg">
+                    你都找出來了！我們來複習一下：
+                </p>
+                <ul class="list-disc list-inside space-y-2 text-lg bg-gray-50 p-4 rounded-lg border">
+                    <li><b>30 的因數：</b><span id="list-30" class="font-mono"></span></li>
+                    <li><b>60 的因數：</b><span id="list-60" class="font-mono"></span></li>
+                    <li><b>90 的因數：</b><span id="list-90" class="font-mono"></span></li>
+                </ul>
+                <p class="text-gray-700 text-lg">
+                    請從上面三個列表找出<span class="highlight">共同都有</span>的因數 (公因數)。
+                    <br>
+                    <small class="text-gray-500">提示：請由小到大，一個一個填入下方的格子中。</small>
+                </p>
+                <div id="input-grid-4" class="flex flex-wrap gap-3 justify-center">
+                    <!-- 輸入框將由 JS 自動生成 -->
+                </div>
+                <div id="feedback-4" class="text-center text-lg font-bold min-h-[1.5em] mt-2"></div>
+            </section>
+            
+            <!-- 步驟 5: 找出 (30, 60, 90) 最大公因數 (GCD) -->
+            <section id="step-5" class="step hidden p-6 bg-white rounded-2xl shadow-lg border border-gray-200 space-y-5">
+                <h2 class="text-xl font-bold">第一題 (3)：找出 (30, 60, 90) 最大公因數</h2>
+                <p class="text-gray-700 text-lg">
+                    太厲害了！你找出的<span class="highlight">公因數</span>有：
+                </p>
+                <div class="text-center text-xl font-bold text-sky-600 bg-sky-50 p-4 rounded-lg border border-sky-200">
+                    <span id="list-common" class="font-mono"></span>
+                </div>
+                <p class="text-gray-700 text-lg">
+                    那麼，(30, 60, 90) 的<span class="highlight">最大公因數</span>是多少呢？
+                    <br>
+                    <small class="text-gray-500">提示：請填入公因數中，最大的那一個數字。</small>
+                </p>
+                <div>
+                    <input type="number" id="answer-5" class="input-answer" placeholder="最大的數字是？">
+                </div>
+                <button id="btn-5" class="btn-check btn-check-default" onclick="checkStep(5)">檢查答案 (第一題)</button>
+                <div id="feedback-5" class="text-center text-lg font-bold min-h-[1.5em] mt-2"></div>
+            </section>
+
+            <!-- === 新增的步驟 === -->
+
+            <!-- 步驟 6: 24 的因數 -->
+            <section id="step-6" class="step hidden p-6 bg-white rounded-2xl shadow-lg border border-gray-200 space-y-5">
+                <h2 class="text-xl font-bold">第二題 (1)：找出 24 的因數 (共 8 個)</h2>
+                <p class="text-gray-700 text-lg">
+                    太棒了，第一題完成了！我們來挑戰第二題！
+                    <br>
+                    請找出 <span class="highlight">24</span> 的所有因數。
+                    <br>
+                    <small class="text-gray-500">提示：請由小到大，一個一個填入下方的格子中。</small>
+                </p>
+                <div id="input-grid-6" class="flex flex-wrap gap-3 justify-center">
+                    <!-- 輸入框將由 JS 自動生成 -->
+                </div>
+                <div id="feedback-6" class="text-center text-lg font-bold min-h-[1.5em] mt-2"></div>
+            </section>
+
+            <!-- 步驟 7: 32 的因數 -->
+            <section id="step-7" class="step hidden p-6 bg-white rounded-2xl shadow-lg border border-gray-200 space-y-5">
+                <h2 class="text-xl font-bold">第二題 (1)：找出 32 的因數 (共 6 個)</h2>
+                <p class="text-gray-700 text-lg">
+                    請找出 <span class="highlight">32</span> 的所有因數。
+                    <br>
+                    <small class="text-gray-500">提示：請由小到大，一個一個填入下方的格子中。</small>
+                </p>
+                <div id="input-grid-7" class="flex flex-wrap gap-3 justify-center">
+                    <!-- 輸入框將由 JS 自動生成 -->
+                </div>
+                <div id="feedback-7" class="text-center text-lg font-bold min-h-[1.5em] mt-2"></div>
+            </section>
+
+            <!-- 步驟 8: 找出 (24, 32) 公因數 -->
+            <section id="step-8" class="step hidden p-6 bg-white rounded-2xl shadow-lg border border-gray-200 space-y-5">
+                <h2 class="text-xl font-bold">第二題 (2)：列出 (24, 32) 公因數 (共 4 個)</h2>
+                <p class="text-gray-700 text-lg">
+                    你都找出來了！我們來複習一下：
+                </p>
+                <ul class="list-disc list-inside space-y-2 text-lg bg-gray-50 p-4 rounded-lg border">
+                    <li><b>24 的因數：</b><span id="list-24" class="font-mono"></span></li>
+                    <li><b>32 的因數：</b><span id="list-32" class="font-mono"></span></li>
+                </ul>
+                <p class="text-gray-700 text-lg">
+                    請從上面二個列表找出<span class="highlight">共同都有</span>的因數 (公因數)。
+                    <br>
+                    <small class="text-gray-500">提示：請由小到大，一個一個填入下方的格子中。</small>
+                </p>
+                <div id="input-grid-8" class="flex flex-wrap gap-3 justify-center">
+                    <!-- 輸入框將由 JS 自動生成 -->
+                </div>
+                <div id="feedback-8" class="text-center text-lg font-bold min-h-[1.5em] mt-2"></div>
+            </section>
+            
+            <!-- 步驟 9: 找出 (24, 32) 最大公因數 (GCD) -->
+            <section id="step-9" class="step hidden p-6 bg-white rounded-2xl shadow-lg border border-gray-200 space-y-5">
+                <h2 class="text-xl font-bold">第二題 (3)：找出 (24, 32) 最大公因數</h2>
+                <p class="text-gray-700 text-lg">
+                    太厲害了！你找出的<span class="highlight">公因數</span>有：
+                </p>
+                <div class="text-center text-xl font-bold text-sky-600 bg-sky-50 p-4 rounded-lg border border-sky-200">
+                    <span id="list-common-24-32" class="font-mono"></span>
+                </div>
+                <p class="text-gray-700 text-lg">
+                    那麼，(24, 32) 的<span class="highlight">最大公因數</span>是多少呢？
+                    <br>
+                    <small class="text-gray-500">提示：請填入公因數中，最大的那一個數字。</small>
+                </p>
+                <div>
+                    <input type="number" id="answer-9" class="input-answer" placeholder="最大的數字是？">
+                </div>
+                <button id="btn-9" class="btn-check btn-check-default" onclick="checkStep(9)">檢查答案 (完成練習)</button>
+                <div id="feedback-9" class="text-center text-lg font-bold min-h-[1.5em] mt-2"></div>
+            </section>
+
+            <!-- === 結束 === -->
+
+
+            <!-- 完成訊息 (移到最後) -->
+            <section id="completion-message" class="hidden p-8 bg-green-50 rounded-2xl shadow-lg border-2 border-green-300 text-center space-y-4">
+                <h2 class="text-3xl font-bold text-green-700">🎉 恭喜你！全部完成了！ 🎉</h2>
+                <p class="text-xl text-green-600">
+                    你已經學會了如何找出因數、公因數，和最大公因數！
+                    <br>
+                    真是太棒了！
+                </p>
+                <button class="btn-check bg-sky-500 text-white hover:bg-sky-600" onclick="location.reload()">
+                    再練習一次
+                </button>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- 頁尾固定區塊 -->
+    <footer class="fixed bottom-0 left-0 w-full text-center text-gray-500 text-sm bg-white bg-opacity-80 py-2 border-t border-gray-200 backdrop-blur-sm">
+      © 2025 特教米克師｜採用 
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh_TW" target="_blank" class="text-sky-600 hover:underline">
+        CC BY-NC-SA 4.0 創用CC授權
+      </a>｜非商業用途歡迎轉載或改編，請保留署名並附上原始連結。
+    </footer>
+
+    <script>
+        // 總步驟數 (5 + 4 = 9)
+        const totalSteps = 9;
+
+        // 正確答案
+        const correctAnswers = {
+            1: ["1", "2", "3", "5", "6", "10", "15", "30"],
+            2: ["1", "2", "3", "4", "5", "6", "10", "12", "15", "20", "30", "60"],
+            3: ["1", "2", "3", "5", "6", "9", "10", "15", "18", "30", "45", "90"],
+            4: ["1", "2", "3", "5", "6", "10", "15", "30"],
+            5: "30", // 步驟 5 是按鈕
+            // --- 新增答案 ---
+            6: ["1", "2", "3", "4", "6", "8", "12", "24"],
+            7: ["1", "2", "4", "8", "16", "32"],
+            8: ["1", "2", "4", "8"],
+            9: "8" // 步驟 9 是按鈕
+        };
+        
+        // 正向回饋訊息
+        const positiveFeedbacks = [
+            "太棒了！繼續加油～",
+            "做得好，進入下一步吧！",
+            "完全正確！你越來越熟練了！",
+            "答對了！我們來看下一題！"
+        ];
+        
+        // 錯誤回饋訊息
+        const negativeFeedbacks = [
+            "嗯...答案不太對喔，請再試一次！",
+            "格式或數字好像怪怪的？",
+            "別灰心，再仔細檢查一遍！"
+        ];
+
+        // 頁面載入時
+        document.addEventListener("DOMContentLoaded", function() {
+            // 渲染數學公式 (如果有的話)
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ]
+                });
+            }
+            
+            // --- 自動生成格子與加入監聽 ---
+            generateInputGrids();
+            addInputListeners();
+
+            updateProgress(1); // 初始進度為第 1 步
+            
+            // 自動 focus 第一個格子
+            document.getElementById('input-1-0')?.focus();
+        });
+
+        // *** 新增：跳轉到指定題目的函數 ***
+        function jumpToSection(questionNumber) {
+            // 隱藏所有步驟和完成訊息
+            document.querySelectorAll('.step').forEach(step => {
+                step.classList.add('hidden');
+            });
+            document.getElementById('completion-message').classList.add('hidden');
+
+            let startStep;
+            if (questionNumber === 1) {
+                startStep = 1;
+            } else if (questionNumber === 2) {
+                startStep = 6;
+            } else {
+                return; // 錯誤的題號
+            }
+
+            // 顯示目標步驟
+            const stepEl = document.getElementById(`step-${startStep}`);
+            if (stepEl) {
+                stepEl.classList.remove('hidden');
+                updateProgress(startStep); // 更新進度條
+                
+                // 自動 focus
+                const firstInput = document.getElementById(`input-${startStep}-0`) || document.getElementById(`answer-${startStep}`);
+                if (firstInput) {
+                    firstInput.focus();
+                }
+            }
+        }
+
+
+        /**
+         * 步驟 1-4, 6-8：自動生成輸入框
+         */
+        function generateInputGrids() {
+            // 定義哪些步驟需要格子
+            const gridSteps = [1, 2, 3, 4, 6, 7, 8];
+            
+            gridSteps.forEach(i => {
+                const grid = document.getElementById(`input-grid-${i}`);
+                if (grid) { 
+                    const answers = correctAnswers[i];
+                    answers.forEach((answer, index) => {
+                        const input = document.createElement('input');
+                        input.type = "number";
+                        input.className = "factor-input";
+                        input.dataset.step = i;
+                        input.dataset.index = index;
+                        input.dataset.answer = answer;
+                        input.id = `input-${i}-${index}`;
+                        input.setAttribute("aria-label", `步驟 ${i} 答案 ${index + 1}`);
+                        grid.appendChild(input);
+                    });
+                }
+            });
+        }
+
+        /**
+         * 步驟 1-4, 6-8：為每個格子加入監聽
+         */
+        function addInputListeners() {
+            const inputs = document.querySelectorAll('.factor-input');
+            inputs.forEach(input => {
+                input.addEventListener('input', handleFactorInput);
+                // 監聽 Enter 鍵
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (input.value === input.dataset.answer) {
+                            const nextInput = getNextInput(input.dataset.step, input.dataset.index);
+                            if (nextInput) {
+                                nextInput.focus();
+                            } else {
+                                const firstEmptyInput = document.querySelector(`#input-grid-${input.dataset.step} .factor-input:not(.correct)`);
+                                if (firstEmptyInput) {
+                                    firstEmptyInput.focus();
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+        }
+
+        /**
+         * 獲取下一個輸入框
+         */
+        function getNextInput(step, index) {
+            const nextIndex = parseInt(index) + 1;
+            return document.getElementById(`input-${step}-${nextIndex}`);
+        }
+
+        /**
+         * 步驟 1-4, 6-8：處理格子輸入的核心邏輯
+         */
+        function handleFactorInput(event) {
+            const input = event.target;
+            const value = input.value;
+            const step = input.dataset.step;
+            const index = input.dataset.index;
+            const answer = input.dataset.answer;
+            const feedbackEl = document.getElementById(`feedback-${step}`);
+
+            if (value === answer) {
+                // --- 答對了 ---
+                input.classList.add('correct');
+                input.disabled = true; // 鎖定
+                feedbackEl.innerHTML = `<span class="text-green-600">答對了！</span>`;
+                
+                const nextInput = getNextInput(step, index);
+                if (nextInput) {
+                    // --- 跳到下一格 ---
+                    nextInput.focus();
+                } else {
+                    // --- 如果是最後一格，試著 focus 第一個還沒填的 ---
+                    const firstEmptyInput = document.querySelector(`#input-grid-${step} .factor-input:not(.correct)`);
+                    if(firstEmptyInput) {
+                        firstEmptyInput.focus();
+                    }
+                }
+
+                // --- 關鍵更動：每次答對都檢查 *整步驟* 是否完成 ---
+                checkStepCompletion(step);
+
+            } else {
+                // --- 答錯了 ---
+                feedbackEl.innerHTML = `<span class="text-red-600">不對喔...</span>`;
+                // 如果輸入的長度足夠長但還是錯，1秒後清空
+                if (value.length >= answer.length) {
+                    setTimeout(() => {
+                        if (!input.classList.contains('correct')) { // 再次確認是否已修正
+                            input.value = "";
+                            feedbackEl.textContent = "";
+                        }
+                    }, 1000);
+                }
+            }
+        }
+        
+        /**
+         * 步驟 1-4, 6-8：檢查是否該步驟的所有格子都已完成
+         */
+        function checkStepCompletion(step) {
+            const answers = correctAnswers[step]; // 該步驟的標準答案陣列
+            const inputs = document.querySelectorAll(`#input-grid-${step} .factor-input`); // 該步驟的所有輸入框
+            
+            // 檢查是否 *所有* 格子都答對了
+            let allCorrect = true;
+            if (inputs.length !== answers.length) { // 數量不對，直接 return
+                allCorrect = false;
+            } else {
+                for (let input of inputs) {
+                    if (!input.classList.contains('correct')) {
+                        allCorrect = false; // 只要有一個格子還沒答對
+                        break;
+                    }
+                }
+            }
+
+            // --- 如果全部答對，才進入下一步 ---
+            if (allCorrect) {
+                const feedbackEl = document.getElementById(`feedback-${step}`);
+                const feedbackText = positiveFeedbacks[Math.floor(Math.random() * positiveFeedbacks.length)];
+                
+                feedbackEl.innerHTML = `<span class="text-green-600">${feedbackText}</span>`;
+                
+                // 延遲 1.5 秒後自動跳到下一步
+                setTimeout(() => moveToNextStep(parseInt(step)), 1500);
+            }
+        }
+
+
+        /**
+         * (格子/按鈕)步驟完成後，移動到下一步
+         */
+        function moveToNextStep(stepNumber) {
+            document.getElementById(`step-${stepNumber}`).classList.add('hidden');
+            
+            const nextStep = stepNumber + 1;
+            
+            // 特殊處理：進入步驟 4, 5, 8, 9 時，填入前面步驟的答案
+            if (nextStep === 4) {
+                document.getElementById('list-30').textContent = correctAnswers[1].join(', ');
+                document.getElementById('list-60').textContent = correctAnswers[2].join(', ');
+                document.getElementById('list-90').textContent = correctAnswers[3].join(', ');
+            }
+            if (nextStep === 5) {
+                document.getElementById('list-common').textContent = correctAnswers[4].join(', ');
+            }
+            // --- 新增 ---
+            if (nextStep === 8) {
+                document.getElementById('list-24').textContent = correctAnswers[6].join(', ');
+                document.getElementById('list-32').textContent = correctAnswers[7].join(', ');
+            }
+            if (nextStep === 9) {
+                document.getElementById('list-common-24-32').textContent = correctAnswers[8].join(', ');
+            }
+            // --- 結束 ---
+            
+            // 顯示下一步
+            const nextStepEl = document.getElementById(`step-${nextStep}`);
+            if (nextStepEl) {
+                nextStepEl.classList.remove('hidden');
+                updateProgress(nextStep);
+
+                // 自動 focus 下一步驟的第一個格子 (如果存在)
+                const firstInputOfNextStep = document.getElementById(`input-${nextStep}-0`);
+                if (firstInputOfNextStep) {
+                    firstInputOfNextStep.focus();
+                } else {
+                    // 如果下一步是按鈕步驟 (5 或 9)，focus 它的輸入框
+                    document.getElementById(`answer-${nextStep}`)?.focus();
+                }
+            }
+        }
+
+
+        /**
+         * 檢查答案的函數 (***現在用於步驟 5 和 9***)
+         * @param {number} stepNumber - 目前的步驟編號 (5 或 9)
+         */
+        function checkStep(stepNumber) {
+            // 防呆：只處理 5 和 9
+            if (stepNumber !== 5 && stepNumber !== 9) return;
+
+            const answerInput = document.getElementById(`answer-${stepNumber}`);
+            const feedbackEl = document.getElementById(`feedback-${stepNumber}`);
+            const button = document.getElementById(`btn-${stepNumber}`);
+
+            const userAnswer = answerInput.value.trim().replace(/\s+/g, '').replace(/，/g, ',');
+            const correctAnswer = correctAnswers[stepNumber];
+
+            if (userAnswer === correctAnswer) {
+                // --- 答對了 (步驟 5 或 9) ---
+                const feedbackText = positiveFeedbacks[Math.floor(Math.random() * positiveFeedbacks.length)];
+                feedbackEl.innerHTML = `<span class="text-green-600">${feedbackText}</span>`;
+                
+                button.className = "btn-check btn-check-success";
+                button.disabled = true;
+                answerInput.disabled = true;
+                answerInput.classList.add("border-green-500", "bg-green-50");
+
+                if (stepNumber === 5) {
+                    // --- 答對第 1 題, 進入第 2 題 (步驟 6) ---
+                    setTimeout(() => moveToNextStep(stepNumber), 1500);
+                } else if (stepNumber === 9) {
+                    // --- 答對第 2 題, 全部完成 ---
+                    setTimeout(() => {
+                        document.getElementById(`step-${stepNumber}`).classList.add('hidden');
+                        document.getElementById('completion-message').classList.remove('hidden');
+                        updateProgress(stepNumber, true); // 標記為完成
+                    }, 1500);
+                }
+
+            } else {
+                // --- 步驟 5 或 9 答錯了 ---
+                const feedbackText = negativeFeedbacks[Math.floor(Math.random() * negativeFeedbacks.length)];
+                feedbackEl.innerHTML = `<span class="text-red-600">${feedbackText}</span>`;
+                
+                button.className = "btn-check btn-check-error";
+                setTimeout(() => {
+                    button.className = "btn-check btn-check-default";
+                }, 2000);
+            }
+        }
+
+        /**
+         * 更新進度提示
+         * @param {number} currentStep - 目前步驟
+         * @param {boolean} isComplete - 是否已完成
+         */
+        function updateProgress(currentStep, isComplete = false) {
+            const indicator = document.getElementById('progress-indicator');
+            if (isComplete) {
+                indicator.textContent = `🎉 全部完成！ (${totalSteps} / ${totalSteps} 步) 🎉`;
+                indicator.classList.add("bg-green-100", "text-green-700", "border-green-300");
+            } else {
+                // 修正錯字： F步 -> 步
+                indicator.textContent = `第 ${currentStep} 步 / 共 ${totalSteps} 步`;
+            }
+        }
+    </script>
+</body>
+</html>
