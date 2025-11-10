@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 標題已更新 -->
+    <title>Unit 4 Grammar Focus3(現在進行式)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="dog.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background-color: #f0f9ff; /* light blue background */
+        }
+        .exercise-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: box-shadow 0.3s ease;
+        }
+        .exercise-card:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+        .example-box {
+            background-color: #f8faff;
+            border: 1px solid #dbeafe;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+            font-family: 'Noto Sans TC', sans-serif;
+            line-height: 1.8;
+            color: #1e3a8a;
+        }
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 12px;
+            background-color: #f1f5f9;
+            border-radius: 8px;
+            min-height: 50px;
+        }
+        .drop-zone {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 12px;
+            background-color: #ffffff;
+            border: 2px dashed #94a3b8;
+            border-radius: 8px;
+            min-height: 50px;
+            margin-top: 12px;
+            transition: all 0.3s ease;
+        }
+        .word-item {
+            padding: 8px 16px;
+            background-color: #e0f2fe;
+            border: 1px solid #7dd3fc;
+            color: #075985;
+            border-radius: 9999px; /* pill shape */
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+            font-weight: 600;
+        }
+        .word-item:hover {
+            background-color: #bae6fd;
+            transform: scale(1.05);
+        }
+        .speaker-icon {
+            cursor: pointer;
+            display: inline-block;
+            margin-left: 8px;
+            color: #3b82f6;
+            font-size: 1.2em;
+            vertical-align: middle;
+        }
+        .speaker-icon:hover {
+            color: #2563eb;
+        }
+        #tooltip {
+            position: absolute;
+            display: none;
+            background-color: #1f2937;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            pointer-events: none; /* So it doesn't interfere with mouse events */
+            z-index: 100;
+        }
+        .drop-zone.correct {
+            border-color: #22c55e;
+            background-color: #f0fdf4;
+        }
+        .drop-zone.incorrect {
+            border-color: #ef4444;
+            background-color: #fef2f2;
+        }
+        .question-prompt {
+             font-size: 1.1em;
+             font-weight: 600;
+             color: #1f2937;
+        }
+        .question-text {
+            font-size: 1.0em;
+            color: #4b5563;
+        }
+
+        @keyframes card-correct-glow {
+            0% { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); }
+            50% { box-shadow: 0 8px 30px rgba(34, 197, 94, 0.4); }
+            100% { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); }
+        }
+
+        .card-glow-animation {
+            animation: card-correct-glow 1s ease-out;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+
+    <div id="tooltip"></div>
+
+    <div class="max-w-4xl mx-auto">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-blue-800">Unit 4 Grammar Focus3(現在進行式)</h1>
+            <p class="text-lg text-slate-600 mt-2">課本p.75-76</p>
+        </header>
+
+        <!-- Section 1: 依提示完成句子 -->
+        <div class="exercise-section mb-8">
+            <h2 class="text-2xl font-bold text-blue-700 mb-4">一、請依提示完成句子 (be+V.ing)</h2>
+            <div class="example-box">
+                <b>例：</b>Teddy / be / cry / .<br>
+                ➔ Teddy is crying.
+            </div>
+            <div id="exercise-container-1">
+                <!-- JS will inject exercises here -->
+            </div>
+        </div>
+
+        <!-- Section 2: Yes/No 或 Wh- 疑問句 -->
+        <div class="exercise-section mb-8">
+            <h2 class="text-2xl font-bold text-blue-700 mb-4">二、請回答以下Yes/No或Wh-疑問句</h2>
+             <div class="example-box">
+                <b>提示：</b>請根據括號中的提示，重組正確的答句。
+            </div>
+            <div id="exercise-container-2">
+                <!-- JS will inject exercises here -->
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- DATA (重組句子) ---
+        const translations = {
+            'Teddy': '泰迪', 'is': '是', 'crying': '哭泣',
+            'Joe': '喬', 'cooking': '烹飪', 'at': '在', 'six': '六', 'p.m.': '下午', 'in': '在', 'the': '這/那', 'kitchen': '廚房',
+            'Joe’s': '喬的', 'son': '兒子', 'running': '跑步', 'school': '學校',
+            'Peter': '彼得', 'singing': '唱歌', 'in': '在', 'the': '這/那', 'park': '公園',
+            'We': '我們', 'are': '是', 'listening': '聽', 'to': '到', 'music': '音樂',
+            'Are': '...嗎', 'you': '你', 'watching': '看', 'TV': '電視',
+            'Yes': '是', 'I': '我', 'am': '是',
+            'they': '他們', 'playing': '玩', 'baseball': '棒球',
+            'No': '不', 'aren’t': '不是',
+            'What': '什麼', 'Kelly': '凱莉', 'doing': '做',
+            'She': '她', 'talking': '說話',
+            'They': '他們', 'sleeping': '睡覺',
+            '.': '。', '?': '？', ',': '，'
+        };
+
+        const exercises = [
+            // Section 1
+            // --- 修正第一題: 移除 in the kitchen ---
+            { id: 's1q1', section: 1, prompt: '1. Joe / be / cook / at six p.m.', question: '請重組句子:', answer: 'Joe is cooking at six p.m..', chunks: ['Joe', 'is', 'cooking', 'at', 'six', 'p.m.', '.'] },
+            { id: 's1q2', section: 1, prompt: '2. Joe’s son / be / run / at school / .', question: '請重組句子:', answer: 'Joe’s son is running at school.', chunks: ['Joe’s', 'son', 'is', 'running', 'at', 'school', '.'] },
+            { id: 's1q3', section: 1, prompt: '3. Peter / be / sing / in the park / .', question: '請重組句子:', answer: 'Peter is singing in the park.', chunks: ['Peter', 'is', 'singing', 'in', 'the', 'park', '.'] },
+            { id: 's1q4', section: 1, prompt: '4. We / be / listen to music / .', question: '請重組句子:', answer: 'We are listening to music.', chunks: ['We', 'are', 'listening', 'to', 'music', '.'] },
+            
+            // Section 2
+            { id: 's2q1', section: 2, prompt: '1. Are you watching TV? (肯定簡答)', question: '請重組回答:', answer: 'Yes, I am.', chunks: ['Yes', ',', 'I', 'am', '.'] },
+            { id: 's2q2', section: 2, prompt: '2. Are they playing baseball? (否定簡答)', question: '請重組回答:', answer: 'No, they aren’t.', chunks: ['No', ',', 'they', 'aren’t', '.'] },
+            { id: 's2q3', section: 2, prompt: '3. What is Kelly doing? (talk)', question: '請重組回答:', answer: 'She is talking.', chunks: ['She', 'is', 'talking', '.'] },
+            { id: 's2q4', section: 2, prompt: '4. What are they doing? (sleep)', question: '請重組回答:', answer: 'They are sleeping.', chunks: ['They', 'are', 'sleeping', '.'] }
+        ];
+
+        // --- CORE FUNCTIONS ---
+        const synth = window.speechSynthesis;
+        
+        function speak(text, rate = 0.9) {
+            synth.cancel();
+            if (text !== '') {
+                const cleanText = text.replace(/[.?]/g, '')
+                                     .replace('a.m.', 'A M')
+                                     .replace('p.m.', 'P M');
+                const utterThis = new SpeechSynthesisUtterance(cleanText);
+                utterThis.lang = 'en-US';
+                utterThis.rate = rate;
+                synth.speak(utterThis);
+            }
+        }
+        
+        function createSpeakerIcon(textToSpeak) {
+            const safeText = textToSpeak.replace(/<[^>]*>/g, '').replace(/"/g, '&quot;');
+            const speakText = safeText.replace(':', ' ').replace('?', '');
+            return `<span class="speaker-icon" data-speak="${speakText}">🔊</span>`;
+        }
+
+        // --- INITIALIZATION (網頁載入) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const container1 = document.getElementById('exercise-container-1');
+            const container2 = document.getElementById('exercise-container-2'); 
+
+            exercises.forEach((ex, index) => {
+                const card = document.createElement('div');
+                card.className = 'exercise-card';
+                card.id = `exercise-${ex.id}`;
+
+                const words = ex.chunks;
+                
+                // --- 修正: 只在 Section 2 (問題) 才加入喇叭圖示 ---
+                let promptText = ex.prompt;
+                if (ex.section === 2) {
+                     // 取得括號前的文字來朗讀
+                     const speakablePrompt = ex.prompt.split('(')[0].trim();
+                     promptText = `${ex.prompt} ${createSpeakerIcon(speakablePrompt)}`;
+                }
+
+                const contentHTML = `
+                    <div class="flex items-center mb-2">
+                        <div class="question-prompt">${promptText}</div>
+                    </div>
+                    <p class="question-text mb-3">${ex.question}</p>
+                    <div class="word-bank mt-4">
+                        ${[...words].sort(() => Math.random() - 0.5).map((word, idx) => `<div class="word-item" data-word-id="${ex.id}-${idx}">${word}</div>`).join('')}
+                    </div>
+                    <div class="drop-zone mt-3"></div>
+                    <div class="flex flex-wrap gap-3 mt-4">
+                         <button class="check-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded" data-answer="${ex.answer}" data-id="${ex.id}">檢查答案</button>
+                         <button class="reset-btn bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded" data-id="${ex.id}">重新作答</button>
+                         <button class="hint-btn bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded" data-speak-hint="${ex.answer}">💡 提示 (聽答案)</button>
+                    </div>
+                    <p class="feedback mt-2 text-sm font-bold"></p>
+                `;
+                card.innerHTML = contentHTML;
+                
+                // Append to correct container
+                if (ex.section === 1) {
+                    container1.appendChild(card);
+                } else if (ex.section === 2) {
+                    container2.appendChild(card);
+                }
+            });
+
+            addEventListeners();
+        });
+
+        // --- 綁定重組句子的事件 ---
+        function addEventListeners() {
+            // Tooltip (共用)
+            const tooltip = document.getElementById('tooltip');
+            document.body.addEventListener('mouseover', (e) => {
+                if (e.target.classList.contains('word') || e.target.closest('.word-item')) {
+                     const wordElement = e.target.closest('.word-item') || e.target;
+                     const text = wordElement.textContent.trim().replace(/[.?,]/g, '');
+                     const chinese = translations[text];
+                    if (chinese) {
+                        tooltip.textContent = chinese;
+                        tooltip.style.display = 'block';
+                    }
+                }
+            });
+             document.body.addEventListener('mousemove', (e) => {
+                if (tooltip.style.display === 'block') {
+                    tooltip.style.left = `${e.pageX + 10}px`;
+                    tooltip.style.top = `${e.pageY + 10}px`;
+                }
+            });
+            document.body.addEventListener('mouseout', (e) => {
+                if (e.target.classList.contains('word') || e.target.closest('.word-item')) {
+                    tooltip.style.display = 'none';
+                }
+            });
+
+            // Speaker Icon & Hint Button clicks (重組句子)
+            document.body.addEventListener('click', (e) => {
+                if (e.target.classList.contains('speaker-icon')) {
+                    e.stopPropagation();
+                    const textToSpeak = e.target.dataset.speak;
+                    if (textToSpeak) speak(textToSpeak); // 預設 0.9 速度
+                }
+                if (e.target.classList.contains('hint-btn')) {
+                    const textToSpeak = e.target.dataset.speakHint;
+                    if (textToSpeak) speak(textToSpeak, 0.5); // 提示 0.5 速度
+                }
+            });
+            
+            // --- UN SCRAMBLE LOGIC (重組句子) ---
+            document.body.addEventListener('click', e => {
+                const target = e.target;
+                if (target.classList.contains('word-item')) {
+                    const card = target.closest('.exercise-card');
+                    if (!card) return;
+                    const wordBank = card.querySelector('.word-bank');
+                    const dropZone = card.querySelector('.drop-zone');
+                    
+                    if (target.parentElement === wordBank) {
+                        speak(target.textContent); // 單字 0.9 速度
+                        dropZone.appendChild(target);
+                    } else if (target.parentElement === dropZone) {
+                        wordBank.appendChild(target);
+                    }
+                }
+            });
+
+            // Check unscramble answers (重組句子)
+            document.querySelectorAll('.check-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const exId = btn.dataset.id;
+                    const card = document.getElementById(`exercise-${exId}`);
+                    const dropZone = card.querySelector('.drop-zone');
+                    const feedbackEl = card.querySelector('.feedback');
+                    const words = Array.from(dropZone.children).map(child => child.textContent);
+                    
+                    let userAnswer = '';
+                    for (let i = 0; i < words.length; i++) {
+                        // 自動在單字間添加空格 (除非是標點符號)
+                        // --- 修正: 移除 'a.m.' 和 'p.m.'，讓它們前面可以加空格 ---
+                        if (i > 0 && ![',', '.', '?', 'aren’t'].includes(words[i]) && !words[i].startsWith('(')) {
+                            userAnswer += ' ';
+                        }
+                        userAnswer += words[i];
+                    }
+                    // 特別處理 'aren't' (因為 't 前不應有空格)
+                    userAnswer = userAnswer.replace("aren ’t", "aren’t").trim();
+
+                    const correctAnswer = btn.dataset.answer;
+
+                    if (userAnswer === correctAnswer) {
+                        feedbackEl.textContent = '🎉 太棒了，答對了！';
+                        feedbackEl.className = 'feedback mt-2 text-sm font-bold text-green-600';
+                        dropZone.classList.remove('incorrect');
+                        dropZone.classList.add('correct');
+                        card.classList.add('card-glow-animation');
+                        setTimeout(() => card.classList.remove('card-glow-animation'), 1000);
+                    } else {
+                        feedbackEl.textContent = '🤔 再試一次看看！';
+                        feedbackEl.className = 'feedback mt-2 text-sm font-bold text-red-600';
+                        dropZone.classList.remove('correct');
+                        dropZone.classList.add('incorrect');
+                    }
+                });
+            });
+            
+            // Reset unscramble questions (重組句子)
+            document.querySelectorAll('.reset-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const exId = btn.dataset.id;
+                    const card = document.getElementById(`exercise-${exId}`);
+                    const dropZone = card.querySelector('.drop-zone');
+                    const wordBank = card.querySelector('.word-bank');
+                    const feedbackEl = card.querySelector('.feedback');
+                    
+                    // 將所有單字移回 word-bank
+                    Array.from(dropZone.children).forEach(child => wordBank.appendChild(child));
+                    
+                    // (可選) 重新打亂 word-bank 中的順序
+                    const items = Array.from(wordBank.children);
+                    items.sort(() => Math.random() - 0.5);
+                    items.forEach(item => wordBank.appendChild(item));
+
+                    feedbackEl.textContent = '';
+                    dropZone.classList.remove('correct', 'incorrect');
+                });
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 標題已更新 -->
+    <title>Unit 4 Grammar Focus2(詢問時間幾點? )</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="dog.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background-color: #f0f9ff; /* light blue background */
+        }
+        .exercise-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: box-shadow 0.3s ease;
+        }
+        .exercise-card:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+        .example-box {
+            background-color: #f8faff;
+            border: 1px solid #dbeafe;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+            font-family: 'Noto Sans TC', sans-serif;
+            line-height: 1.8;
+            color: #1e3a8a;
+        }
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 12px;
+            background-color: #f1f5f9;
+            border-radius: 8px;
+            min-height: 50px;
+        }
+        .drop-zone {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 12px;
+            background-color: #ffffff;
+            border: 2px dashed #94a3b8;
+            border-radius: 8px;
+            min-height: 50px;
+            margin-top: 12px;
+            transition: all 0.3s ease;
+        }
+        .word-item {
+            padding: 8px 16px;
+            background-color: #e0f2fe;
+            border: 1px solid #7dd3fc;
+            color: #075985;
+            border-radius: 9999px; /* pill shape */
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+            font-weight: 600;
+        }
+        .word-item:hover {
+            background-color: #bae6fd;
+            transform: scale(1.05);
+        }
+        .speaker-icon {
+            cursor: pointer;
+            display: inline-block;
+            margin-left: 8px;
+            color: #3b82f6;
+            font-size: 1.2em;
+            vertical-align: middle;
+        }
+        .speaker-icon:hover {
+            color: #2563eb;
+        }
+        #tooltip {
+            position: absolute;
+            display: none;
+            background-color: #1f2937;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            pointer-events: none; /* So it doesn't interfere with mouse events */
+            z-index: 100;
+        }
+        .drop-zone.correct {
+            border-color: #22c55e;
+            background-color: #f0fdf4;
+        }
+        .drop-zone.incorrect {
+            border-color: #ef4444;
+            background-color: #fef2f2;
+        }
+        .question-prompt {
+             font-size: 1.1em;
+             font-weight: 600;
+             color: #1f2937;
+        }
+        .question-text {
+            font-size: 1.0em;
+            color: #4b5563;
+        }
+
+        @keyframes card-correct-glow {
+            0% { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); }
+            50% { box-shadow: 0 8px 30px rgba(34, 197, 94, 0.4); }
+            100% { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); }
+        }
+
+        .card-glow-animation {
+            animation: card-correct-glow 1s ease-out;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+
+    <div id="tooltip"></div>
+
+    <div class="max-w-4xl mx-auto">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-blue-800">Unit 4 Grammar Focus2(詢問時間幾點?)</h1>
+            <p class="text-lg text-slate-600 mt-2">課本p.73-74</p>
+        </header>
+
+        <!-- Section 1: 寫出時間 -->
+        <div class="exercise-section mb-8">
+            <h2 class="text-2xl font-bold text-blue-700 mb-4">◎ 請用英文寫出下列時間（先「時」後「分」）</h2>
+            <div class="example-box">
+                <b>例：</b>2:10 ➔ It’s two ten.<br>
+                <b>例：</b>4:00 ➔ It’s four o’clock (整點).
+            </div>
+            <div id="exercise-container-1">
+                <!-- JS will inject exercises here -->
+            </div>
+        </div>
+
+        <!-- +++ NEW SECTION +++ -->
+        <!-- Section 2: Lisa 的行事曆 -->
+        <div class="exercise-section mb-8">
+            <h2 class="text-2xl font-bold text-blue-700 mb-4">◎ 請根據Lisa週末的行事曆回答</h2>
+            <div class="example-box">
+                <b>注意:</b> 1. 請使用 a.m. (上午) / p.m. (下午)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. 特定活動時間需加介係詞 at
+            </div>
+            
+            <!-- Schedule Table -->
+            <div class="overflow-x-auto rounded-lg border border-slate-300 shadow-sm mb-6">
+                <table class="w-full min-w-[500px] text-sm text-left text-slate-700">
+                    <thead class="bg-slate-100 text-slate-800 font-semibold">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">Time</th>
+                            <th scope="col" class="px-6 py-3">Saturday</th>
+                            <th scope="col" class="px-6 py-3">Sunday</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-white border-b">
+                            <td class="px-6 py-4 font-medium">10:00 (10 a.m.)</td>
+                            <td class="px-6 py-4">violin class (小提琴課)</td>
+                            <td class="px-6 py-4">swimming class</td>
+                        </tr>
+                        <tr class="bg-slate-50 border-b">
+                            <td class="px-6 py-4 font-medium">12:00 (12 p.m.)</td>
+                            <td class="px-6 py-4">lunch with Jane</td>
+                            <td class="px-6 py-4"></td>
+                        </tr>
+                        <tr class="bg-white border-b">
+                            <td class="px-6 py-4 font-medium">16:00 (4 p.m.)</td>
+                            <td class="px-6 py-4"></td>
+                            <td class="px-6 py-4">English class</td>
+                        </tr>
+                        <tr class="bg-slate-50 border-b">
+                            <td class="px-6 py-4 font-medium">19:00 (7 p.m.)</td>
+                            <td class="px-6 py-4"></td>
+                            <td class="px-6 py-4">Kelly’s birthday party</td>
+                        </tr>
+                        <tr class="bg-white">
+                            <td class="px-6 py-4 font-medium">20:00 (8 p.m.)</td>
+                            <td class="px-6 py-4">watch TV</td>
+                            <td class="px-6 py-4"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- New exercises container -->
+            <div id="exercise-container-2">
+                <!-- JS will inject new exercises here -->
+            </div>
+        </div>
+        <!-- +++ END OF NEW SECTION +++ -->
+
+    </div>
+
+    <script>
+        // --- DATA (重組句子) ---
+        const translations = {
+            'It’s': '它是', 'one': '一', 'twenty': '二十',
+            'four': '四', 'fifteen': '十五',
+            'three': '三', 'forty-five': '四十五',
+            'eleven': '十一', 'thirty': '三十',
+            'eight': '八', 'o’clock': '點鐘',
+            '.': '。',
+            // --- New words for Section 2 ---
+            'What': '什麼', 'time': '時間', 'is': '是',
+            'the': '這/那', 'violin': '小提琴', 'class': '課程',
+            'Kelly’s': 'Kelly的', 'birthday': '生日', 'party': '派對',
+            'Lisa’s': 'Lisa的', 'English': '英文', 'on': '在', 'Sunday': '星期天',
+            'at': '在 (時間)', 'ten': '十', 'in': '在...裡面', 'morning': '早上',
+            'a.m.': '上午', '10': '十',
+            'seven': '七', 'evening': '晚上',
+            'p.m.': '下午', '7': '七',
+            'afternoon': '下午', '4': '四',
+            '?': '？'
+        };
+
+        const exercises = [
+            // Section 1
+            { id: 'q1', section: 1, prompt: '1. 1:20', question: '請重組句子:', answer: 'It’s one twenty.', chunks: ['It’s', 'one', 'twenty', '.'] },
+            { id: 'q2', section: 1, prompt: '2. 4:15', question: '請重組句子:', answer: 'It’s four fifteen.', chunks: ['It’s', 'four', 'fifteen', '.'] },
+            { id: 'q3', section: 1, prompt: '3. 3:45', question: '請重組句子:', answer: 'It’s three forty-five.', chunks: ['It’s', 'three', 'forty-five', '.'] },
+            { id: 'q4', section: 1, prompt: '4. 11:30', question: '請重組句子:', answer: 'It’s eleven thirty.', chunks: ['It’s', 'eleven', 'thirty', '.'] },
+            { id: 'q5', section: 1, prompt: '5. 8:00', question: '請重組句子:', answer: 'It’s eight o’clock.', chunks: ['It’s', 'eight', 'o’clock', '.'] },
+            
+            // --- New exercises for Section 2 ---
+            { id: 'q-sched-1a', section: 2, prompt: '1. What time is the violin class?', question: '請重組回答 (答案1):', answer: 'It’s at ten o’clock in the morning.', chunks: ['It’s', 'at', 'ten', 'o’clock', 'in', 'the', 'morning', '.'] },
+            { id: 'q-sched-1b', section: 2, prompt: '1. What time is the violin class?', question: '請重組回答 (答案2):', answer: 'It’s at 10 a.m.', chunks: ['It’s', 'at', '10', 'a.m.', '.'] },
+            { id: 'q-sched-2a', section: 2, prompt: '2. What time is Kelly’s birthday party?', question: '請重組回答 (答案1):', answer: 'It’s at seven o’clock in the evening.', chunks: ['It’s', 'at', 'seven', 'o’clock', 'in', 'the', 'evening', '.'] },
+            { id: 'q-sched-2b', section: 2, prompt: '2. What time is Kelly’s birthday party?', question: '請重組回答 (答案2):', answer: 'It’s at 7 p.m.', chunks: ['It’s', 'at', '7', 'p.m.', '.'] },
+            { id: 'q-sched-3a', section: 2, prompt: '3. What time is Lisa’s English class on Sunday?', question: '請重組回答 (答案1):', answer: 'It’s at four o’clock in the afternoon.', chunks: ['It’s', 'at', 'four', 'o’clock', 'in', 'the', 'afternoon', '.'] },
+            { id: 'q-sched-3b', section: 2, prompt: '3. What time is Lisa’s English class on Sunday?', question: '請重組回答 (答案2):', answer: 'It’s at 4 p.m.', chunks: ['It’s', 'at', '4', 'p.m.', '.'] }
+        ];
+
+        // --- CORE FUNCTIONS ---
+        const synth = window.speechSynthesis;
+        
+        // *** 修正: 增加 rate 參數, 預設為 0.9 ***
+        function speak(text, rate = 0.9) {
+            synth.cancel();
+            if (text !== '') {
+                // 移除標點符號並替換 'a.m.' 和 'p.m.' 以便朗讀
+                const cleanText = text.replace(/[.?]/g, '')
+                                     .replace('a.m.', 'A M')
+                                     .replace('p.m.', 'P M');
+                const utterThis = new SpeechSynthesisUtterance(cleanText);
+                utterThis.lang = 'en-US';
+                // *** 修正: 使用傳入的 rate ***
+                utterThis.rate = rate;
+                synth.speak(utterThis);
+            }
+        }
+        
+        function createSpeakerIcon(textToSpeak) {
+            const safeText = textToSpeak.replace(/<[^>]*>/g, '').replace(/"/g, '&quot;');
+            // 替換 : 為空格以便朗讀
+            const speakText = safeText.replace(':', ' ').replace('?', '');
+            return `<span class="speaker-icon" data-speak="${speakText}">🔊</span>`;
+        }
+
+        // --- INITIALIZATION (網頁載入) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const container1 = document.getElementById('exercise-container-1');
+            const container2 = document.getElementById('exercise-container-2'); // Get new container
+
+            exercises.forEach((ex, index) => {
+                const card = document.createElement('div');
+                card.className = 'exercise-card';
+                card.id = `exercise-${ex.id}`;
+
+                const words = ex.chunks;
+                let promptText = ex.prompt;
+                // 對於 section 2 的問題，加上 🔊
+                if (ex.section === 2) {
+                     promptText = `${ex.prompt} ${createSpeakerIcon(ex.prompt)}`;
+                } else {
+                     promptText = `${ex.prompt} ${createSpeakerIcon(ex.prompt.replace(':', ' '))}`;
+                }
+
+                const contentHTML = `
+                    <div class="flex items-center mb-2">
+                        <div class="question-prompt">${promptText}</div>
+                    </div>
+                    <p class="question-text mb-3">${ex.question}</p>
+                    <div class="word-bank mt-4">
+                        ${[...words].sort(() => Math.random() - 0.5).map((word, idx) => `<div class="word-item" data-word-id="${ex.id}-${idx}">${word}</div>`).join('')}
+                    </div>
+                    <div class="drop-zone mt-3"></div>
+                    <div class="flex flex-wrap gap-3 mt-4">
+                         <button class="check-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded" data-answer="${ex.answer}" data-id="${ex.id}">檢查答案</button>
+                         <button class="reset-btn bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded" data-id="${ex.id}">重新作答</button>
+                         <button class="hint-btn bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded" data-speak-hint="${ex.answer}">💡 提示 (聽答案)</button>
+                    </div>
+                    <p class="feedback mt-2 text-sm font-bold"></p>
+                `;
+                card.innerHTML = contentHTML;
+                
+                // Append to correct container
+                if (ex.section === 1) {
+                    container1.appendChild(card);
+                } else if (ex.section === 2) {
+                    container2.appendChild(card);
+                }
+            });
+
+            addEventListeners();
+        });
+
+        // --- 綁定重組句子的事件 ---
+        function addEventListeners() {
+            // Tooltip (共用)
+            const tooltip = document.getElementById('tooltip');
+            document.body.addEventListener('mouseover', (e) => {
+                if (e.target.classList.contains('word') || e.target.closest('.word-item')) {
+                     const wordElement = e.target.closest('.word-item') || e.target;
+                     const text = wordElement.textContent.trim().replace(/[.?,]/g, '');
+                     const chinese = translations[text];
+                    if (chinese) {
+                        tooltip.textContent = chinese;
+                        tooltip.style.display = 'block';
+                    }
+                }
+            });
+             document.body.addEventListener('mousemove', (e) => {
+                if (tooltip.style.display === 'block') {
+                    tooltip.style.left = `${e.pageX + 10}px`;
+                    tooltip.style.top = `${e.pageY + 10}px`;
+                }
+            });
+            document.body.addEventListener('mouseout', (e) => {
+                if (e.target.classList.contains('word') || e.target.closest('.word-item')) {
+                    tooltip.style.display = 'none';
+                }
+            });
+
+            // Speaker Icon & Hint Button clicks (重組句子)
+            document.body.addEventListener('click', (e) => {
+                if (e.target.classList.contains('speaker-icon')) {
+                    e.stopPropagation();
+                    const textToSpeak = e.target.dataset.speak;
+                    // *** 修正: 呼叫 speak 時使用預設速度 0.9 ***
+                    if (textToSpeak) speak(textToSpeak);
+                }
+                if (e.target.classList.contains('hint-btn')) {
+                    const textToSpeak = e.target.dataset.speakHint;
+                    // *** 修正: 呼叫 speak 並傳入 0.5 速度 ***
+                    if (textToSpeak) speak(textToSpeak, 0.5);
+                }
+            });
+            
+            // --- UN SCRAMBLE LOGIC (重組句子) ---
+            document.body.addEventListener('click', e => {
+                const target = e.target;
+                if (target.classList.contains('word-item')) {
+                    const card = target.closest('.exercise-card');
+                    if (!card) return;
+                    const wordBank = card.querySelector('.word-bank');
+                    const dropZone = card.querySelector('.drop-zone');
+                    
+                    if (target.parentElement === wordBank) {
+                        // *** 修正: 呼叫 speak 時使用預設速度 0.9 ***
+                        speak(target.textContent);
+                        dropZone.appendChild(target);
+                    } else if (target.parentElement === dropZone) {
+                        wordBank.appendChild(target);
+                    }
+                }
+            });
+
+            // Check unscramble answers (重組句子)
+            document.querySelectorAll('.check-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const exId = btn.dataset.id;
+                    const card = document.getElementById(`exercise-${exId}`);
+                    const dropZone = card.querySelector('.drop-zone');
+                    const feedbackEl = card.querySelector('.feedback');
+                    const words = Array.from(dropZone.children).map(child => child.textContent);
+                    
+                    let userAnswer = '';
+                    for (let i = 0; i < words.length; i++) {
+                        // 自動在單字間添加空格 (除非是標點符號)
+                        // 修正： 'a.m.' 和 'p.m.' 前面不應有空格
+                        if (i > 0 && ![',', '.', '?', 'a.m.', 'p.m.'].includes(words[i]) && !words[i].startsWith('(')) {
+                            userAnswer += ' ';
+                        }
+                        userAnswer += words[i];
+                    }
+                    userAnswer = userAnswer.trim();
+
+                    // 處理 (It's at 10 a.m.) 這種答案，句點可能在外面
+                    const correctAnswer = btn.dataset.answer.endsWith('.') ? btn.dataset.answer : btn.dataset.answer + '.';
+                    
+                    // 讓 It's at 10 a.m. 和 It's at 10 a.m. 都算對
+                    if (userAnswer === correctAnswer || userAnswer === correctAnswer.slice(0, -1)) {
+                        feedbackEl.textContent = '🎉 太棒了，答對了！';
+                        feedbackEl.className = 'feedback mt-2 text-sm font-bold text-green-600';
+                        dropZone.classList.remove('incorrect');
+                        dropZone.classList.add('correct');
+                        card.classList.add('card-glow-animation');
+                        setTimeout(() => card.classList.remove('card-glow-animation'), 1000);
+                    } else {
+                        feedbackEl.textContent = '🤔 再試一次看看！';
+                        feedbackEl.className = 'feedback mt-2 text-sm font-bold text-red-600';
+                        dropZone.classList.remove('correct');
+                        dropZone.classList.add('incorrect');
+                    }
+                });
+            });
+            
+            // Reset unscramble questions (重組句子)
+            document.querySelectorAll('.reset-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const exId = btn.dataset.id;
+                    const card = document.getElementById(`exercise-${exId}`);
+                    const dropZone = card.querySelector('.drop-zone');
+                    const wordBank = card.querySelector('.word-bank');
+                    const feedbackEl = card.querySelector('.feedback');
+                    
+                    // 將所有單字移回 word-bank
+                    Array.from(dropZone.children).forEach(child => wordBank.appendChild(child));
+                    
+                    // (可選) 重新打亂 word-bank 中的順序
+                    const items = Array.from(wordBank.children);
+                    items.sort(() => Math.random() - 0.5);
+                    items.forEach(item => wordBank.appendChild(item));
+
+                    feedbackEl.textContent = '';
+                    dropZone.classList.remove('correct', 'incorrect');
+                });
+            });
+        }
+    </script>
+</body>
+</html>
