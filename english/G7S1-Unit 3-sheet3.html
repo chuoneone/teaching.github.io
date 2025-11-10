@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 3 文法選擇練習</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter for English, Noto Sans TC for Chinese -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" href="dog.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* 自定義樣式 */
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+        }
+
+        /* 互動單字樣式 */
+        .word {
+            position: relative;
+            cursor: pointer;
+            border-bottom: 1px dotted #a8a29e; /* stone-400 */
+            transition: color 0.2s;
+        }
+
+        .word:hover {
+            color: #d97706; /* amber-600 */
+        }
+
+        /* 中文翻譯提示框 (Tooltip) */
+        .word .tooltip {
+            visibility: hidden;
+            width: max-content;
+            background-color: #1f2937; /* gray-800 */
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 10px;
+            position: absolute;
+            z-index: 10;
+            bottom: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none; /* 避免提示框干擾滑鼠事件 */
+        }
+
+        .word:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-amber-50 flex items-center justify-center min-h-screen p-4">
+
+    <!-- 測驗主容器 -->
+    <div id="quiz-container" class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg w-full max-w-3xl">
+        <h1 class="text-2xl sm:text-3xl font-bold text-stone-800 text-center mb-2">Unit 3 文法選擇練習</h1>
+        <p class="text-center text-stone-600 mb-4">Class: _____&nbsp;&nbsp;&nbsp; Name: __________</p>
+        
+        <!-- 進度條 -->
+        <div class="w-full bg-stone-200 rounded-full h-2.5 mb-6">
+            <div id="progress-bar" class="bg-amber-500 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+        </div>
+        
+        <!-- 題目將由 JavaScript 動態生成於此 -->
+        <div id="questions-wrapper"></div>
+
+        <!-- 功能按鈕與分數顯示區 -->
+        <div id="controls" class="mt-8 text-center">
+            <!-- 按鈕將由 JavaScript 動態生成 -->
+        </div>
+        <div id="score-display" class="mt-6 text-center hidden"></div>
+    </div>
+
+    <!-- 提示訊息 Modal -->
+    <div id="alert-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-20">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm text-center">
+            <p id="alert-message" class="text-lg text-gray-800 mb-4"></p>
+            <button id="close-alert-btn" class="bg-amber-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-amber-600 transition-colors">知道了</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- 資料定義區 ---
+            // 更新的翻譯字典
+            const translations = {
+                // 原有單字
+                "what's": "什麼是", "what": "什麼", "the": "這個", "today": "今天", "it's": "它是", "may": "五月",
+                "time": "時間", "day": "天", "month": "月份", "date": "日期", "when": "何時", "is": "是", "her": "她的/她(受格)",
+                "school": "學校", "november": "十一月", "on": "在", "in": "在...裡面", "your": "你的", "birthday": "生日",
+                "oh": "哦", "also": "也", "new": "新的", "year's": "年的", "at": "在", "nine": "九", "thirty": "三十",
+                "january": "一月", "first": "第一", "december": "十二月", "this": "這個", "boy": "男孩", "has": "有",
+                "beautiful": "美麗的", "eyes": "眼睛", "and": "和", "long": "長的", "hair": "頭髮", "i": "我",
+                "like": "喜歡", "him": "他(受格)", "very": "非常", "much": "很多", "he": "他(主格)", "his": "他的", "he's": "他是",
+                "hi": "嗨", "i'm": "我是", "nice": "高興的", "to": "去", "meet": "遇見", "you": "你", "too": "也", "see": "看到",
+                "you're": "你是", "welcome": "不客氣", "excuse": "請問", "me": "我(受格)", "are": "是", "mr.": "先生", "walker": "沃克",
+                "yes": "是的", "larry": "賴瑞", "no": "不是", "not": "不", "friend": "朋友", "who's": "誰是", "that": "那個",
+                "girl": "女孩", "she": "她(主格)", "really": "真的", "tall": "高的", "a": "一個", "happy": "快樂的", "she's": "她是",
+                "ariel": "愛麗兒", "our": "我們的", "classmate": "同學", "eric's": "艾瑞克的", "aunt": "阿姨", "writer": "作家",
+                "doctor": "醫生", "housewife": "家庭主婦", "how": "如何", "old": "年老的", "alice": "愛麗絲", "brad": "布萊德",
+                "they": "他們(主格)", "my": "我的", "family": "家庭", "ten": "十", "twelve": "十二", "cook": "烹飪/廚師", "nurse": "護士",
+                "they're": "他們是", "erasers": "橡皮擦", "where": "在哪裡", "those": "那些", "these": "這些", "pens": "筆(複數)", 
+                "aren't": "不是", "for": "給/為了", "desk": "書桌", "where's": "在哪裡", "notebook": "筆記本", "from": "從", 
+                "uncle": "叔叔/伯伯", "under": "在...下面", "chair": "椅子", "enough": "足夠的", "one": "一", "person": "人", 
+                "favorite": "最喜歡的", "color": "顏色", "gray": "灰色", "purple": "紫色", "table": "桌子", "isn't": "不是", 
+                "red": "紅色", "watch": "手錶", "special": "特別的", "parents": "父母", "home": "家", "we": "我們(主格)", "park": "公園", 
+                "house": "房子", "maybe": "也許", "kitchen": "廚房", "jenny": "珍妮", "bag": "包包", "sofa": "沙發", 
+                "sure": "當然/確定的", "look": "看", "sign": "標示", "now": "現在", "please": "請", "write": "寫", "down": "下", 
+                "name": "名字", "sorry": "抱歉", "can't": "不能", "turn": "輪流", "can": "能", "wait": "等待", "here": "這裡", 
+                "wash": "洗", "dog": "狗",
+                
+                // --- Unit 3 新增單字 ---
+                "nick": "尼克", "be": "是(原形)", "let's": "讓我們", "play": "玩", "game": "遊戲", "ok": "好的", "don't": "不要",
+                "sing": "唱歌", "library": "圖書館", "close": "關上", "book": "書", "lily": "莉莉", "run": "跑", 
+                "living room": "客廳", "boys": "男孩們", "john": "約翰", "stand up": "站起來", "eat": "吃", "talk": "說話",
+                "clean": "打掃", "room": "房間", "dirty": "髒的", "students": "學生們", "song": "歌曲", "mother": "媽媽",
+                "father": "爸爸", "bird": "鳥", "hello": "哈囉", "people": "人們", "speak": "說", "say": "說",
+                "bob": "鮑伯", "jump": "跳", "tennis": "網球", "spell": "拼字", "tony": "湯尼", "in front of": "在...前面",
+                "kelly's": "凱莉的", "gift": "禮物", "two": "二", "dolls": "娃娃(複數)", "them": "他們(受格)",
+                "their": "他們的", "sister": "姊妹", "with": "和...一起", "us": "我們(受格)"
+            };
+
+            // 更新的題目資料
+            const quizData = [
+                {
+                    question: "Nick, _____ happy.",
+                    options: ["X", "be", "is", "do"],
+                    answer: "B",
+                    hint: "句型一: 祈使句。祈使句中要求對方「要（保持）快樂」時，動詞要用原形 be。'happy' 是形容詞，前面要用 be 動詞。"
+                },
+                {
+                    question: "A: Let’s _____ play the game now. B: OK.",
+                    options: ["no", "not", "be not", "don’t"],
+                    answer: "B",
+                    hint: "句型一: 祈使句。Let's 的否定句型為「Let's not + 原形動詞」。"
+                },
+                {
+                    question: "_____ sing in the library.",
+                    options: ["Not", "Let’s", "Don’t", "Please"],
+                    answer: "C",
+                    hint: "句型一: 祈使句。否定的祈使句（叫人不要做某事）開頭要用 Don't + 原形動詞。"
+                },
+                {
+                    question: "Close your book, _____.",
+                    options: ["please Lily", "Lily", "Lily please", "please to"],
+                    answer: "B",
+                    hint: "句型一: 祈使句。祈使句中呼叫對方（人名）時，人名要用逗號隔開。'Close your book, Lily.' 是正確的用法。"
+                },
+                {
+                    question: "_____ run in the living room, boys.",
+                    options: ["Not", "Don’t be", "No", "Don’t"],
+                    answer: "D",
+                    hint: "句型一: 祈使句。否定的祈使句（叫人不要做某事）開頭要用 Don't + 原形動詞 (run)。"
+                },
+                {
+                    question: "_____, stand up.",
+                    options: ["John", "Please", "Don’t", "Let’s"],
+                    answer: "B",
+                    hint: "句型一: 祈使句。'Please' 放在句首，後面加上逗號，用來表示禮貌的請求。"
+                },
+                {
+                    question: "_____ not eat or talk here.",
+                    options: ["No", "Let’s", "Be", "Don’t"],
+                    answer: "B",
+                    hint: "句型一: 祈使句。'Let's not...' 是用來建議「我們不要」做某事。句型為 Let's + not + 原形動詞。"
+                },
+                {
+                    question: "_____ your room. It’s very dirty.",
+                    options: ["Be", "Let’s", "Clean", "Not clean"],
+                    answer: "C",
+                    hint: "句型一: 祈使句。'Clean' (打掃) 是原形動詞，用在祈使句句首，表示命令或請求。"
+                },
+                {
+                    question: "選出錯誤的句子。",
+                    options: ["Please sing the song, students.", "Please, students sing the song.", "Students, please sing the song.", "Students, sing the song, please."],
+                    answer: "B",
+                    hint: "句型一: 祈使句。選項 (B) 是錯誤的。'Please' 和人名 'students' 都是祈使句的附加語，人名 'students' 應該用逗號隔開，且 'students' 不該放在 'Please' 和動詞之間而不加逗號。"
+                },
+                {
+                    question: "A: Can your mother cook? B: No, but my father _____.",
+                    options: ["cook", "is", "can", "can’t"],
+                    answer: "C",
+                    hint: "句型二: can的用法。問句用 Can，回答也用 can。B 回答「不，但我爸爸 *會*。」，'can' 承接了 'can cook' 的意思。"
+                },
+                {
+                    question: "The bird can _____ hello to people.",
+                    options: ["speak", "speaking", "saying", "say"],
+                    answer: "D",
+                    hint: "句型二: can的用法。助動詞 'can' 後面必須接原形動詞。'say hello' (說哈囉) 是固定用法。"
+                },
+                {
+                    question: "A: Can you jump? B: Yes, I _____.",
+                    options: ["am", "can", "jump", "do"],
+                    answer: "B",
+                    hint: "句型二: can的用法。用 'Can' 問，就用 'can' (或 'can't') 回答。'Yes, I can.'"
+                },
+                {
+                    question: "A: Can they play tennis? B: No, ______________.",
+                    options: ["they can’t", "they can’t play", "I can", "we can’t"],
+                    answer: "A",
+                    hint: "句型二: can的用法。問句的主詞是 'they'，所以簡答的主詞也是 'they'。否定簡答為 'No, they can’t.'"
+                },
+                {
+                    question: "A: Can you spell “happy”? B: Sure, I _____. “H-A-P-P-Y.”",
+                    options: ["can", "do", "may", "am"],
+                    answer: "A",
+                    hint: "句型二: can的用法。用 'Can' 問能力，回答時也用 'can' 表示「我能」。"
+                },
+                {
+                    question: "Tony is in front of _____.",
+                    options: ["I", "am", "my", "me"],
+                    answer: "D",
+                    hint: "句型三: 受格的用法。'in front of' (在...前面) 是介係詞片語，介係詞 (of) 後面要使用受格代名詞 'me'。"
+                },
+                {
+                    question: "Today is Kelly’s birthday. I have a gift for_____.",
+                    options: ["she", "her", "his", "he"],
+                    answer: "B",
+                    hint: "句型三: 受格的用法。介係詞 'for' (給) 後面要使用受格代名詞。Kelly 是女性，所以用 'her'。"
+                },
+                {
+                    question: "I have two dolls. I like _____.",
+                    options: ["them", "they", "their", "we"],
+                    answer: "A",
+                    hint: "句型三: 受格的用法。動詞 'like' (喜歡) 後面要接受詞。'two dolls' (兩個娃娃) 是複數，代名詞受格用 'them'。"
+                },
+                {
+                    question: "A: Are you and your sister in the living room? B: Yes, my parents are with _____.",
+                    options: ["we", "our", "us", "the"],
+                    answer: "C",
+                    hint: "句型三: 受格的用法。介係詞 'with' (和...一起) 後面要使用受格代名詞。'you and your sister' 指的是「我們」，受格是 'us'。"
+                }
+            ];
+
+
+            // --- 狀態變數 ---
+            let currentQuestionIndex = 0;
+            let score = 0;
+
+            // --- DOM 元素 ---
+            const questionsWrapper = document.getElementById('questions-wrapper');
+            const controlsContainer = document.getElementById('controls');
+            const scoreDisplay = document.getElementById('score-display');
+            const progressBar = document.getElementById('progress-bar');
+            const quizTitle = document.querySelector('#quiz-container h1');
+            const alertModal = document.getElementById('alert-modal');
+            const alertMessage = document.getElementById('alert-message');
+            const closeAlertBtn = document.getElementById('close-alert-btn');
+
+            // --- 功能函式區 ---
+
+            /**
+             * 將文字轉換為包含互動式單字的 HTML
+             */
+            function createInteractiveText(text) {
+                // 更新正則表達式以處理 'in front of'
+                const parts = text.split(/(\bin front of\b|[a-zA-Z'’]+)/i);
+                return parts.map(part => {
+                    if (!part) return ''; // 忽略空字串
+                    const cleanPart = part.toLowerCase().replace(/’/g, "'");
+                    if (translations[cleanPart]) {
+                        return `<span class="word">${part}<span class="tooltip">${translations[cleanPart]}</span></span>`;
+                    }
+                    return part;
+                }).join('');
+            }
+
+            /**
+             * 使用瀏覽器 API 朗讀文字
+             */
+            function speak(text) {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'en-US';
+                    utterance.rate = 0.9;
+                    window.speechSynthesis.speak(utterance);
+                } else {
+                    console.error("此瀏覽器不支援語音合成功能。");
+                }
+            }
+
+            /**
+             * 建立喇叭圖示 (SVG)
+             */
+            function createSpeakerIcon(textToSpeak) {
+                const svgNS = "http://www.w3.org/2000/svg";
+                const svg = document.createElementNS(svgNS, "svg");
+                svg.setAttribute("class", "h-5 w-5 text-amber-600 hover:text-amber-800 cursor-pointer flex-shrink-0");
+                svg.setAttribute("viewBox", "0 0 20 20");
+                svg.setAttribute("fill", "currentColor");
+                
+                const path = document.createElementNS(svgNS, "path");
+                path.setAttribute("fill-rule", "evenodd");
+                path.setAttribute("d", "M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.016 5.39a.75.75 0 01.016 1.046l-1.04 1.04a.75.75 0 11-1.06-1.06l1.04-1.04a.75.75 0 011.044-.026zM14.07 3.33a.75.75 0 01.016 1.046l-1.04 1.04a.75.75 0 01-1.06-1.06l1.04-1.04a.75.75 0 011.044-.026z");
+                path.setAttribute("clip-rule", "evenodd");
+                
+                svg.appendChild(path);
+                
+                // 點擊圖示時朗讀文字，並停止事件冒泡
+                svg.onclick = (e) => { 
+                    e.stopPropagation(); 
+                    speak(textToSpeak); 
+                };
+                
+                return svg;
+            }
+
+            /**
+             * 顯示指定索引的題目
+             */
+            function displayQuestion(index) {
+                questionsWrapper.innerHTML = '';
+                controlsContainer.innerHTML = '';
+
+                const progressPercentage = (index / quizData.length) * 100;
+                progressBar.style.width = `${progressPercentage}%`;
+
+                const q = quizData[index];
+                const questionBlock = document.createElement('div');
+                questionBlock.id = `q-${index}`;
+
+                const questionText = document.createElement('p');
+                // 改為 flex 佈局以容納喇叭
+                questionText.className = 'text-lg text-stone-700 mb-4 flex items-center gap-2'; 
+                
+                // 建立問題的喇叭圖示 (朗讀時移除中文和底線)
+                const cleanQuestionForSpeech = q.question.replace(/______/g, '').replace(/（.*）/g, '');
+                const questionSpeakerIcon = createSpeakerIcon(cleanQuestionForSpeech);
+                
+                // 建立問題文字的 span
+                const questionTextSpan = document.createElement('span');
+                // 處理中文題目
+                if (q.question.includes('選出錯誤的句子')) {
+                     questionTextSpan.innerHTML = `<strong>${index + 1}.</strong> ${q.question}`;
+                } else {
+                     questionTextSpan.innerHTML = `<strong>${index + 1}.</strong> ${createInteractiveText(q.question)}`;
+                }
+                
+                // 依序加入
+                questionText.appendChild(questionSpeakerIcon);
+                questionText.appendChild(questionTextSpan);
+                
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
+                
+                q.options.forEach((option, i) => {
+                    const optionChar = String.fromCharCode(65 + i);
+                    const optionContainer = document.createElement('div');
+                    optionContainer.className = 'flex items-center p-3 border border-stone-300 rounded-lg transition-all cursor-pointer hover:bg-amber-50';
+                    
+                    const radio = document.createElement('input');
+                    radio.type = 'radio';
+                    radio.id = `q${index}-opt${optionChar}`;
+                    radio.name = `q${index}`;
+                    radio.value = optionChar;
+                    radio.className = 'h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300';
+
+                    const label = document.createElement('label');
+                    label.htmlFor = `q${index}-opt${optionChar}`;
+                    // 改為 flex 佈局以容納喇叭
+                    label.className = 'ml-3 block text-md text-stone-900 flex-1 cursor-pointer flex items-center gap-2';
+
+                    // 建立選項的喇叭圖示
+                    const optionSpeakerIcon = createSpeakerIcon(option);
+
+                    // 建立選項文字的 span
+                    const optionTextSpan = document.createElement('span');
+                    optionTextSpan.innerHTML = `(${optionChar}) ${createInteractiveText(option)}`;
+
+                    // 依序加入
+                    label.appendChild(optionSpeakerIcon);
+                    label.appendChild(optionTextSpan);
+
+                    optionContainer.onclick = () => { radio.checked = true; };
+                    optionContainer.appendChild(radio);
+                    optionContainer.appendChild(label);
+                    optionsGrid.appendChild(optionContainer);
+                });
+
+                const hintContainer = document.createElement('div');
+                hintContainer.className = 'mt-4';
+                const hintButton = document.createElement('button');
+                hintButton.className = 'text-sm text-amber-600 hover:text-amber-800';
+                hintButton.textContent = '💡 提示';
+                const hintText = document.createElement('p');
+                hintText.className = 'hint-content hidden mt-2 text-sm text-stone-600 bg-yellow-100 p-2 rounded-md';
+                hintText.textContent = q.hint;
+                hintButton.onclick = () => hintText.classList.toggle('hidden');
+                hintContainer.appendChild(hintButton);
+                hintContainer.appendChild(hintText);
+                
+                questionBlock.appendChild(questionText);
+                questionBlock.appendChild(optionsGrid);
+                questionBlock.appendChild(hintContainer);
+                questionsWrapper.appendChild(questionBlock);
+
+                const submitButton = document.createElement('button');
+                submitButton.className = 'w-full sm:w-auto bg-amber-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-amber-600 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-opacity-50';
+                submitButton.textContent = '檢查答案';
+                submitButton.onclick = () => checkCurrentAnswer(index);
+                controlsContainer.appendChild(submitButton);
+            }
+
+            /**
+             * 檢查當前題目的答案
+             */
+            function checkCurrentAnswer(index) {
+                const selectedRadio = document.querySelector(`input[name="q${index}"]:checked`);
+
+                if (!selectedRadio) {
+                    alertMessage.textContent = '請先選擇一個答案！';
+                    alertModal.classList.remove('hidden');
+                    return;
+                }
+
+                const q = quizData[index];
+                const questionBlock = document.getElementById(`q-${index}`);
+                questionBlock.querySelectorAll('input[type="radio"]').forEach(radio => { radio.disabled = true; });
+                questionBlock.querySelectorAll('div.flex.items-center').forEach(div => { div.onclick = null; div.classList.remove('hover:bg-amber-50'); div.style.cursor = 'default'; });
+
+
+                const correctOptionValue = q.answer;
+                const correctLabel = document.querySelector(`label[for="q${index}-opt${correctOptionValue}"]`);
+                const userLabel = selectedRadio.nextElementSibling;
+                
+                if (selectedRadio.value === correctOptionValue) {
+                    score++;
+                    userLabel.parentElement.classList.add('bg-yellow-100', 'border-yellow-400', 'ring-2', 'ring-yellow-300');
+                    userLabel.innerHTML += ' <span class="text-green-600 font-bold">✔️</span>';
+                } else {
+                    userLabel.parentElement.classList.add('bg-red-100', 'border-red-400', 'ring-2', 'ring-red-300');
+                    userLabel.innerHTML += ' <span class="text-red-600 font-bold">❌</span>';
+                    correctLabel.parentElement.classList.add('bg-yellow-100', 'border-yellow-400');
+                }
+
+                controlsContainer.innerHTML = '';
+                const nextButton = document.createElement('button');
+                nextButton.className = 'w-full sm:w-auto bg-amber-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-amber-600 transition-colors';
+
+                if (currentQuestionIndex < quizData.length - 1) {
+                    nextButton.textContent = '下一題';
+                    nextButton.onclick = () => {
+                        currentQuestionIndex++;
+                        displayQuestion(currentQuestionIndex);
+                    };
+                } else {
+                    nextButton.textContent = '完成測驗';
+                    nextButton.onclick = showFinalScore;
+                }
+                controlsContainer.appendChild(nextButton);
+            }
+
+            /**
+             * 顯示最終分數
+             */
+            function showFinalScore() {
+                progressBar.style.width = '100%';
+                questionsWrapper.innerHTML = '';
+                controlsContainer.innerHTML = '';
+                quizTitle.textContent = '測驗完成！';
+
+                scoreDisplay.innerHTML = `
+                    <p class="text-xl text-stone-600">你的最終分數</p>
+                    <p class="text-5xl my-4 text-stone-800">${score} / ${quizData.length}</p>
+                `;
+                scoreDisplay.classList.remove('hidden');
+
+                const restartButton = document.createElement('button');
+                restartButton.className = 'mt-6 w-full sm:w-auto bg-amber-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-amber-600 transition-colors';
+                restartButton.textContent = '重新測驗';
+                restartButton.onclick = () => window.location.reload();
+                scoreDisplay.appendChild(restartButton);
+            }
+
+            // --- 事件監聽區 ---
+            questionsWrapper.addEventListener('click', (e) => {
+                // 確保點擊的是 .word 元素本身
+                let targetWord = e.target.closest('.word');
+                if (targetWord) {
+                    // 取得 .word 元素的第一個子節點 (即文字節點)
+                    const textNode = targetWord.childNodes[0];
+                    if (textNode && textNode.nodeValue) {
+                        speak(textNode.nodeValue.trim().replace(/[.,!?]$/, '')); // 朗讀文字並移除尾隨標點
+                    }
+                }
+            });
+
+            closeAlertBtn.addEventListener('click', () => {
+                alertModal.classList.add('hidden');
+            });
+
+            // --- 程式進入點 ---
+            displayQuestion(currentQuestionIndex);
+        });
+    </script>
+</body>
+</html>
