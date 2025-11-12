@@ -202,7 +202,7 @@
                 <button class="gradient-button" data-subject-id="chinese"><span>國語文</span></button>
                 <button class="gradient-button" data-subject-id="math"><span>數學</span></button>
                 <button class="gradient-button" data-subject-id="english"><span>英語文</span></button>
-                <button class="gradient-button" data-subject-id="advocacy"><span>融合教育</span></button>
+                <button class="gradient-button" data-subject-id="advocacy"><span>通用工具</span></button>
                 <button class="gradient-button" data-subject-id="ai-tools"><span>行政工具</span></button>
                 <button class="gradient-button" data-subject-id="social-skills"><span>社會技巧</span></button>
                 <button class="gradient-button" data-subject-id="learning-strategies"><span>學習策略</span></button>
@@ -227,7 +227,7 @@
                                 <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">將長篇文章轉位逐句顯示，並提供朗讀，輔助閱讀理解。</p>
                             </a>
                             <a href="teacher/simple.html" target="_blank" rel="noopener noreferrer" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'chinese-text_simplification')">
-                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">課文簡化系統</h3>
+                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">差異化教材生成系統</h3>
                                 <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">利用 AI 簡化複雜課文，一鍵生成摘要、漫畫、測驗，使學生更易理解。</p>
                             </a>
                             <a href="teacher/engwords.html" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'english-multisensory_quiz')">
@@ -303,13 +303,24 @@
                             <span class="material-icons mr-1">arrow_back</span>
                             返回科目選單
                         </button>
-                        <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">融合教育</h2>
-                        <p class="mb-6">彙整特教新知、法規與教學策略等專業資源。</p>
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">通用工具</h2>
+                        <p class="mb-6">協助教師備課的常用工具。</p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                            <a href="teacher/learningdisability.html" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'advocacy-ld_experience')">
-                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">學障體驗</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">模擬閱讀障礙者的視覺感受，提升同理心與教學調整意識。</p>
+                            <a href="teacher/simple.html" target="_blank" rel="noopener noreferrer" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'chinese-text_simplification')">
+                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">差異化教材生成系統</h3>
+                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">利用 AI 簡化複雜課文，一鍵生成摘要、漫畫、測驗，使學生更易理解。</p>
                             </a>
+                            <a href="teacher/question.html" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'chinese-multisensory_quiz')">
+                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">個別化出題小幫手</h3>
+                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">貼上課文，即可產生差異化題型。</p>
+                            </a>
+
+                            <a href="teacher/engwords.html" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'english-multisensory_quiz')">
+                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">AI即時生成圖片測驗</h3>
+                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">提供學生即時圖片、中英文發音、檢核答案及錯題重測功能。</p>
+                            </a>
+
+
                         </div>
                     </div>
                 </div>
