@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>個別化出題小幫手</title>
-    <!-- 網頁小圖示 -->
     <link rel="icon" href="dog.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -50,7 +49,6 @@
         }
     </style>
 
-    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5BBHYN77N9"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -62,7 +60,6 @@
 </head>
 <body class="bg-background-light min-h-screen text-text-light">
 
-    <!-- 導覽列 -->
     <nav class="bg-surface-light/80 backdrop-blur-sm shadow-md sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="text-xl font-bold text-primary">SPEDMIX</div>
@@ -71,17 +68,14 @@
                rel="noopener noreferrer"
                class="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-white hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-110"
                onclick="trackEvent('button_click', 'social_link', 'navbar-instagram')">
-                <!-- Instagram Icon SVG -->
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0 3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                </svg>
+                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                     <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0 3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                 </svg>
             </a>
         </div>
     </nav>
 
-    <!-- 主要內容 -->
     <div class="container mx-auto px-4 py-8 max-w-7xl">
-        <!-- 標題區 -->
         <div class="text-center mb-10">
             <h1 class="text-4xl md:text-5xl font-bold text-primary mb-4">
                 個別化出題小幫手
@@ -94,10 +88,8 @@
             </p>
         </div>
         
-        <!-- 卡片佈局 -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
             
-            <!-- 左側：主要功能說明 -->
             <div class="lg:col-span-2">
                 <div class="bg-surface-light rounded-lg p-6 sm:p-8 card-shadow hover-lift h-full">
                     <div class="space-y-6">
@@ -144,10 +136,8 @@
                 </div>
             </div>
 
-            <!-- 右側：工具連結 -->
             <div class="lg:col-span-1 flex flex-col gap-8">
                 
-                <!-- 通用小幫手 -->
                 <div class="bg-surface-light rounded-lg p-6 sm:p-8 card-shadow hover-lift">
                     <h2 class="text-2xl font-bold text-primary mb-6 text-center">通用小幫手</h2>
                     
@@ -155,12 +145,11 @@
                        target="_blank" rel="noopener noreferrer"
                        class="inline-block bg-primary hover:bg-opacity-90 text-white px-5 py-3 rounded-lg transition-colors duration-300 font-semibold text-base w-full text-center"
                        onclick="trackEvent('button_click', 'tool_link', 'general-quiz-generator');">
-                         <span class="text-lg">💡</span> 通用小幫手
+                        <span class="text-lg">💡</span> 通用小幫手
                     </a>
                     <p class="text-center text-sm text-gray-500 mt-4">（快速生成選擇題）</p>
                 </div>
 
-                <!-- 各科小幫手 -->
                 <div class="bg-surface-light rounded-lg p-6 sm:p-8 card-shadow hover-lift">
                     <h2 class="text-2xl font-bold text-primary mb-6 text-center">各科小幫手</h2>
                     <div class="flex flex-col gap-4">
@@ -197,17 +186,18 @@
                         </a>
                     </div>
                 </div>
+
+                <!-- "線上測驗咒語" 區塊已從這裡移除 -->
+
             </div>
         </div>
-
-        <!-- 咒語與注意事項佈局 -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            <!-- 1. "線上測驗咒語" 區塊 -->
-            <div class="bg-surface-light rounded-lg p-6 sm:p-8 card-shadow hover-lift flex flex-col h-full">
-                <h2 class="text-2xl font-bold text-primary mb-6 text-center">線上選擇題測驗咒語(貼到CANVA AI會有後台)</h2>
+            <!-- 1. "AI 生成提醒" 區塊被 "線上測驗咒語" 區塊取代 -->
+            <div class="bg-surface-light rounded-lg p-6 sm:p-8 card-shadow hover-lift">
+                <h2 class="text-2xl font-bold text-primary mb-6 text-center">線上測驗咒語(貼到CANVA AI才有後台)</h2>
                 
                 <!-- 咒語內容顯示區 -->
-                <div class="bg-gray-100 p-4 rounded-lg text-sm text-gray-700 relative flex-grow overflow-y-auto">
+                <div class="bg-gray-100 p-4 rounded-lg text-sm text-gray-700 relative">
                     <!-- 使用 pre 標籤保留換行和空格，並套用字型 -->
                     <pre id="prompt-text" class="whitespace-pre-wrap font-sans">我要做一套線上測驗工具，請生成一個 HTML 網頁，包含：
 學生輸入姓名 → 進入測驗
@@ -218,16 +208,15 @@
 教師後台含：儀表板、成績表、數據分析圖、排行榜 
 
 題目如下︰</pre>
-                    <!-- 複製按鈕 -->
                     <button id="copy-button" class="absolute top-2 right-2 bg-primary text-white px-3 py-1 rounded-md text-xs font-semibold hover:bg-opacity-90 transition-colors" onclick="copyPrompt()">
                         複製
                     </button>
                 </div>
-                <p class="text-center text-sm text-gray-500 mt-4">（點擊「複製」，再貼到 AI 聊天室中，並貼上您的題目）</p>
+                <p class="text-center text-sm text-gray-500 mt-4">（點擊「複製」，再貼到 AI 聊天室中）</p>
             </div>
 
-            <!-- 2. "注意事項" 區塊 - 已更新 -->
-            <div class="bg-amber-50 border-l-4 border-amber-400 p-6 rounded-r-lg card-shadow h-full">
+            <!-- 2. "注意事項" 區塊合併了 "AI 生成提醒" 的內容 -->
+            <div class="bg-amber-50 border-l-4 border-amber-400 p-6 rounded-r-lg card-shadow">
                 <div class="flex items-start">
                     <div class="flex-shrink-0"><span class="text-2xl">⚠️</span></div>
                     <div class="ml-4">
@@ -254,33 +243,17 @@
             </div>
         </div>
 
-        <!-- 頁尾 -->
         <footer style="font-size:12px; color:gray; text-align:center;">
-        © 2025 米克師  
-        本作品採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh_TW" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">CC BY-NC-SA 4.0 創用CC授權</a>。  
+        © 2025 米克師  
+        本作品採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh_TW" target="_blank">CC BY-NC-SA 4.0 創用CC授權</a>。  
         歡迎非商業用途轉載、引用或改編，請保留「米克師」署名，並附上本作品原始連結。
         </footer>
 
     </div>
 
-    <!-- 追蹤 JavasScript -->
-    <!-- <script src="tracking.js"></script> -->
-    <script>
-        // 簡易的 GA 事件追蹤函式 (如果 gtag 存在)
-        function trackEvent(category, action, label) {
-            if (typeof gtag === 'function') {
-                gtag('event', action, {
-                    'event_category': category,
-                    'event_label': label
-                });
-            } else {
-                console.log(`Event tracked: Category=${category}, Action=${action}, Label=${label}`);
-            }
-        }
-    </script>
+    <script src="tracking.js"></script>
 
-
-    <!-- 複製功能 JavaScript -->
+    <!-- 新增的複製功能 JavaScript -->
     <script>
         function copyPrompt() {
             // 找到 <pre> 元素
@@ -305,10 +278,9 @@
             const originalText = copyButton.innerText;
             const originalBg = 'bg-primary';
             const successBg = 'bg-green-500'; // 成功時的背景色
-            const failBg = 'bg-red-500';      // 失敗時的背景色
+            const failBg = 'bg-red-500';     // 失敗時的背景色
 
             try {
-                // 執行複製命令
                 success = document.execCommand('copy');
                 
                 if (success) {
@@ -332,7 +304,7 @@
             // 移除暫時的 textarea
             document.body.removeChild(textArea);
             
-            // 追蹤事件
+            // 追蹤事件 (如果 trackEvent 存在)
             if (success && typeof trackEvent === 'function') {
                 trackEvent('button_click', 'copy_prompt', 'online-quiz-prompt');
             }
@@ -346,4 +318,7 @@
         }
     </script>
 </body>
+
+
+
 </html>
