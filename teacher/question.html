@@ -154,51 +154,52 @@
                     <h2 class="text-2xl font-bold text-primary mb-6 text-center">各科小幫手</h2>
                     <div class="flex flex-col gap-4">
                         <a href="https://gemini.google.com/share/980d6f6fa9b5" 
-                           target="_blank" rel="noopener noreferrer"
-                           class="inline-block bg-primary hover:bg-opacity-90 text-white px-5 py-3 rounded-lg transition-colors duration-300 font-semibold text-base w-full text-center"
-                           onclick="trackEvent('button_click', 'tool_link', 'chinese-quiz-generator')">
+                            target="_blank" rel="noopener noreferrer"
+                            class="inline-block bg-primary hover:bg-opacity-90 text-white px-5 py-3 rounded-lg transition-colors duration-300 font-semibold text-base w-full text-center"
+                            onclick="trackEvent('button_click', 'tool_link', 'chinese-quiz-generator')">
                            <span class="text-lg">🚀</span> 國文小幫手
                         </a>
                         <a href="https://gemini.google.com/share/6b081922a1d7" 
-                           target="_blank" rel="noopener noreferrer"
-                           class="inline-block bg-primary hover:bg-opacity-90 text-white px-5 py-3 rounded-lg transition-colors duration-300 font-semibold text-base w-full text-center"
-                           onclick="trackEvent('button_click', 'tool_link', 'math-quiz-generator')">
+                            target="_blank" rel="noopener noreferrer"
+                            class="inline-block bg-primary hover:bg-opacity-90 text-white px-5 py-3 rounded-lg transition-colors duration-300 font-semibold text-base w-full text-center"
+                            onclick="trackEvent('button_click', 'tool_link', 'math-quiz-generator')">
                            <span class="text-lg">⚖️</span> 數學小幫手(Beta)
                         </a>
                         
                         <a href="https://gemini.google.com/share/7006ef412dd1" 
-                           target="_blank" rel="noopener noreferrer"
-                           class="inline-block bg-primary hover:bg-opacity-90 text-white px-5 py-3 rounded-lg transition-colors duration-300 font-semibold text-base w-full text-center"
-                           onclick="trackEvent('button_click', 'tool_link', 'english-quiz-generator');">
-                           📚 英文小幫手
+                            target="_blank" rel="noopener noreferrer"
+                            class="inline-block bg-primary hover:bg-opacity-90 text-white px-5 py-3 rounded-lg transition-colors duration-300 font-semibold text-base w-full text-center"
+                            onclick="trackEvent('button_click', 'tool_link', 'english-quiz-generator');">
+                            📚 英文小幫手
                         </a>
                         <a href="https://gemini.google.com/share/e0bfcd0588c3" 
-                           target="_blank" rel="noopener noreferrer"
-                           class="inline-block bg-primary hover:bg-opacity-90 text-white px-5 py-3 rounded-lg transition-colors duration-300 font-semibold text-base w-full text-center"
-                           onclick="trackEvent('button_click', 'tool_link', 'social-quiz-generator');">
-                           🌍 社會小幫手
+                            target="_blank" rel="noopener noreferrer"
+                            class="inline-block bg-primary hover:bg-opacity-90 text-white px-5 py-3 rounded-lg transition-colors duration-300 font-semibold text-base w-full text-center"
+                            onclick="trackEvent('button_click', 'tool_link', 'social-quiz-generator');">
+                            🌍 社會小幫手
                         </a>
                         <a href="https://gemini.google.com/share/1a0cb21312bd" 
-                           target="_blank" rel="noopener noreferrer"
-                           class="inline-block bg-primary hover:bg-opacity-90 text-white px-5 py-3 rounded-lg transition-colors duration-300 font-semibold text-base w-full text-center"
-                           onclick="trackEvent('button_click', 'tool_link', 'science-quiz-generator');">
-                           🧲 自然小幫手
+                            target="_blank" rel="noopener noreferrer"
+                            class="inline-block bg-primary hover:bg-opacity-90 text-white px-5 py-3 rounded-lg transition-colors duration-300 font-semibold text-base w-full text-center"
+                            onclick="trackEvent('button_click', 'tool_link', 'science-quiz-generator');">
+                            🧲 自然小幫手
+                        </a>
+                        <a href="https://gemini.google.com/share/06b190e90cbb" 
+                            target="_blank" rel="noopener noreferrer"
+                            class="inline-block bg-primary hover:bg-opacity-90 text-white px-5 py-3 rounded-lg transition-colors duration-300 font-semibold text-base w-full text-center"
+                            onclick="trackEvent('button_click', 'tool_link', 'science-adapted-quiz-generator');">
+                            <span class="text-lg">🧲</span> 自然科改編版
                         </a>
                     </div>
                 </div>
 
-                <!-- "線上測驗咒語" 區塊已從這裡移除 -->
-
-            </div>
+                </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            <!-- 1. "AI 生成提醒" 區塊被 "線上測驗咒語" 區塊取代 -->
             <div class="bg-surface-light rounded-lg p-6 sm:p-8 card-shadow hover-lift">
                 <h2 class="text-2xl font-bold text-primary mb-6 text-center">線上測驗選擇題咒語(貼到CANVA AI才有後台)</h2>
                 
-                <!-- 咒語內容顯示區 -->
                 <div class="bg-gray-100 p-4 rounded-lg text-sm text-gray-700 relative">
-                    <!-- 使用 pre 標籤保留換行和空格，並套用字型 -->
                     <pre id="prompt-text" class="whitespace-pre-wrap font-sans">我要做一套線上測驗工具，請生成一個 HTML 網頁，包含：
 學生輸入姓名 → 進入測驗
 題目單題呈現、選擇答案、上一題和下一題按鈕
@@ -215,7 +216,6 @@
                 <p class="text-center text-sm text-gray-500 mt-4">（點擊「複製」貼到 AI 聊天室中，再貼上您的題目）</p>
             </div>
 
-            <!-- 2. "注意事項" 區塊合併了 "AI 生成提醒" 的內容 -->
             <div class="bg-amber-50 border-l-4 border-amber-400 p-6 rounded-r-lg card-shadow">
                 <div class="flex items-start">
                     <div class="flex-shrink-0"><span class="text-2xl">⚠️</span></div>
@@ -234,26 +234,32 @@
                         <p class="text-amber-700 text-sm mb-2">
                             <strong>[ 數學版 (Beta) ]</strong> 數學功能仍在測試中，目前僅支援 PDF 輸出。若數學符號或格式有亂碼，可嘗試「重新生成」一次，有時會恢復正常。
                         </p>
-                        <p class="text-amber-700 text-sm"> <!-- 移除最後一項的 mb-2 -->
-                            <strong>[ 生成不確定性 ]</strong> 每次生成的結果都可能不同。如果第一次結果不滿意，可微調設定或再次生成。
+                        <p class="text-amber-700 text-sm mb-2"> <strong>[ 生成不確定性 ]</strong> 每次生成的結果都可能不同。如果第一次結果不滿意，可微調設定或再次生成。
                         </p>
+
+                        <div class="mt-4 pt-3 border-t border-amber-300 text-sm text-amber-800" style="line-height: 1.6;">
+                            <p class="font-semibold"><strong>[ 歡迎改編 ]</strong> 若有人想改編，可以直接參考以下格式︰</p>
+                            <p class="pl-2">原版工具：米克師</p>
+                            <p class="pl-2">延伸開發：＿＿＿＿（改編者姓名）</p>
+                            <p class="pl-2">本作品基於原版工具改編，採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh_TW" target="_blank" class="font-semibold text-primary hover:underline">CC BY-NC-SA 4.0</a> 授權。</p>
+                        </div>
+
                     </div>
                 </div>
 
             </div>
         </div>
 
-        <footer style="font-size:12px; color:gray; text-align:center;">
-        © 2025 米克師  
-        本作品採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh_TW" target="_blank">CC BY-NC-SA 4.0 創用CC授權</a>。  
-        歡迎非商業用途轉載、引用或改編，請保留「米克師」署名，並附上本作品原始連結。
+        <footer style="font-size:12px; color:gray; text-align:center;" class="mt-8 mb-4">
+            © 2025 米克師 &nbsp;
+            本作品採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh_TW" target="_blank" class="text-primary hover:underline">CC BY-NC-SA 4.0 創用CC授權</a>。 &nbsp;
+            歡迎非商業用途轉載、引用或改編，請保留「米克師」署名，並附上本作品原始連結。
         </footer>
 
     </div>
 
     <script src="tracking.js"></script>
 
-    <!-- 新增的複製功能 JavaScript -->
     <script>
         function copyPrompt() {
             // 找到 <pre> 元素
@@ -284,12 +290,12 @@
                 success = document.execCommand('copy');
                 
                 if (success) {
-                    // 成功：顯示回饋
+                    // Succeed: Show feedback
                     copyButton.innerText = '已複製！';
                     copyButton.classList.add(successBg);
                     copyButton.classList.remove(originalBg, failBg);
                 } else {
-                    // 失敗：顯示回饋
+                    // Fail: Show feedback
                     copyButton.innerText = '複製失敗';
                     copyButton.classList.add(failBg);
                     copyButton.classList.remove(originalBg, successBg);
@@ -323,7 +329,3 @@
 
 
 </html>
-
-
-
-
