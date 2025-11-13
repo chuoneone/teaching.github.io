@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>互動填空遊戲 (公因式版)</title>
+    <!-- 載入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 📘 字型引入 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chiron+GoRound+TC:wght@200..900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Chiron GoRound TC", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            background: #a8d0e6; /* Fallback */
+            background: linear-gradient(to bottom, #a8d0e6 0%, #f0f8ff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            padding-bottom: 5rem; 
+        }
+
+        /* 🌟 修改：.slot 樣式，改回單字元底線樣式 */
+        .slot {
+            width: 2.5rem; /* 40px */
+            height: 2.5rem; /* 40px */
+            font-size: 1.875rem; /* 30px */
+        }
+        @media (min-width: 768px) { /* md: */
+            .slot {
+                width: 3rem; /* 48px */
+                height: 3rem; /* 48px */
+                font-size: 2.25rem; /* 36px */
+            }
+        }
+        
+        .slot {
+            border-bottom: 3px solid #333; /* 粗底線 */
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            margin: 0 0.15rem; /* 間距 */
+            color: #111;
+            transition: all 0.2s;
+            flex-shrink: 0; 
+        }
+        /* 🌟 修改：已填入內容的 slot */
+        .slot.filled {
+            border-bottom-color: #007bff; /* 填入後底線變色 */
+            background-color: transparent; /* 移除背景色 */
+            cursor: pointer; /* 提示可以點擊移除 */
+        }
+
+        /* 括號的樣式 - 改為 Tailwind classes */
+        .paren {
+            font-weight: bold;
+            color: #333;
+            margin: 0 0.25rem;
+            line-height: 1;
+            align-self: center; /* 垂直置中 */
+        }
+
+        /* 🌟 選項按鈕的樣式 (改回單字元樣式) */
+        .option-btn {
+            padding: 0.5rem 1rem; /* 手機 */
+            font-size: 1.5rem; /* 24px */
+        }
+        @media (min-width: 768px) { /* md: */
+            .option-btn {
+                padding: 0.75rem 1.25rem; /* 桌機 */
+                font-size: 2rem; /* 32px */
+            }
+        }
+        
+        .option-btn {
+            background-color: #ffffff;
+            border: 2px solid #a0aec0;
+            border-radius: 20px / 50%; /* 橢圓形雲朵感 */
+            font-weight: bold;
+            color: #2d3748;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease-in-out;
+            margin: 0.25rem;
+        }
+        .option-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        .option-btn:disabled {
+            background-color: #e2e8f0;
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 勾勾 SVG 動畫 (保留) */
+        .checkmark-path {
+            stroke-dasharray: 50;
+            stroke-dashoffset: 50;
+        }
+        .circle-bg {
+            stroke-dasharray: 157;
+            stroke-dashoffset: 157;
+        }
+        #correct-overlay:not(.hidden) .checkmark-path {
+            animation: draw-check 0.5s 0.2s ease-out forwards;
+        }
+        #correct-overlay:not(.hidden) .circle-bg {
+            animation: draw-circle 0.4s ease-out forwards;
+        }
+        @keyframes draw-check { to { stroke-dashoffset: 0; } }
+        @keyframes draw-circle { to { stroke-dashoffset: 0; } }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-sky-300 to-sky-500 min-h-screen flex items-center justify-center p-4 pb-20">
+
+    <div class="bg-white/70 backdrop-blur-sm p-4 md:p-10 rounded-2xl shadow-xl max-w-4xl w-full">
+
+        <!-- 🌟 主標題 (修改) -->
+        <h1 class="text-3xl md:text-5xl font-bold text-gray-900 text-center mb-6">二、 提公因式</h1>
+
+        <!-- 1. 導覽與標題區域 -->
+        <div class="flex justify-between items-center mb-6">
+            <button id="prev-btn" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-3 md:px-6 rounded-lg text-base md:text-lg shadow-lg transition duration-200">上一題</button>
+            <!-- 🌟 修改題數 -->
+            <h1 id="question-counter" class="text-lg md:text-3xl font-bold text-gray-800 text-center px-2">第 1 / 8 題</h1>
+            <button id="next-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 md:px-6 rounded-lg text-base md:text-lg shadow-lg transition duration-200">下一題</button>
+        </div>
+
+        <!-- 2. 題目區域 -->
+        <div class="text-center mb-8">
+            <p id="question-prompt" class="text-lg md:text-2xl text-gray-600 mt-2">提出公因式並分解：</p>
+            <div id="question-expression" class="my-6 p-3 md:p-4 bg-white rounded-lg shadow-inner inline-block text-3xl md:text-5xl font-bold text-gray-800" style="box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);">
+                <!-- 題目將動態載入 -->
+            </div>
+        </div>
+
+        <!-- 3. 填空區域 (使用新的 slot 樣式) -->
+        <div id="slots-container" class="flex justify-center items-center mb-8 md:mb-10 flex-wrap p-2">
+            <!-- 答案欄位將動態載入 -->
+        </div>
+
+        <!-- 4. 選項區域 (使用新的 option-btn 樣式) -->
+        <div id="options-container" class="flex justify-center flex-wrap gap-2 md:gap-3 mb-8 md:mb-10 p-2 md:p-4 bg-white/50 rounded-lg">
+            <!-- JavaScript 會動態生成按鈕 -->
+        </div>
+
+        <!-- 5. 控制按鈕和訊息區域 (保留) -->
+        <div class="text-center">
+            <button id="check-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 md:py-3 md:px-8 rounded-lg text-lg md:text-xl shadow-lg transition duration-200 mr-2 md:mr-4">檢查答案</button>
+            <button id="reset-btn" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 md:py-3 md:px-8 rounded-lg text-lg md:text-xl shadow-lg transition duration-200">重新填寫</button>
+            
+            <div id="message-area" class="mt-6 h-10 text-xl md:text-2xl font-bold">
+                <!-- 訊息會顯示在這裡 -->
+            </div>
+        </div>
+
+    </div> 
+
+    <!-- 答對了的綠色勾勾遮罩 (保留) -->
+    <div id="correct-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm hidden">
+        <svg class="w-48 h-48 md:w-64 md:h-64" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
+            <circle class="circle-bg" cx="26" cy="26" r="25" fill="none" stroke="#FFFFFF" stroke-width="3"/>
+            <path class="checkmark-path" fill="none" stroke="#4CAF50" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"
+                d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+        </svg>
+    </div>
+
+
+    <!-- 🪶 頁尾固定區塊 (保留) -->
+    <footer class="fixed bottom-0 left-0 w-full text-center text-gray-500 text-sm bg-white bg-opacity-80 py-2 border-t border-gray-200 backdrop-blur-sm">
+      © 2025 米克師｜採用 
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh_TW" target="_blank" class="text-sky-600 hover:underline">
+        CC BY-NC-SA 4.0 創用CC授權
+      </a>｜非商業用途歡迎轉載或改編，請保留署名並附上原始連結。
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- 🌟 題庫資料 (擴充至 8 題) ---
+            const questions = [
+                {
+                    // 題目 1：x(x-1) + 3(x-1)
+                    questionHtml: 'x<span class="text-red-500 font-bold">(x-1)</span> + 3<span class="text-red-500 font-bold">(x-1)</span>',
+                    // 答案欄：( _ _ _ ) ( _ _ _ )
+                    answerSlotsHtml: `
+                        <span class="paren text-5xl md:text-6xl">(</span>
+                        <div id="slot-0" class="slot" data-index="0"></div>
+                        <div id="slot-1" class="slot" data-index="1"></div>
+                        <div id="slot-2" class="slot" data-index="2"></div>
+                        <span class="paren text-5xl md:text-6xl">)</span>
+                        <span class="paren text-5xl md:text-6xl">(</span>
+                        <div id="slot-3" class="slot" data-index="3"></div>
+                        <div id="slot-4" class="slot" data-index="4"></div>
+                        <div id="slot-5" class="slot" data-index="5"></div>
+                        <span class="paren text-5xl md:text-6xl">)</span>`,
+                    // 選項
+                    options: ['x', '+', '3', 'x', '-', '1'],
+                    // 正確答案 (x+3)(x-1) 或 (x-1)(x+3)
+                    correctAnswer: [ 
+                        ['x', '+', '3', 'x', '-', '1'],
+                        ['x', '-', '1', 'x', '+', '3']
+                    ]
+                },
+                {
+                    // 題目 2：4(x+3) - 5x(x+3)
+                    questionHtml: '4<span class="text-red-500 font-bold">(x+3)</span> - 5x<span class="text-red-500 font-bold">(x+3)</span>',
+                    // 答案欄：( _ _ _ ) ( _ _ _ _ )
+                    answerSlotsHtml: `
+                        <span class="paren text-5xl md:text-6xl">(</span>
+                        <div id="slot-0" class="slot" data-index="0"></div>
+                        <div id="slot-1" class="slot" data-index="1"></div>
+                        <div id="slot-2" class="slot" data-index="2"></div>
+                        <span class="paren text-5xl md:text-6xl">)</span>
+                        <span class="paren text-5xl md:text-6xl">(</span>
+                        <div id="slot-3" class="slot" data-index="3"></div>
+                        <div id="slot-4" class="slot" data-index="4"></div>
+                        <div id="slot-5" class="slot" data-index="5"></div>
+                        <div id="slot-6" class="slot" data-index="6"></div>
+                        <span class="paren text-5xl md:text-6xl">)</span>`,
+                    // 選項
+                    options: ['x', '+', '3', '4', '-', '5', 'x'],
+                    // 正確答案 (x+3)(4-5x) 或 (4-5x)(x+3)
+                    correctAnswer: [
+                        ['x', '+', '3', '4', '-', '5', 'x'],
+                        ['4', '-', '5', 'x', 'x', '+', '3']
+                    ]
+                },
+                {
+                    // 🌟 題目 3：y(y+2) - 1(y+2)
+                    questionHtml: 'y<span class="text-red-500 font-bold">(y+2)</span> - 1<span class="text-red-500 font-bold">(y+2)</span>',
+                    answerSlotsHtml: `
+                        <span class="paren text-5xl md:text-6xl">(</span>
+                        <div id="slot-0" class="slot" data-index="0"></div>
+                        <div id="slot-1" class="slot" data-index="1"></div>
+                        <div id="slot-2" class="slot" data-index="2"></div>
+                        <span class="paren text-5xl md:text-6xl">)</span>
+                        <span class="paren text-5xl md:text-6xl">(</span>
+                        <div id="slot-3" class="slot" data-index="3"></div>
+                        <div id="slot-4" class="slot" data-index="4"></div>
+                        <div id="slot-5" class="slot" data-index="5"></div>
+                        <span class="paren text-5xl md:text-6xl">)</span>`,
+                    options: ['y', '+', '2', 'y', '-', '1'],
+                    correctAnswer: [ 
+                        ['y', '+', '2', 'y', '-', '1'],
+                        ['y', '-', '1', 'y', '+', '2']
+                    ]
+                },
+                {
+                    // 🌟 題目 4：2a(a-5) + 3(a-5)
+                    questionHtml: '2a<span class="text-red-500 font-bold">(a-5)</span> + 3<span class="text-red-500 font-bold">(a-5)</span>',
+                    answerSlotsHtml: `
+                        <span class="paren text-5xl md:text-6xl">(</span>
+                        <div id="slot-0" class="slot" data-index="0"></div>
+                        <div id="slot-1" class="slot" data-index="1"></div>
+                        <div id="slot-2" class="slot" data-index="2"></div>
+                        <span class="paren text-5xl md:text-6xl">)</span>
+                        <span class="paren text-5xl md:text-6xl">(</span>
+                        <div id="slot-3" class="slot" data-index="3"></div>
+                        <div id="slot-4" class="slot" data-index="4"></div>
+                        <div id="slot-5" class="slot" data-index="5"></div>
+                        <div id="slot-6" class="slot" data-index="6"></div>
+                        <span class="paren text-5xl md:text-6xl">)</span>`,
+                    options: ['a', '-', '5', '2', 'a', '+', '3'],
+                    correctAnswer: [
+                        ['a', '-', '5', '2', 'a', '+', '3'],
+                        ['2', 'a', '+', '3', 'a', '-', '5']
+                    ]
+                },
+                {
+                    // 🌟 題目 5：b(x+y) + a(x+y)
+                    questionHtml: 'b<span class="text-red-500 font-bold">(x+y)</span> + a<span class="text-red-500 font-bold">(x+y)</span>',
+                    answerSlotsHtml: `
+                        <span class="paren text-5xl md:text-6xl">(</span>
+                        <div id="slot-0" class="slot" data-index="0"></div>
+                        <div id="slot-1" class="slot" data-index="1"></div>
+                        <div id="slot-2" class="slot" data-index="2"></div>
+                        <span class="paren text-5xl md:text-6xl">)</span>
+                        <span class="paren text-5xl md:text-6xl">(</span>
+                        <div id="slot-3" class="slot" data-index="3"></div>
+                        <div id="slot-4" class="slot" data-index="4"></div>
+                        <div id="slot-5" class="slot" data-index="5"></div>
+                        <span class="paren text-5xl md:text-6xl">)</span>`,
+                    options: ['x', '+', 'y', 'b', '+', 'a'],
+                    correctAnswer: [ 
+                        ['x', '+', 'y', 'b', '+', 'a'],
+                        ['b', '+', 'a', 'x', '+', 'y']
+                    ]
+                },
+                {
+                    // 🌟 題目 6：7x(y-1) - 2(y-1)
+                    questionHtml: '7x<span class="text-red-500 font-bold">(y-1)</span> - 2<span class="text-red-500 font-bold">(y-1)</span>',
+                    answerSlotsHtml: `
+                        <span class="paren text-5xl md:text-6xl">(</span>
+                        <div id="slot-0" class="slot" data-index="0"></div>
+                        <div id="slot-1" class="slot" data-index="1"></div>
+                        <div id="slot-2" class="slot" data-index="2"></div>
+                        <span class="paren text-5xl md:text-6xl">)</span>
+                        <span class="paren text-5xl md:text-6xl">(</span>
+                        <div id="slot-3" class="slot" data-index="3"></div>
+                        <div id="slot-4" class="slot" data-index="4"></div>
+                        <div id="slot-5" class="slot" data-index="5"></div>
+                        <div id="slot-6" class="slot" data-index="6"></div>
+                        <span class="paren text-5xl md:text-6xl">)</span>`,
+                    options: ['y', '-', '1', '7', 'x', '-', '2'],
+                    correctAnswer: [
+                        ['y', '-', '1', '7', 'x', '-', '2'],
+                        ['7', 'x', '-', '2', 'y', '-', '1']
+                    ]
+                },
+                {
+                    // 🌟 題目 7：a(b+1) + (b+1)  (隱含 1)
+                    questionHtml: 'a<span class="text-red-500 font-bold">(b+1)</span> + <span class="text-red-500 font-bold">(b+1)</span>',
+                    answerSlotsHtml: `
+                        <span class="paren text-5xl md:text-6xl">(</span>
+                        <div id="slot-0" class="slot" data-index="0"></div>
+                        <div id="slot-1" class="slot" data-index="1"></div>
+                        <div id="slot-2" class="slot" data-index="2"></div>
+                        <span class="paren text-5xl md:text-6xl">)</span>
+                        <span class="paren text-5xl md:text-6xl">(</span>
+                        <div id="slot-3" class="slot" data-index="3"></div>
+                        <div id="slot-4" class="slot" data-index="4"></div>
+                        <div id="slot-5" class="slot" data-index="5"></div>
+                        <span class="paren text-5xl md:text-6xl">)</span>`,
+                    options: ['b', '+', '1', 'a', '+', '1'],
+                    correctAnswer: [ 
+                        ['b', '+', '1', 'a', '+', '1'],
+                        ['a', '+', '1', 'b', '+', '1']
+                    ]
+                },
+                {
+                    // 🌟 題目 8：3x(2x-1) - 4(2x-1)
+                    questionHtml: '3x<span class="text-red-500 font-bold">(2x-1)</span> - 4<span class="text-red-500 font-bold">(2x-1)</span>',
+                    answerSlotsHtml: `
+                        <span class="paren text-5xl md:text-6xl">(</span>
+                        <div id="slot-0" class="slot" data-index="0"></div>
+                        <div id="slot-1" class="slot" data-index="1"></div>
+                        <div id="slot-2" class="slot" data-index="2"></div>
+                        <div id="slot-3" class="slot" data-index="3"></div>
+                        <span class="paren text-5xl md:text-6xl">)</span>
+                        <span class="paren text-5xl md:text-6xl">(</span>
+                        <div id="slot-4" class="slot" data-index="4"></div>
+                        <div id="slot-5" class="slot" data-index="5"></div>
+                        <div id="slot-6" class="slot" data-index="6"></div>
+                        <span class="paren text-5xl md:text-6xl">)</span>`,
+                    options: ['2', 'x', '-', '1', '3', 'x', '-', '4'],
+                    correctAnswer: [
+                        ['2', 'x', '-', '1', '3', 'x', '-', '4'],
+                        ['3', 'x', '-', '4', '2', 'x', '-', '1']
+                    ]
+                }
+            ];
+
+            // --- 狀態管理 ---
+            let currentQuestionIndex = 0;
+            let slots = []; // 目前題目的欄位狀態
+            let slotElements = []; // 目前題目的 DOM 元素
+
+            // --- DOM 元素 ---
+            const optionsContainer = document.getElementById('options-container');
+            const messageArea = document.getElementById('message-area');
+            const checkBtn = document.getElementById('check-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const questionCounter = document.getElementById('question-counter');
+            const questionExpression = document.getElementById('question-expression');
+            const slotsContainer = document.getElementById('slots-container');
+            const correctOverlay = document.getElementById('correct-overlay');
+
+            // --- 函式 ---
+
+            /**
+             * 載入指定索引的題目
+             */
+            function loadQuestion(index) {
+                currentQuestionIndex = index;
+                const question = questions[currentQuestionIndex];
+
+                // 1. 更新題號和題目
+                // 🌟 這裡會自動讀取 questions.length (現在是 8)
+                questionCounter.textContent = `第 ${index + 1} / ${questions.length} 題`;
+                questionExpression.innerHTML = question.questionHtml;
+
+                // 2. 渲染答案欄位
+                slotsContainer.innerHTML = question.answerSlotsHtml;
+
+                // 3. 重設欄位狀態 (根據答案數)
+                slots = new Array(question.correctAnswer[0].length).fill(null);
+                
+                // 4. 重新選取 slot 元素並綁定事件
+                slotElements = slotsContainer.querySelectorAll('.slot');
+                slotElements.forEach(slot => {
+                    slot.addEventListener('click', handleSlotClick);
+                });
+
+                // 5. 重新渲染選項按鈕
+                optionsContainer.innerHTML = ''; // 清空舊按鈕
+                
+                const questionOptions = question.options.map((val, i) => ({
+                    id: `opt-${i}`,
+                    value: val
+                }));
+                
+                const shuffledOptions = [...questionOptions].sort(() => Math.random() - 0.5);
+                
+                shuffledOptions.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.id = opt.id;
+                    btn.dataset.value = opt.value;
+                    btn.textContent = opt.value;
+                    btn.className = 'option-btn';
+                    btn.addEventListener('click', handleOptionClick);
+                    optionsContainer.appendChild(btn);
+                });
+
+                // 6. 清空訊息
+                messageArea.textContent = '';
+                messageArea.className = 'mt-6 h-10 text-xl md:text-2xl font-bold';
+                correctOverlay.classList.add('hidden');
+
+                // 7. 更新導覽按鈕狀態
+                prevBtn.disabled = index === 0;
+                prevBtn.style.opacity = index === 0 ? 0.5 : 1;
+                nextBtn.disabled = index === questions.length - 1;
+                nextBtn.style.opacity = index === questions.length - 1 ? 0.5 : 1;
+            }
+
+            /**
+             * 處理選項按鈕點擊
+             */
+            function handleOptionClick(event) {
+                const clickedBtn = event.currentTarget;
+                const value = clickedBtn.dataset.value;
+                const optionId = clickedBtn.id;
+
+                const firstEmptySlotIndex = slots.findIndex(s => s === null);
+
+                if (firstEmptySlotIndex !== -1) {
+                    slots[firstEmptySlotIndex] = { value: value, optionId: optionId };
+
+                    const slotElement = document.getElementById(`slot-${firstEmptySlotIndex}`);
+                    if(slotElement) {
+                        slotElement.textContent = value;
+                        slotElement.classList.add('filled');
+                        slotElement.dataset.optionId = optionId; 
+                    }
+
+                    clickedBtn.disabled = true;
+                    messageArea.textContent = '';
+                    messageArea.className = 'mt-6 h-10 text-xl md:text-2xl font-bold';
+                }
+            }
+
+            /**
+             * 處理已填入欄位的點擊 (移除答案)
+             */
+            function handleSlotClick(event) {
+                const clickedSlot = event.currentTarget;
+                const slotIndex = parseInt(clickedSlot.dataset.index, 10);
+                const currentSlotData = slots[slotIndex];
+
+                if (currentSlotData) {
+                    const optionId = currentSlotData.optionId;
+
+                    const optionBtn = document.getElementById(optionId);
+                    if (optionBtn) {
+                        optionBtn.disabled = false;
+                    }
+
+                    slots[slotIndex] = null;
+
+                    clickedSlot.textContent = '';
+                    clickedSlot.classList.remove('filled');
+                    clickedSlot.dataset.optionId = '';
+
+                    messageArea.textContent = '';
+                    messageArea.className = 'mt-6 h-10 text-xl md:text-2xl font-bold';
+                }
+            }
+
+            /**
+             * 檢查答案
+             */
+            function checkAnswer() {
+                const question = questions[currentQuestionIndex];
+
+                if (slots.some(s => s === null)) {
+                    messageArea.textContent = '請填滿所有空格！';
+                    messageArea.className = 'mt-6 h-10 text-xl md:text-2xl font-bold text-orange-600';
+                    return;
+                }
+
+                const currentAnswer = slots.map(s => s.value);
+
+                // 🌟 更新：檢查答案是否匹配 correctAnswer 陣列中的任何一個
+                const currentAnswerString = JSON.stringify(currentAnswer);
+                let isCorrect = false;
+                
+                // 遍歷所有可能的正確答案組合
+                for (const validAnswer of question.correctAnswer) {
+                    if (JSON.stringify(validAnswer) === currentAnswerString) {
+                        isCorrect = true;
+                        break;
+                    }
+                }
+
+                if (isCorrect) {
+                    messageArea.textContent = '答對了！';
+                    messageArea.className = 'mt-6 h-10 text-xl md:text-2xl font-bold text-green-700';
+                    
+                    correctOverlay.classList.remove('hidden');
+
+                    setTimeout(() => {
+                        correctOverlay.classList.add('hidden');
+                    }, 1500); 
+
+                } else {
+                    messageArea.textContent = '不對喔，再試一次！';
+                    messageArea.className = 'mt-6 h-10 text-xl md:text-2xl font-bold text-red-600';
+                }
+            }
+
+            // --- 事件綁定 ---
+            
+            prevBtn.addEventListener('click', () => {
+                if (currentQuestionIndex > 0) {
+                    loadQuestion(currentQuestionIndex - 1);
+                }
+            });
+
+            nextBtn.addEventListener('click', () => {
+                if (currentQuestionIndex < questions.length - 1) {
+                    loadQuestion(currentQuestionIndex + 1);
+                }
+            });
+
+            checkBtn.addEventListener('click', checkAnswer);
+            resetBtn.addEventListener('click', () => {
+                loadQuestion(currentQuestionIndex);
+            });
+
+            // --- 啟動遊戲 ---
+            loadQuestion(0); // 載入第一題
+        });
+    </script>
+</body>
+</html>
