@@ -55,6 +55,11 @@
     .problem.active .katex {
       color: #2d5f52;
     }
+
+    /* 新增的 hidden 類別 */
+    .hidden {
+      display: none;
+    }
   </style>
   <style>@view-transition { navigation: auto; }</style>
 </head>
@@ -142,7 +147,7 @@
         <div class="steps mt-8">
           
           <!-- 步驟 1 -->
-          <div class="step bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
             <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
               <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">1</span>
               <span id="step1-title">理解「負負得正」</span>
@@ -157,7 +162,7 @@
           </div>
 
           <!-- 步驟 2 -->
-          <div class="step bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
             <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
               <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">2</span>
               <span id="step2-title">確認分母相同</span>
@@ -172,7 +177,7 @@
           </div>
           
           <!-- 步驟 3 -->
-          <div class="step bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
             <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
               <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">3</span>
               <span id="step3-title">計算分子</span>
@@ -187,7 +192,7 @@
           </div>
           
           <!-- 步驟 4 -->
-          <div class="step bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
             <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
               <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">4</span>
               <span id="step4-title">判斷是否需要約分</span>
@@ -202,7 +207,7 @@
           </div>
           
           <!-- 步驟 5 -->
-          <div class="step bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
             <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
               <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">5</span>
               <span id="step5-title">約分得到最簡分數</span>
@@ -217,13 +222,23 @@
           </div>
 
           <!-- 最終答案 -->
-          <div class="final-answer bg-gradient-to-r from-[#4db8a0] to-[#7fc7af] text-white p-8 rounded-2xl text-center mt-8 text-2xl font-bold shadow-lg">
+          <div id="final-answer-1" class="final-answer hidden bg-gradient-to-r from-[#4db8a0] to-[#7fc7af] text-white p-8 rounded-2xl text-center mt-8 text-2xl font-bold shadow-lg">
             <div>
               <span id="answer-label">最終答案：</span>
             </div>
             <div class="math-display [&_.katex]:text-[2em]">
               $$\frac{1}{2}$$
             </div>
+          </div>
+
+          <!-- 互動按鈕 -->
+          <div class="controls mt-6 flex justify-center gap-4">
+              <button id="next-step-1" class="bg-[#4db8a0] text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-[#3a9c88] transition-all">
+                下一步
+              </button>
+              <button id="reset-step-1" class="hidden bg-gray-500 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-gray-600 transition-all">
+                重設
+              </button>
           </div>
 
         </div> <!-- 結束 .steps -->
@@ -233,7 +248,7 @@
       <div id="problem2" class="problem-content">
         <div class="steps mt-8">
           
-          <div class="step bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
             <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
               <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">1</span>
               <span>確認分母相同</span>
@@ -247,7 +262,7 @@
             </div>
           </div>
 
-          <div class="step bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
             <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
               <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">2</span>
               <span>計算分子</span>
@@ -261,7 +276,7 @@
             </div>
           </div>
 
-          <div class="step bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
             <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
               <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">3</span>
               <span>判斷是否需要約分</span>
@@ -275,12 +290,23 @@
             </div>
           </div>
 
-          <div class="final-answer bg-gradient-to-r from-[#4db8a0] to-[#7fc7af] text-white p-8 rounded-2xl text-center mt-8 text-2xl font-bold shadow-lg">
+          <div id="final-answer-2" class="final-answer hidden bg-gradient-to-r from-[#4db8a0] to-[#7fc7af] text-white p-8 rounded-2xl text-center mt-8 text-2xl font-bold shadow-lg">
             <div>最終答案：</div>
             <div class="math-display [&_.katex]:text-[2em]">
               $$\frac{7}{13}$$
             </div>
           </div>
+
+          <!-- 互動按鈕 -->
+          <div class="controls mt-6 flex justify-center gap-4">
+              <button id="next-step-2" class="bg-[#4db8a0] text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-[#3a9c88] transition-all">
+                下一步
+              </button>
+              <button id="reset-step-2" class="hidden bg-gray-500 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-gray-600 transition-all">
+                重設
+              </button>
+          </div>
+
         </div>
       </div> <!-- 結束 #problem2 -->
 
@@ -288,7 +314,7 @@
       <div id="problem3" class="problem-content">
          <div class="steps mt-8">
           
-          <div class="step bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
             <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
               <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">1</span>
               <span>理解「負負得正」</span>
@@ -302,7 +328,7 @@
             </div>
           </div>
 
-          <div class="step bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
             <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
               <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">2</span>
               <span>確認分母相同</span>
@@ -316,7 +342,7 @@
             </div>
           </div>
           
-          <div class="step bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
             <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
               <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">3</span>
               <span>計算分子</span>
@@ -330,7 +356,7 @@
             </div>
           </div>
           
-          <div class="step bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
             <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
               <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">4</span>
               <span>判斷是否需要約分</span>
@@ -344,7 +370,7 @@
             </div>
           </div>
           
-          <div class="step bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
             <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
               <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">5</span>
               <span>約分得到最簡分數</span>
@@ -358,12 +384,23 @@
             </div>
           </div>
 
-          <div class="final-answer bg-gradient-to-r from-[#4db8a0] to-[#7fc7af] text-white p-8 rounded-2xl text-center mt-8 text-2xl font-bold shadow-lg">
+          <div id="final-answer-3" class="final-answer hidden bg-gradient-to-r from-[#4db8a0] to-[#7fc7af] text-white p-8 rounded-2xl text-center mt-8 text-2xl font-bold shadow-lg">
             <div>最終答案：</div>
             <div class="math-display [&_.katex]:text-[2em]">
               $$\frac{3}{8}$$
             </div>
           </div>
+
+          <!-- 互動按鈕 -->
+          <div class="controls mt-6 flex justify-center gap-4">
+              <button id="next-step-3" class="bg-[#4db8a0] text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-[#3a9c88] transition-all">
+                下一步
+              </button>
+              <button id="reset-step-3" class="hidden bg-gray-500 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-gray-600 transition-all">
+                重設
+              </button>
+          </div>
+
         </div>
       </div> <!-- 結束 #problem3 -->
 
@@ -371,7 +408,7 @@
       <div id="problem4" class="problem-content">
          <div class="steps mt-8">
           
-          <div class="step bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
             <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
               <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">1</span>
               <span>理解「正號不改變符號」</span>
@@ -385,7 +422,7 @@
             </div>
           </div>
 
-          <div class="step bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
             <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
               <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">2</span>
               <span>確認分母相同</span>
@@ -399,7 +436,7 @@
             </div>
           </div>
           
-          <div class="step bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
             <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
               <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">3</span>
               <span>計算分子</span>
@@ -413,7 +450,7 @@
             </div>
           </div>
           
-          <div class="step bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
             <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
               <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">4</span>
               <span>化簡為整數</span>
@@ -427,12 +464,23 @@
             </div>
           </div>
 
-          <div class="final-answer bg-gradient-to-r from-[#4db8a0] to-[#7fc7af] text-white p-8 rounded-2xl text-center mt-8 text-2xl font-bold shadow-lg">
+          <div id="final-answer-4" class="final-answer hidden bg-gradient-to-r from-[#4db8a0] to-[#7fc7af] text-white p-8 rounded-2xl text-center mt-8 text-2xl font-bold shadow-lg">
             <div>最終答案：</div>
             <div class="math-display [&_.katex]:text-[2em]">
               $$-1$$
             </div>
           </div>
+
+          <!-- 互動按鈕 -->
+          <div class="controls mt-6 flex justify-center gap-4">
+              <button id="next-step-4" class="bg-[#4db8a0] text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-[#3a9c88] transition-all">
+                下一步
+              </button>
+              <button id="reset-step-4" class="hidden bg-gray-500 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-gray-600 transition-all">
+                重設
+              </button>
+          </div>
+
         </div>
       </div> <!-- 結束 #problem4 -->
       
@@ -446,10 +494,11 @@
 
   <!-- 
     ============================================================
-    = JAVASCRIPT - (與原始檔案相同，未做修改)
+    = JAVASCRIPT - (已更新互動邏輯)
     ============================================================
   -->
   <script>
+    // SDK 相關的 defaultConfig (主要用於 problem 1 和顏色)
     const defaultConfig = {
       main_title: "分數運算練習題",
       step1_title: "理解「負負得正」",
@@ -476,8 +525,7 @@
       accent_color: "#d0f0e8"
     };
 
-    // (注意：onConfigChange 函數中的樣式更新現在會與 Tailwind 衝突)
-    // (但由於它是 SDK 的一部分，我們保留它)
+    // SDK onConfigChange 函數 (與之前相同)
     async function onConfigChange(config) {
       document.getElementById('main-title').textContent = config.main_title || defaultConfig.main_title;
       document.getElementById('step1-title').textContent = config.step1_title || defaultConfig.step1_title;
@@ -504,95 +552,37 @@
       const textColor = config.text_color || defaultConfig.text_color;
       const accentColor = config.accent_color || defaultConfig.accent_color;
 
-      // 這些 JS 驅動的樣式會覆蓋 Tailwind，這是 SDK 的預期行為
       document.body.style.background = `linear-gradient(135deg, ${secondaryColor} 0%, ${accentColor} 100%)`;
       document.querySelector('h1').style.color = primaryColor;
-      document.querySelector('.lg\\:w-80').style.background = `linear-gradient(180deg, ${secondaryColor} 0%, ${primaryColor} 100%)`; // 選擇器更新為 Tailwind 的
+      document.querySelector('.lg\\:w-80').style.background = `linear-gradient(180deg, ${secondaryColor} 0%, ${primaryColor} 100%)`;
       document.querySelector('.flex-1').style.background = backgroundColor;
       
-      document.querySelectorAll('.problem').forEach(problem => {
-        problem.style.color = textColor;
-      });
-      
-      document.querySelectorAll('.problem-number').forEach(num => {
-        num.style.color = primaryColor;
-      });
-      
-      document.querySelectorAll('.step').forEach(step => {
-        step.style.borderLeftColor = primaryColor;
-      });
-      
-      document.querySelectorAll('.step-number').forEach(num => {
-        num.style.background = primaryColor;
-      });
-      
-      document.querySelectorAll('.step-title').forEach(title => {
-        title.style.color = primaryColor;
-      });
-      
-      document.querySelectorAll('.step-content').forEach(content => {
-        content.style.color = textColor;
-      });
-      
-      document.querySelectorAll('.highlight').forEach(highlight => {
-        highlight.style.background = accentColor;
-        highlight.style.color = textColor;
-      });
-      
-      document.querySelectorAll('.math-expression').forEach(expr => {
-        expr.style.background = accentColor;
-      });
-      
-      document.querySelectorAll('.final-answer').forEach(answer => {
-        answer.style.background = `linear-gradient(135deg, ${primaryColor} 0%, ${secondaryColor} 100%)`;
-      });
+      document.querySelectorAll('.problem').forEach(problem => { problem.style.color = textColor; });
+      document.querySelectorAll('.problem-number').forEach(num => { num.style.color = primaryColor; });
+      document.querySelectorAll('.step').forEach(step => { step.style.borderLeftColor = primaryColor; });
+      document.querySelectorAll('.step-number').forEach(num => { num.style.background = primaryColor; });
+      document.querySelectorAll('.step-title').forEach(title => { title.style.color = primaryColor; });
+      document.querySelectorAll('.step-content').forEach(content => { content.style.color = textColor; });
+      document.querySelectorAll('.highlight').forEach(highlight => { highlight.style.background = accentColor; highlight.style.color = textColor; });
+      document.querySelectorAll('.math-expression').forEach(expr => { expr.style.background = accentColor; });
+      document.querySelectorAll('.final-answer').forEach(answer => { answer.style.background = `linear-gradient(135deg, ${primaryColor} 0%, ${secondaryColor} 100%)`; });
     }
 
+    // SDK mapToCapabilities 函數 (與之前相同)
     function mapToCapabilities(config) {
       return {
         recolorables: [
-          {
-            get: () => config.primary_color || defaultConfig.primary_color,
-            set: (value) => {
-              config.primary_color = value;
-              window.elementSdk.setConfig({ primary_color: value });
-            }
-          },
-          {
-            get: () => config.secondary_color || defaultConfig.secondary_color,
-            set: (value) => {
-              config.secondary_color = value;
-              window.elementSdk.setConfig({ secondary_color: value });
-            }
-          },
-          {
-            get: () => config.background_color || defaultConfig.background_color,
-            set: (value) => {
-              config.background_color = value;
-              window.elementSdk.setConfig({ background_color: value });
-            }
-          },
-          {
-            get: () => config.text_color || defaultConfig.text_color,
-            set: (value) => {
-              config.text_color = value;
-              window.elementSdk.setConfig({ text_color: value });
-            }
-          },
-          {
-            get: () => config.accent_color || defaultConfig.accent_color,
-            set: (value) => {
-              config.accent_color = value;
-              window.elementSdk.setConfig({ accent_color: value });
-            }
-          }
+          { get: () => config.primary_color || defaultConfig.primary_color, set: (value) => { config.primary_color = value; window.elementSdk.setConfig({ primary_color: value }); } },
+          { get: () => config.secondary_color || defaultConfig.secondary_color, set: (value) => { config.secondary_color = value; window.elementSdk.setConfig({ secondary_color: value }); } },
+          { get: () => config.background_color || defaultConfig.background_color, set: (value) => { config.background_color = value; window.elementSdk.setConfig({ background_color: value }); } },
+          { get: () => config.text_color || defaultConfig.text_color, set: (value) => { config.text_color = value; window.elementSdk.setConfig({ text_color: value }); } },
+          { get: () => config.accent_color || defaultConfig.accent_color, set: (value) => { config.accent_color = value; window.elementSdk.setConfig({ accent_color: value }); } }
         ],
-        borderables: [],
-        fontEditable: undefined,
-        fontSizeable: undefined
+        borderables: [], fontEditable: undefined, fontSizeable: undefined
       };
     }
 
+    // SDK mapToEditPanelValues 函數 (與之前相同)
     function mapToEditPanelValues(config) {
       return new Map([
         ["main_title", config.main_title || defaultConfig.main_title],
@@ -616,6 +606,72 @@
       ]);
     }
 
+    // --- 互動式步驟邏輯 ---
+
+    // 儲存每個題目的目前步驟
+    let currentStepState = { 1: 0, 2: 0, 3: 0, 4: 0 };
+
+    /**
+     * 重設指定題目的所有步驟和按鈕
+     */
+    function resetSteps(problemNumber) {
+      currentStepState[problemNumber] = 0;
+
+      // 隱藏所有步驟
+      document.querySelectorAll(`#problem${problemNumber} .step`).forEach(step => {
+        step.classList.add('hidden');
+      });
+
+      // 隱藏最終答案
+      document.querySelector(`#final-answer-${problemNumber}`).classList.add('hidden');
+
+      // 顯示 "下一步" 按鈕
+      const nextButton = document.querySelector(`#next-step-${problemNumber}`);
+      if (nextButton) nextButton.classList.remove('hidden');
+
+      // 隱藏 "重設" 按鈕
+      const resetButton = document.querySelector(`#reset-step-${problemNumber}`);
+      if (resetButton) resetButton.classList.add('hidden');
+    }
+
+    /**
+     * 顯示指定題目的下一步
+     */
+    function showNextStep(problemNumber) {
+      const steps = document.querySelectorAll(`#problem${problemNumber} .step`);
+      const current = currentStepState[problemNumber];
+
+      if (current < steps.length) {
+        // 顯示下一步
+        steps[current].classList.remove('hidden');
+        currentStepState[problemNumber]++;
+      }
+
+      // 檢查是否已顯示所有步驟
+      if (currentStepState[problemNumber] === steps.length) {
+        // 顯示最終答案
+        document.querySelector(`#final-answer-${problemNumber}`).classList.remove('hidden');
+        
+        // 隱藏 "下一步" 按鈕
+        document.querySelector(`#next-step-${problemNumber}`).classList.add('hidden');
+        
+        // 顯示 "重設" 按鈕
+        document.querySelector(`#reset-step-${problemNumber}`).classList.remove('hidden');
+      }
+      
+      // 顯示後重新渲染數學
+      renderMathInElement(document.body, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+          ],
+          throwOnError: false
+      });
+    }
+
+    /**
+     * 顯示選定的題目內容，並重設其步驟
+     */
     function showProblem(problemNumber) {
       // 移除所有題目的 active 狀態
       document.querySelectorAll('.problem').forEach(p => p.classList.remove('active'));
@@ -625,6 +681,9 @@
       document.querySelectorAll('.problem')[problemNumber - 1].classList.add('active');
       document.getElementById('problem' + problemNumber).classList.add('active');
       
+      // 重設新選中題目的步驟
+      resetSteps(problemNumber);
+
       // 重新渲染數學符號
       setTimeout(() => {
         renderMathInElement(document.body, {
@@ -637,7 +696,11 @@
       }, 50); // 給予一點延遲確保 DOM 更新
     }
 
+    /**
+     * DOM 載入完成後執行的初始化
+     */
     document.addEventListener('DOMContentLoaded', () => {
+      // 初始渲染數學
       renderMathInElement(document.body, {
         delimiters: [
           {left: '$$', right: '$$', display: true},
@@ -645,8 +708,25 @@
         ],
         throwOnError: false
       });
+
+      // 設置所有按鈕的監聽器
+      for (let i = 1; i <= 4; i++) {
+        const nextButton = document.querySelector(`#next-step-${i}`);
+        const resetButton = document.querySelector(`#reset-step-${i}`);
+
+        if (nextButton) {
+          nextButton.addEventListener('click', () => showNextStep(i));
+        }
+        if (resetButton) {
+          resetButton.addEventListener('click', () => resetSteps(i));
+        }
+      }
+      
+      // 確保第一個問題在載入時被正確重設
+      resetSteps(1);
     });
 
+    // SDK 初始化
     if (window.elementSdk) {
       window.elementSdk.init({
         defaultConfig,
