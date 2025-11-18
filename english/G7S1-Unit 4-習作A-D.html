@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNI4習作A-D</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter for English, Noto Sans TC for Chinese -->
+    <link rel="icon" href="dog.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* 自定義樣式 */
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+        }
+
+        /* 互動單字樣式 */
+        .word {
+            position: relative;
+            cursor: pointer;
+            border-bottom: 1px dotted #a8a29e; /* stone-400 */
+            transition: color 0.2s;
+        }
+
+        .word:hover {
+            color: #d97706; /* amber-600 */
+        }
+
+        /* 中文翻譯提示框 (Tooltip) */
+        .word .tooltip {
+            visibility: hidden;
+            width: max-content;
+            background-color: #1f2937; /* gray-800 */
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 10px;
+            position: absolute;
+            z-index: 10;
+            bottom: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none; /* 避免提示框干擾滑鼠事件 */
+            font-size: 0.875rem;
+        }
+
+        .word:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* 側邊欄選單項目激活狀態 */
+        .nav-item.active {
+            background-color: #f59e0b; /* amber-500 */
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-amber-50 min-h-screen flex flex-col md:flex-row">
+
+    <!-- 側邊導覽列 (Desktop) / 頂部導覽列 (Mobile) -->
+    <nav class="bg-white shadow-md w-full md:w-64 md:min-h-screen flex-shrink-0 md:flex md:flex-col z-10">
+        <div class="p-4 border-b md:border-b-0 md:border-r border-gray-200 flex items-center justify-between md:block">
+            <h1 class="text-xl font-bold text-stone-800">UNI4習作A-D</h1>
+        </div>
+        <div class="flex md:flex-col overflow-x-auto md:overflow-visible">
+            <button onclick="switchSection('A')" id="nav-A" class="nav-item active whitespace-nowrap flex-1 md:flex-none text-left px-6 py-4 md:py-3 hover:bg-amber-100 transition-colors border-b-4 border-transparent md:border-l-4 md:border-b-0 focus:outline-none">
+                <span class="font-bold block text-sm text-stone-500 mb-1">Part A</span>
+                <span class="font-semibold">單字填空</span>
+            </button>
+            <button onclick="switchSection('B')" id="nav-B" class="nav-item whitespace-nowrap flex-1 md:flex-none text-left px-6 py-4 md:py-3 hover:bg-amber-100 transition-colors border-b-4 border-transparent md:border-l-4 md:border-b-0 focus:outline-none">
+                <span class="font-bold block text-sm text-stone-500 mb-1">Part B</span>
+                <span class="font-semibold">看圖寫作</span>
+            </button>
+            <button onclick="switchSection('C')" id="nav-C" class="nav-item whitespace-nowrap flex-1 md:flex-none text-left px-6 py-4 md:py-3 hover:bg-amber-100 transition-colors border-b-4 border-transparent md:border-l-4 md:border-b-0 focus:outline-none">
+                <span class="font-bold block text-sm text-stone-500 mb-1">Part C</span>
+                <span class="font-semibold">看圖問答</span>
+            </button>
+            <button onclick="switchSection('D')" id="nav-D" class="nav-item whitespace-nowrap flex-1 md:flex-none text-left px-6 py-4 md:py-3 hover:bg-amber-100 transition-colors border-b-4 border-transparent md:border-l-4 md:border-b-0 focus:outline-none">
+                <span class="font-bold block text-sm text-stone-500 mb-1">Part D</span>
+                <span class="font-semibold">介系詞填空</span>
+            </button>
+        </div>
+        <div class="mt-auto p-6 hidden md:block">
+            <div class="text-xs text-stone-400 text-center">
+                Interactive English Quiz<br>v2.2
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要內容區 -->
+    <main class="flex-1 p-4 md:p-8 flex items-start justify-center overflow-y-auto">
+        <div id="quiz-container" class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg w-full max-w-3xl transition-all duration-300">
+            <div class="flex justify-between items-center mb-6">
+                <h2 id="section-title" class="text-2xl font-bold text-stone-800">Part A: 單字填空</h2>
+                <span id="question-counter" class="text-stone-500 font-mono">1/5</span>
+            </div>
+            
+            <!-- 進度條 -->
+            <div class="w-full bg-stone-200 rounded-full h-2.5 mb-8">
+                <div id="progress-bar" class="bg-amber-500 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+            
+            <!-- 題目區域 -->
+            <div id="questions-wrapper"></div>
+
+            <!-- 控制區 -->
+            <div id="controls" class="mt-8 text-center"></div>
+            
+            <!-- 分數顯示 -->
+            <div id="score-display" class="mt-6 text-center hidden"></div>
+        </div>
+    </main>
+
+    <!-- 提示訊息 Modal -->
+    <div id="alert-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm text-center transform transition-all scale-100">
+            <p id="alert-message" class="text-lg text-gray-800 mb-4"></p>
+            <button id="close-alert-btn" class="bg-amber-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-amber-600 transition-colors">知道了</button>
+        </div>
+    </div>
+
+    <script>
+        // --- 資料定義區 ---
+        const translations = {
+            // Part A 基礎單字
+            "what's": "什麼是", "what": "什麼", "the": "這個", "today": "今天", "it's": "它是", "may": "五月",
+            "time": "時間", "day": "天", "month": "月份", "date": "日期", "when": "何時", "is": "是", "her": "她的",
+            "school": "學校", "november": "十一月", "on": "在", "in": "在...裡面", "your": "你的", "birthday": "生日",
+            "oh": "哦", "also": "也", "new": "新的", "year's": "年的", "at": "在", "nine": "九", "thirty": "三十",
+            "january": "一月", "first": "第一", "december": "十二月", "this": "這個", "boy": "男孩", "has": "有",
+            "beautiful": "美麗的", "eyes": "眼睛", "and": "和", "long": "長的", "hair": "頭髮", "i": "我",
+            "like": "喜歡", "him": "他(受格)", "very": "非常", "much": "很多", "he": "他(主格)", "his": "他的", "he's": "他是",
+            "hi": "嗨", "i'm": "我是", "nice": "高興的", "to": "去", "meet": "遇見", "you": "你", "too": "也", "see": "看到",
+            "you're": "你是", "welcome": "不客氣", "excuse": "請問", "me": "我", "are": "是", "mr.": "先生", "walker": "沃克",
+            "yes": "是的", "larry": "賴瑞", "no": "不是", "not": "不", "friend": "朋友", "who's": "誰是", "that": "那個",
+            "girl": "女孩", "she": "她", "really": "真的", "tall": "高的", "a": "一個", "happy": "快樂的", "she's": "她是",
+            "ariel": "愛麗兒", "our": "我們的", "classmate": "同學", "eric's": "艾瑞克的", "aunt": "阿姨", "writer": "作家",
+            "doctor": "醫生", "housewife": "家庭主婦", "how": "如何", "old": "年老的", "alice": "愛麗絲", "brad": "布萊德",
+            "they": "他們", "my": "我的", "family": "家庭", "ten": "十", "twelve": "十二", "cook": "廚師", "nurse": "護士",
+            "they're": "他們是", "erasers": "橡皮擦", "where": "在哪裡", "those": "那些", "these": "這些", "pens": "筆(複數)", 
+            "aren't": "不是", "for": "給/為了", "desk": "書桌", "where's": "在哪裡", "notebook": "筆記本", "from": "從", 
+            "uncle": "叔叔/伯伯", "under": "在...下面", "chair": "椅子", "enough": "足夠的", "one": "一", "person": "人", 
+            "favorite": "最喜歡的", "color": "顏色", "gray": "灰色", "purple": "紫色", "table": "桌子", "isn't": "不是", 
+            "red": "紅色", "watch": "手錶", "special": "特別的", "parents": "父母", "home": "家", "we": "我們", "park": "公園", 
+            "house": "房子", "maybe": "也許", "kitchen": "廚房", "jenny": "珍妮", "bag": "包包", "sofa": "沙發", 
+            "sure": "確定的", "look": "看", "sign": "標示", "now": "現在", "please": "請", "write": "寫", "down": "下", 
+            "name": "名字", "sorry": "抱歉", "can't": "不能", "turn": "輪流", "can": "能", "wait": "等待", "here": "這裡", 
+            "wash": "洗", "dog": "狗", "joseph": "約瑟夫", "fan": "粉絲", "band": "樂團", "sing": "唱歌", "songs": "歌曲", 
+            "video": "影片", "may's": "梅的", "popular": "受歡迎的", "still": "仍然", "waiting": "等待", "ready": "準備好的",
+            "movie": "電影", "let's": "我們一起...", "go": "走", "meet-and-greet": "見面會", "weekend": "週末",
+            "sunday": "星期日", "afternoon": "下午", "great": "很棒", "music": "音樂", "people": "人們",
+
+            // Part B & C 新增單字
+            "eight": "八", "twenty-five": "二十五", "five": "五", "fifteen": "十五", 
+            "wednesday": "星期三", "friday": "星期五", "tuesday": "星期二", "ten": "十", "thirty": "三十",
+            "thursday": "星期四", "saturday": "星期六", "monday": "星期一", "seven": "七", "fifty": "五十",
+            "four": "四", "two": "二", "clock": "時鐘", "calendar": "日曆", "march": "三月",
+            "forty-five": "四十五",
+
+            // Part D 新增單字
+            "concert": "演唱會", "dinner": "晚餐", "evening": "傍晚/晚上", "mother's": "母親的", "together": "一起",
+            "billy": "比利", "chen's": "陳的", "o'clock": "點鐘"
+        };
+
+        // 題庫資料
+        const quizSections = {
+            'A': {
+                title: "Part A: 單字填空",
+                data: [
+                    {
+                        type: "choice",
+                        question: "Joseph is a big ______ of the boy band. He can sing all their songs.",
+                        options: ["fan", "video", "popular", "weekend"],
+                        answer: "A",
+                        hint: "他非常喜歡這個樂團，甚至會唱他們所有的歌，所以他是個...？"
+                    },
+                    {
+                        type: "choice",
+                        question: "I'm watching a music ______ of my favorite band. It's great.",
+                        options: ["ready", "popular", "video", "fan"],
+                        answer: "C",
+                        hint: "你通常會「觀看(watch)」什麼跟音樂有關的東西？"
+                    },
+                    {
+                        type: "choice",
+                        question: "May's Kitchen is really ______. Look! It's 1:15 p.m. now, but many people are still waiting for a table.",
+                        options: ["popular", "weekend", "ready", "video"],
+                        answer: "A",
+                        hint: "很多人在排隊等位子，代表這家餐廳非常...？"
+                    },
+                    {
+                        type: "choice",
+                        question: "A: Are you ______ for the movie? B: Sure. Let's go.",
+                        options: ["popular", "ready", "fan", "weekend"],
+                        answer: "B",
+                        hint: "B 說「當然，走吧」，代表 A 問他是否「準備好」了。"
+                    },
+                    {
+                        type: "choice",
+                        question: "A: Is the meet-and-greet of your favorite band this ______? B: Yes. It's on Sunday afternoon. I can't wait!",
+                        options: ["video", "ready", "fan", "weekend"],
+                        answer: "D",
+                        hint: "B 回答是在「星期日下午」，這屬於一週的哪個時段？"
+                    }
+                ]
+            },
+            'B': {
+                title: "Part B: 看圖選答",
+                data: [
+                    {
+                        type: "choice",
+                        visualType: "clock",
+                        visualData: { h: 8, m: 25 },
+                        question: "Look at the clock. What time is it?",
+                        options: ["It's eight fifty.", "It's eight twenty-five.", "It's seven twenty-five.", "It's eight five."],
+                        answer: "B",
+                        hint: "時針在 8，分針在 5 (代表 25 分)。"
+                    },
+                    {
+                        type: "choice",
+                        visualType: "clock",
+                        visualData: { h: 5, m: 15 },
+                        question: "Look at the clock. What time is it?",
+                        options: ["It's five fifty.", "It's four fifteen.", "It's five fifteen.", "It's fifteen five."],
+                        answer: "C",
+                        hint: "時針在 5，分針在 3 (代表 15 分)。"
+                    },
+                    {
+                        type: "choice",
+                        visualType: "calendar",
+                        visualData: { month: "八月", date: 17, day: "WED" },
+                        question: "Look at the calendar. What day is it?",
+                        options: ["It's Tuesday.", "It's Thursday.", "It's Friday.", "It's Wednesday."],
+                        answer: "D",
+                        hint: "圖片上的 WED 是 Wednesday 的縮寫。"
+                    },
+                    {
+                        type: "choice",
+                        visualType: "calendar",
+                        visualData: { month: "八月", date: 26, day: "FRI" },
+                        question: "Look at the calendar. What day is it?",
+                        options: ["It's Friday.", "It's Saturday.", "It's Sunday.", "It's Monday."],
+                        answer: "A",
+                        hint: "圖片上的 FRI 是 Friday 的縮寫。"
+                    }
+                ]
+            },
+            'C': {
+                title: "Part C: 看圖問答",
+                data: [
+                    {
+                        type: "choice",
+                        visualType: "calendar",
+                        visualData: { month: "三月", date: 12, day: "SAT" },
+                        question: "Choose the correct question.<br>Answer: It's Saturday.",
+                        options: ["What day is it?", "What time is it?", "What date is it?", "What month is it?"],
+                        answer: "A",
+                        hint: "回答是 'It's Saturday' (星期六)，所以是在問『星期』。"
+                    },
+                    {
+                        type: "choice",
+                        visualType: "clock",
+                        visualData: { h: 12, m: 45 },
+                        question: "Choose the correct question.<br>Answer: It's twelve forty-five.",
+                        options: ["What day is it?", "What time is it?", "Is it twelve?", "What time is the movie?"],
+                        answer: "B",
+                        hint: "回答是 'It's twelve forty-five' (12點45分)，所以是在問『時間』。"
+                    }
+                ]
+            },
+            'D': {
+                title: "Part D: 介系詞填空",
+                data: [
+                    {
+                        type: "choice",
+                        question: "The meet-and-greet is ______ Wednesday.",
+                        options: ["in", "at", "on", "from"],
+                        answer: "C",
+                        hint: "星期幾 (Wednesday) 前面通常使用介系詞 'on'。"
+                    },
+                    {
+                        type: "choice",
+                        question: "The English class is ______ 9 a.m.",
+                        options: ["in", "on", "at", "to"],
+                        answer: "C",
+                        hint: "具體的時間點 (9 a.m.) 前面通常使用介系詞 'at'。"
+                    },
+                    {
+                        type: "choice",
+                        question: "The movie is ______ 2 p.m. ______ 6:30 p.m.",
+                        options: ["from / to", "at / in", "on / at", "in / on"],
+                        answer: "A",
+                        hint: "表示「從...到...」的時間段，使用 'from ... to ...'。"
+                    },
+                    {
+                        type: "choice",
+                        question: "A: Is Billy Chen's concert ______ Thursday? B: Yes, it is.",
+                        options: ["at", "in", "on", "to"],
+                        answer: "C",
+                        hint: "星期幾 (Thursday) 前面通常使用介系詞 'on'。"
+                    },
+                    {
+                        type: "choice",
+                        question: "A: What time is it there? B: It's seven o'clock ______ the evening.",
+                        options: ["at", "on", "in", "from"],
+                        answer: "C",
+                        hint: "表示一天的某個時段 (the evening) 通常使用 'in'。"
+                    },
+                    {
+                        type: "choice",
+                        question: "A: Let's have dinner together ______ Mother's Day. B: Sure.",
+                        options: ["in", "at", "on", "from"],
+                        answer: "C",
+                        hint: "特定的節日 (Mother's Day) 視為特定的一天，使用 'on'。"
+                    }
+                ]
+            }
+        };
+
+        // --- 全域變數 ---
+        let currentSectionId = 'A';
+        let currentData = quizSections['A'].data;
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        // --- DOM 元素 ---
+        const questionsWrapper = document.getElementById('questions-wrapper');
+        const controlsContainer = document.getElementById('controls');
+        const scoreDisplay = document.getElementById('score-display');
+        const progressBar = document.getElementById('progress-bar');
+        const sectionTitle = document.getElementById('section-title');
+        const questionCounter = document.getElementById('question-counter');
+        const alertModal = document.getElementById('alert-modal');
+        const alertMessage = document.getElementById('alert-message');
+        const closeAlertBtn = document.getElementById('close-alert-btn');
+
+        // --- 輔助視覺產生函式 (SVG & CSS) ---
+
+        function createSVGClock(hour, minute) {
+            const hDegree = (hour % 12 + minute / 60) * 30; // 每小時30度
+            const mDegree = minute * 6; // 每分鐘6度
+
+            return `
+                <div class="flex justify-center my-4">
+                    <svg width="120" height="120" viewBox="0 0 100 100" class="drop-shadow-md">
+                        <!-- 鐘面 -->
+                        <circle cx="50" cy="50" r="45" stroke="#a8a29e" stroke-width="3" fill="#f5f5f4" />
+                        <!-- 刻度 (簡化) -->
+                        <line x1="50" y1="5" x2="50" y2="10" stroke="#78716c" stroke-width="2" />
+                        <line x1="50" y1="90" x2="50" y2="95" stroke="#78716c" stroke-width="2" />
+                        <line x1="95" y1="50" x2="90" y2="50" stroke="#78716c" stroke-width="2" />
+                        <line x1="5" y1="50" x2="10" y2="50" stroke="#78716c" stroke-width="2" />
+                        <!-- 數字 -->
+                        <text x="50" y="22" font-size="10" text-anchor="middle" fill="#444">12</text>
+                        <text x="80" y="54" font-size="10" text-anchor="middle" fill="#444">3</text>
+                        <text x="50" y="85" font-size="10" text-anchor="middle" fill="#444">6</text>
+                        <text x="20" y="54" font-size="10" text-anchor="middle" fill="#444">9</text>
+                        
+                        <!-- 時針 -->
+                        <line x1="50" y1="50" x2="50" y2="25" stroke="#1c1917" stroke-width="3" stroke-linecap="round" transform="rotate(${hDegree}, 50, 50)" />
+                        <!-- 分針 -->
+                        <line x1="50" y1="50" x2="50" y2="15" stroke="#0ea5e9" stroke-width="2" stroke-linecap="round" transform="rotate(${mDegree}, 50, 50)" />
+                        <!-- 中心點 -->
+                        <circle cx="50" cy="50" r="3" fill="#1c1917" />
+                    </svg>
+                </div>
+            `;
+        }
+
+        function createCSSCalendar(month, date, day) {
+            return `
+                <div class="flex justify-center my-4">
+                    <div class="w-24 bg-white rounded-lg shadow-md border border-stone-200 overflow-hidden text-center">
+                        <div class="bg-stone-500 text-white text-xs py-1 font-bold tracking-widest">
+                            ${month}
+                        </div>
+                        <div class="py-2">
+                            <div class="text-3xl font-bold text-sky-600 font-sans">${date}</div>
+                            <div class="text-sm font-bold text-stone-700 tracking-wider mt-1">${day}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- 核心功能函式 ---
+
+        function createInteractiveText(text) {
+            const parts = text.split(/([a-zA-Z'’\-]+)/);
+            return parts.map(part => {
+                const cleanPart = part.toLowerCase().replace(/’/g, "'").replace(/[^a-z\-]/g, "");
+                if (translations[cleanPart]) {
+                    return `<span class="word" onclick="event.stopPropagation(); speak('${part}')">${part}<span class="tooltip">${translations[cleanPart]}</span></span>`;
+                }
+                return part;
+            }).join('');
+        }
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function createSpeakerIcon(textToSpeak) {
+            const svgNS = "http://www.w3.org/2000/svg";
+            const svg = document.createElementNS(svgNS, "svg");
+            svg.setAttribute("class", "h-5 w-5 text-amber-600 hover:text-amber-800 cursor-pointer flex-shrink-0");
+            svg.setAttribute("viewBox", "0 0 20 20");
+            svg.setAttribute("fill", "currentColor");
+            
+            const path = document.createElementNS(svgNS, "path");
+            path.setAttribute("fill-rule", "evenodd");
+            path.setAttribute("d", "M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.016 5.39a.75.75 0 01.016 1.046l-1.04 1.04a.75.75 0 11-1.06-1.06l1.04-1.04a.75.75 0 011.044-.026zM14.07 3.33a.75.75 0 01.016 1.046l-1.04 1.04a.75.75 0 01-1.06-1.06l1.04-1.04a.75.75 0 011.044-.026z");
+            path.setAttribute("clip-rule", "evenodd");
+            svg.appendChild(path);
+            
+            svg.onclick = (e) => { 
+                e.stopPropagation(); 
+                speak(textToSpeak); 
+            };
+            return svg;
+        }
+
+        // --- 導覽與狀態切換 ---
+
+        window.switchSection = function(sectionId) {
+            currentSectionId = sectionId;
+            currentData = quizSections[sectionId].data;
+            currentQuestionIndex = 0;
+            score = 0;
+            
+            // Update UI Titles
+            sectionTitle.textContent = quizSections[sectionId].title;
+            
+            // Update Active Nav State
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('active');
+                el.classList.remove('bg-amber-500', 'text-white');
+            });
+            
+            const activeBtn = document.getElementById(`nav-${sectionId}`);
+            if(activeBtn) activeBtn.classList.add('active');
+
+            // Reset Displays
+            scoreDisplay.classList.add('hidden');
+            questionsWrapper.classList.remove('hidden');
+            
+            displayQuestion(0);
+        };
+
+        function displayQuestion(index) {
+            questionsWrapper.innerHTML = '';
+            controlsContainer.innerHTML = '';
+            questionCounter.textContent = `${index + 1}/${currentData.length}`;
+            
+            const progressPercentage = (index / currentData.length) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+
+            const q = currentData[index];
+            const questionBlock = document.createElement('div');
+            questionBlock.className = 'animate-fade-in';
+            
+            // 如果有視覺元件 (Part B & C)
+            if (q.visualType === 'clock') {
+                questionBlock.innerHTML += createSVGClock(q.visualData.h, q.visualData.m);
+            } else if (q.visualType === 'calendar') {
+                questionBlock.innerHTML += createCSSCalendar(q.visualData.month, q.visualData.date, q.visualData.day);
+            }
+
+            // 題目文字
+            const questionText = document.createElement('p');
+            questionText.className = 'text-lg text-stone-700 mb-4 flex items-center gap-2 flex-wrap';
+            
+            // 移除底線後的純文字，用於發音 (但對於 Part C，整句可能比較長，我們只朗讀問題部分)
+            // 對於 Part C，q.question 包含 HTML <br>，我們需要小心處理
+            let cleanQText = q.question.replace(/<br>/g, ' ').replace(/______/g, '');
+            const speaker = createSpeakerIcon(cleanQText);
+            
+            const textSpan = document.createElement('span');
+            textSpan.innerHTML = `<strong>${index + 1}.</strong> ${createInteractiveText(q.question)}`;
+            
+            questionText.appendChild(speaker);
+            questionText.appendChild(textSpan);
+            questionBlock.appendChild(questionText);
+
+            // 根據題型渲染輸入區域 (目前統一為 choice)
+            if (q.type === 'choice') {
+                renderChoiceOptions(q, index, questionBlock);
+            } else if (q.type === 'write') {
+                renderWriteInput(q, index, questionBlock);
+            }
+
+            // 提示按鈕
+            renderHint(q, questionBlock);
+
+            questionsWrapper.appendChild(questionBlock);
+
+            // 提交按鈕
+            const submitButton = document.createElement('button');
+            submitButton.className = 'w-full sm:w-auto bg-amber-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-amber-600 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-opacity-50';
+            submitButton.textContent = '檢查答案';
+            submitButton.onclick = () => checkAnswer(index);
+            controlsContainer.appendChild(submitButton);
+        }
+
+        function renderChoiceOptions(q, index, container) {
+            const optionsGrid = document.createElement('div');
+            optionsGrid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4';
+            
+            q.options.forEach((option, i) => {
+                const optionChar = String.fromCharCode(65 + i);
+                const optionContainer = document.createElement('div');
+                optionContainer.className = 'flex items-center p-3 border border-stone-300 rounded-lg transition-all cursor-pointer hover:bg-amber-50';
+                
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.id = `q${index}-opt${optionChar}`;
+                radio.name = `q${index}`;
+                radio.value = optionChar;
+                radio.className = 'h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300';
+
+                const label = document.createElement('label');
+                label.htmlFor = `q${index}-opt${optionChar}`;
+                label.className = 'ml-3 block text-md text-stone-900 flex-1 cursor-pointer flex items-center gap-2';
+                
+                label.appendChild(createSpeakerIcon(option));
+                const textSpan = document.createElement('span');
+                textSpan.innerHTML = `(${optionChar}) ${createInteractiveText(option)}`;
+                label.appendChild(textSpan);
+
+                optionContainer.onclick = () => { radio.checked = true; };
+                optionContainer.appendChild(radio);
+                optionContainer.appendChild(label);
+                optionsGrid.appendChild(optionContainer);
+            });
+            container.appendChild(optionsGrid);
+        }
+
+        function renderWriteInput(q, index, container) {
+            const inputContainer = document.createElement('div');
+            inputContainer.className = 'mb-6';
+            
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.id = `q${index}-input`;
+            input.className = 'w-full p-3 border-2 border-stone-300 rounded-lg focus:border-amber-500 focus:outline-none text-lg font-mono text-stone-700';
+            input.placeholder = "請在此輸入完整句子...";
+            input.autocomplete = "off";
+            
+            // 按 Enter 提交
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') checkAnswer(index);
+            });
+
+            inputContainer.appendChild(input);
+            container.appendChild(inputContainer);
+        }
+
+        function renderHint(q, container) {
+            const hintContainer = document.createElement('div');
+            hintContainer.className = 'mt-2';
+            const hintButton = document.createElement('button');
+            hintButton.className = 'text-sm text-amber-600 hover:text-amber-800 flex items-center gap-1';
+            hintButton.innerHTML = '<span>💡</span> 提示';
+            
+            const hintText = document.createElement('p');
+            hintText.className = 'hint-content hidden mt-2 text-sm text-stone-600 bg-yellow-50 border border-yellow-100 p-3 rounded-md';
+            hintText.textContent = q.hint;
+            
+            hintButton.onclick = () => hintText.classList.toggle('hidden');
+            hintContainer.appendChild(hintButton);
+            hintContainer.appendChild(hintText);
+            container.appendChild(hintContainer);
+        }
+
+        function checkAnswer(index) {
+            const q = currentData[index];
+            let isCorrect = false;
+            let userAnswer = "";
+
+            // 獲取使用者答案
+            if (q.type === 'choice') {
+                const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                if (!selected) {
+                    showAlert("請先選擇一個答案！");
+                    return;
+                }
+                userAnswer = selected.value;
+                isCorrect = (userAnswer === q.answer);
+            } else if (q.type === 'write') {
+                const input = document.getElementById(`q${index}-input`);
+                userAnswer = input.value.trim();
+                if (!userAnswer) {
+                    showAlert("請輸入答案！");
+                    return;
+                }
+                // 寬鬆比對
+                const cleanUser = userAnswer.toLowerCase().replace(/[.,!]/g, '').replace(/\s+/g, ' ');
+                const cleanCorrect = q.answer.toLowerCase().replace(/[.,!]/g, '').replace(/\s+/g, ' ');
+                isCorrect = (cleanUser === cleanCorrect);
+            }
+
+            // 鎖定與顯示結果
+            controlsContainer.innerHTML = ''; // 清除提交按鈕
+            
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `mt-4 p-4 rounded-lg ${isCorrect ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`;
+            
+            if (isCorrect) {
+                score++;
+                resultDiv.innerHTML = `
+                    <p class="text-green-700 font-bold flex items-center gap-2">
+                        <span class="text-xl">✔️</span> 答對了！
+                    </p>
+                    <p class="text-green-600 mt-1">${q.answer}</p>
+                `;
+                // 播放正確答案的語音 (若是 choice，q.answer 只是 "A"，我們需要抓選項內容)
+                let speakText = q.answer;
+                if (q.type === 'choice') {
+                    // 找到正確選項的索引 (A=0, B=1...)
+                    const correctIndex = q.answer.charCodeAt(0) - 65;
+                    if (q.options[correctIndex]) {
+                        speakText = q.options[correctIndex];
+                    }
+                }
+                speak(speakText);
+            } else {
+                // 取得正確答案文字
+                let correctText = q.answer;
+                if (q.type === 'choice') {
+                    const correctIndex = q.answer.charCodeAt(0) - 65;
+                    correctText = q.options[correctIndex];
+                }
+                
+                resultDiv.innerHTML = `
+                    <p class="text-red-700 font-bold flex items-center gap-2">
+                        <span class="text-xl">❌</span> 答錯了
+                    </p>
+                    <p class="text-stone-600 mt-1">正確答案：<span class="font-bold text-stone-800">${createInteractiveText(correctText)}</span></p>
+                `;
+            }
+
+            // 停用輸入
+            if (q.type === 'choice') {
+                document.querySelectorAll(`input[name="q${index}"]`).forEach(el => el.disabled = true);
+            } else {
+                document.getElementById(`q${index}-input`).disabled = true;
+            }
+
+            questionsWrapper.appendChild(resultDiv);
+
+            // 下一題按鈕
+            const nextButton = document.createElement('button');
+            nextButton.className = 'w-full sm:w-auto bg-amber-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-amber-600 transition-colors mt-4';
+            
+            if (currentQuestionIndex < currentData.length - 1) {
+                nextButton.textContent = '下一題';
+                nextButton.onclick = () => {
+                    currentQuestionIndex++;
+                    displayQuestion(currentQuestionIndex);
+                };
+            } else {
+                nextButton.textContent = '查看成績';
+                nextButton.onclick = showFinalScore;
+            }
+            controlsContainer.appendChild(nextButton);
+        }
+
+        function showFinalScore() {
+            progressBar.style.width = '100%';
+            questionsWrapper.innerHTML = '';
+            controlsContainer.innerHTML = '';
+            sectionTitle.textContent = '測驗完成';
+
+            scoreDisplay.innerHTML = `
+                <div class="py-8">
+                    <p class="text-xl text-stone-600">你的最終分數</p>
+                    <p class="text-6xl font-bold my-4 text-amber-500">${score} <span class="text-2xl text-stone-400">/ ${currentData.length}</span></p>
+                    <div class="flex justify-center gap-4 mt-6">
+                        <button onclick="location.reload()" class="px-6 py-2 border border-stone-300 rounded-lg hover:bg-stone-50 text-stone-600">回首頁</button>
+                        <button onclick="switchSection('${currentSectionId}')" class="px-6 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 shadow-md">再練習一次</button>
+                    </div>
+                </div>
+            `;
+            scoreDisplay.classList.remove('hidden');
+        }
+
+        function showAlert(msg) {
+            alertMessage.textContent = msg;
+            alertModal.classList.remove('hidden');
+        }
+
+        closeAlertBtn.addEventListener('click', () => {
+            alertModal.classList.add('hidden');
+        });
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            switchSection('A');
+        });
+    </script>
+</body>
+</html>
