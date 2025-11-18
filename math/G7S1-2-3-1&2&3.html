@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分數的四則運算</title>
+    <link rel="icon" href="dog.png" type="image/png">
+    <!-- 載入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 載入 KaTeX (數學公式) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" xintegrity="sha384-KiWOvVjnN8qwKMvhioyej1N4Kfc8JsurIYCFTYdjCNq1lWMnYDPvrHotKcSESSZN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" xintegrity="sha384-hIoBPJpTadx52GjLhpKmqxNtUVAAiY9bS+eCacT5nLzIPhOUPXmKqtSgwGsaCdgM" crossorigin="anonymous"></script>
+
+    <!-- 載入 Chiron GoRound TC 字型 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chiron+GoRound+TC:wght@200..900&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: "Chiron GoRound TC", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            /* 避免 KaTeX 字型被覆蓋 */
+            --katex-font-family: 'KaTeX_Main', serif;
+        }
+        
+        /* 自定義分數樣式 (舊) */
+        .fraction {
+            display: inline-block;
+            text-align: center;
+            vertical-align: middle;
+            margin: 0 0.5rem;
+        }
+        .fraction .numerator {
+            border-bottom: 2px solid black;
+            padding: 0 0.25rem;
+            display: block;
+        }
+        .fraction .denominator {
+            padding: 0 0.25rem;
+            display: block;
+        }
+        /* 負號樣式 (舊) */
+        .negative-sign {
+            font-size: 1.5rem;
+            font-weight: bold;
+            vertical-align: middle;
+            margin-right: 0.1rem;
+        }
+        /* 隱藏 radio button (舊) */
+        input[type="radio"] {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+        }
+        /* 自定義 radio button 標籤 (舊) */
+        input[type="radio"] + label {
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border: 2px solid #cbd5e1;
+            border-radius: 0.375rem;
+            transition: all 0.2s ease-in-out;
+            margin: 0 0.25rem;
+            display: inline-block;
+        }
+        /* 選中時的樣式 (舊) */
+        input[type="radio"]:checked + label {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        /* 比較符號下拉選單 (舊) */
+        select.comparison-select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20"><path stroke="%236b7280" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 8l4 4 4-4"/></svg>');
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+
+        /* --- 以下為新加入的樣式 --- */
+
+        /* 螢光筆 highlight 效果 */
+        .highlight {
+            background-color: #fef08a; /* Tailwind amber-200 */
+            padding: 0.1em 0.25em;
+            border-radius: 0.25em;
+            font-weight: 600;
+        }
+
+        /* 隱藏/顯示 的 CSS class */
+        .hidden {
+            display: none;
+        }
+        
+        /* 按鈕樣式 */
+        .btn {
+            padding: 0.6rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: none;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background-color: #0284c7; /* sky-600 */
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #0369a1; /* sky-700 */
+        }
+        .btn-primary:disabled {
+            background-color: #e0f2fe; /* sky-100 */
+            color: #7dd3fc; /* sky-300 */
+            cursor: not-allowed;
+        }
+        .btn-secondary {
+            background-color: #e5e7eb; /* gray-200 */
+            color: #374151; /* gray-700 */
+        }
+        .btn-secondary:hover {
+            background-color: #d1d5db; /* gray-300 */
+        }
+        
+        /* 輸入框樣式 */
+        .select-symbol {
+            font-size: 1.5rem; /* 2xl */
+            border: 2px solid #cbd5e1; /* gray-300 */
+            border-radius: 0.5rem; /* lg */
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            padding: 0.25rem 0.5rem;
+            font-family: "Chiron GoRound TC", sans-serif;
+            font-weight: 700;
+        }
+        
+        /* 數學公式的容器 */
+        .math-display {
+            font-size: 1.875rem; /* 3xl */
+            padding: 0 0.5rem;
+            color: #1e3a8a; /* blue-900 */
+        }
+        
+        /* 學習卡片 */
+        .learning-card {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 1rem; /* xl */
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        /* 提示框 */
+        .hint-box {
+            color: #0c4a6e; /* sky-900 */
+            background-color: #f0f9ff; /* sky-50 */
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem; /* lg */
+            margin-bottom: 1rem;
+            border: 1px solid #bae6fd; /* sky-200 */
+        }
+        
+        /* 回饋訊息 */
+        .feedback {
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 1.125rem; /* lg */
+            font-weight: 600;
+            height: 2rem; /* 保持空間，避免跳動 */
+        }
+        .feedback-success {
+            color: #15803d; /* green-700 */
+        }
+        .feedback-error {
+            color: #b91c1c; /* red-700 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="flex min-h-screen">
+        <!-- 導覽列 (Sidebar) -->
+        <nav class="w-60 bg-gray-800 text-white p-6 fixed h-full shadow-lg">
+            <h2 class="text-2xl font-semibold mb-8 text-white">分數的四則運算</h2>
+            <ul class="space-y-4">
+                <li>
+                    <a href="#concept1" class="text-lg text-gray-300 hover:text-white transition-colors duration-200 block p-2 rounded-md hover:bg-gray-700">
+                        一、最簡分數
+                    </a>
+                </li>
+                <li>
+                    <a href="#concept2" class="text-lg text-gray-300 hover:text-white transition-colors duration-200 block p-2 rounded-md hover:bg-gray-700">
+                        二、正分數的比較
+                    </a>
+                </li>
+                <li>
+                    <a href="#concept3" class="text-lg text-gray-300 hover:text-white transition-colors duration-200 block p-2 rounded-md hover:bg-gray-700">
+                        三、負分數的比較
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- 主要內容 -->
+        <main class="flex-1 ml-60 p-8">
+            
+            <!-- Section 1: 最簡分數 -->
+            <div id="concept1" class="bg-white p-6 sm:p-10 rounded-xl shadow-lg w-full max-w-2xl mb-10">
+                
+                <div class="flex justify-between items-start mb-6">
+                    <h1 class="text-3xl font-bold text-gray-800">一、最簡分數</h1>
+                    <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full whitespace-nowrap">對應課本：P.129 隨堂</span>
+                </div>
+                
+                <p class="text-lg text-gray-700 mb-8">
+                    判斷下列各分數是否為最簡分數，如果不是，請化成最簡分數。
+                </p>
+
+                <!-- 問題列表 1 -->
+                <div class="space-y-8">
+                    <!-- 問題 1 -->
+                    <div class="question-item p-4 border border-gray-200 rounded-lg" data-question-id="1">
+                        <div class="flex flex-wrap items-center justify-between gap-4">
+                            <div class="flex items-center">
+                                <span class="text-xl font-semibold mr-2">1.</span>
+                                <span class="negative-sign">-</span>
+                                <div class="fraction text-xl"><span class="numerator">4</span><span class="denominator">5</span></div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <input type="radio" id="q1-yes" name="q1-simple" value="yes"><label for="q1-yes">是</label>
+                                <input type="radio" id="q1-no" name="q1-simple" value="no"><label for="q1-no">否</label>
+                            </div>
+                            <div class="flex items-center w-full sm:w-auto mt-4 sm:mt-0">
+                                <label for="q1-simplified" class="text-gray-700 mr-2 whitespace-nowrap">化簡後：</label>
+                                <input type="text" id="q1-simplified" name="q1-simplified" class="form-input w-full max-w-xs border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between mt-3">
+                            <div id="feedback-1" class="text-lg font-medium"></div>
+                            <button class="check-single-btn bg-blue-500 text-white py-1 px-4 rounded-lg hover:bg-blue-600 transition-transform active:scale-95" data-question-id="1">檢核</button>
+                        </div>
+                    </div>
+                    <!-- 問題 2 -->
+                    <div class="question-item p-4 border border-gray-200 rounded-lg" data-question-id="2">
+                        <div class="flex flex-wrap items-center justify-between gap-4">
+                            <div class="flex items-center">
+                                <span class="text-xl font-semibold mr-2">2.</span>
+                                <div class="fraction text-xl"><span class="numerator">55</span><span class="denominator">66</span></div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <input type="radio" id="q2-yes" name="q2-simple" value="yes"><label for="q2-yes">是</label>
+                                <input type="radio" id="q2-no" name="q2-simple" value="no"><label for="q2-no">否</label>
+                            </div>
+                            <div class="flex items-center w-full sm:w-auto mt-4 sm:mt-0">
+                                <label for="q2-simplified" class="text-gray-700 mr-2 whitespace-nowrap">化簡後：</label>
+                                <input type="text" id="q2-simplified" name="q2-simplified" class="form-input w-full max-w-xs border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between mt-3">
+                            <div id="feedback-2" class="text-lg font-medium"></div>
+                            <button class="check-single-btn bg-blue-500 text-white py-1 px-4 rounded-lg hover:bg-blue-600 transition-transform active:scale-95" data-question-id="2">檢核</button>
+                        </div>
+                    </div>
+                    <!-- 問題 3 -->
+                    <div class="question-item p-4 border border-gray-200 rounded-lg" data-question-id="3">
+                        <div class="flex flex-wrap items-center justify-between gap-4">
+                            <div class="flex items-center">
+                                <span class="text-xl font-semibold mr-2">3.</span>
+                                <div class="fraction text-xl"><span class="numerator">39</span><span class="denominator">91</span></div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <input type="radio" id="q3-yes" name="q3-simple" value="yes"><label for="q3-yes">是</label>
+                                <input type="radio" id="q3-no" name="q3-simple" value="no"><label for="q3-no">否</label>
+                            </div>
+                            <div class="flex items-center w-full sm:w-auto mt-4 sm:mt-0">
+                                <label for="q3-simplified" class="text-gray-700 mr-2 whitespace-nowrap">化簡後：</label>
+                                <input type="text" id="q3-simplified" name="q3-simplified" class="form-input w-full max-w-xs border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between mt-3">
+                            <div id="feedback-3" class="text-lg font-medium"></div>
+                            <button class="check-single-btn bg-blue-500 text-white py-1 px-4 rounded-lg hover:bg-blue-600 transition-transform active:scale-95" data-question-id="3">檢核</button>
+                        </div>
+                    </div>
+                    <!-- 問題 4 -->
+                    <div class="question-item p-4 border border-gray-200 rounded-lg" data-question-id="4">
+                        <div class="flex flex-wrap items-center justify-between gap-4">
+                            <div class="flex items-center">
+                                <span class="text-xl font-semibold mr-2">4.</span>
+                                <span class="negative-sign">-</span>
+                                <div class="fraction text-xl"><span class="numerator">25</span><span class="denominator">36</span></div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <input type="radio" id="q4-yes" name="q4-simple" value="yes"><label for="q4-yes">是</label>
+                                <input type="radio" id="q4-no" name="q4-simple" value="no"><label for="q4-no">否</label>
+                            </div>
+                            <div class="flex items-center w-full sm:w-auto mt-4 sm:mt-0">
+                                <label for="q4-simplified" class="text-gray-700 mr-2 whitespace-nowrap">化簡後：</label>
+                                <input type="text" id="q4-simplified" name="q4-simplified" class="form-input w-full max-w-xs border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between mt-3">
+                            <div id="feedback-4" class="text-lg font-medium"></div>
+                            <button class="check-single-btn bg-blue-500 text-white py-1 px-4 rounded-lg hover:bg-blue-600 transition-transform active:scale-95" data-question-id="4">檢核</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: 正分數的比較大小 -->
+            <div id="concept2" class="bg-white p-6 sm:p-10 rounded-xl shadow-lg w-full max-w-2xl mb-10">
+                <div class="flex justify-between items-start mb-6">
+                    <h1 class="text-3xl font-bold text-gray-800">二、正分數的比較大小</h1>
+                    <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full whitespace-nowrap">對應課本：P.130 例 1</span>
+                </div>
+                
+                <p class="text-lg text-gray-700 mb-8">
+                    比較下列各組分數的大小。
+                </p>
+
+                <!-- 問題列表 2 -->
+                <div class="space-y-8">
+                    <!-- 問題 5 -->
+                    <div class="question-item p-4 border border-gray-200 rounded-lg" data-question-id="5">
+                        <div class="flex flex-wrap items-center justify-center gap-4">
+                            <span class="text-xl font-semibold mr-2 sm:mr-4">1.</span>
+                            <div class="fraction text-xl"><span class="numerator">1</span><span class="denominator">3</span></div>
+                            <select id="q5-compare" name="q5-compare" class="comparison-select border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 text-xl font-bold p-2 h-12 w-20 text-center">
+                                <option value="">?</option>
+                                <option value=">">&gt;</option>
+                                <option value="<">&lt;</option>
+                                <option value="=">=</option>
+                            </select>
+                            <div class="fraction text-xl"><span class="numerator">1</span><span class="denominator">4</span></div>
+                        </div>
+                        <div class="mt-3 text-center">
+                            <div id="feedback-5" class="text-lg font-medium text-center mb-3"></div>
+                            <button class="check-single-btn bg-blue-500 text-white py-1 px-4 rounded-lg hover:bg-blue-600 transition-transform active:scale-95" data-question-id="5">檢核</button>
+                        </div>
+                    </div>
+                    <!-- 問題 6 -->
+                    <div class="question-item p-4 border border-gray-200 rounded-lg" data-question-id="6">
+                        <div class="flex flex-wrap items-center justify-center gap-4">
+                            <span class="text-xl font-semibold mr-2 sm:mr-4">2.</span>
+                            <div class="fraction text-xl"><span class="numerator">9</span><span class="denominator">11</span></div>
+                            <select id="q6-compare" name="q6-compare" class="comparison-select border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 text-xl font-bold p-2 h-12 w-20 text-center">
+                                <option value="">?</option>
+                                <option value=">">&gt;</option>
+                                <option value="<">&lt;</option>
+                                <option value="=">=</option>
+                            </select>
+                            <div class="fraction text-xl"><span class="numerator">6</span><span class="denominator">11</span></div>
+                        </div>
+                        <div class="mt-3 text-center">
+                            <div id="feedback-6" class="text-lg font-medium text-center mb-3"></div>
+                            <button class="check-single-btn bg-blue-500 text-white py-1 px-4 rounded-lg hover:bg-blue-600 transition-transform active:scale-95" data-question-id="6">檢核</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: 負分數的比較大小 (新加入的) -->
+            <div id="concept3" class="w-full max-w-2xl mb-10">
+                <!-- 標題 -->
+                <header class="text-center my-6">
+                    <h1 class="text-4xl font-bold text-sky-800">負分數的比較大小</h1>
+                    <p class="text-lg text-gray-600 mt-2">對應課本：P.131 例 2</p>
+                </header>
+        
+                <!-- 
+                    卡片 1：第 1 題
+                    比較 -2/5 和 -2/7 (同分子)
+                -->
+                <div class="learning-card">
+                    <!-- 題目名稱 -->
+                    <h3 class="text-2xl font-bold mb-4 flex items-center">
+                        第 1 題：比較 <span id="q1-math" class="math-display"></span>
+                    </h3>
+        
+                    <!-- 進度條 -->
+                    <div class="w-full bg-gray-200 rounded-full h-3 mb-2">
+                        <div id="progress1" class="bg-sky-500 h-3 rounded-full" style="width: 33.3%; transition: width 0.5s;"></div>
+                    </div>
+                    <p id="progress-text1" class="text-sm text-gray-500 text-center mb-4">第 1 步 / 共 3 步</p>
+        
+                    <!-- 步驟 1-1：比較正數 -->
+                    <div id="p1-step1">
+                        <p class="text-lg mb-4">
+                            <b>步驟 1：</b>先忘掉<span class="highlight">負號</span>，我們來比較它們的「正數」：
+                        </p>
+                        <div class="hint-box">
+                            <b>小提示💡：</b>當「分子」相同時 (都是 2)，「分母」越 <b class="text-red-600">小</b>，代表切得越 <b class="text-red-600">大</b> 塊，所以值就越 <b class="text-red-600">大</b>。
+                        </div>
+                        <div class="flex items-center justify-center space-x-2 sm:space-x-4 my-6">
+                            <span id="p1-s1-q1" class="math-display"></span>
+                            <select id="p1-s1-answer" class="select-symbol">
+                                <option value="">?</option>
+                                <option value=">">&gt;</option>
+                                <option value="<">&lt;</option>
+                                <option value="=">=</option>
+                            </select>
+                            <span id="p1-s1-q2" class="math-display"></span>
+                            <button onclick="checkAnswer('p1', 1)" class="btn btn-primary">檢查答案</button>
+                        </div>
+                    </div>
+        
+                    <!-- 步驟 1-2：套用負數規則 -->
+                    <div id="p1-step2" class="hidden">
+                        <p class="text-lg mb-4">
+                            <b>步驟 2：</b>太棒了！<span id="p1-s1-result" class="highlight"></span>
+                        </p>
+                        <p class="text-lg mb-4">
+                            現在，我們把<span class="highlight">負號</span>加回去。
+                        </p>
+                        <div class="hint-box">
+                            <b>重點觀念💡：</b>正數時越大，加上負號後，反而會越 <b class="text-red-600">小</b>。
+                            (大小關係會<b class="text-red-600">完全顛倒</b>！)
+                        </div>
+                        <div class="flex items-center justify-center space-x-2 sm:space-x-4 my-6">
+                            <span id="p1-s2-q1" class="math-display"></span>
+                            <select id="p1-s2-answer" class="select-symbol">
+                                <option value="">?</option>
+                                <option value=">">&gt;</option>
+                                <option value="<">&lt;</option>
+                                <option value="=">=</option>
+                            </select>
+                            <span id="p1-s2-q2" class="math-display"></span>
+                            <button onclick="checkAnswer('p1', 2)" class="btn btn-primary">檢查答案</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 步驟 1-3：完成總結 -->
+                    <div id="p1-step3" class="hidden text-center">
+                        <h4 class="text-2xl font-bold text-green-700 mb-4">🎉 做得好！第一題完成了！</h4>
+                        <p class="text-lg bg-green-50 p-4 rounded-lg">
+                            總結：因為 <span id="p1-final-positive" class="font-bold"></span>，
+                            <br>
+                            所以 <span id="p1-final-negative" class="font-bold"></span>。
+                        </p>
+                        <button onclick="resetProblem('p1')" class="btn btn-secondary mt-6">再做一次</button>
+                    </div>
+        
+                    <!-- 回饋訊息區 -->
+                    <div id="feedback-p1" class="feedback"></div>
+                </div>
+        
+                <!-- 
+                    卡片 2：第 3 題
+                    比較 -4/5 和 -3/4 (不同分子分母)
+                -->
+                <div class="learning-card">
+                    <!-- 題目名稱 -->
+                    <h3 class="text-2xl font-bold mb-4 flex items-center">
+                        第 3 題：比較 <span id="q3-math" class="math-display"></span>
+                    </h3>
+        
+                    <!-- 進度條 -->
+                    <div class="w-full bg-gray-200 rounded-full h-3 mb-2">
+                        <div id="progress3" class="bg-sky-500 h-3 rounded-full" style="width: 33.3%; transition: width 0.5s;"></div>
+                    </div>
+                    <p id="progress-text3" class="text-sm text-gray-500 text-center mb-4">第 1 步 / 共 3 步</p>
+        
+                    <!-- 步驟 3-1：比較正數 -->
+                    <div id="p3-step1">
+                        <p class="text-lg mb-4">
+                            <b>步驟 1：</b>先忘掉<span class="highlight">負號</span>，比較它們的「正數」：
+                        </p>
+                        <div class="hint-box">
+                            <b>小提示💡：</b>分母和分子都不一樣時，要先「<b>通分</b>」！
+                            <br>
+                            5 和 4 的公分母是 <b>20</b>。
+                            <div class="mt-2 flex justify-around">
+                                <span id="p3-s1-convert1" class="font-bold"></span>
+                                <span id="p3-s1-convert2" class="font-bold"></span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-center space-x-2 sm:space-x-4 my-6">
+                            <span id="p3-s1-q1" class="math-display"></span>
+                            <select id="p3-s1-answer" class="select-symbol">
+                                <option value="">?</option>
+                                <option value=">">&gt;</option>
+                                <option value="<">&lt;</option>
+                                <option value="=">=</option>
+                            </select>
+                            <span id="p3-s1-q2" class="math-display"></span>
+                            <button onclick="checkAnswer('p3', 1)" class="btn btn-primary">檢查答案</button>
+                        </div>
+                    </div>
+        
+                    <!-- 步驟 3-2：套用負數規則 -->
+                    <div id="p3-step2" class="hidden">
+                        <p class="text-lg mb-4">
+                            <b>步驟 2：</b>完全正確！<span id="p3-s1-result" class="highlight"></span>
+                        </p>
+                        <p class="text-lg mb-4">
+                            現在，我們把<span class="highlight">負號</span>加回去。
+                        </p>
+                        <div class="hint-box">
+                            <b>重點觀念💡：</b>大小關係會<b class="text-red-600">完全顛倒</b>！
+                        </div>
+                        <div class="flex items-center justify-center space-x-2 sm:space-x-4 my-6">
+                            <span id="p3-s2-q1" class="math-display"></span>
+                            <select id="p3-s2-answer" class="select-symbol">
+                                <option value="">?</option>
+                                <option value=">">&gt;</option>
+                                <option value="<">&lt;</option>
+                                <option value="=">=</option>
+                            </select>
+                            <span id="p3-s2-q2" class="math-display"></span>
+                            <button onclick="checkAnswer('p3', 2)" class="btn btn-primary">檢查答案</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 步驟 3-3：完成總結 -->
+                    <div id="p3-step3" class="hidden text-center">
+                        <h4 class="text-2xl font-bold text-green-700 mb-4">🎉 超厲害！你也完成囉！</h4>
+                        <p class="text-lg bg-green-50 p-4 rounded-lg">
+                            總結：因為 <span id="p3-final-positive" class="font-bold"></span>，
+                            <br>
+                            所以 <span id="p3-final-negative" class="font-bold"></span>。
+                        </p>
+                        <button onclick="resetProblem('p3')" class="btn btn-secondary mt-6">再做一次</button>
+                    </div>
+        
+                    <!-- 回饋訊息區 -->
+                    <div id="feedback-p3" class="feedback"></div>
+                </div>
+            </div>
+
+
+            <!-- 全局重新作答按鈕 -->
+            <div class="mt-10 text-center max-w-2xl">
+                <button id="reset-btn" class="bg-gray-500 text-white font-bold py-3 px-8 rounded-lg text-lg hover:bg-gray-600 transition-colors duration-200 shadow-md">
+                    全部重新作答
+                </button>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // --- 舊的 SCRIPT (Section 1 & 2) ---
+
+        // 正確答案 (Section 1 & 2)
+        const correctAnswers = {
+            q1: { isSimplest: "yes", simplified: "" },
+            q2: { isSimplest: "no", simplified: "5/6" },
+            q3: { isSimplest: "no", simplified: "3/7" },
+            q4: { isSimplest: "yes", simplified: "" },
+            q5: { compare: ">" }, // 1/3 > 1/4
+            q6: { compare: ">" }  // 9/11 > 6/11
+        };
+        
+        const resetButton = document.getElementById('reset-btn');
+
+        // 逐題檢核的事件監聽 (Section 1 & 2)
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('check-single-btn')) {
+                const questionId = e.target.getAttribute('data-question-id');
+                checkQuestion(questionId);
+            }
+        });
+
+        // 檢核單一問題的函數 (Section 1 & 2)
+        function checkQuestion(id) {
+            const questionId = `q${id}`;
+            const answer = correctAnswers[questionId];
+            const feedbackEl = document.getElementById(`feedback-${id}`);
+            const questionItemEl = feedbackEl.closest('.question-item');
+            let isCorrect = false;
+
+            if (id <= 4) { // 處理最簡分數問題 (1-4)
+                const selectedRadio = document.querySelector(`input[name="${questionId}-simple"]:checked`);
+                const userIsSimplest = selectedRadio ? selectedRadio.value : null;
+                const userSimplified = document.getElementById(`${questionId}-simplified`).value.trim().replace(/\s+/g, '');
+
+                if (answer.isSimplest === "yes") {
+                    isCorrect = userIsSimplest === "yes";
+                } else {
+                    const simplifiedAnswerCheck = userSimplified === answer.simplified;
+                    isCorrect = (userIsSimplest === "no" && simplifiedAnswerCheck);
+                }
+
+                // 顯示回饋
+                if (isCorrect) {
+                    feedbackEl.textContent = '✔️ 答對了！';
+                    feedbackEl.className = 'text-lg font-medium text-green-600';
+                    questionItemEl.classList.remove('border-red-400');
+                    questionItemEl.classList.add('border-green-400');
+                } else {
+                    feedbackEl.textContent = `❌ 答錯了。正確答案：${answer.isSimplest === 'yes' ? '是' : '否'}${answer.simplified ? '，化簡為 ' + answer.simplified : ''}`;
+                    feedbackEl.className = 'text-lg font-medium text-red-600';
+                    questionItemEl.classList.remove('border-green-400');
+                    questionItemEl.classList.add('border-red-400');
+                }
+
+            } else { // 處理比較大小問題 (5-6)，使用下拉選單
+                const compareSelect = document.getElementById(`${questionId}-compare`);
+                const userCompare = compareSelect.value;
+
+                isCorrect = (userCompare === answer.compare);
+
+                if (isCorrect) {
+                    feedbackEl.textContent = '✔️ 答對了！';
+                    feedbackEl.className = 'text-lg font-medium text-center text-green-600 mb-3';
+                    questionItemEl.classList.remove('border-red-400');
+                    questionItemEl.classList.add('border-green-400');
+                } else {
+                    feedbackEl.textContent = `❌ 答錯了。正確答案：${answer.compare}`;
+                    feedbackEl.className = 'text-lg font-medium text-center text-red-600 mb-3';
+                    questionItemEl.classList.remove('border-green-400');
+                    questionItemEl.classList.add('border-red-400');
+                }
+            }
+        }
+
+
+        // 全局重新作答 (Section 1 & 2 & 3)
+        resetButton.addEventListener('click', () => {
+            // --- 重設 Section 1 & 2 ---
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.checked = false;
+            });
+            document.querySelectorAll('input[type="text"]').forEach(input => {
+                input.value = '';
+            });
+            document.querySelectorAll('select.comparison-select').forEach(select => {
+                select.selectedIndex = 0; 
+            });
+            for (let i = 1; i <= 6; i++) {
+                const feedbackEl = document.getElementById(`feedback-${i}`);
+                if (feedbackEl) {
+                    if (i <= 4) {
+                        feedbackEl.textContent = '';
+                        feedbackEl.className = 'text-lg font-medium';
+                    } else {
+                        feedbackEl.textContent = '';
+                        feedbackEl.className = 'text-lg font-medium text-center mb-3';
+                    }
+                    const questionItemEl = feedbackEl.closest('.question-item');
+                    questionItemEl.classList.remove('border-green-400', 'border-red-400');
+                    questionItemEl.classList.add('border-gray-200');
+                }
+            }
+            for (let i = 1; i <= 4; i++) {
+                const simplifiedInput = document.getElementById(`q${i}-simplified`);
+                if(simplifiedInput) {
+                    simplifiedInput.disabled = false;
+                    simplifiedInput.classList.remove('bg-gray-100');
+                }
+            }
+            // --- 重設 Section 3 ---
+            resetProblem('p1');
+            resetProblem('p3');
+        });
+
+        // "是/否" Radio
+        document.querySelectorAll('input[name$="-simple"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const qNum = e.target.name.split('-')[0]; // 'q1', 'q2', etc.
+                const simplifiedInput = document.getElementById(`${qNum}-simplified`);
+                
+                if (e.target.value === 'yes') {
+                    simplifiedInput.value = '';
+                    simplifiedInput.disabled = true;
+                    simplifiedInput.classList.add('bg-gray-100');
+                } else {
+                    simplifiedInput.disabled = false;
+                    simplifiedInput.classList.remove('bg-gray-100');
+                }
+            });
+        });
+
+        // 自定義 alert 函數 (目前未使用)
+        function showCustomAlert(message) {
+            const backdrop = document.createElement('div');
+            backdrop.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            const alertBox = document.createElement('div');
+            alertBox.className = 'bg-white p-8 rounded-lg shadow-lg text-center max-w-sm';
+            const messageEl = document.createElement('p');
+            messageEl.textContent = message;
+            messageEl.className = 'text-lg font-medium text-gray-800 mb-6';
+            const closeButton = document.createElement('button');
+            closeButton.textContent = '太棒了！';
+            closeButton.className = 'bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition-colors duration-200';
+            alertBox.appendChild(messageEl);
+            alertBox.appendChild(closeButton);
+            backdrop.appendChild(alertBox);
+            document.body.appendChild(backdrop);
+            closeButton.onclick = () => document.body.removeChild(backdrop);
+            backdrop.onclick = (e) => {
+                if (e.target === backdrop) {
+                    document.body.removeChild(backdrop);
+                }
+            };
+        }
+
+        // --- 新加入的 SCRIPT (Section 3) ---
+
+        // 答案儲存 (Section 3)
+        const answers = {
+            p1: { step1: '>', step2: '<' },
+            p3: { step1: '>', step2: '<' }
+        };
+
+        // 顯示數學公式 (使用 KaTeX)
+        function renderMath() {
+            try {
+                // 卡片 1 的題目
+                katex.render("-\\frac{2}{5} \\square -\\frac{2}{7}", document.getElementById('q1-math'), { throwOnError: false });
+                katex.render("\\frac{2}{5}", document.getElementById('p1-s1-q1'), { throwOnError: false });
+                katex.render("\\frac{2}{7}", document.getElementById('p1-s1-q2'), { throwOnError: false });
+                katex.render("-\\frac{2}{5}", document.getElementById('p1-s2-q1'), { throwOnError: false });
+                katex.render("-\\frac{2}{7}", document.getElementById('p1-s2-q2'), { throwOnError: false });
+                // 卡片 1 的結果
+                katex.render("\\frac{2}{5} > \\frac{2}{7}", document.getElementById('p1-s1-result'), { throwOnError: false });
+                katex.render("\\frac{2}{5} > \\frac{2}{7}", document.getElementById('p1-final-positive'), { throwOnError: false });
+                katex.render("-\\frac{2}{5} < -\\frac{2}{7}", document.getElementById('p1-final-negative'), { throwOnError: false });
+
+                // 卡片 3 的題目
+                katex.render("-\\frac{4}{5} \\square -\\frac{3}{4}", document.getElementById('q3-math'), { throwOnError: false });
+                katex.render("\\frac{4}{5} = \\frac{16}{20}", document.getElementById('p3-s1-convert1'), { throwOnError: false });
+                katex.render("\\frac{3}{4} = \\frac{15}{20}", document.getElementById('p3-s1-convert2'), { throwOnError: false });
+                katex.render("\\frac{4}{5}", document.getElementById('p3-s1-q1'), { throwOnError: false });
+                katex.render("\\frac{3}{4}", document.getElementById('p3-s1-q2'), { throwOnError: false });
+                katex.render("-\\frac{4}{5}", document.getElementById('p3-s2-q1'), { throwOnError: false });
+                katex.render("-\\frac{3}{4}", document.getElementById('p3-s2-q2'), { throwOnError: false });
+                // 卡片 3 的結果
+                katex.render("\\frac{4}{5} > \\frac{3}{4}", document.getElementById('p3-s1-result'), { throwOnError: false });
+                katex.render("\\frac{4}{5} > \\frac{3}{4}", document.getElementById('p3-final-positive'), { throwOnError: false });
+                katex.render("-\\frac{4}{5} < -\\frac{3}{4}", document.getElementById('p3-final-negative'), { throwOnError: false });
+
+            } catch (err) {
+                console.error("KaTeX rendering error:", err);
+            }
+        }
+
+        // 頁面載入時執行
+        document.addEventListener('DOMContentLoaded', renderMath);
+
+        // 顯示回饋訊息 (Section 3)
+        function showFeedback(problemId, message, isSuccess) {
+            const feedbackEl = document.getElementById(`feedback-${problemId}`);
+            feedbackEl.textContent = message;
+            feedbackEl.className = 'feedback ' + (isSuccess ? 'feedback-success' : 'feedback-error');
+            
+            // 錯誤訊息短暫震動提示
+            if (!isSuccess) {
+                const card = feedbackEl.closest('.learning-card');
+                card.style.transition = 'transform 0.1s';
+                card.style.transform = 'translateX(5px)';
+                setTimeout(() => { 
+                    card.style.transform = 'translateX(-5px)'; 
+                    setTimeout(() => { card.style.transform = ''; }, 100);
+                }, 100);
+            }
+        }
+        
+        // 隱藏回饋訊息 (Section 3)
+        function hideFeedback(problemId) {
+            const feedbackEl = document.getElementById(`feedback-${problemId}`);
+            feedbackEl.textContent = '';
+        }
+
+        // 檢查答案的通用函式 (Section 3)
+        function checkAnswer(problemId, step) {
+            const userAnswer = document.getElementById(`${problemId}-s${step}-answer`).value;
+            const correctAnswer = answers[problemId][`step${step}`];
+            
+            // 隱藏舊的回饋
+            hideFeedback(problemId);
+
+            if (userAnswer === "") {
+                showFeedback(problemId, '請選擇一個答案喔！', false);
+                return;
+            }
+
+            if (userAnswer === correctAnswer) {
+                // 答案正確
+                showFeedback(problemId, '太棒了！繼續加油～', true);
+                
+                // 禁用按鈕避免重複點擊
+                const button = document.querySelector(`button[onclick="checkAnswer('${problemId}', ${step})"]`);
+                button.disabled = true;
+
+                // 延遲 1.5 秒後進入下一步
+                setTimeout(() => {
+                    hideFeedback(problemId);
+                    
+                    // 隱藏目前步驟
+                    document.getElementById(`${problemId}-step${step}`).classList.add('hidden');
+                    
+                    const nextStep = step + 1;
+                    const nextStepEl = document.getElementById(`${problemId}-step${nextStep}`);
+                    
+                    if (nextStepEl) {
+                        // 顯示下一步
+                        nextStepEl.classList.remove('hidden');
+                        // 更新進度條
+                        const progressPercentage = (nextStep / 3) * 100;
+                        document.getElementById(`progress${problemId[1]}`).style.width = `${progressPercentage}%`;
+                        document.getElementById(`progress-text${problemId[1]}`).textContent = `第 ${nextStep} 步 / 共 3 步`;
+                    }
+                    
+                }, 1500);
+
+            } else {
+                // 答案錯誤
+                let hint = '嗯... 再想一想？';
+                if (problemId === 'p1' && step === 1) hint = '再想一想？分母越小，值越大喔！';
+                if (problemId === 'p3' && step === 1) hint = '不對喔，通分後再比較看看！';
+                if (step === 2) hint = '記得喔，加上負號，大小要顛倒！';
+                
+                showFeedback(problemId, hint, false);
+            }
+        }
+        
+        // 重置問題 (Section 3)
+        function resetProblem(problemId) {
+            // 隱藏步驟 2 和 3，顯示步驟 1
+            document.getElementById(`${problemId}-step1`).classList.remove('hidden');
+            document.getElementById(`${problemId}-step2`).classList.add('hidden');
+            document.getElementById(`${problemId}-step3`).classList.add('hidden');
+            
+            // 重設進度條
+            document.getElementById(`progress${problemId[1]}`).style.width = '33.3%';
+            document.getElementById(`progress-text${problemId[1]}`).textContent = '第 1 步 / 共 3 步';
+            
+            // 清空答案
+            const s1Answer = document.getElementById(`${problemId}-s1-answer`);
+            if (s1Answer) s1Answer.value = '';
+            
+            const s2Answer = document.getElementById(`${problemId}-s2-answer`);
+            if (s2Answer) s2Answer.value = '';
+            
+            // 重新啟用按鈕
+            const buttons = document.querySelectorAll(`.learning-card button[onclick*="${problemId}"]`);
+            buttons.forEach(btn => { btn.disabled = false; });
+            
+            // 清空回饋
+            hideFeedback(problemId);
+        }
+
+    </script>
+</body>
+</html>
