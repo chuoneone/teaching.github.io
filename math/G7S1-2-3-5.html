@@ -1,0 +1,713 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>異分母分數運算</title>
+  <!-- KaTeX for Math Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- SDK Scripts (from original) -->
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+
+  <!-- Minimal styles for custom font and dynamic classes -->
+  <style>
+    /* 應用自訂字體 */
+    body {
+      font-family: 'Chiron GoRound TC', 'Noto Sans TC', sans-serif;
+    }
+    
+    /* 用於 JS 切換的動態類別 */
+    .problem-content {
+      display: none;
+    }
+    
+    .problem-content.active {
+      display: block;
+    }
+
+    /* .active 狀態的樣式 */
+    .problem.active {
+      transform: translateX(4px);
+      background: rgba(255, 255, 255, 0.95);
+      border-color: #4db8a0;
+      border-width: 3px;
+      box-shadow: 0 6px 16px rgba(77, 184, 160, 0.4);
+    }
+    
+    .problem.active .problem-number {
+      color: #4db8a0;
+      font-weight: 700;
+    }
+    
+    .problem.active .katex {
+      color: #2d5f52;
+    }
+
+    /* 新增的 hidden 類別 */
+    .hidden {
+      display: none;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-br from-[#a8e6cf] to-[#dcedc1]">
+
+  <!-- 
+    主要容器
+    - 預設為垂直排列 (行動裝置)
+    - lg (1024px) 以上變為水平排列
+  -->
+  <div class="flex flex-col lg:flex-row min-h-screen w-full bg-white shadow-none">
+
+    <!-- 
+      側邊欄 (題目選擇區)
+      - 在 lg 裝置上固定寬度為 320px
+      - 在行動裝置上寬度為 100%
+    -->
+    <div class="w-full lg:w-80 flex-shrink-0 bg-gradient-to-b from-[#a8e6cf] to-[#7fc7af] shadow-lg lg:shadow-xl flex flex-col">
+      <h1 id="main-title" class="text-[#4db8a0] text-center text-3xl font-bold pt-8 pb-4 px-6">
+        異分母的分數加減
+      </h1>
+      <p class="text-center text-white/90 text-base px-6 pb-4">
+        點選題目查看詳細解題步驟
+      </p>
+
+      <!-- 
+        題目網格
+        - 預設為水平滾動 (行動裝置)
+        - lg 以上變為垂直排列和滾動
+      -->
+      <div class="flex flex-row lg:flex-col gap-4 p-6 overflow-x-auto lg:overflow-x-hidden lg:overflow-y-auto">
+        
+        <!-- 題目 1 -->
+        <div class="problem active min-w-[200px] lg:min-w-0 flex-shrink-0 text-center text-lg text-[#2d5f52] p-5 bg-white/50 rounded-xl border-2 border-transparent transition-all duration-300 cursor-pointer hover:translate-x-1 hover:shadow-lg hover:border-[#4db8a0] hover:bg-white/80" onclick="showProblem(1)">
+          <div class="problem-number font-semibold text-[#5fc9b0] mb-3 text-sm">
+            題目 1
+          </div>
+          <div class="math-display text-[1.5em]">
+            $$\frac{5}{6} - \frac{4}{7}$$
+          </div>
+        </div>
+        
+        <!-- 題目 2 -->
+        <div class="problem min-w-[200px] lg:min-w-0 flex-shrink-0 text-center text-lg text-[#2d5f52] p-5 bg-white/50 rounded-xl border-2 border-transparent transition-all duration-300 cursor-pointer hover:translate-x-1 hover:shadow-lg hover:border-[#4db8a0] hover:bg-white/80" onclick="showProblem(2)">
+          <div class="problem-number font-semibold text-[#5fc9b0] mb-3 text-sm">
+            題目 2
+          </div>
+          <div class="math-display text-[1.5em]">
+            $$\frac{9}{5} - \frac{5}{3}$$
+          </div>
+        </div>
+
+        <!-- 題目 3 -->
+        <div class="problem min-w-[200px] lg:min-w-0 flex-shrink-0 text-center text-lg text-[#2d5f52] p-5 bg-white/50 rounded-xl border-2 border-transparent transition-all duration-300 cursor-pointer hover:translate-x-1 hover:shadow-lg hover:border-[#4db8a0] hover:bg-white/80" onclick="showProblem(3)">
+          <div class="problem-number font-semibold text-[#5fc9b0] mb-3 text-sm">
+            題目 3
+          </div>
+          <div class="math-display text-[1.5em]">
+            $$\frac{3}{8} - \left(-\frac{4}{7}\right)$$
+          </div>
+        </div>
+
+        <!-- 題目 4 -->
+        <div class="problem min-w-[200px] lg:min-w-0 flex-shrink-0 text-center text-lg text-[#2d5f52] p-5 bg-white/50 rounded-xl border-2 border-transparent transition-all duration-300 cursor-pointer hover:translate-x-1 hover:shadow-lg hover:border-[#4db8a0] hover:bg-white/80" onclick="showProblem(4)">
+          <div class="problem-number font-semibold text-[#5fc9b0] mb-3 text-sm">
+            題目 4
+          </div>
+          <div class="math-display text-[1.5em]">
+            $$\frac{5}{8} - \left(-\frac{3}{4}\right)$$
+          </div>
+        </div>
+
+      </div>
+    </div> <!-- 結束 .sidebar -->
+
+    <!-- 
+      內容區域 (步驟解析區)
+      - flex-1 讓它填滿剩餘空間
+      - p-6 (padding) 在 md (768px) 以上變為 p-12，在 lg (1024px) 以上變為 p-16
+    -->
+    <div class="flex-1 p-6 md:p-12 lg:p-16 bg-[#f8fffe] overflow-y-auto">
+
+      <!-- 題目 1 內容 -->
+      <div id="problem1" class="problem-content active">
+        <div class="steps mt-8">
+          
+          <!-- 步驟 1 -->
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+            <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
+              <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">1</span>
+              <span id="step1-title">找出公分母</span>
+            </div>
+            <div class="step-content text-[#2d5f52] text-lg leading-relaxed ml-0 md:ml-12">
+              <p id="step1-desc">分母 6 和 7 的最小公倍數是 42。</p>
+              <div class="math-expression bg-[#f0faf8] p-5 rounded-xl my-4 text-center text-xl border-2 border-[#d0f0e8] [&_.katex]:text-[1.6em]">
+                $$\frac{5}{6} - \frac{4}{7}$$
+              </div>
+              <p id="step1-note">💡 <span class="highlight bg-[#d0f0e8] px-2 py-1 rounded-md font-medium text-[#2d5f52]">LCM(6, 7) = 42</span></p>
+            </div>
+          </div>
+
+          <!-- 步驟 2 -->
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+            <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
+              <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">2</span>
+              <span id="step2-title">進行擴分（通分）</span>
+            </div>
+            <div class="step-content text-[#2d5f52] text-lg leading-relaxed ml-0 md:ml-12">
+              <p id="step2-desc">將兩個分數都轉換成以 42 為分母的分數。</p>
+              <div class="math-expression bg-[#f0faf8] p-5 rounded-xl my-4 text-center text-xl border-2 border-[#d0f0e8] [&_.katex]:text-[1.6em]">
+                $$\left(\frac{5 \times 7}{6 \times 7}\right) - \left(\frac{4 \times 6}{7 \times 6}\right) = \frac{35}{42} - \frac{24}{42}$$
+              </div>
+              <p id="step2-note">✓ <span class="highlight bg-[#d0f0e8] px-2 py-1 rounded-md font-medium text-[#2d5f52]">分子和分母同乘以一個數</span></p>
+            </div>
+          </div>
+          
+          <!-- 步驟 3 -->
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+            <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
+              <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">3</span>
+              <span id="step3-title">計算分子</span>
+            </div>
+            <div class="step-content text-[#2d5f52] text-lg leading-relaxed ml-0 md:ml-12">
+              <p id="step3-desc">分母相同，可以直接計算分子：35 - 24 = 11</p>
+              <div class="math-expression bg-[#f0faf8] p-5 rounded-xl my-4 text-center text-xl border-2 border-[#d0f0e8] [&_.katex]:text-[1.6em]">
+                $$\frac{35 - 24}{42} = \frac{11}{42}$$
+              </div>
+              <p id="step3-note">📝 <span class="highlight bg-[#d0f0e8] px-2 py-1 rounded-md font-medium text-[#2d5f52]">35 - 24 = 11</span></p>
+            </div>
+          </div>
+          
+          <!-- 步驟 4 -->
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+            <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
+              <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">4</span>
+              <span id="step4-title">判斷是否需要約分</span>
+            </div>
+            <div class="step-content text-[#2d5f52] text-lg leading-relaxed ml-0 md:ml-12">
+              <p id="step4-desc">11 和 42 沒有大於 1 的公因數。</p>
+              <div class="math-expression bg-[#f0faf8] p-5 rounded-xl my-4 text-center text-xl border-2 border-[#d0f0e8] [&_.katex]:text-[1.6em]">
+                $$\frac{11}{42}$$
+              </div>
+              <p id="step4-note">🔍 <span class="highlight bg-[#d0f0e8] px-2 py-1 rounded-md font-medium text-[#2d5f52]">這已經是最簡分數</span></p>
+            </div>
+          </div>
+          
+          <!-- 最終答案 -->
+          <div id="final-answer-1" class="final-answer hidden bg-gradient-to-r from-[#4db8a0] to-[#7fc7af] text-white p-8 rounded-2xl text-center mt-8 text-2xl font-bold shadow-lg">
+            <div>
+              <span id="answer-label">最終答案：</span>
+            </div>
+            <div class="math-display [&_.katex]:text-[2em]">
+              $$\frac{11}{42}$$
+            </div>
+          </div>
+
+          <!-- 控制按鈕 -->
+          <div class="controls mt-6 flex justify-center gap-4">
+            <button id="next-step-1" class="bg-[#4db8a0] text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-[#3a9c88] transition-all">
+              下一步
+            </button>
+            <button id="reset-step-1" class="hidden bg-gray-500 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-gray-600 transition-all">
+              重設
+            </button>
+          </div>
+
+        </div> <!-- 結束 .steps -->
+      </div> <!-- 結束 #problem1 -->
+
+      <!-- 題目 2 內容 -->
+      <div id="problem2" class="problem-content">
+        <div class="steps mt-8">
+          
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+            <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
+              <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">1</span>
+              <span>找出公分母</span>
+            </div>
+            <div class="step-content text-[#2d5f52] text-lg leading-relaxed ml-0 md:ml-12">
+              <p>分母 5 和 3 的最小公倍數是 15。</p>
+              <div class="math-expression bg-[#f0faf8] p-5 rounded-xl my-4 text-center text-xl border-2 border-[#d0f0e8] [&_.katex]:text-[1.6em]">
+                $$\frac{9}{5} - \frac{5}{3}$$
+              </div>
+              <p>💡 <span class="highlight bg-[#d0f0e8] px-2 py-1 rounded-md font-medium text-[#2d5f52]">LCM(5, 3) = 15</span></p>
+            </div>
+          </div>
+
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+            <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
+              <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">2</span>
+              <span>進行擴分（通分）</span>
+            </div>
+            <div class="step-content text-[#2d5f52] text-lg leading-relaxed ml-0 md:ml-12">
+              <p>將兩個分數都轉換成以 15 為分母的分數。</p>
+              <div class="math-expression bg-[#f0faf8] p-5 rounded-xl my-4 text-center text-xl border-2 border-[#d0f0e8] [&_.katex]:text-[1.6em]">
+                $$\left(\frac{9 \times 3}{5 \times 3}\right) - \left(\frac{5 \times 5}{3 \times 5}\right) = \frac{27}{15} - \frac{25}{15}$$
+              </div>
+              <p>✓ <span class="highlight bg-[#d0f0e8] px-2 py-1 rounded-md font-medium text-[#2d5f52]">分別乘以 3 和 5</span></p>
+            </div>
+          </div>
+
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+            <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
+              <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">3</span>
+              <span>計算分子</span>
+            </div>
+            <div class="step-content text-[#2d5f52] text-lg leading-relaxed ml-0 md:ml-12">
+              <p>分母相同，可以直接計算分子：27 - 25 = 2</p>
+              <div class="math-expression bg-[#f0faf8] p-5 rounded-xl my-4 text-center text-xl border-2 border-[#d0f0e8] [&_.katex]:text-[1.6em]">
+                $$\frac{27 - 25}{15} = \frac{2}{15}$$
+              </div>
+              <p>📝 <span class="highlight bg-[#d0f0e8] px-2 py-1 rounded-md font-medium text-[#2d5f52]">27 - 25 = 2</span></p>
+            </div>
+          </div>
+
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+            <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
+              <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">4</span>
+              <span>判斷是否需要約分</span>
+            </div>
+            <div class="step-content text-[#2d5f52] text-lg leading-relaxed ml-0 md:ml-12">
+              <p>2 和 15 沒有大於 1 的公因數。</p>
+              <div class="math-expression bg-[#f0faf8] p-5 rounded-xl my-4 text-center text-xl border-2 border-[#d0f0e8] [&_.katex]:text-[1.6em]">
+                $$\frac{2}{15}$$
+              </div>
+              <p>🔍 <span class="highlight bg-[#d0f0e8] px-2 py-1 rounded-md font-medium text-[#2d5f52]">這已經是最簡分數</span></p>
+            </div>
+          </div>
+
+          <div id="final-answer-2" class="final-answer hidden bg-gradient-to-r from-[#4db8a0] to-[#7fc7af] text-white p-8 rounded-2xl text-center mt-8 text-2xl font-bold shadow-lg">
+            <div>最終答案：</div>
+            <div class="math-display [&_.katex]:text-[2em]">
+              $$\frac{2}{15}$$
+            </div>
+          </div>
+
+          <!-- 控制按鈕 -->
+          <div class="controls mt-6 flex justify-center gap-4">
+            <button id="next-step-2" class="bg-[#4db8a0] text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-[#3a9c88] transition-all">
+              下一步
+            </button>
+            <button id="reset-step-2" class="hidden bg-gray-500 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-gray-600 transition-all">
+              重設
+            </button>
+          </div>
+
+        </div>
+      </div> <!-- 結束 #problem2 -->
+
+      <!-- 題目 3 內容 -->
+      <div id="problem3" class="problem-content">
+         <div class="steps mt-8">
+          
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+            <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
+              <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">1</span>
+              <span>理解「負負得正」</span>
+            </div>
+            <div class="step-content text-[#2d5f52] text-lg leading-relaxed ml-0 md:ml-12">
+              <p>減去一個負數，等於加上這個數的相反數（正數）。</p>
+              <div class="math-expression bg-[#f0faf8] p-5 rounded-xl my-4 text-center text-xl border-2 border-[#d0f0e8] [&_.katex]:text-[1.6em]">
+                $$\frac{3}{8} - \left(-\frac{4}{7}\right) = \frac{3}{8} + \frac{4}{7}$$
+              </div>
+              <p>💡 <span class="highlight bg-[#d0f0e8] px-2 py-1 rounded-md font-medium text-[#2d5f52]">負負得正</span>：兩個負號相遇變成正號</p>
+            </div>
+          </div>
+
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+            <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
+              <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">2</span>
+              <span>找出公分母</span>
+            </div>
+            <div class="step-content text-[#2d5f52] text-lg leading-relaxed ml-0 md:ml-12">
+              <p>分母 8 和 7 的最小公倍數是 56。</p>
+              <div class="math-expression bg-[#f0faf8] p-5 rounded-xl my-4 text-center text-xl border-2 border-[#d0f0e8] [&_.katex]:text-[1.6em]">
+                $$\frac{3}{8} + \frac{4}{7}$$
+              </div>
+              <p>💡 <span class="highlight bg-[#d0f0e8] px-2 py-1 rounded-md font-medium text-[#2d5f52]">LCM(8, 7) = 56</span></p>
+            </div>
+          </div>
+          
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+            <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
+              <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">3</span>
+              <span>進行擴分（通分）</span>
+            </div>
+            <div class="step-content text-[#2d5f52] text-lg leading-relaxed ml-0 md:ml-12">
+              <p>將兩個分數都轉換成以 56 為分母的分數。</p>
+              <div class="math-expression bg-[#f0faf8] p-5 rounded-xl my-4 text-center text-xl border-2 border-[#d0f0e8] [&_.katex]:text-[1.6em]">
+                $$\left(\frac{3 \times 7}{8 \times 7}\right) + \left(\frac{4 \times 8}{7 \times 8}\right) = \frac{21}{56} + \frac{32}{56}$$
+              </div>
+              <p>✓ <span class="highlight bg-[#d0f0e8] px-2 py-1 rounded-md font-medium text-[#2d5f52]">分別乘以 7 和 8</span></p>
+            </div>
+          </div>
+          
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+            <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
+              <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">4</span>
+              <span>計算分子</span>
+            </div>
+            <div class="step-content text-[#2d5f52] text-lg leading-relaxed ml-0 md:ml-12">
+              <p>分母相同，可以直接計算分子：21 + 32 = 53</p>
+              <div class="math-expression bg-[#f0faf8] p-5 rounded-xl my-4 text-center text-xl border-2 border-[#d0f0e8] [&_.katex]:text-[1.6em]">
+                $$\frac{21 + 32}{56} = \frac{53}{56}$$
+              </div>
+              <p>📝 <span class="highlight bg-[#d0f0e8] px-2 py-1 rounded-md font-medium text-[#2d5f52]">21 + 32 = 53</span></p>
+            </div>
+          </div>
+          
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+            <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
+              <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">5</span>
+              <span>判斷是否需要約分</span>
+            </div>
+            <div class="step-content text-[#2d5f52] text-lg leading-relaxed ml-0 md:ml-12">
+              <p>53 是質數，且 56 不是 53 的倍數，所以無法約分。</p>
+              <div class="math-expression bg-[#f0faf8] p-5 rounded-xl my-4 text-center text-xl border-2 border-[#d0f0e8] [&_.katex]:text-[1.6em]">
+                $$\frac{53}{56}$$
+              </div>
+              <p>🔍 <span class="highlight bg-[#d0f0e8] px-2 py-1 rounded-md font-medium text-[#2d5f52]">這已經是最簡分數</span></p>
+            </div>
+          </div>
+
+          <div id="final-answer-3" class="final-answer hidden bg-gradient-to-r from-[#4db8a0] to-[#7fc7af] text-white p-8 rounded-2xl text-center mt-8 text-2xl font-bold shadow-lg">
+            <div>最終答案：</div>
+            <div class="math-display [&_.katex]:text-[2em]">
+              $$\frac{53}{56}$$
+            </div>
+          </div>
+
+          <!-- 控制按鈕 -->
+          <div class="controls mt-6 flex justify-center gap-4">
+            <button id="next-step-3" class="bg-[#4db8a0] text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-[#3a9c88] transition-all">
+              下一步
+            </button>
+            <button id="reset-step-3" class="hidden bg-gray-500 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-gray-600 transition-all">
+              重設
+            </button>
+          </div>
+
+        </div>
+      </div> <!-- 結束 #problem3 -->
+
+      <!-- 題目 4 內容 -->
+      <div id="problem4" class="problem-content">
+         <div class="steps mt-8">
+          
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+            <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
+              <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">1</span>
+              <span>理解「負負得正」</span>
+            </div>
+            <div class="step-content text-[#2d5f52] text-lg leading-relaxed ml-0 md:ml-12">
+              <p>減去一個負數，等於加上這個數的相反數（正數）。</p>
+              <div class="math-expression bg-[#f0faf8] p-5 rounded-xl my-4 text-center text-xl border-2 border-[#d0f0e8] [&_.katex]:text-[1.6em]">
+                $$\frac{5}{8} - \left(-\frac{3}{4}\right) = \frac{5}{8} + \frac{3}{4}$$
+              </div>
+              <p>💡 <span class="highlight bg-[#d0f0e8] px-2 py-1 rounded-md font-medium text-[#2d5f52]">負負得正</span>：兩個負號相遇變成正號</p>
+            </div>
+          </div>
+
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+            <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
+              <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">2</span>
+              <span>找出公分母</span>
+            </div>
+            <div class="step-content text-[#2d5f52] text-lg leading-relaxed ml-0 md:ml-12">
+              <p>分母 8 和 4 的最小公倍數是 8。</p>
+              <div class="math-expression bg-[#f0faf8] p-5 rounded-xl my-4 text-center text-xl border-2 border-[#d0f0e8] [&_.katex]:text-[1.6em]">
+                $$\frac{5}{8} + \frac{3}{4}$$
+              </div>
+              <p>💡 <span class="highlight bg-[#d0f0e8] px-2 py-1 rounded-md font-medium text-[#2d5f52]">LCM(8, 4) = 8</span></p>
+            </div>
+          </div>
+          
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+            <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
+              <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">3</span>
+              <span>進行擴分（通分）</span>
+            </div>
+            <div class="step-content text-[#2d5f52] text-lg leading-relaxed ml-0 md:ml-12">
+              <p>第一個分數 $\frac{5}{8}$ 不需要改變。將 $\frac{3}{4}$ 轉換成以 8 為分母的分數。</p>
+              <div class="math-expression bg-[#f0faf8] p-5 rounded-xl my-4 text-center text-xl border-2 border-[#d0f0e8] [&_.katex]:text-[1.6em]">
+                $$\frac{5}{8} + \left(\frac{3 \times 2}{4 \times 2}\right) = \frac{5}{8} + \frac{6}{8}$$
+              </div>
+              <p>✓ <span class="highlight bg-[#d0f0e8] px-2 py-1 rounded-md font-medium text-[#2d5f52]">只需擴分第二個分數</span></p>
+            </div>
+          </div>
+          
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+            <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
+              <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">4</span>
+              <span>計算分子</span>
+            </div>
+            <div class="step-content text-[#2d5f52] text-lg leading-relaxed ml-0 md:ml-12">
+              <p>分母相同，可以直接計算分子：5 + 6 = 11</p>
+              <div class="math-expression bg-[#f0faf8] p-5 rounded-xl my-4 text-center text-xl border-2 border-[#d0f0e8] [&_.katex]:text-[1.6em]">
+                $$\frac{5 + 6}{8} = \frac{11}{8}$$
+              </div>
+              <p>📝 <span class="highlight bg-[#d0f0e8] px-2 py-1 rounded-md font-medium text-[#2d5f52]">5 + 6 = 11</span></p>
+            </div>
+          </div>
+          
+          <div class="step hidden bg-white rounded-2xl p-6 mb-5 border-l-[6px] border-[#4db8a0] transition-all duration-300 shadow-md hover:translate-x-2 hover:shadow-lg">
+            <div class="step-title text-[#4db8a0] text-xl font-bold mb-3 flex items-center">
+              <span class="step-number inline-flex items-center justify-center bg-[#4db8a0] text-white w-9 h-9 rounded-full font-bold mr-3 text-lg">5</span>
+              <span>判斷是否需要約分</span>
+            </div>
+            <div class="step-content text-[#2d5f52] text-lg leading-relaxed ml-0 md:ml-12">
+              <p>11 和 8 沒有大於 1 的公因數。</p>
+              <div class="math-expression bg-[#f0faf8] p-5 rounded-xl my-4 text-center text-xl border-2 border-[#d0f0e8] [&_.katex]:text-[1.6em]">
+                $$\frac{11}{8}$$
+              </div>
+              <p>🔍 <span class="highlight bg-[#d0f0e8] px-2 py-1 rounded-md font-medium text-[#2d5f52]">這已經是最簡分數</span> (或可寫為 $1\frac{3}{8}$)</p>
+            </div>
+          </div>
+
+          <div id="final-answer-4" class="final-answer hidden bg-gradient-to-r from-[#4db8a0] to-[#7fc7af] text-white p-8 rounded-2xl text-center mt-8 text-2xl font-bold shadow-lg">
+            <div>最終答案：</div>
+            <div class="math-display [&_.katex]:text-[2em]">
+              $$\frac{11}{8}$$
+            </div>
+          </div>
+
+          <!-- 控制按鈕 -->
+          <div class="controls mt-6 flex justify-center gap-4">
+            <button id="next-step-4" class="bg-[#4db8a0] text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-[#3a9c88] transition-all">
+              下一步
+            </button>
+            <button id="reset-step-4" class="hidden bg-gray-500 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-gray-600 transition-all">
+              重設
+            </button>
+          </div>
+
+        </div>
+      </div> <!-- 結束 #problem4 -->
+      
+    </div> <!-- 結束 .content-area -->
+  </div> <!-- 結束 .container -->
+
+  <!-- 頁腳 -->
+  <div id="footer-text" class="text-center text-[#2d5f52]/70 p-4 text-sm bg-[#a8e6cf]/30">
+    © 2024 數學學習工具 | 使用 Chiron GoRound TC 字型
+  </div>
+
+  <!-- 
+    ============================================================
+    = JAVASCRIPT - (已更新互動邏輯)
+    ============================================================
+  -->
+  <script>
+    // SDK 函數 (與之前相同)
+    async function onConfigChange(config) {
+      document.getElementById('main-title').textContent = config.main_title || "異分母的分數加減";
+      document.getElementById('footer-text').textContent = config.footer_text || "© 2024 數學學習工具 | 使用 Chiron GoRound TC 字型";
+
+      const primaryColor = config.primary_color || "#4db8a0";
+      const secondaryColor = config.secondary_color || "#7fc7af";
+      const backgroundColor = config.background_color || "#f8fffe";
+      const textColor = config.text_color || "#2d5f52";
+      const accentColor = config.accent_color || "#d0f0e8";
+
+      document.body.style.background = `linear-gradient(135deg, ${secondaryColor} 0%, ${accentColor} 100%)`;
+      document.querySelector('h1').style.color = primaryColor;
+      document.querySelector('.lg\\:w-80').style.background = `linear-gradient(180deg, ${secondaryColor} 0%, ${primaryColor} 100%)`;
+      document.querySelector('.flex-1').style.background = backgroundColor;
+      
+      document.querySelectorAll('.problem').forEach(problem => { problem.style.color = textColor; });
+      document.querySelectorAll('.problem-number').forEach(num => { num.style.color = primaryColor; });
+      document.querySelectorAll('.step').forEach(step => { step.style.borderLeftColor = primaryColor; });
+      document.querySelectorAll('.step-number').forEach(num => { num.style.background = primaryColor; });
+      document.querySelectorAll('.step-title').forEach(title => { title.style.color = primaryColor; });
+      document.querySelectorAll('.step-content').forEach(content => { content.style.color = textColor; });
+      document.querySelectorAll('.highlight').forEach(highlight => { highlight.style.background = accentColor; highlight.style.color = textColor; });
+      document.querySelectorAll('.math-expression').forEach(expr => { expr.style.background = accentColor; });
+      document.querySelectorAll('.final-answer').forEach(answer => { answer.style.background = `linear-gradient(135deg, ${primaryColor} 0%, ${secondaryColor} 100%)`; });
+    }
+
+    function mapToCapabilities(config) {
+      const defaults = window.elementSdk?.defaultConfig || {
+        primary_color: "#4db8a0",
+        secondary_color: "#7fc7af",
+        background_color: "#f8fffe",
+        text_color: "#2d5f52",
+        accent_color: "#d0f0e8"
+      };
+      return {
+        recolorables: [
+          { get: () => config.primary_color || defaults.primary_color, set: (value) => { config.primary_color = value; window.elementSdk.setConfig({ primary_color: value }); } },
+          { get: () => config.secondary_color || defaults.secondary_color, set: (value) => { config.secondary_color = value; window.elementSdk.setConfig({ secondary_color: value }); } },
+          { get: () => config.background_color || defaults.background_color, set: (value) => { config.background_color = value; window.elementSdk.setConfig({ background_color: value }); } },
+          { get: () => config.text_color || defaults.text_color, set: (value) => { config.text_color = value; window.elementSdk.setConfig({ text_color: value }); } },
+          { get: () => config.accent_color || defaults.accent_color, set: (value) => { config.accent_color = value; window.elementSdk.setConfig({ accent_color: value }); } }
+        ],
+        borderables: [], fontEditable: undefined, fontSizeable: undefined
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ["main_title", config.main_title || "異分母的分數加減"],
+        ["footer_text", config.footer_text || "© 2024 數學學習工具 | 使用 Chiron GoRound TC 字型"]
+      ]);
+    }
+
+    // --- 互動式步驟邏輯 ---
+
+    // 儲存每個題目的目前步驟
+    let currentStepState = { 1: 0, 2: 0, 3: 0, 4: 0 };
+
+    /**
+     * 顯示選定的題目內容，並重設其步驟
+     */
+    function showProblem(problemNumber) {
+      // 移除所有題目的 active 狀態
+      document.querySelectorAll('.problem').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.problem-content').forEach(p => p.classList.remove('active'));
+      
+      // 添加選中題目的 active 狀態
+      document.querySelectorAll('.problem')[problemNumber - 1].classList.add('active');
+      document.getElementById('problem' + problemNumber).classList.add('active');
+      
+      // 重設新選中題目的步驟
+      resetSteps(problemNumber);
+
+      // 重新渲染數學符號
+      setTimeout(() => {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+          ],
+          throwOnError: false
+        });
+      }, 50); 
+    }
+
+    /**
+     * 重設指定題目的所有步驟和按鈕
+     */
+    function resetSteps(problemNumber) {
+      currentStepState[problemNumber] = 0;
+
+      // 隱藏所有步驟
+      document.querySelectorAll(`#problem${problemNumber} .step`).forEach(step => {
+        step.classList.add('hidden');
+      });
+
+      // 隱藏最終答案
+      document.querySelector(`#final-answer-${problemNumber}`).classList.add('hidden');
+
+      // 顯示 "下一步" 按鈕
+      const nextButton = document.querySelector(`#next-step-${problemNumber}`);
+      if (nextButton) nextButton.classList.remove('hidden');
+
+      // 隱藏 "重設" 按鈕
+      const resetButton = document.querySelector(`#reset-step-${problemNumber}`);
+      if (resetButton) resetButton.classList.add('hidden');
+    }
+
+    /**
+     * 顯示指定題目的下一步
+     */
+    function showNextStep(problemNumber) {
+      const steps = document.querySelectorAll(`#problem${problemNumber} .step`);
+      const current = currentStepState[problemNumber];
+
+      if (current < steps.length) {
+        // 顯示下一步
+        steps[current].classList.remove('hidden');
+        currentStepState[problemNumber]++;
+      }
+
+      // 檢查是否已顯示所有步驟
+      if (currentStepState[problemNumber] === steps.length) {
+        // 顯示最終答案
+        document.querySelector(`#final-answer-${problemNumber}`).classList.remove('hidden');
+        
+        // 隱藏 "下一步" 按鈕
+        document.querySelector(`#next-step-${problemNumber}`).classList.add('hidden');
+        
+        // 顯示 "重設" 按鈕
+        document.querySelector(`#reset-step-${problemNumber}`).classList.remove('hidden');
+      }
+      
+      // 顯示後重新渲染數學
+      renderMathInElement(document.body, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+          ],
+          throwOnError: false
+      });
+    }
+
+    /**
+     * DOM 載入完成後執行的初始化
+     */
+    document.addEventListener('DOMContentLoaded', () => {
+      // 初始渲染數學
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+
+      // 設置所有按鈕的監聽器
+      for (let i = 1; i <= 4; i++) {
+        const nextButton = document.querySelector(`#next-step-${i}`);
+        const resetButton = document.querySelector(`#reset-step-${i}`);
+
+        if (nextButton) {
+          nextButton.addEventListener('click', () => showNextStep(i));
+        }
+        if (resetButton) {
+          resetButton.addEventListener('click', () => resetSteps(i));
+        }
+
+        // 初始重設所有題目 (除了第一個，因為 showProblem 會處理)
+        if (i !== 1) {
+          resetSteps(i);
+        }
+      }
+      
+      // 確保第一個問題在載入時被正確重設
+      resetSteps(1);
+    });
+
+    // SDK 初始化
+    if (window.elementSdk) {
+      const simplifiedDefaultConfig = {
+        main_title: "異分母的分數加減",
+        footer_text: "© 2024 數學學習工具 | 使用 Chiron GoRound TC 字型",
+        primary_color: "#4db8a0",
+        secondary_color: "#7fc7af",
+        background_color: "#f8fffe",
+        text_color: "#2d5f52",
+        accent_color: "#d0f0e8"
+      };
+
+      window.elementSdk.init({
+        defaultConfig: simplifiedDefaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+  </script>
+</body>
+</html>
