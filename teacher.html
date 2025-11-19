@@ -1,22 +1,26 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" class="scroll-smooth">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>教師備課幫手</title>
-
     <link rel="icon" href="images/sped2.png" type="image/png">
-
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     
+    <!-- 預先連線以加速字型載入 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5BBHYN77N9"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-5BBHYN77N9');
     </script>
 
@@ -27,6 +31,7 @@
                 extend: {
                     colors: {
                         'primary': '#38A3A5',
+                        'primary-dark': '#2C7A7B',
                         'background-light': '#F0F4F8',
                         'background-dark': '#1A202C',
                         'surface-light': '#FFFFFF',
@@ -40,574 +45,660 @@
                     fontFamily: {
                         display: ["Noto Sans TC", "sans-serif"],
                     },
-                    borderRadius: {
-                        DEFAULT: "0.25rem",
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
+                        'slow-zoom': 'slowZoom 20s linear infinite alternate',
                     },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        slowZoom: {
+                            '0%': { transform: 'scale(1)' },
+                            '100%': { transform: 'scale(1.1)' },
+                        }
+                    }
                 },
             },
         };
     </script>
+
     <style>
+        /* 核心樣式優化 */
         :root {
-            --transition-duration-fast: 0.2s;
-            --transition-duration-normal: 0.3s;
+            --transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            overflow-x: hidden; /* 防止水平捲動 */
+        }
+
+        /* 載入遮罩 */
+        #preloader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #F0F4F8;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease-out, visibility 0.5s;
+        }
+        .dark #preloader { background: #1A202C; }
+        .loader-spinner {
+            width: 40px; height: 40px;
+            border: 4px solid #38A3A5;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* 頁面切換動畫類別 */
+        .view-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
+        }
+        .view-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out forwards;
         }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
-        @keyframes slideInFromRight { 0% { opacity: 0; transform: translateX(30px); } 100% { opacity: 1; transform: translateX(0); } }
-        @keyframes slideOutToLeft { 0% { opacity: 1; transform: translateX(0); } 100% { opacity: 0; transform: translateX(-30px); } }
+
+        /* 內容區塊過渡 */
+        .sections-wrapper {
+            position: relative;
+            transition: height 0.3s ease-out;
+        }
+        .subject-detail {
+            display: none;
+            animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .subject-detail.active { display: block; }
         
-        .is-showing { animation: fadeIn var(--transition-duration-normal) ease-out forwards; }
-        .is-hiding { animation: fadeOut var(--transition-duration-normal) ease-out forwards; }
-        
-        .sections-wrapper { 
-            position: relative; 
-            overflow: hidden; 
-            transition: height var(--transition-duration-normal) ease-out;
-        }
-        .section { 
-            position: absolute; 
-            width: 100%; top: 0; left: 0; 
-            opacity: 0; visibility: hidden; pointer-events: none; 
-        }
-        .section.active { 
-            opacity: 1; visibility: visible; pointer-events: auto; 
-            animation: slideInFromRight var(--transition-duration-normal) ease-out forwards;
-        }
-        .section.is-exiting { 
-            position: absolute; visibility: visible; pointer-events: none; 
-            animation: slideOutToLeft var(--transition-duration-normal) ease-out forwards;
-        }
-        .content-container.hidden { display: none; }
-        
-        .hero-full-bg { background-image: url('images/house.jpg'); background-size: cover; background-position: center; min-height: 100vh; display: flex; align-items: center; }
-        .hero-overlay { background-color: rgba(240, 244, 248, 0.3); } 
-        .dark .hero-overlay { background-color: rgba(26, 32, 44, 0.4); } 
-        
-        .text-stroke-dark {
-            color: #2D3748;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-        }
-        .dark .text-stroke-dark {
-            color: #E2E8F0;
-            -webkit-text-stroke-color: #2D3748;
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
-        .text-stroke {
-            color: #38A3A5;
-            -webkit-text-stroke-width: 0.5px;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-        }
-        .dark .text-stroke {
-            color: #80CBC4;
-            -webkit-text-stroke-color: #2D3748;
+        /* Hero 背景設定 (圖片改用 img tag 處理以配合特效) */
+        .hero-full-bg {
+            min-height: 100vh; /* Fallback */
+            min-height: 100dvh; /* Mobile Friendly */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
+        /* 文字描邊與陰影優化 */
+        .text-stroke-dark { color: #2D3748; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        .dark .text-stroke-dark { color: #E2E8F0; }
+        
+        .text-shadow-lg {
+            text-shadow: 0 4px 8px rgba(0,0,0,0.12);
+        }
+
+        /* 按鈕優化 */
         .gradient-button {
             position: relative;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
             overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.5rem;
+            min-height: 120px; /* 稍微加高 */
+            border-radius: 1rem;
+            background: linear-gradient(135deg, #38A3A5 0%, #80CBC4 100%);
+            color: white;
             font-weight: bold;
-            min-height: 100px;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            color: #FFFFFF;
-            background-image: linear-gradient(to right, #38A3A5, #80CBC4);
-            background-size: 200% auto;
-            background-position: left center;
-            transition: background-position 0.4s ease-out, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border 0.3s ease-in-out;
-            border: 3px solid transparent; 
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(56, 163, 165, 0.3);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); /* 彈性效果 */
+            border: 1px solid rgba(255,255,255,0.2);
         }
-
-        .gradient-button.active-button {
-            background-position: right center; 
-            transform: translateY(-3px);
-            box-shadow: 0 10px 15px rgba(56, 163, 165, 0.3);
-            border-color: #38A3A5;
+        .gradient-button::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(255,255,255,0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
-
         .gradient-button:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(56, 163, 165, 0.4);
+        }
+        .gradient-button:hover::before { opacity: 1; }
+        .gradient-button:active { transform: scale(0.98); }
+
+        /* 工具卡片優化 */
+        .tool-card {
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        .tool-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
-            background-position: right center; 
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.15);
+            border-color: rgba(56, 163, 165, 0.3);
         }
 
-        .gradient-button-small {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: #FFFFFF;
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            background: linear-gradient(to right, #38A3A5, #80CBC4);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: all var(--transition-duration-fast) ease-in-out;
+        /* 滾動觸發動畫類別 (Scroll Reveal) */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
         }
-        .gradient-button-small:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            opacity: 0.9;
+        .reveal-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 
-<body class="bg-background-light dark:bg-background-dark font-display text-text-light dark:text-text-dark transition-colors duration-300">
-    <header class="bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
+<body class="bg-background-light dark:bg-background-dark font-display text-text-light dark:text-text-dark transition-colors duration-300 antialiased selection:bg-primary selection:text-white">
+    
+    <!-- 載入畫面 -->
+    <div id="preloader">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <!-- 導覽列 -->
+    <header class="bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200/50 dark:border-gray-700/50 transition-all duration-300" id="main-header">
         <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
-            <a href="#" id="spedmix-logo" class="flex items-center gap-2">
-                <span class="text-2xl font-bold text-primary dark:text-accent-dark">教師備課幫手</span>
+            <a href="#" id="spedmix-logo" class="flex items-center gap-2 group" onclick="handleLogoClick(event)">
+                <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold text-sm group-hover:rotate-12 transition-transform">S</div>
+                <span class="text-2xl font-bold text-primary dark:text-accent-dark tracking-tight">教師備課幫手</span>
             </a>
             
-            <div id="desktop-nav" class="hidden md:flex items-center space-x-4 lg:space-x-6 ">
-                <a href="#" class="nav-link text-text-light dark:text-text-dark hover:text-primary transition-colors duration-200">首頁</a>
-                <a href="https://www.instagram.com/spedmix2025/" target="_blank" rel="noopener noreferrer" class="nav-link text-text-light dark:text-text-dark hover:text-primary transition-colors duration-200">Instagram</a>
+            <div id="desktop-nav" class="hidden md:flex items-center space-x-8">
+                <a href="#" onclick="handleLogoClick(event)" class="nav-link text-sm font-medium text-text-light dark:text-text-dark hover:text-primary dark:hover:text-accent-dark transition-colors relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-primary after:bottom-[-4px] after:left-0 after:transition-all hover:after:w-full">首頁</a>
+                <a href="https://www.instagram.com/spedmix2025/" target="_blank" rel="noopener noreferrer" class="nav-link text-sm font-medium text-text-light dark:text-text-dark hover:text-primary dark:hover:text-accent-dark transition-colors flex items-center gap-1">
+                    <span class="material-icons text-lg">photo_camera</span> Instagram
+                </a>
             </div>
             
-            <button id="mobile-menu-button" class="md:hidden text-text-light dark:text-text-dark" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+            <button id="mobile-menu-button" class="md:hidden text-text-light dark:text-text-dark p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                 <span class="material-icons">menu</span>
             </button>
         </nav>
 
-        <div id="mobile-menu" class="hidden md:hidden bg-surface-light dark:bg-surface-dark absolute w-full shadow-lg">
-            <a href="#" class="block py-3 px-4 text-text-light dark:text-text-dark hover:bg-background-light dark:hover:bg-surface-dark/80">首頁</a>
-            <a href="https://www.instagram.com/spedmix2025/" target="_blank" rel="noopener noreferrer" class="block py-3 px-4 text-text-light dark:text-text-dark hover:bg-background-light dark:hover:bg-surface-dark/80">Instagram</a>
+        <!-- 手機版選單 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-surface-light dark:bg-surface-dark border-t dark:border-gray-700 shadow-lg absolute w-full origin-top transition-transform duration-200">
+            <a href="#" onclick="handleLogoClick(event)" class="block py-3 px-6 font-medium text-text-light dark:text-text-dark hover:bg-gray-50 dark:hover:bg-gray-700/50">首頁</a>
+            <a href="https://www.instagram.com/spedmix2025/" target="_blank" rel="noopener noreferrer" class="block py-3 px-6 font-medium text-text-light dark:text-text-dark hover:bg-gray-50 dark:hover:bg-gray-700/50">Instagram</a>
         </div>
     </header>
 
-    <main>
-        <section id="hero-section" class="hero-full-bg relative">
-            <div class="absolute inset-0 hero-overlay"></div>
-            <div class="container mx-auto px-4 sm:px-6 py-24 relative z-10 text-left">
-                <p class="text-xl md:text-2xl text-stroke-dark mb-4 italic">高效教學輔助，專為教材調整設計</p>
-                <h1 class="text-5xl sm:text-6xl md:text-8xl font-bold text-primary leading-tight text-stroke">Special Education</h1>
-                <p class="text-2xl sm:text-3xl md:text-4xl text-stroke-dark mt-4">教師備課幫手</p>
-                <div class="mt-12">
-                    <button id="scroll-to-subject-nav" class="bg-button-bg text-button-text font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-opacity-80 transition-all duration-300 transform hover:scale-105">
-                        找幫手
+    <main class="min-h-screen">
+        
+        <!-- Hero Section (首頁 - 背景圖版) -->
+        <section id="hero-view" class="view-section active">
+            <div class="hero-full-bg relative overflow-hidden">
+                
+                <!-- 背景圖片層 (放在字後面，很大) -->
+                <div class="absolute inset-0 z-0">
+                     <!-- 這裡使用 Unsplash 的高品質圖片，您可以替換為自己的圖片連結 -->
+                    <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
+                         alt="Background" 
+                         class="w-full h-full object-cover animate-slow-zoom"
+                    >
+                    <!-- 遮罩層 (重要：讓字看清楚) -->
+                    <!-- 白天模式：半透明白 + 模糊 -->
+                    <!-- 黑夜模式：半透明黑 + 模糊 -->
+                    <div class="absolute inset-0 bg-white/85 dark:bg-gray-900/85 backdrop-blur-sm transition-colors duration-500"></div>
+                </div>
+
+                <!-- 內容層 (放在最上層，確保清晰) -->
+                <div class="container mx-auto px-4 sm:px-6 relative z-10 text-center">
+                    <div class="max-w-4xl mx-auto animate-fade-in-up">
+                        
+                        <div class="inline-block px-4 py-1.5 mb-6 text-sm font-bold tracking-wider text-primary uppercase bg-primary/10 dark:bg-primary/20 rounded-full border border-primary/20">
+                            2025 米克師
+                        </div>
+                        
+                        <h1 class="text-5xl sm:text-6xl md:text-8xl font-bold text-text-light dark:text-text-dark leading-tight mb-6 tracking-tighter text-shadow-lg">
+                            Special <span class="text-primary relative inline-block">
+                                Education
+                                <!-- 裝飾性底線 -->
+                                <span class="absolute bottom-2 left-0 w-full h-3 bg-primary/20 -z-10 rotate-1"></span>
+                            </span>
+                        </h1>
+                        
+                        <p class="text-2xl sm:text-3xl md:text-4xl text-text-light/90 dark:text-text-dark/90 font-bold mb-4">
+                            教師備課幫手
+                        </p>
+                        
+                        <p class="text-lg md:text-xl text-text-light/70 dark:text-text-dark/70 mb-10 max-w-2xl mx-auto font-medium">
+                            高效教學輔助，專為特殊教育與教材調整設計<br class="hidden md:block">讓 AI 成為您的備課神隊友
+                        </p>
+                        
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                            <button onclick="navigateTo('menu')" class="group bg-primary hover:bg-primary-dark text-white font-bold py-4 px-12 rounded-full shadow-xl shadow-primary/30 hover:shadow-primary/50 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 flex items-center justify-center gap-2 text-lg">
+                                <span>開始找幫手</span>
+                                <span class="material-icons transition-transform group-hover:translate-x-1">arrow_forward</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 底部裝飾性波浪 -->
+                <div class="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-20">
+                    <svg class="relative block w-[calc(100%+1.3px)] h-[60px] text-background-light dark:text-background-dark fill-current transition-colors duration-300" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                        <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
+                    </svg>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Menu Section (分類選單) -->
+        <section id="menu-view" class="view-section py-12">
+            <div class="container mx-auto px-4 md:px-8">
+                <div class="text-center mb-12 reveal-on-scroll">
+                    <h2 class="text-3xl md:text-4xl font-bold text-primary dark:text-accent-dark mb-3">教學工具分類</h2>
+                    <p class="text-gray-500 dark:text-gray-400">選擇您需要的教學領域，快速找到合適的 AI 輔助工具</p>
+                    <div class="w-16 h-1 bg-primary mx-auto mt-6 rounded-full"></div>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-6xl mx-auto">
+                    <!-- 按鈕生成區 -->
+                    <button onclick="openSubject('chinese')" class="gradient-button reveal-on-scroll" style="transition-delay: 50ms;">
+                        <div class="text-center">
+                            <span class="material-icons block text-3xl mb-1 opacity-80">menu_book</span>
+                            <span>國語文</span>
+                        </div>
+                    </button>
+                    <button onclick="openSubject('math')" class="gradient-button reveal-on-scroll" style="transition-delay: 100ms;">
+                        <div class="text-center">
+                            <span class="material-icons block text-3xl mb-1 opacity-80">calculate</span>
+                            <span>數學</span>
+                        </div>
+                    </button>
+                    <button onclick="openSubject('english')" class="gradient-button reveal-on-scroll" style="transition-delay: 150ms;">
+                        <div class="text-center">
+                            <span class="material-icons block text-3xl mb-1 opacity-80">language</span>
+                            <span>英語文</span>
+                        </div>
+                    </button>
+                    <button onclick="openSubject('advocacy')" class="gradient-button reveal-on-scroll" style="transition-delay: 200ms;">
+                        <div class="text-center">
+                            <span class="material-icons block text-3xl mb-1 opacity-80">school</span>
+                            <span>通用工具</span>
+                        </div>
+                    </button>
+                    <button onclick="openSubject('ai-tools')" class="gradient-button reveal-on-scroll" style="transition-delay: 250ms;">
+                        <div class="text-center">
+                            <span class="material-icons block text-3xl mb-1 opacity-80">folder_shared</span>
+                            <span>行政工具</span>
+                        </div>
+                    </button>
+                    <button onclick="openSubject('social-skills')" class="gradient-button reveal-on-scroll" style="transition-delay: 300ms;">
+                        <div class="text-center">
+                            <span class="material-icons block text-3xl mb-1 opacity-80">people</span>
+                            <span>社會技巧</span>
+                        </div>
+                    </button>
+                    <button onclick="openSubject('learning-strategies')" class="gradient-button reveal-on-scroll" style="transition-delay: 350ms;">
+                        <div class="text-center">
+                            <span class="material-icons block text-3xl mb-1 opacity-80">psychology</span>
+                            <span>學習策略</span>
+                        </div>
+                    </button>
+                    <button onclick="openSubject('life-management')" class="gradient-button reveal-on-scroll" style="transition-delay: 400ms;">
+                        <div class="text-center">
+                            <span class="material-icons block text-3xl mb-1 opacity-80">apps</span>
+                            <span>其它工具</span>
+                        </div>
+                    </button>
+                </div>
+                
+                <div class="text-center mt-12">
+                     <button onclick="navigateTo('hero')" class="text-gray-500 hover:text-primary transition-colors flex items-center justify-center gap-1 mx-auto">
+                        <span class="material-icons text-sm">arrow_upward</span> 回到頂部
                     </button>
                 </div>
             </div>
         </section>
 
-        <div id="subject-navigation-buttons" class="content-container container mx-auto p-4 md:p-8 mt-8 hidden">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-10 text-primary dark:text-accent-dark">教學工具分類</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                <button class="gradient-button" data-subject-id="chinese"><span>國語文</span></button>
-                <button class="gradient-button" data-subject-id="math"><span>數學</span></button>
-                <button class="gradient-button" data-subject-id="english"><span>英語文</span></button>
-                <button class="gradient-button" data-subject-id="advocacy"><span>通用工具</span></button>
-                <button class="gradient-button" data-subject-id="ai-tools"><span>行政工具</span></button>
-                <button class="gradient-button" data-subject-id="social-skills"><span>社會技巧</span></button>
-                <button class="gradient-button" data-subject-id="learning-strategies"><span>學習策略</span></button>
-                <button class="gradient-button" data-subject-id="life-management"><span>其它工具</span></button>
-            </div>
-        </div>
-
-        <div id="sections-container" class="content-container container mx-auto p-4 md:p-8 mt-8 hidden">
-            <div class="sections-wrapper">
+        <!-- Content Detail Section (工具詳情) -->
+        <section id="detail-view" class="view-section py-8 min-h-screen bg-background-light dark:bg-background-dark">
+            <div class="container mx-auto px-4 md:px-8">
                 
-                <div id="chinese" class="section">
-                    <div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-lg shadow-lg">
-                        <button class="gradient-button-small mb-4 flex items-center">
-                            <span class="material-icons mr-1">arrow_back</span>
-                            返回科目選單
-                        </button>
-                        <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">國語文工具</h2>
-                        <p class="mb-6">提供文本簡化、朗讀輔助等國語文教學工具。</p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                            <a href="teacher/chinesereading.html" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'chinese-sentence_reading')">
-                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">文章逐句朗讀</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">將長篇文章轉位逐句顯示，並提供朗讀，輔助閱讀理解。</p>
-                            </a>
-                            <a href="teacher/simple.html" target="_blank" rel="noopener noreferrer" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'chinese-text_simplification')">
-                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">差異化教材生成系統</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">利用 AI 簡化複雜課文，一鍵生成摘要、漫畫、測驗，使學生更易理解。</p>
-                            </a>
-                            <a href="teacher/engwords.html" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'english-multisensory_quiz')">
-                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">AI即時生成圖片測驗</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">提供學生即時圖片、中英文發音、檢核答案及錯題重測功能。</p>
-                            </a>
-                            <a href="teacher/reading.html" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'chinese-multisensory_quiz')">
-                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">通用性閱讀測驗</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">提供學生語音朗讀、劃記重點、檢核答案等功能。</p>
-                            </a>
+                <!-- 控制列 -->
+                <div class="mb-8 flex items-center">
+                    <button onclick="navigateTo('menu')" class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-surface-dark rounded-lg shadow-sm hover:shadow-md text-primary dark:text-accent-dark font-medium transition-all hover:-translate-x-1">
+                        <span class="material-icons text-sm">arrow_back_ios</span>
+                        返回選單
+                    </button>
+                </div>
 
-                            <a href="teacher/question.html" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'chinese-multisensory_quiz')">
-                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">個別化出題小幫手</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">貼上課文，即可產生差異化題型。</p>
-                            </a>
-
-                            <a href="teacher/chinesetranslate.html" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'chinese-multisensory_quiz')">
-                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">文言文逐句圖文學習單</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">將艱澀的文言文轉化為圖文並茂的學習素材。</p>
-                            </a>
-                        </div>
+                <!-- 國語文 -->
+                <div id="chinese" class="subject-detail">
+                    <div class="mb-8">
+                        <h2 class="text-3xl font-bold text-primary dark:text-accent-dark flex items-center gap-3">
+                            <span class="material-icons text-4xl">menu_book</span> 國語文工具
+                        </h2>
+                        <p class="mt-2 text-gray-600 dark:text-gray-400">提供文本簡化、朗讀輔助等國語文教學工具。</p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Cards will be populated here or written statically -->
+                         <a href="teacher/chinesereading.html" class="tool-card p-6 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm" onclick="trackEvent('button_click', 'tool_link', 'chinese-sentence_reading')">
+                            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 text-primary"><span class="material-icons">record_voice_over</span></div>
+                            <h3 class="font-bold text-lg text-gray-800 dark:text-gray-100">文章逐句朗讀</h3>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">將長篇文章轉位逐句顯示，並提供朗讀，輔助閱讀理解。</p>
+                        </a>
+                        <a href="teacher/simple.html" target="_blank" class="tool-card p-6 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm">
+                            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 text-primary"><span class="material-icons">auto_fix_high</span></div>
+                            <h3 class="font-bold text-lg text-gray-800 dark:text-gray-100">差異化教材生成</h3>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">利用 AI 簡化複雜課文，一鍵生成摘要、漫畫、測驗。</p>
+                        </a>
+                        <a href="teacher/reading.html" class="tool-card p-6 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm">
+                            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 text-primary"><span class="material-icons">quiz</span></div>
+                            <h3 class="font-bold text-lg text-gray-800 dark:text-gray-100">通用性閱讀測驗</h3>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">語音朗讀、劃記重點、檢核答案等功能。</p>
+                        </a>
+                        <a href="teacher/question.html" class="tool-card p-6 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm">
+                             <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 text-primary"><span class="material-icons">edit_note</span></div>
+                            <h3 class="font-bold text-lg text-gray-800 dark:text-gray-100">個別化出題小幫手</h3>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">貼上課文，即可產生差異化題型。</p>
+                        </a>
+                        <a href="teacher/chinesetranslate.html" class="tool-card p-6 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm">
+                             <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 text-primary"><span class="material-icons">translate</span></div>
+                            <h3 class="font-bold text-lg text-gray-800 dark:text-gray-100">文言文圖文學習單</h3>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">將艱澀的文言文轉化為圖文並茂的學習素材。</p>
+                        </a>
                     </div>
                 </div>
 
-                <div id="math" class="section">
-                    <div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-lg shadow-lg">
-                        <button class="gradient-button-small mb-4 flex items-center">
-                            <span class="material-icons mr-1">arrow_back</span>
-                            返回科目選單
-                        </button>
-                        <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">數學工具</h2>
-                        <p class="mb-6">包含互動式教具、視覺化概念等數學輔助工具。</p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                            <a href="https://g.co/gemini/share/ce02a1d69a3c" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'math-number_simplifier')">
-                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">題目數字簡化小幫手</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">貼上題目，即可產生簡化後的相同題型數題</p>
-                            </a>
-                        </div>
+                <!-- 數學 -->
+                <div id="math" class="subject-detail">
+                    <div class="mb-8">
+                        <h2 class="text-3xl font-bold text-primary dark:text-accent-dark flex items-center gap-3">
+                            <span class="material-icons text-4xl">calculate</span> 數學工具
+                        </h2>
+                        <p class="mt-2 text-gray-600 dark:text-gray-400">包含互動式教具、視覺化概念等數學輔助工具。</p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                         <a href="https://g.co/gemini/share/ce02a1d69a3c" target="_blank" class="tool-card p-6 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm">
+                            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 text-primary"><span class="material-icons">exposure_neg_1</span></div>
+                            <h3 class="font-bold text-lg text-gray-800 dark:text-gray-100">數字簡化小幫手</h3>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">貼上題目，即可產生簡化後的相同題型數題。</p>
+                        </a>
                     </div>
                 </div>
 
-                <div id="english" class="section">
-                    <div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-lg shadow-lg">
-                        <button class="gradient-button-small mb-4 flex items-center">
-                            <span class="material-icons mr-1">arrow_back</span>
-                            返回科目選單
-                        </button>
-                        <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">英語文工具</h2>
-                        <p class="mb-6">提供中英文發音以及朗讀練習的數位學習單等備課工具。</p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                            <a href="https://g.co/gemini/share/9d9f4d4c25ac" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'english-listen_sentence_by_sentence')">
-                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">逐句聽</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">將長篇文章改為逐句呈現，並提供翻譯及中英文發音</p>
-                            </a>
-                            <a href="https://g.co/gemini/share/81fa3194197f" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'english-listen_and_speak')">
-                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">逐句聽與唸</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">有AI朗讀評分機制，並逐句呈現，並提供翻譯及中英文發音</p>
-                            </a>
-                            <a href="teacher/unscramble.html" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'english-sentence_ordering_maker')">
-                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">句型排列製作</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">將手寫句子改為句型排列，降低書寫負荷，並提供即時發音。</p>
-                            </a>
-                            <a href="teacher/choose.html" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'english-interactive_mcq_maker')">
-                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">互動式選擇題製作</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">提供學生即時翻譯、英文發音、提示及檢核答案功能。</p>
-                            </a>
-                            <a href="teacher/engwords.html" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'english-multisensory_quiz')">
-                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">AI即時生成圖片測驗</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">提供學生即時圖片、中英文發音、檢核答案及錯題重測功能。</p>
-                            </a>
-                        </div>
+                <!-- 英語文 -->
+                <div id="english" class="subject-detail">
+                     <div class="mb-8">
+                        <h2 class="text-3xl font-bold text-primary dark:text-accent-dark flex items-center gap-3">
+                            <span class="material-icons text-4xl">language</span> 英語文工具
+                        </h2>
+                        <p class="mt-2 text-gray-600 dark:text-gray-400">提供中英文發音以及朗讀練習的數位學習單。</p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <a href="https://g.co/gemini/share/9d9f4d4c25ac" target="_blank" class="tool-card p-6 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm">
+                            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 text-primary"><span class="material-icons">headphones</span></div>
+                            <h3 class="font-bold text-lg text-gray-800 dark:text-gray-100">逐句聽</h3>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">將長篇文章改為逐句呈現，並提供翻譯及中英文發音。</p>
+                        </a>
+                        <a href="https://g.co/gemini/share/81fa3194197f" target="_blank" class="tool-card p-6 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm">
+                            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 text-primary"><span class="material-icons">mic</span></div>
+                            <h3 class="font-bold text-lg text-gray-800 dark:text-gray-100">逐句聽與唸</h3>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">AI 朗讀評分機制，逐句呈現並提供翻譯。</p>
+                        </a>
+                        <a href="teacher/unscramble.html" class="tool-card p-6 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm">
+                            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 text-primary"><span class="material-icons">sort_by_alpha</span></div>
+                            <h3 class="font-bold text-lg text-gray-800 dark:text-gray-100">句型排列製作</h3>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">降低書寫負荷，並提供即時發音。</p>
+                        </a>
+                        <a href="teacher/choose.html" class="tool-card p-6 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm">
+                             <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 text-primary"><span class="material-icons">touch_app</span></div>
+                            <h3 class="font-bold text-lg text-gray-800 dark:text-gray-100">互動式選擇題製作</h3>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">即時翻譯、英文發音、提示及檢核答案。</p>
+                        </a>
+                         <a href="teacher/engwords.html" class="tool-card p-6 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm">
+                             <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 text-primary"><span class="material-icons">image</span></div>
+                            <h3 class="font-bold text-lg text-gray-800 dark:text-gray-100">AI圖片測驗</h3>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">即時圖片、中英文發音、錯題重測功能。</p>
+                        </a>
                     </div>
                 </div>
 
-                <div id="advocacy" class="section">
-                    <div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-lg shadow-lg">
-                        <button class="gradient-button-small mb-4 flex items-center">
-                            <span class="material-icons mr-1">arrow_back</span>
-                            返回科目選單
-                        </button>
-                        <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">通用工具</h2>
-                        <p class="mb-6">協助教師備課的常用工具。</p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                            <a href="teacher/simple.html" target="_blank" rel="noopener noreferrer" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'chinese-text_simplification')">
-                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">差異化教材生成系統</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">利用 AI 簡化複雜課文，一鍵生成摘要、漫畫、測驗，使學生更易理解。</p>
-                            </a>
-                            <a href="teacher/question.html" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'chinese-multisensory_quiz')">
-                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">個別化出題小幫手</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">貼上課文，即可產生差異化題型。</p>
-                            </a>
-
-                            <a href="teacher/engwords.html" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'english-multisensory_quiz')">
-                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">AI即時生成圖片測驗</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">提供學生即時圖片、中英文發音、檢核答案及錯題重測功能。</p>
-                            </a>
-
-
-                        </div>
+                <!-- 通用工具 -->
+                <div id="advocacy" class="subject-detail">
+                     <div class="mb-8">
+                        <h2 class="text-3xl font-bold text-primary dark:text-accent-dark flex items-center gap-3">
+                            <span class="material-icons text-4xl">school</span> 通用工具
+                        </h2>
+                        <p class="mt-2 text-gray-600 dark:text-gray-400">協助教師備課的跨領域常用工具。</p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                         <a href="teacher/simple.html" target="_blank" class="tool-card p-6 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm">
+                            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 text-primary"><span class="material-icons">auto_fix_high</span></div>
+                            <h3 class="font-bold text-lg text-gray-800 dark:text-gray-100">差異化教材生成</h3>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">利用 AI 簡化複雜課文，一鍵生成摘要、漫畫。</p>
+                        </a>
+                        <a href="teacher/question.html" class="tool-card p-6 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm">
+                            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 text-primary"><span class="material-icons">edit_note</span></div>
+                            <h3 class="font-bold text-lg text-gray-800 dark:text-gray-100">個別化出題</h3>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">貼上課文，即可產生差異化題型。</p>
+                        </a>
+                         <a href="teacher/engwords.html" class="tool-card p-6 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm">
+                             <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 text-primary"><span class="material-icons">image</span></div>
+                            <h3 class="font-bold text-lg text-gray-800 dark:text-gray-100">AI圖片測驗</h3>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">即時圖片、中英文發音、錯題重測功能。</p>
+                        </a>
                     </div>
                 </div>
 
-                <div id="ai-tools" class="section">
-                    <div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-lg shadow-lg">
-                        <button class="gradient-button-small mb-4 flex items-center">
-                            <span class="material-icons mr-1">arrow_back</span>
-                            返回科目選單
-                        </button>
-                        <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">行政工具</h2>
-                        <p class="mb-6">運用 AI 技術生成教材、簡化文本，提升行政效率。</p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                            <a href="teacher/IEP.html" target="_blank" rel="noopener noreferrer" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'iep_generator-start')">
-                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">IEP 目標產生</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">根據學生需求，快速生成 IEP 學期與學年目標 (僅供參考)。</p>
-                            </a>
-                                <a href="teacher/behavior.html" target="_blank" rel="noopener noreferrer" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'ai_tools-behavior_intervention')">
-                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">行為功能介入</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">輸入行為事件，一鍵分析ABC，也提供普通班教師方法。</p>
-                            </a>
-                        </div>
+                <!-- 行政工具 -->
+                <div id="ai-tools" class="subject-detail">
+                     <div class="mb-8">
+                        <h2 class="text-3xl font-bold text-primary dark:text-accent-dark flex items-center gap-3">
+                            <span class="material-icons text-4xl">folder_shared</span> 行政工具
+                        </h2>
+                        <p class="mt-2 text-gray-600 dark:text-gray-400">運用 AI 技術生成教材、簡化文本，提升行政效率。</p>
                     </div>
-                </div>
-                
-                <div id="social-skills" class="section">
-                    <div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-lg shadow-lg">
-                        <button class="gradient-button-small mb-4 flex items-center">
-                            <span class="material-icons mr-1">arrow_back</span>
-                            返回科目選單
-                        </button>
-                        <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">社會技巧工具</h2>
-                        <p class="mb-6">提供社交情境故事、情緒識別等互動練習。</p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                            <a href="https://g.co/gemini/share/448c25a01644" target="_blank" rel="noopener noreferrer" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'social_skills-emotion_image_generator')">
-                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">情緒圖片生成</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">輸入情緒詞彙，AI 生成對應的人物表情圖片，用於情緒識別教學。</p>
-                            </a>
-                        </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <a href="teacher/IEP.html" target="_blank" class="tool-card p-6 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm">
+                            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 text-primary"><span class="material-icons">description</span></div>
+                            <h3 class="font-bold text-lg text-gray-800 dark:text-gray-100">IEP 目標產生</h3>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">根據需求快速生成 IEP 學期與學年目標。</p>
+                        </a>
+                        <a href="teacher/behavior.html" target="_blank" class="tool-card p-6 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm">
+                            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 text-primary"><span class="material-icons">psychology_alt</span></div>
+                            <h3 class="font-bold text-lg text-gray-800 dark:text-gray-100">行為功能介入</h3>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">輸入行為事件，一鍵分析 ABC，提供介入策略。</p>
+                        </a>
                     </div>
                 </div>
 
-                <div id="learning-strategies" class="section">
-                    <div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-lg shadow-lg">
-                        <button class="gradient-button-small mb-4 flex items-center">
-                            <span class="material-icons mr-1">arrow_back</span>
-                            返回科目選單
-                        </button>
-                        <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">學習策略工具</h2>
-                        <p class="mb-6">包含時間管理、筆記技巧、心智圖等學習方法。</p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                            <a href="#" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'learning_strategies-mind_map_generator')">
-                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">心智圖產生器</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">輸入主題，AI 自動生成心智圖，幫助整理思緒。</p>
-                            </a>
-                        </div>
+                <!-- 社會技巧 -->
+                <div id="social-skills" class="subject-detail">
+                     <div class="mb-8">
+                        <h2 class="text-3xl font-bold text-primary dark:text-accent-dark flex items-center gap-3">
+                            <span class="material-icons text-4xl">people</span> 社會技巧
+                        </h2>
+                        <p class="mt-2 text-gray-600 dark:text-gray-400">提供社交情境故事、情緒識別等互動練習。</p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <a href="https://g.co/gemini/share/448c25a01644" target="_blank" class="tool-card p-6 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm">
+                            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 text-primary"><span class="material-icons">emoji_emotions</span></div>
+                            <h3 class="font-bold text-lg text-gray-800 dark:text-gray-100">情緒圖片生成</h3>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">輸入情緒詞彙，AI 生成對應表情圖片。</p>
+                        </a>
                     </div>
                 </div>
 
-                <div id="life-management" class="section">
-                    <div class="bg-surface-light dark:bg-surface-dark p-4 sm:p-6 rounded-lg shadow-lg">
-                        <button class="gradient-button-small mb-4 flex items-center">
-                            <span class="material-icons mr-1">arrow_back</span>
-                            返回科目選單
-                        </button>
-                        <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-primary dark:text-accent-dark">其它工具</h2>
-                        <p class="mb-6">其他常用工具</p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                            <a href="teacher/tts.html" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'narrated_quiz_maker')">
-                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">自製報讀測驗</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">快速建立報讀測驗，免安裝並支援離線、跨裝置。</p>
-                            </a>
-                            <a href="https://www.notion.so/spedmix2025/AI-2744c52ff8d08022b1e3c3a7577d7312?source=copy_link" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'other-visual_flowchart')">
-                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">視覺化流程圖</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">建立步驟化的視覺提示，引導學生完成任務。</p>
-                            </a>
-                            <a href="https://gemini.google.com/share/b32ef7e41b73" class="block p-6 bg-background-light dark:bg-background-dark rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="trackEvent('button_click', 'tool_link', 'other-sticker_generator')">
-                                <h3 class="font-bold text-primary dark:text-accent-dark text-lg">一鍵生貼圖</h3>
-                                <p class="mt-2 text-sm text-text-light/80 dark:text-text-dark/80">上傳照片並選擇想要的風格和表情，一鍵產出貼圖。</p>
-                            </a>
-                        </div>
+                 <!-- 學習策略 -->
+                <div id="learning-strategies" class="subject-detail">
+                     <div class="mb-8">
+                        <h2 class="text-3xl font-bold text-primary dark:text-accent-dark flex items-center gap-3">
+                            <span class="material-icons text-4xl">psychology</span> 學習策略
+                        </h2>
+                        <p class="mt-2 text-gray-600 dark:text-gray-400">包含時間管理、筆記技巧、心智圖等學習方法。</p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <a href="#" class="tool-card p-6 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm">
+                            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 text-primary"><span class="material-icons">account_tree</span></div>
+                            <h3 class="font-bold text-lg text-gray-800 dark:text-gray-100">心智圖產生器</h3>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">輸入主題，AI 自動生成心智圖，幫助整理思緒。</p>
+                        </a>
                     </div>
                 </div>
+
+                <!-- 其它工具 -->
+                <div id="life-management" class="subject-detail">
+                     <div class="mb-8">
+                        <h2 class="text-3xl font-bold text-primary dark:text-accent-dark flex items-center gap-3">
+                            <span class="material-icons text-4xl">apps</span> 其它工具
+                        </h2>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <a href="teacher/tts.html" class="tool-card p-6 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm">
+                            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 text-primary"><span class="material-icons">record_voice_over</span></div>
+                            <h3 class="font-bold text-lg text-gray-800 dark:text-gray-100">自製報讀測驗</h3>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">快速建立報讀測驗，免安裝並支援離線。</p>
+                        </a>
+                        <a href="https://www.notion.so/spedmix2025/AI-2744c52ff8d08022b1e3c3a7577d7312?source=copy_link" target="_blank" class="tool-card p-6 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm">
+                             <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 text-primary"><span class="material-icons">account_tree</span></div>
+                            <h3 class="font-bold text-lg text-gray-800 dark:text-gray-100">視覺化流程圖</h3>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">建立步驟化的視覺提示，引導學生完成任務。</p>
+                        </a>
+                        <a href="https://gemini.google.com/share/b32ef7e41b73" target="_blank" class="tool-card p-6 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm">
+                            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 text-primary"><span class="material-icons">sticker</span></div>
+                            <h3 class="font-bold text-lg text-gray-800 dark:text-gray-100">一鍵生貼圖</h3>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">上傳照片並選擇風格，一鍵產出貼圖。</p>
+                        </a>
+                    </div>
+                </div>
+
             </div>
-        </div>
+        </section>
     </main>
 
-    <footer class="bg-surface-light dark:bg-surface-dark mt-12 py-6 border-t border-gray-200 dark:border-gray-700">
-        <div class="container mx-auto text-center text-text-light/70 dark:text-text-dark/70">
-            <p>&copy; 2025 SPEDMIX.</p>
+    <footer class="bg-surface-light dark:bg-surface-dark mt-auto py-8 border-t border-gray-200 dark:border-gray-700">
+        <div class="container mx-auto text-center">
+            <p class="text-text-light/60 dark:text-text-dark/60 text-sm">&copy; 2025 SPEDMIX. Designed for Special Education.</p>
         </div>
     </footer>
 
     <script src="tracking.js"></script>
-
+    
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const spedmixLogo = document.getElementById('spedmix-logo');
-            const heroSection = document.getElementById('hero-section');
-            const scrollToSubjectNavButton = document.getElementById('scroll-to-subject-nav');
-            const subjectNavContainer = document.getElementById('subject-navigation-buttons');
-            const sectionsContainer = document.getElementById('sections-container');
-            const sectionsWrapper = document.querySelector('.sections-wrapper');
-            const sections = document.querySelectorAll('.section');
-            const desktopNav = document.getElementById('desktop-nav');
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            let isAnimating = false;
-            let currentView = 'hero';
-            const animationDuration = 300;
-
-            const smoothScrollTo = (element) => { 
-                const headerOffset = document.querySelector('header').offsetHeight; 
-                const elementPosition = element.getBoundingClientRect().top + window.pageYOffset; 
-                const offsetPosition = elementPosition - headerOffset - 20; 
-                window.scrollTo({ top: offsetPosition, behavior: 'smooth' }); 
-            };
-
-            const updateActiveStates = (activeId) => { 
-                document.querySelectorAll('.nav-link, #mobile-menu a').forEach(link => { 
-                    const href = link.getAttribute('href'); 
-                    let isActive = (activeId === 'home' && href === '#') || (href === `#${activeId}`); 
-                    link.classList.toggle('font-bold', isActive); 
-                    link.classList.toggle('text-primary', isActive && link.classList.contains('nav-link')); 
-                    link.classList.toggle('bg-background-light', isActive && !link.classList.contains('nav-link')); 
-                    link.classList.toggle('dark:bg-surface-dark/80', isActive && !link.classList.contains('nav-link')); 
-                }); 
-                subjectNavContainer.querySelectorAll('.gradient-button').forEach(button => { 
-                    button.classList.toggle('active-button', button.dataset.subjectId === activeId); 
-                }); 
-            };
-
-            const switchToContentView = () => { 
-                if (isAnimating || currentView === 'content') return; 
-                isAnimating = true; 
-                currentView = 'content'; 
-                heroSection.classList.add('is-hiding'); 
-                setTimeout(() => { 
-                    heroSection.style.display = 'none'; 
-                    heroSection.classList.remove('is-hiding'); 
-                    isAnimating = false;
-                }, animationDuration); 
-                subjectNavContainer.classList.remove('hidden'); 
-                subjectNavContainer.classList.add('is-showing'); 
-                updateActiveStates(null); 
-                smoothScrollTo(subjectNavContainer); 
-            };
-
-            const switchToHeroView = () => { 
-                if (isAnimating || currentView === 'hero') return; 
-                isAnimating = true; 
-                currentView = 'hero';
-                [subjectNavContainer, sectionsContainer].forEach(container => { 
-                    if (!container.classList.contains('hidden')) { 
-                        container.classList.add('is-hiding'); 
-                        setTimeout(() => { 
-                            container.classList.add('hidden'); 
-                            container.classList.remove('is-hiding'); 
-                        }, animationDuration); 
-                    } 
-                }); 
-                heroSection.style.display = 'flex'; 
-                heroSection.classList.add('is-showing'); 
-                setTimeout(() => { 
-                    heroSection.classList.remove('is-showing'); 
-                    isAnimating = false; 
-                }, animationDuration); 
-                sections.forEach(section => section.classList.remove('active', 'is-exiting')); 
-                sectionsWrapper.style.height = ''; 
-                updateActiveStates('home'); 
-                window.scrollTo({ top: 0, behavior: 'smooth' }); 
-            };
-            
-            const showSubjectMenu = () => {
-                if (isAnimating) return;
-                isAnimating = true;
-
-                const currentSection = document.querySelector('.section.active');
-                if (currentSection) {
-                    currentSection.classList.add('is-exiting');
-                    currentSection.classList.remove('active');
-                }
+        // 預載入處理 (解決 Tailwind CDN FOUC 與提升感知速度)
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                preloader.style.visibility = 'hidden';
                 
-                sectionsWrapper.style.height = '0px';
-
-                setTimeout(() => {
-                    sectionsContainer.classList.add('hidden');
-                    if (currentSection) {
-                        currentSection.classList.remove('is-exiting');
-                    }
-                    isAnimating = false;
-                }, animationDuration);
-
-                subjectNavContainer.classList.remove('hidden');
-                subjectNavContainer.classList.add('is-showing');
-                
-                updateActiveStates(null); 
-                smoothScrollTo(subjectNavContainer); 
-            };
-
-            const showSection = (id) => {
-                const nextSection = document.getElementById(id);
-                const currentSection = document.querySelector('.section.active');
-                
-                if (isAnimating || !nextSection || nextSection === currentSection) return;
-                
-                if (currentView !== 'content') {
-                    switchToContentView();
-                    setTimeout(() => showSection(id), animationDuration);
-                    return;
-                }
-                
-                isAnimating = true;
-                
-                sectionsContainer.classList.remove('hidden');
-                
-                if (currentSection) {
-                    currentSection.classList.add('is-exiting');
-                    currentSection.classList.remove('active');
-                    sectionsWrapper.style.height = `${currentSection.scrollHeight}px`;
-                }
-
-                subjectNavContainer.classList.add('hidden');
-
-                setTimeout(() => {
-                    nextSection.classList.add('active'); 
-                    const newHeight = nextSection.scrollHeight;
-                    sectionsWrapper.style.height = `${newHeight}px`;
-                }, 50);
-
-                setTimeout(() => {
-                    if (currentSection) {
-                        currentSection.classList.remove('is-exiting');
-                    }
-                    isAnimating = false;
-                }, animationDuration + 50);
-
-                smoothScrollTo(sectionsContainer); 
-                updateActiveStates(id);
-                mobileMenu.classList.add('hidden');
-                mobileMenuButton.setAttribute('aria-expanded', 'false');
-            };
-
-            spedmixLogo.addEventListener('click', (e) => { e.preventDefault(); switchToHeroView(); });
-            scrollToSubjectNavButton.addEventListener('click', switchToContentView);
-            mobileMenuButton.addEventListener('click', () => { 
-                const isExpanded = mobileMenu.classList.toggle('hidden'); 
-                mobileMenuButton.setAttribute('aria-expanded', !isExpanded); 
-            });
-            
-            const handleNavClick = (e) => { 
-                const link = e.target.closest('a[href^="#"]'); 
-                if (link) { 
-                    e.preventDefault(); 
-                    const href = link.getAttribute('href'); 
-                    if (href === '#') { 
-                        switchToHeroView(); 
-                    } else { 
-                        showSection(href.substring(1)); 
-                    } 
-                } 
-            };
-            desktopNav.addEventListener('click', handleNavClick);
-            mobileMenu.addEventListener('click', handleNavClick);
-
-            subjectNavContainer.addEventListener('click', (e) => { 
-                const button = e.target.closest('.gradient-button'); 
-                if (button) {
-                    showSection(button.dataset.subjectId); 
-                }
-            });
-            
-            sectionsContainer.addEventListener('click', (e) => {
-                const backButton = e.target.closest('.gradient-button-small');
-                if (backButton) {
-                    showSubjectMenu();
-                }
-            });
-
-            updateActiveStates('home');
+                // 觸發首頁文字動畫
+                document.querySelector('.animate-fade-in-up')?.classList.add('active');
+            }, 500);
         });
+
+        // 視圖狀態管理
+        let currentView = 'hero'; // hero, menu, detail
+
+        // 導航功能
+        function navigateTo(viewId) {
+            // 隱藏所有 View Section
+            document.querySelectorAll('.view-section').forEach(el => {
+                el.classList.remove('active');
+                // 重置 Scroll 以獲得更好的體驗
+                if(el.id !== viewId + '-view') {
+                     setTimeout(() => el.style.display = 'none', 400); // 等待 fade out
+                }
+            });
+
+            // 顯示目標 View
+            const target = document.getElementById(viewId + '-view');
+            if (target) {
+                target.style.display = 'block';
+                // 強制重繪以觸發動畫
+                void target.offsetWidth; 
+                target.classList.add('active');
+                
+                currentView = viewId;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                // 如果進入 Menu，重新觸發 Scroll Reveal
+                if (viewId === 'menu') {
+                    resetScrollReveal();
+                }
+            }
+        }
+
+        // 開啟特定科目
+        function openSubject(subjectId) {
+            navigateTo('detail');
+            
+            // 隱藏所有詳情區塊
+            document.querySelectorAll('.subject-detail').forEach(el => el.classList.remove('active'));
+            
+            // 顯示選定區塊
+            const target = document.getElementById(subjectId);
+            if (target) {
+                setTimeout(() => {
+                    target.classList.add('active');
+                }, 100);
+            }
+        }
+
+        function handleLogoClick(e) {
+            e.preventDefault();
+            navigateTo('hero');
+        }
+
+        // Scroll Reveal Observer (滾動出現動畫)
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, observerOptions);
+
+        function initScrollReveal() {
+            document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        function resetScrollReveal() {
+            document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+                el.classList.remove('is-visible');
+                observer.unobserve(el);
+                observer.observe(el); // Re-observe to trigger animation again
+            });
+        }
+
+        // Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-button');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            initScrollReveal();
+        });
+
     </script>
 </body>
-
 </html>
