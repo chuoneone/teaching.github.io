@@ -10,50 +10,30 @@
     <link rel="icon" href="images/dog.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
-    <style>
-        /* 確保連結樣式的按鈕與普通按鈕看起來一致 */
-        a.section-button {
-            text-decoration: none;
-            color: initial; /* 這裡可以根據你的 style.css 調整 */
-        }
-    </style>
-
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5BBHYN77N9"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-5BBHYN77N9');
-    </script>
     </head>
 
- 
 <body>
     <header class="navbar">
         <div class="logo">SPED</div>
-<nav>
-    <ul class="nav-links">
-        <li><a href="index.html" onclick="trackEvent('button_click', 'navbar_link', 'home')">HOME</a></li>
-        <li><a href="tt.html" onclick="trackEvent('button_click', 'navbar_link', 'emotion_log')">情緒紀錄</a></li>
-
-        <li><a href="7.html" onclick="trackEvent('button_click', 'subject_nav', 'g7-math')">7數</a></li>
-        <li><a href="8.html" onclick="trackEvent('button_click', 'subject_nav', 'g8-math')">8數</a></li>
-        <li><a href="9.html" onclick="trackEvent('button_click', 'subject_nav', 'g9-math')">9數</a></li>
-        <li><a href="7eng.html" onclick="trackEvent('button_click', 'subject_nav', 'g7-english')">7英</a></li>
-        <li><a href="8eng.html" onclick="trackEvent('button_click', 'subject_nav', 'g8-english')">8英</a></li>
-        <li><a href="9eng.html" onclick="trackEvent('button_click', 'subject_nav', 'g9-english')">9英</a></li>
-        <li><a href="7ch.html" onclick="trackEvent('button_click', 'subject_nav', 'g7-chinese')">7國</a></li>
-        <li><a href="8ch.html" onclick="trackEvent('button_click', 'subject_nav', 'g8-chinese')">8國</a></li>
-        <li><a href="9ch.html" onclick="trackEvent('button_click', 'subject_nav', 'g9-chinese')">9國</a></li>
-
-        <li><a href="bigtest.html" onclick="trackEvent('button_click', 'category_nav', 'exam_prep')">會考專區</a></li>
-        <li><a href="learningstrategy.html" onclick="trackEvent('button_click', 'category_nav', 'learning_strategy')">學習策略</a></li>
-        
-        <li><a href="socialskill.html" onclick="trackEvent('button_click', 'category_nav', 'social_skills')">社會技巧</a></li>
-    </ul>
-</nav>
-        <div class="menu-toggle" onclick="toggleMenu()">
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html" data-track-cat="navbar_link" data-track-lbl="home">HOME</a></li>
+                <li><a href="tt.html" data-track-cat="navbar_link" data-track-lbl="emotion_log">情緒紀錄</a></li>
+                <li><a href="7.html" data-track-cat="subject_nav" data-track-lbl="g7-math">7數</a></li>
+                <li><a href="8.html" data-track-cat="subject_nav" data-track-lbl="g8-math">8數</a></li>
+                <li><a href="9.html" data-track-cat="subject_nav" data-track-lbl="g9-math">9數</a></li>
+                <li><a href="7eng.html" data-track-cat="subject_nav" data-track-lbl="g7-english">7英</a></li>
+                <li><a href="8eng.html" data-track-cat="subject_nav" data-track-lbl="g8-english">8英</a></li>
+                <li><a href="9eng.html" data-track-cat="subject_nav" data-track-lbl="g9-english">9英</a></li>
+                <li><a href="7ch.html" data-track-cat="subject_nav" data-track-lbl="g7-chinese">7國</a></li>
+                <li><a href="8ch.html" data-track-cat="subject_nav" data-track-lbl="g8-chinese">8國</a></li>
+                <li><a href="9ch.html" data-track-cat="subject_nav" data-track-lbl="g9-chinese">9國</a></li>
+                <li><a href="bigtest.html" data-track-cat="category_nav" data-track-lbl="exam_prep">會考專區</a></li>
+                <li><a href="learningstrategy.html" data-track-cat="category_nav" data-track-lbl="learning_strategy">學習策略</a></li>
+                <li><a href="socialskill.html" data-track-cat="category_nav" data-track-lbl="social_skills">社會技巧</a></li>
+            </ul>
+        </nav>
+        <div class="menu-toggle">
             <i class="fas fa-bars"></i>
         </div>
     </header>
@@ -64,11 +44,11 @@
 
     <div style="text-align:center; margin-top: 40px;">
         <div class="button-container">
-            <button class="section-button" onclick="showSection('chapter1', this); trackEvent('button_click', 'chapter_select', 'g7-math-s1-ch1')">第1章</button>
-            <button class="section-button" onclick="showSection('chapter2', this); trackEvent('button_click', 'chapter_select', 'g7-math-s1-ch2')">第2章</button>
-            <button class="section-button" onclick="showSection('chapter3', this); trackEvent('button_click', 'chapter_select', 'g7-math-s1-ch3')">第3章</button>
-            <button class="section-button" onclick="showSection('videos', this); trackEvent('button_click', 'chapter_select', 'g7-math-s1-videos')">影片區</button>
-            <a href="7s2.html" class="section-button" onclick="trackEvent('button_click', 'semester_toggle', 'g7-math-s1-to-s2')">7下</a>
+            <button class="section-button" onclick="showSection('chapter1', this)" data-track-cat="chapter_select" data-track-lbl="g7-math-s1-ch1">第1章</button>
+            <button class="section-button" onclick="showSection('chapter2', this)" data-track-cat="chapter_select" data-track-lbl="g7-math-s1-ch2">第2章</button>
+            <button class="section-button" onclick="showSection('chapter3', this)" data-track-cat="chapter_select" data-track-lbl="g7-math-s1-ch3">第3章</button>
+            <button class="section-button" onclick="showSection('videos', this)" data-track-cat="chapter_select" data-track-lbl="g7-math-s1-videos">影片區</button>
+            <a href="7s2.html" class="section-button" data-track-cat="semester_toggle" data-track-lbl="g7-math-s1-to-s2">7下</a>
         </div>
     </div>
 
@@ -78,39 +58,38 @@
                 <div class="social-group">                    
                     <h3 style="text-align: center;">1-1負數與數線</h3>
                     <div class="btn-group">
-                        <a href="https://chuone.my.canva.site/7-1-1-1" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s1-ch1_1-worksheet')">01學習單</a>
+                        <a href="https://chuone.my.canva.site/7-1-1-1" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch1_1-worksheet">01學習單</a>
                     </div>
                 </div>
 
                 <div class="social-group">                    
                     <h3 style="text-align: center;">1-2正負數的加減</h3>
                     <div class="btn-group">
-                        <a href="https://chuone.my.canva.site/math-7-1-1-2" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s1-ch1_2-worksheet')">01學習單</a>
-                        <a href="math/7-01-1-2.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s1-ch1_2-learning_page')">02正負數學習</a>                        
-                        <a href="math/7-01-1-2L.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s1-ch1_2-learning_page_visual')">03正負數學習(圖形)</a>
-                        <a href="math/game1.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s1-ch1_2-game')">04撿便便好主人遊戲</a>
+                        <a href="https://chuone.my.canva.site/math-7-1-1-2" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch1_2-worksheet">01學習單</a>
+                        <a href="math/7-01-1-2.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch1_2-learning_page">02正負數學習</a>                        
+                        <a href="math/7-01-1-2L.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch1_2-learning_page_visual">03正負數學習(圖形)</a>
+                        <a href="math/game1.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch1_2-game">04撿便便好主人遊戲</a>
                     </div>
                 </div>
 
                 <div class="social-group">                    
                     <h3 style="text-align: center;">1-3 乘除與四則運算</h3>
                     <div class="btn-group">
-                        <a href="math/7-01-1-3.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s1-ch1_3-worksheet_fill_in')">學習單-填充</a>
-                        <a href="https://chuone.my.canva.site/math-7-1-1-3" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s1-ch1_3-worksheet_mcq')">學習單-選擇</a>                    
+                        <a href="math/7-01-1-3.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch1_3-worksheet_fill_in">學習單-填充</a>
+                        <a href="https://chuone.my.canva.site/math-7-1-1-3" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch1_3-worksheet_mcq">學習單-選擇</a>                    
                     </div>
                 </div>
-                
             </div>
  
             <div class="single-row">
                 <div class="social-group">                    
                     <h3 style="text-align: center;">1-4指數記法與科學記號</h3>
                     <div class="btn-group">
-                        <a href="https://wordwall.net/play/78918/397/429" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s1-ch1_4-exercise_exponent')">01指數記法</a>
-                        <a href="https://wordwall.net/play/98338/632/892" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s1-ch1_4-exercise_exponent_L')">02指數記法L</a>                                                                   
-                        <a href="https://wordwall.net/play/72659/100/839" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s1-ch1_4-exercise_is_scientific_notation')">03誰是科學記號</a>
-                        <a href="https://wordwall.net/play/72658/911/817" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s1-ch1_4-exercise_scientific_notation_1')">04科學記號(1)</a>                      
-                        <a href="https://wordwall.net/play/72658/809/358" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s1-ch1_4-exercise_scientific_notation_2')">05科學記號(2)</a>
+                        <a href="https://wordwall.net/play/78918/397/429" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch1_4-exercise_exponent">01指數記法</a>
+                        <a href="https://wordwall.net/play/98338/632/892" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch1_4-exercise_exponent_L">02指數記法L</a>                                                                   
+                        <a href="https://wordwall.net/play/72659/100/839" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch1_4-exercise_is_scientific_notation">03誰是科學記號</a>
+                        <a href="https://wordwall.net/play/72658/911/817" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch1_4-exercise_scientific_notation_1">04科學記號(1)</a>                      
+                        <a href="https://wordwall.net/play/72658/809/358" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch1_4-exercise_scientific_notation_2">05科學記號(2)</a>
                     </div>
                 </div>
             </div>
@@ -123,42 +102,37 @@
                 <div class="social-group">                    
                     <h3 style="text-align: center;">2-1因數的應用</h3>
                     <div class="btn-group">
-                        <a href="math/7-01-2-1-1.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s1-ch2_1-worksheet')">01因數的應用</a>
-                        <a href="math/7-01-2-1-34567.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s1-ch2_1-worksheet')">02判別倍數</a>
-                        <a href="https://chuone.my.canva.site/g7s1-ch2-1" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s1-ch2_1-worksheet')">03認識質數</a>
-                        <a href="math/7-s1-ch2-1-89.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s1-ch2_1-worksheet')">03質數與合數</a>
-                        <a href="math/7-s1-ch2-1-10.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s1-ch2_1-worksheet')">04質因數分解</a>
+                        <a href="math/7-01-2-1-1.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch2_1-worksheet">01因數的應用</a>
+                        <a href="math/7-01-2-1-34567.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch2_1-worksheet">02判別倍數</a>
+                        <a href="https://chuone.my.canva.site/g7s1-ch2-1" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch2_1-worksheet">03認識質數</a>
+                        <a href="math/7-s1-ch2-1-89.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch2_1-worksheet">03質數與合數</a>
+                        <a href="math/7-s1-ch2-1-10.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch2_1-worksheet">04質因數分解</a>
                     </div>
                 </div>
                 <div class="social-group">                    
                     <h3 style="text-align: center;">2-2最大公因最小公倍</h3>
                     <div class="btn-group">
-                        <a href="math/7-s1-ch2-2-1.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s1-ch2_1-worksheet')">01因數公因數</a>
-                        <a href="math/7-s1-ch2-2-2.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s1-ch2_1-worksheet')">02判別互質</a>
+                        <a href="math/7-s1-ch2-2-1.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch2_1-worksheet">01因數公因數</a>
+                        <a href="math/7-s1-ch2-2-2.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch2_1-worksheet">02判別互質</a>
                     </div>
                 </div>
                 <div class="social-group">                    
                     <h3 style="text-align: center;">2-3分數的四則運算</h3>
                     <div class="btn-group">
-                        <a href="math/G7S1-2-3-1&2&3.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s1-ch2_3')">01-03最簡、比大小</a>
-                        <a href="math/G7S1-2-3-4.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s1-ch2_3')">04同分母的加減</a>
-                        <a href="math/G7S1-2-3-5.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s1-ch2_3')">05異分母的相減</a>
-                    
+                        <a href="math/G7S1-2-3-1&2&3.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch2_3">01-03最簡、比大小</a>
+                        <a href="math/G7S1-2-3-4.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch2_3">04同分母的加減</a>
+                        <a href="math/G7S1-2-3-5.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch2_3">05異分母的相減</a>
                     </div>
                 </div>
-
-
-
-                
             </div>
- 
-
         </div>
-
-        </div>
+    </div>
 
     <div id="chapter3" class="section-content">
+        <div class="social-container">
+            <h3 style="text-align:center; margin-top:20px;">第3章 內容準備中...</h3>
         </div>
+    </div>
 
     <div id="videos" class="section-content">
         <div class="social-container">
@@ -166,27 +140,20 @@
                 <div class="social-group">
                     <h3 style="text-align: center;">請選擇︰</h3>
                     <div class="btn-group">
-                        <a href="https://digitalmaster.knsh.com.tw/all/video/j/math_page.html?l1=%E8%AA%B2%E6%9C%AC%E8%A7%A3%E9%A1%8C&l2=7%E4%B8%8A" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s1-video-textbook')">課本例題</a>
-                        <a href="https://digitalmaster.knsh.com.tw/all/video/j/math_page.html?l1=%E7%BF%92%E4%BD%9C%E8%A7%A3%E9%A1%8C&l2=7%E4%B8%8A" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g7-math-s1-video-workbook')">習作例題</a>
+                        <a href="https://digitalmaster.knsh.com.tw/all/video/j/math_page.html?l1=%E8%AA%B2%E6%9C%AC%E8%A7%A3%E9%A1%8C&l2=7%E4%B8%8A" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-video-textbook">課本例題</a>
+                        <a href="https://digitalmaster.knsh.com.tw/all/video/j/math_page.html?l1=%E7%BF%92%E4%BD%9C%E8%A7%A3%E9%A1%8C&l2=7%E4%B8%8A" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-video-workbook">習作例題</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div style="text-align: center; margin-bottom: 20px;">
-      <a href="index.html">
-        <img src="images/dog.png" alt="Logo" style="height: 100px;">
-      </a>
-    </div>
+
 
     <script src="main.js"></script>
-    
     <script src="tracking.js"></script>
-
 </body>
-</html>
 <footer>
     <p style="display: inline;">Created by Chu Pei Yi</p>
-
 </footer>
+</html>

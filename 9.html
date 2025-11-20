@@ -10,38 +10,29 @@
     <link rel="icon" href="images/dog.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
-
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5BBHYN77N9"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-5BBHYN77N9');
-    </script>
-</head>
+    </head>
 <body>
     <header class="navbar">
         <div class="logo">SPED</div>
         <nav>
             <ul class="nav-links">
-                <li><a href="index.html" onclick="trackEvent('button_click', 'navbar_link', 'home')">HOME</a></li>
-                <li><a href="tt.html" onclick="trackEvent('button_click', 'navbar_link', 'emotion_log')">情緒紀錄</a></li>
-                <li><a href="7.html" onclick="trackEvent('button_click', 'subject_nav', 'g7-math')">7數</a></li>
-                <li><a href="8.html" onclick="trackEvent('button_click', 'subject_nav', 'g8-math')">8數</a></li>
-                <li><a href="9.html" onclick="trackEvent('button_click', 'subject_nav', 'g9-math')">9數</a></li>
-                <li><a href="7eng.html" onclick="trackEvent('button_click', 'subject_nav', 'g7-english')">7英</a></li>
-                <li><a href="8eng.html" onclick="trackEvent('button_click', 'subject_nav', 'g8-english')">8英</a></li>
-                <li><a href="9eng.html" onclick="trackEvent('button_click', 'subject_nav', 'g9-english')">9英</a></li>
-                <li><a href="7ch.html" onclick="trackEvent('button_click', 'subject_nav', 'g7-chinese')">7國</a></li>
-                <li><a href="8ch.html" onclick="trackEvent('button_click', 'subject_nav', 'g8-chinese')">8國</a></li>
-                <li><a href="9ch.html" onclick="trackEvent('button_click', 'subject_nav', 'g9-chinese')">9國</a></li>
-                <li><a href="bigtest.html" onclick="trackEvent('button_click', 'category_nav', 'exam_prep')">會考專區</a></li>
-                <li><a href="learningstrategy.html" onclick="trackEvent('button_click', 'category_nav', 'learning_strategy')">學習策略</a></li>
-                <li><a href="socialskill.html" onclick="trackEvent('button_click', 'category_nav', 'social_skills')">社會技巧</a></li>
+                <li><a href="index.html" data-track-cat="navbar_link" data-track-lbl="home">HOME</a></li>
+                <li><a href="tt.html" data-track-cat="navbar_link" data-track-lbl="emotion_log">情緒紀錄</a></li>
+                <li><a href="7.html" data-track-cat="subject_nav" data-track-lbl="g7-math">7數</a></li>
+                <li><a href="8.html" data-track-cat="subject_nav" data-track-lbl="g8-math">8數</a></li>
+                <li><a href="9.html" data-track-cat="subject_nav" data-track-lbl="g9-math">9數</a></li>
+                <li><a href="7eng.html" data-track-cat="subject_nav" data-track-lbl="g7-english">7英</a></li>
+                <li><a href="8eng.html" data-track-cat="subject_nav" data-track-lbl="g8-english">8英</a></li>
+                <li><a href="9eng.html" data-track-cat="subject_nav" data-track-lbl="g9-english">9英</a></li>
+                <li><a href="7ch.html" data-track-cat="subject_nav" data-track-lbl="g7-chinese">7國</a></li>
+                <li><a href="8ch.html" data-track-cat="subject_nav" data-track-lbl="g8-chinese">8國</a></li>
+                <li><a href="9ch.html" data-track-cat="subject_nav" data-track-lbl="g9-chinese">9國</a></li>
+                <li><a href="bigtest.html" data-track-cat="category_nav" data-track-lbl="exam_prep">會考專區</a></li>
+                <li><a href="learningstrategy.html" data-track-cat="category_nav" data-track-lbl="learning_strategy">學習策略</a></li>
+                <li><a href="socialskill.html" data-track-cat="category_nav" data-track-lbl="social_skills">社會技巧</a></li>
             </ul>
         </nav>
-        <div class="menu-toggle" onclick="toggleMenu()">
+        <div class="menu-toggle">
             <i class="fas fa-bars"></i>
         </div>
     </header>
@@ -52,11 +43,11 @@
 
     <div style="text-align:center; margin-top: 40px;">
     <div class="button-container">
-        <button class="section-button" onclick="showSection('section1', this); trackEvent('button_click', 'chapter_select', 'g9-math-s1-ch1')">第1章</button>
-        <button class="section-button" onclick="showSection('section2', this); trackEvent('button_click', 'chapter_select', 'g9-math-s1-ch2')">第2章</button>
-        <button class="section-button" onclick="showSection('section3', this); trackEvent('button_click', 'chapter_select', 'g9-math-s1-ch3')">第3章</button>
-        <a href="https://mathvideo.hle.com.tw/62/" target="_blank" class="section-button" onclick="trackEvent('button_click', 'chapter_select', 'g9-math-s1-videos')">課本影片</a>                
-        <a href="9s2.html" class="section-button" onclick="trackEvent('button_click', 'semester_toggle', 'g9-math-s1-to-s2')">9下</a>
+        <button class="section-button" onclick="showSection('section1', this)" data-track-cat="chapter_select" data-track-lbl="g9-math-s1-ch1">第1章</button>
+        <button class="section-button" onclick="showSection('section2', this)" data-track-cat="chapter_select" data-track-lbl="g9-math-s1-ch2">第2章</button>
+        <button class="section-button" onclick="showSection('section3', this)" data-track-cat="chapter_select" data-track-lbl="g9-math-s1-ch3">第3章</button>
+        <a href="https://mathvideo.hle.com.tw/62/" target="_blank" class="section-button" data-track-cat="chapter_select" data-track-lbl="g9-math-s1-videos">課本影片</a>                
+        <a href="9s2.html" class="section-button" data-track-cat="semester_toggle" data-track-lbl="g9-math-s1-to-s2">9下</a>
     </div>
     </div>
     
@@ -66,36 +57,36 @@
                 <div class="social-group">
                     <h3 style="text-align: center;">1-1 連比</h3>
                     <div class="btn-group">
-                        <a href="https://gemini.google.com/share/f7e0dee60031" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-math-s1-ch1_1-simplest_integer_ratio')">01最簡整數比</a>                        
-                        <a href="https://gemini.google.com/share/cbb333293546" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-math-s1-ch1_1-continued_ratio_ops')">02連比例的運算</a>                                                
-                        <a href="math/G9S1-1-1-3sheet.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-math-s1-ch1_1-continued_ratio_ops_3')">03連比例的運算3</a>
-                        <a href="math/G9S1-1-1-4sheet.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-math-s1-ch1_1-continued_ratio_ops_4')">04連比例的運算4</a>
+                        <a href="https://gemini.google.com/share/f7e0dee60031" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_1-simplest_integer_ratio">01最簡整數比</a>                        
+                        <a href="https://gemini.google.com/share/cbb333293546" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_1-continued_ratio_ops">02連比例的運算</a>                                                
+                        <a href="math/G9S1-1-1-3sheet.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_1-continued_ratio_ops_3">03連比例的運算3</a>
+                        <a href="math/G9S1-1-1-4sheet.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_1-continued_ratio_ops_4">04連比例的運算4</a>
                     </div>
                 </div>
         
                 <div class="social-group">
                     <h3 style="text-align: center;">1-2 比例線段</h3>
                     <div class="btn-group">
-                        <a href="math/G9S1-1-2-2.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-math-s1-ch1_2-parallel_lines_prop_segments')">01平行線截比例線</a>
-                        <a href="math/G9S1-1-2-4.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-math-s1-ch1_2-parallel_lines_prop_segments_2')">02平行線截比例線2</a>
+                        <a href="math/G9S1-1-2-2.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_2-parallel_lines_prop_segments">01平行線截比例線</a>
+                        <a href="math/G9S1-1-2-4.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_2-parallel_lines_prop_segments_2">02平行線截比例線2</a>
                     </div>
                 </div>
         
                 <div class="social-group">
                     <h3 style="text-align: center;">1-3 相似多邊形</h3>
                     <div class="btn-group">
-                        <a href="math/G9S1-1-3-2.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-math-s1-ch1_3-polygon_scaling')">01多邊形的縮放</a>
-                        <a href="math/G9S1-1-3-4.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-math-s1-ch1_3-similarity_correspondence')">02相似對應關係</a>                           
-                        <a href="math/G9S1-1-3-567.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-math-s1-ch1_3-triangle_similarity')">03三角形相似判別</a>
+                        <a href="math/G9S1-1-3-2.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_3-polygon_scaling">01多邊形的縮放</a>
+                        <a href="math/G9S1-1-3-4.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_3-similarity_correspondence">02相似對應關係</a>                           
+                        <a href="math/G9S1-1-3-567.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_3-triangle_similarity">03三角形相似判別</a>
                     </div>
                 </div>
                 <div class="social-group">
                     <h3 style="text-align: center;">1-4 相似三角應用和三角比</h3>
                     <div class="btn-group">                           
-                        <a href="math/G9S1-1-4-12.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-math-s1-ch1_4')">01對應邊的比</a>   
-                        <a href="https://wordwall.net/play/80628/213/992" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-math-s1-ch1_4')">02特殊邊長比1</a>
-                        <a href="https://wordwall.net/play/80628/609/444" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-math-s1-ch1_4')">03特殊邊長比2</a>
-                        <a href="math/G9S1-1-4-sincos.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-math-s1-ch1_4')">04 sin/cos/tan</a>   
+                        <a href="math/G9S1-1-4-12.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_4">01對應邊的比</a>   
+                        <a href="https://wordwall.net/play/80628/213/992" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_4">02特殊邊長比1</a>
+                        <a href="https://wordwall.net/play/80628/609/444" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_4">03特殊邊長比2</a>
+                        <a href="math/G9S1-1-4-sincos.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_4">04 sin/cos/tan</a>   
                     </div>
                 </div>
 
@@ -103,45 +94,43 @@
         </div>
     </div>
 
-        <div id="section2" class="section-content">   
+    <div id="section2" class="section-content">   
         <div class="social-container">
             <div class="single-row">
                 <div class="social-group">
                     <h3 style="text-align: center;">2-1點、線、圓</h3>
                     <div class="btn-group">                           
-                        <a href="math/G9S1-2-1-1&2.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-math-s1-ch2_1')">01圓定義、02扇形</a>   
-                        <a href="https://gemini.google.com/share/87e86b3adadd" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-math-s1-ch2_1')">03扇形、04點圓位置</a>   
-                        <a href="https://app.edcafe.ai/quiz/691698d93a294dcdcfafddfa" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-math-s1-ch2_1')">點線圓位置測驗</a>   
+                        <a href="math/G9S1-2-1-1&2.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">01圓定義、02扇形</a>   
+                        <a href="https://gemini.google.com/share/87e86b3adadd" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">03扇形、04點圓位置</a>   
+                        <a href="https://app.edcafe.ai/quiz/691698d93a294dcdcfafddfa" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">點線圓位置測驗</a>   
                     </div>
                 </div>
 
                 <div class="social-group">
                     <h3 style="text-align: center;">2-2圓心角與圓周角</h3>
                     <div class="btn-group">                           
-                        <a href="math/G9S1-2-2-1.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-math-s1-ch2_1')">01圓心角與弧的度數</a>   
-                        <a href="math/G9S1-2-2-2.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-math-s1-ch2_1')">02弧的度數求圓周角</a>   
-                        <a href="math/G9S1-2-2-3.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-math-s1-ch2_1')">03圓周角求弧的度數</a>   
-                        <a href="math/G9S1-2-2-4.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-math-s1-ch2_1')">04平行線截等弧</a>   
-                        <a href="math/G9S1-2-2-5.html" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-math-s1-ch2_1')">05圓內接四邊形對角互補</a>   
+                        <a href="math/G9S1-2-2-1.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">01圓心角與弧的度數</a>   
+                        <a href="math/G9S1-2-2-2.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">02弧的度數求圓周角</a>   
+                        <a href="math/G9S1-2-2-3.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">03圓周角求弧的度數</a>   
+                        <a href="math/G9S1-2-2-4.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">04平行線截等弧</a>   
+                        <a href="math/G9S1-2-2-5.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">05圓內接四邊形對角互補</a>   
                     </div>
                 </div>
-
-                </div>
+            </div>
         </div>
     </div>
     
-    <script src="main.js"></script>
+    <div id="section3" class="section-content">
+        <div class="social-container">
+             <h3 style="text-align:center; margin-top:20px;">第3章 內容準備中...</h3>
+        </div>
+    </div>
 
-<script src="tracking.js"></script>
+    <script src="main.js"></script>
+    <script src="tracking.js"></script>
 </body>
 </html>
 <footer>
-    <a href="index.html">
-        <img src="images/dog.png" alt="Logo" style="height: 100px; vertical-align: middle; margin-right: 10px;">
-    </a>
-    <br>
+
     <p style="display: inline;">Created by Chu Pei Yi</p>
-
 </footer>
-
-
