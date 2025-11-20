@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WMNZ6FESH7"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-WMNZ6FESH7');
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>閱讀測驗4</title>
@@ -17,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="reading.css">
-</head>
+    </head>
 <body>
     <div class="page-container">
         <h1>閱讀測驗4</h1>
@@ -35,25 +27,24 @@
                 <div id="article-container">
                     <h2 id="article-title" style="text-align:center; margin-top:0;"></h2>
                     <div id="article-content">
-                        <!-- Article content loads here -->
-                    </div>
+                        </div>
                      <span id="click-to-continue-prompt">點擊此處開始閱讀或繼續...</span>
                 </div>
             </div>
 
             <div class="right-panel" id="quiz-panel">
                 <div id="questions-container">
-                    <!-- Questions load here, each with its own controls -->
-                </div>
+                    </div>
                 <div id="overall-feedback-area" style="text-align:center; margin-top: 20px;">
-                    <!-- For final message when all questions are done -->
-                </div>
+                    </div>
             </div>
         </div>
     </div>
 
+    <script src="tracking.js"></script>
+
     <script>
-        // --- Data Store for Multiple Articles (包含 explanation) ---
+        // --- Data Store ---
         const readingExercises = {
             "pineapple-cake": {
                 title: "不為人知的鳳梨酥",
@@ -211,15 +202,12 @@
         };
         // --- End Data Store ---
 
-        // --- State Variables ---
         let currentArticleId = '';
-        let currentQuestionStates = {}; // To track answered state for each question
+        let currentQuestionStates = {};
         let currentSentenceIndex = 0;
         let readingFinished = false;
         let sentences = [];
-        // --- End State Variables ---
 
-        // --- DOM Element References ---
         const articleSelect = document.getElementById('articleSelect');
         const articleDisplayArea = document.getElementById('article-container');
         const articleContentDiv = document.getElementById('article-content');
@@ -228,17 +216,12 @@
         const quizPanel = document.getElementById('quiz-panel');
         const questionsContainer = document.getElementById('questions-container');
         const overallFeedbackArea = document.getElementById('overall-feedback-area');
-        // --- End DOM Element References ---
 
-        // --- Core Functions ---
         function loadArticle(articleId) {
-            if (!readingExercises[articleId]) {
-                console.error("Article data not found for ID:", articleId);
-                return;
-            }
+            if (!readingExercises[articleId]) return;
             currentArticleId = articleId;
             const data = readingExercises[currentArticleId];
-            currentQuestionStates = {}; // Reset answered states for new article
+            currentQuestionStates = {};
 
             currentSentenceIndex = 0;
             readingFinished = false;
@@ -246,7 +229,7 @@
 
             articleContentDiv.innerHTML = '';
             questionsContainer.innerHTML = '';
-            overallFeedbackArea.innerHTML = ''; // Clear overall feedback
+            overallFeedbackArea.innerHTML = '';
             clearHighlights();
 
             articleTitleEl.textContent = data.title;
@@ -264,17 +247,12 @@
 
         function displayNextSentence() {
             if (readingFinished || !sentences.length) return;
-
             if (currentSentenceIndex < sentences.length) {
-                if (currentSentenceIndex === 0) {
-                    clickPrompt.style.display = 'none';
-                }
+                if (currentSentenceIndex === 0) clickPrompt.style.display = 'none';
                 sentences[currentSentenceIndex].style.display = '';
                 sentences[currentSentenceIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 currentSentenceIndex++;
-                if (currentSentenceIndex === sentences.length) {
-                    finishReadingSession();
-                }
+                if (currentSentenceIndex === sentences.length) finishReadingSession();
             }
         }
 
@@ -294,21 +272,23 @@
                 const questionBlock = document.createElement('div');
                 questionBlock.classList.add('question-block');
                 questionBlock.id = qData.id;
-                questionBlock.dataset.questionIndex = index; // Store index for navigation
+                questionBlock.dataset.questionIndex = index;
 
                 const questionHeader = document.createElement('h3');
-                const questionTextSpan = document.createElement('span');
-                questionTextSpan.textContent = `${index + 1}. ${qData.text}`;
+                questionHeader.innerHTML = `<span>${index + 1}. ${qData.text}</span>`;
 
                 const hintBtn = document.createElement('button');
                 hintBtn.classList.add('hint-button');
                 hintBtn.textContent = "提示";
+                // 加入追蹤屬性
+                hintBtn.setAttribute('data-track-cat', 'quiz_hint');
+                hintBtn.setAttribute('data-track-lbl', qData.id);
+                
                 hintBtn.onclick = (e) => {
                     e.stopPropagation();
                     showHint(qData.id);
                 };
 
-                questionHeader.appendChild(questionTextSpan);
                 questionHeader.appendChild(hintBtn);
                 questionBlock.appendChild(questionHeader);
 
@@ -320,8 +300,12 @@
                     optionBox.dataset.value = key;
                     optionBox.dataset.questionId = qData.id;
                     optionBox.textContent = `(${key}) ${qData.options[key]}`;
+                    
+                    // 加入追蹤屬性
+                    optionBox.setAttribute('data-track-cat', 'quiz_option');
+                    optionBox.setAttribute('data-track-lbl', `${qData.id}_option_${key}`);
+                    
                     optionBox.onclick = (e) => {
-                        // Only allow selection if not already checked for this question
                         if (!currentQuestionStates[qData.id] || !currentQuestionStates[qData.id].checked) {
                             selectOption(e.currentTarget);
                         }
@@ -330,30 +314,36 @@
                 }
                 questionBlock.appendChild(optionsList);
 
-                // Single question check button
                 const singleCheckBtn = document.createElement('button');
                 singleCheckBtn.classList.add('single-check-btn');
                 singleCheckBtn.textContent = "檢查本題答案";
                 singleCheckBtn.dataset.questionId = qData.id;
+                
+                // 加入追蹤屬性
+                singleCheckBtn.setAttribute('data-track-cat', 'quiz_check');
+                singleCheckBtn.setAttribute('data-track-lbl', qData.id);
+
                 singleCheckBtn.onclick = () => checkSingleAnswer(qData.id);
                 questionBlock.appendChild(singleCheckBtn);
 
-                // Explanation area (initially hidden)
                 const explanationDiv = document.createElement('div');
                 explanationDiv.classList.add('explanation-area');
                 explanationDiv.id = `exp-${qData.id}`;
                 explanationDiv.style.display = 'none';
                 questionBlock.appendChild(explanationDiv);
 
-                // Next question button (initially hidden)
                 const nextBtn = document.createElement('button');
                 nextBtn.classList.add('next-question-btn');
                 nextBtn.textContent = "下一題";
                 nextBtn.id = `next-${qData.id}`;
                 nextBtn.style.display = 'none';
+                
+                // 加入追蹤屬性
+                nextBtn.setAttribute('data-track-cat', 'quiz_nav');
+                nextBtn.setAttribute('data-track-lbl', `next_after_${qData.id}`);
+
                 nextBtn.onclick = () => goToNextQuestion(qData.id);
                 questionBlock.appendChild(nextBtn);
-
 
                 const pisaNote = document.createElement('p');
                 pisaNote.classList.add('pisa-note');
@@ -368,9 +358,7 @@
         function selectOption(selectedBox) {
             const questionId = selectedBox.dataset.questionId;
             const optionsForThisQuestion = questionsContainer.querySelectorAll(`.option-box[data-question-id="${questionId}"]`);
-            optionsForThisQuestion.forEach(box => {
-                box.classList.remove('selected-option');
-            });
+            optionsForThisQuestion.forEach(box => box.classList.remove('selected-option'));
             selectedBox.classList.add('selected-option');
         }
 
@@ -386,37 +374,26 @@
                 return;
             }
 
-            currentQuestionStates[questionId] = { checked: true }; // Mark as checked
-
-            // Disable further option changes for this question
+            currentQuestionStates[questionId] = { checked: true };
             const allOptionsForThisQ = questionsContainer.querySelectorAll(`.option-box[data-question-id="${questionId}"]`);
             allOptionsForThisQ.forEach(opt => opt.style.pointerEvents = 'none');
-
 
             const userAnswer = selectedOptionBox.dataset.value;
             const correctAnswerBox = questionsContainer.querySelector(`.option-box[data-question-id="${questionId}"][data-value="${qData.answer}"]`);
 
-            // Clear previous feedback classes on options for this question
-            allOptionsForThisQ.forEach(box => {
-                box.classList.remove('feedback-correct-option', 'feedback-incorrect-user-choice');
-            });
+            allOptionsForThisQ.forEach(box => box.classList.remove('feedback-correct-option', 'feedback-incorrect-user-choice'));
 
             if (userAnswer === qData.answer) {
                 selectedOptionBox.classList.add('feedback-correct-option');
             } else {
                 selectedOptionBox.classList.add('feedback-incorrect-user-choice');
-                if (correctAnswerBox) {
-                    correctAnswerBox.classList.add('feedback-correct-option');
-                }
+                if (correctAnswerBox) correctAnswerBox.classList.add('feedback-correct-option');
             }
 
-            // Show explanation
             explanationDiv.innerHTML = `<p><strong>詳解：</strong>${qData.explanation}</p>`;
             explanationDiv.style.display = 'block';
             explanationDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-
-            // Hide check button, show next button
             if(singleCheckBtn) singleCheckBtn.style.display = 'none';
             if(nextBtn) nextBtn.style.display = 'inline-block';
 
@@ -430,11 +407,8 @@
             if (currentIndex < qDataArray.length - 1) {
                 const nextQuestionId = qDataArray[currentIndex + 1].id;
                 const nextQuestionBlock = document.getElementById(nextQuestionId);
-                if (nextQuestionBlock) {
-                    nextQuestionBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
+                if (nextQuestionBlock) nextQuestionBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
             } else {
-                // This was the last question
                 overallFeedbackArea.innerHTML = "<p style='font-weight:bold; color:green;'>您已完成所有題目！</p>";
                 overallFeedbackArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
@@ -456,7 +430,6 @@
             }
         }
 
-
         function clearHighlights() {
             const highlighted = articleContentDiv.querySelectorAll('.highlight');
             highlighted.forEach(el => el.classList.remove('highlight'));
@@ -464,9 +437,8 @@
 
         function showHint(questionId) {
             clearHighlights();
-            let qData = null;
             const currentQuestions = readingExercises[currentArticleId].questionsData;
-            qData = currentQuestions.find(q => q.id === questionId);
+            const qData = currentQuestions.find(q => q.id === questionId);
 
             if (qData && qData.hintSentenceIndices) {
                 let firstHintEl = null;
@@ -475,32 +447,25 @@
                     if (sentenceEl) {
                         sentenceEl.classList.add('highlight');
                         if (i === 0) firstHintEl = sentenceEl;
-                    } else {
-                        console.warn(`Hint element with index ${index} not found for question ${questionId}`);
                     }
                 });
-                if (firstHintEl) {
-                    firstHintEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-            } else {
-                 console.warn(`Hint data not found for question ID: ${questionId}`);
+                if (firstHintEl) firstHintEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         }
-        // --- End Core Functions ---
 
-        // --- Event Listeners ---
         articleSelect.addEventListener('change', (event) => {
             loadArticle(event.target.value);
+            // 手動觸發切換文章的追蹤
+            if (typeof trackEvent === 'function') {
+                trackEvent('button_click', 'article_select', event.target.value);
+            }
         });
-        articleDisplayArea.addEventListener('click', displayNextSentence);
-        // Removed overall checkAnswersBtn event listener
-        // --- End Event Listeners ---
 
-        // --- Initial Load ---
+        articleDisplayArea.addEventListener('click', displayNextSentence);
+
         document.addEventListener('DOMContentLoaded', () => {
             loadArticle(articleSelect.value);
         });
-        // --- End Initial Load ---
     </script>
 </body>
 </html>

@@ -10,38 +10,29 @@
     <link rel="icon" href="images/dog.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
-
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5BBHYN77N9"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-5BBHYN77N9');
-    </script>
-</head>
+    </head>
 <body>
     <header class="navbar">
         <div class="logo">SPED</div>
         <nav>
             <ul class="nav-links">
-                <li><a href="start.html" onclick="trackEvent('button_click', 'navbar_link', 'home')">HOME</a></li>
-                <li><a href="tt.html" onclick="trackEvent('button_click', 'navbar_link', 'emotion_log')">情緒紀錄</a></li>
-                <li><a href="7.html" onclick="trackEvent('button_click', 'subject_nav', 'g7-math')">7數</a></li>
-                <li><a href="8.html" onclick="trackEvent('button_click', 'subject_nav', 'g8-math')">8數</a></li>
-                <li><a href="9.html" onclick="trackEvent('button_click', 'subject_nav', 'g9-math')">9數</a></li>
-                <li><a href="7eng.html" onclick="trackEvent('button_click', 'subject_nav', 'g7-english')">7英</a></li>
-                <li><a href="8eng.html" onclick="trackEvent('button_click', 'subject_nav', 'g8-english')">8英</a></li>
-                <li><a href="9eng.html" onclick="trackEvent('button_click', 'subject_nav', 'g9-english')">9英</a></li>
-                <li><a href="7ch.html" onclick="trackEvent('button_click', 'subject_nav', 'g7-chinese')">7國</a></li>
-                <li><a href="8ch.html" onclick="trackEvent('button_click', 'subject_nav', 'g8-chinese')">8國</a></li>
-                <li><a href="9ch.html" onclick="trackEvent('button_click', 'subject_nav', 'g9-chinese')">9國</a></li>
-                <li><a href="bigtest.html" onclick="trackEvent('button_click', 'category_nav', 'exam_prep')">會考專區</a></li>
-                <li><a href="learningstrategy.html" onclick="trackEvent('button_click', 'category_nav', 'learning_strategy')">學習策略</a></li>
-                <li><a href="socialskill.html" onclick="trackEvent('button_click', 'category_nav', 'social_skills')">社會技巧</a></li>
+                <li><a href="index.html" data-track-cat="navbar_link" data-track-lbl="home">HOME</a></li>
+                <li><a href="tt.html" data-track-cat="navbar_link" data-track-lbl="emotion_log">情緒紀錄</a></li>
+                <li><a href="7.html" data-track-cat="subject_nav" data-track-lbl="g7-math">7數</a></li>
+                <li><a href="8.html" data-track-cat="subject_nav" data-track-lbl="g8-math">8數</a></li>
+                <li><a href="9.html" data-track-cat="subject_nav" data-track-lbl="g9-math">9數</a></li>
+                <li><a href="7eng.html" data-track-cat="subject_nav" data-track-lbl="g7-english">7英</a></li>
+                <li><a href="8eng.html" data-track-cat="subject_nav" data-track-lbl="g8-english">8英</a></li>
+                <li><a href="9eng.html" data-track-cat="subject_nav" data-track-lbl="g9-english">9英</a></li>
+                <li><a href="7ch.html" data-track-cat="subject_nav" data-track-lbl="g7-chinese">7國</a></li>
+                <li><a href="8ch.html" data-track-cat="subject_nav" data-track-lbl="g8-chinese">8國</a></li>
+                <li><a href="9ch.html" data-track-cat="subject_nav" data-track-lbl="g9-chinese">9國</a></li>
+                <li><a href="bigtest.html" data-track-cat="category_nav" data-track-lbl="exam_prep">會考專區</a></li>
+                <li><a href="learningstrategy.html" data-track-cat="category_nav" data-track-lbl="learning_strategy">學習策略</a></li>
+                <li><a href="socialskill.html" data-track-cat="category_nav" data-track-lbl="social_skills">社會技巧</a></li>
             </ul>
         </nav>
-        <div class="menu-toggle" onclick="toggleMenu()">
+        <div class="menu-toggle">
             <i class="fas fa-bars"></i>
         </div>
     </header>
@@ -52,72 +43,70 @@
 
     <div style="text-align:center; margin-top: 40px;">
         <div class="button-container">
-            <button class="section-button" onclick="showSection('chapter1', this); trackEvent('button_click', 'semester_select', 'g9-ch-s1')">9上</button>
-            <button class="section-button" onclick="showSection('chapter2', this); trackEvent('button_click', 'semester_select', 'g9-ch-s2')">9下</button>
+            <button class="section-button" onclick="showSection('chapter1', this)" data-track-cat="semester_select" data-track-lbl="g9-ch-s1">9上</button>
+            <button class="section-button" onclick="showSection('chapter2', this)" data-track-cat="semester_select" data-track-lbl="g9-ch-s2">9下</button>
         </div>
     </div>
 
-<div id="chapter1" class="section-content active-section"> 
-    <div class="social-container">
-        <div class="single-row">
-            <div class="social-group">
-                <h3 style="text-align: center;">按下面按鈕︰</h3>
-                <div class="btn-group">
-                    <a href="https://sites.google.com/view/specialchu/%E5%9C%8B%E6%96%87/9%E4%B8%8A%E5%9C%8B%E6%96%87?authuser=0" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-ch-s1-main_link')">9上國文</a>
+    <div id="chapter1" class="section-content active-section"> 
+        <div class="social-container">
+            <div class="single-row">
+                <div class="social-group">
+                    <h3 style="text-align: center;">按下面按鈕︰</h3>
+                    <div class="btn-group">
+                        <a href="https://sites.google.com/view/specialchu/%E5%9C%8B%E6%96%87/9%E4%B8%8A%E5%9C%8B%E6%96%87?authuser=0" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-ch-s1-main_link">9上國文</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<div id="chapter2" class="section-content"> 
-    <div class="social-container">
-        <div class="single-row">
-            <div class="social-group">
-                <h3 style="text-align: center;">一、一棵開花的樹</h3>
-                <div class="btn-group">
-                    <a href="https://quizlet.com/tw/784044206/%E4%B9%9D%E4%B8%8B%E5%9C%8B%E6%96%8701%E4%B8%80%E6%A3%B5%E9%96%8B%E8%8A%B1%E7%9A%84%E6%A8%B9-flash-cards/?i=3lqzny&x=1jqt" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-ch-s2-ch1-notes')">01注釋</a>
-                    <a href="https://wordwall.net/play/66885/072/874" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-ch-s2-ch1-text_ordering')">02課文排列</a>
-                    <a href="https://oneexam.oneclass.com.tw/quiz/71436294" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-ch-s2-ch1-mcq')">03選擇題</a>
+    <div id="chapter2" class="section-content"> 
+        <div class="social-container">
+            <div class="single-row">
+                <div class="social-group">
+                    <h3 style="text-align: center;">一、一棵開花的樹</h3>
+                    <div class="btn-group">
+                        <a href="https://quizlet.com/tw/784044206/%E4%B9%9D%E4%B8%8B%E5%9C%8B%E6%96%8701%E4%B8%80%E6%A3%B5%E9%96%8B%E8%8A%B1%E7%9A%84%E6%A8%B9-flash-cards/?i=3lqzny&x=1jqt" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-ch-s2-ch1-notes">01注釋</a>
+                        <a href="https://wordwall.net/play/66885/072/874" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-ch-s2-ch1-text_ordering">02課文排列</a>
+                        <a href="https://oneexam.oneclass.com.tw/quiz/71436294" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-ch-s2-ch1-mcq">03選擇題</a>
+                    </div>
+                </div>
+
+                <div class="social-group">
+                    <h3 style="text-align: center;">二、曲選</h3>
+                    <div class="btn-group">
+                        <a href="https://quizlet.com/tw/784044385/%E4%B9%9D%E4%B8%8B%E5%9C%8B%E6%96%8702%E6%9B%B2%E9%81%B8-flash-cards/?i=3lqzny&x=1jqt" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-ch-s2-ch2-notes">01注釋</a>
+                        <a href="https://quizlet.com/tw/884096552/%E4%B9%9D%E4%B8%8B%E5%9C%8B%E6%96%8702%E6%9B%B2%E9%81%B8-%E6%B2%89%E9%86%89%E6%9D%B1%E9%A2%A8%E6%BC%81%E7%88%B6%E8%A9%9E-flash-cards/?i=3lqzny&x=1qqt" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-ch-s2-ch2-translation_1">02翻譯一</a>
+                        <a href="https://quizlet.com/tw/884096934/%E4%B9%9D%E4%B8%8A%E5%9C%8B%E6%96%8702%E6%9B%B2%E9%81%B8-%E5%A4%A9%E6%B7%A8%E6%B2%99%E7%A7%8B%E6%80%9D-flash-cards/?i=3lqzny&x=1jqt" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-ch-s2-ch2-translation_2">03翻譯二</a>
+                        <a href="https://oneexam.oneclass.com.tw/quiz/46549714" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-ch-s2-ch2-mcq">04選擇題</a>
+                    </div>
+                </div>
+
+                <div class="social-group">
+                    <h3 style="text-align: center;">三、人間情分</h3>
+                    <div class="btn-group">
+                        <a href="https://quizlet.com/tw/784034479/%E4%B9%9D%E4%B8%8B%E5%9C%8B%E6%96%8703%E4%BA%BA%E9%96%93%E6%83%85%E5%88%86-flash-cards/?i=3lqzny&x=1jqt" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-ch-s2-ch3-notes">01注釋</a>
+                        <a href="https://wordwall.net/play/70034/329/492" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-ch-s2-ch3-sentence_ordering">02句型排列</a>
+                        <a href="https://oneexam.oneclass.com.tw/quiz/25995119" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-ch-s2-ch3-mcq">03選擇題</a>
+                    </div>
                 </div>
             </div>
 
-            <div class="social-group">
-                <h3 style="text-align: center;">二、曲選</h3>
-                <div class="btn-group">
-                    <a href="https://quizlet.com/tw/784044385/%E4%B9%9D%E4%B8%8B%E5%9C%8B%E6%96%8702%E6%9B%B2%E9%81%B8-flash-cards/?i=3lqzny&x=1jqt" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-ch-s2-ch2-notes')">01注釋</a>
-                    <a href="https://quizlet.com/tw/884096552/%E4%B9%9D%E4%B8%8B%E5%9C%8B%E6%96%8702%E6%9B%B2%E9%81%B8-%E6%B2%89%E9%86%89%E6%9D%B1%E9%A2%A8%E6%BC%81%E7%88%B6%E8%A9%9E-flash-cards/?i=3lqzny&x=1qqt" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-ch-s2-ch2-translation_1')">02翻譯一</a>
-                    <a href="https://quizlet.com/tw/884096934/%E4%B9%9D%E4%B8%8A%E5%9C%8B%E6%96%8702%E6%9B%B2%E9%81%B8-%E5%A4%A9%E6%B7%A8%E6%B2%99%E7%A7%8B%E6%80%9D-flash-cards/?i=3lqzny&x=1jqt" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-ch-s2-ch2-translation_2')">03翻譯二</a>
-                    <a href="https://oneexam.oneclass.com.tw/quiz/46549714" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-ch-s2-ch2-mcq')">04選擇題</a>
-                </div>
-            </div>
-
-            <div class="social-group">
-                <h3 style="text-align: center;">三、人間情分</h3>
-                <div class="btn-group">
-                    <a href="https://quizlet.com/tw/784034479/%E4%B9%9D%E4%B8%8B%E5%9C%8B%E6%96%8703%E4%BA%BA%E9%96%93%E6%83%85%E5%88%86-flash-cards/?i=3lqzny&x=1jqt" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-ch-s2-ch3-notes')">01注釋</a>
-                    <a href="https://wordwall.net/play/70034/329/492" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-ch-s2-ch3-sentence_ordering')">02句型排列</a>
-                    <a href="https://oneexam.oneclass.com.tw/quiz/25995119" target="_blank" class="btn" onclick="trackEvent('button_click', 'resource_link', 'g9-ch-s2-ch3-mcq')">03選擇題</a>
-                </div>
+            <div class="single-row">           
+                <a href="9ch2.html" target="_blank" class="image-button" data-track-cat="resource_link" data-track-lbl="g9-ch-s2-ch2-main_page">
+                    <img src="images/oldtree.jpg" alt="01注釋背景">
+                    <span class="overlay-text">二、曲選</span>
+                </a>
             </div>
         </div>
-
-        <div class="single-row">           
-            <a href="9ch2.html" target="_blank" class="image-button" onclick="trackEvent('button_click', 'resource_link', 'g9-ch-s2-ch2-main_page')">
-                <img src="images/oldtree.jpg" alt="01注釋背景">
-                <span class="overlay-text">二、曲選</span>
-            </a>
     </div>
-</div>
-<script src="main.js"></script>
 
-<script src="tracking.js"></script>
+    <script src="main.js"></script>
+    <script src="tracking.js"></script>
 </body>
-</html>
 <footer>
-    <a href="index.html">
-        <img src="images/dog.png" alt="Logo" style="height: 200px; vertical-align: middle; margin-right: 10px;">
-    </a>
     <br>
     <p style="display: inline;">Created by Chu Pei Yi</p>
 </footer>
+</html>

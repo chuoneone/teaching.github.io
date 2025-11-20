@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WMNZ6FESH7"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-WMNZ6FESH7');
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>學習策略</title>
@@ -18,123 +10,117 @@
     <link rel="icon" href="images/dog.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
-</head>
+    </head>
 
-  
 <body>
-    <!-- 頂部導覽列 -->
     <header class="navbar">
         <div class="logo">SPED</div>
         <nav>
             <ul class="nav-links">
-                <li><a href="start.html">HOME</a></li>
-		        <li><a href="tt.html">情緒紀錄</a></li>
-                <li><a href="7.html">7數</a></li>
-                <li><a href="8.html">8數</a></li>
-                <li><a href="9.html">9數</a></li>
-                <li><a href="7eng.html">7英</a></li>
-                <li><a href="8eng.html">8英</a></li>
-                <li><a href="9eng.html">9英</a></li>
-                <li><a href="7ch.html">7國</a></li>
-                <li><a href="8ch.html">8國</a></li>
-                <li><a href="9ch.html">9國</a></li>
-                <li><a href="bigtest.html">會考專區</a></li>
-                <li><a href="learningstrategy.html">學習策略</a></li>                
+                <li><a href="index.html" data-track-cat="navbar_link" data-track-lbl="home">HOME</a></li>
+                <li><a href="tt.html" data-track-cat="navbar_link" data-track-lbl="emotion_log">情緒紀錄</a></li>
+                <li><a href="7.html" data-track-cat="subject_nav" data-track-lbl="g7-math">7數</a></li>
+                <li><a href="8.html" data-track-cat="subject_nav" data-track-lbl="g8-math">8數</a></li>
+                <li><a href="9.html" data-track-cat="subject_nav" data-track-lbl="g9-math">9數</a></li>
+                <li><a href="7eng.html" data-track-cat="subject_nav" data-track-lbl="g7-english">7英</a></li>
+                <li><a href="8eng.html" data-track-cat="subject_nav" data-track-lbl="g8-english">8英</a></li>
+                <li><a href="9eng.html" data-track-cat="subject_nav" data-track-lbl="g9-english">9英</a></li>
+                <li><a href="7ch.html" data-track-cat="subject_nav" data-track-lbl="g7-chinese">7國</a></li>
+                <li><a href="8ch.html" data-track-cat="subject_nav" data-track-lbl="g8-chinese">8國</a></li>
+                <li><a href="9ch.html" data-track-cat="subject_nav" data-track-lbl="g9-chinese">9國</a></li>
+                <li><a href="bigtest.html" data-track-cat="category_nav" data-track-lbl="exam_prep">會考專區</a></li>
+                <li><a href="learningstrategy.html" data-track-cat="category_nav" data-track-lbl="learning_strategy">學習策略</a></li>                
+                <li><a href="socialskill.html" data-track-cat="category_nav" data-track-lbl="social_skills">社會技巧</a></li>
             </ul>
-
         </nav>
-        <div class="menu-toggle" onclick="toggleMenu()">
+        <div class="menu-toggle">
             <i class="fas fa-bars"></i>
         </div>
     </header>
 
-
     <div class="section-title text-lg font-bold">
         <i class="fas fa-compass mr-2"></i> 學習策略
-      </div>
+    </div>
       
-          <div style="text-align:center; margin-top: 40px;">
-            <button class="section-button" onclick="showSection('section1', this)">1.閱讀區</button>
-            <button class="section-button" onclick="showSection('section2', this)">2.專注力</button>
-            <button class="section-button" onclick="showSection('section3', this)">3.影片區</button>
+    <div style="text-align:center; margin-top: 40px;">
+            <button class="section-button" onclick="showSection('section1', this)" data-track-cat="category_select" data-track-lbl="strategy-reading">1.閱讀區</button>
+            <button class="section-button" onclick="showSection('section2', this)" data-track-cat="category_select" data-track-lbl="strategy-focus">2.專注力</button>
+            <button class="section-button" onclick="showSection('section3', this)" data-track-cat="category_select" data-track-lbl="strategy-video">3.影片區</button>
     </div>
+
     <div id="section1" class="section-content active-section">
-    <div class="social-container">
-        <div class="single-row">
-            <div class="social-group">
-                <h3 style="text-align: center;">閱讀測驗</h3>
-                <div class="btn-group">
-                    <a href="https://chuone.my.canva.site/chargespot" target="_blank" class="btn">閱讀1</a>
-                    <a href="https://chuone.my.canva.site/book-9-10" target="_blank" class="btn">閱讀2</a>
-		    <a href="https://chuone.my.canva.site/book11" target="_blank" class="btn">閱讀3</a>
-                    <a href="reading1.html" target="_blank" class="btn">閱讀4</a>               
-		    <a href="https://chuone.my.canva.site/reading5" target="_blank" class="btn">閱讀5</a>  
+        <div class="social-container">
+            <div class="single-row">
+                <div class="social-group">
+                    <h3 style="text-align: center;">閱讀測驗</h3>
+                    <div class="btn-group">
+                        <a href="https://chuone.my.canva.site/chargespot" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="strategy-reading-1">閱讀1</a>
+                        <a href="https://chuone.my.canva.site/book-9-10" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="strategy-reading-2">閱讀2</a>
+                        <a href="https://chuone.my.canva.site/book11" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="strategy-reading-3">閱讀3</a>
+                        <a href="reading1.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="strategy-reading-4">閱讀4</a>               
+                        <a href="https://chuone.my.canva.site/reading5" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="strategy-reading-5">閱讀5</a>  
+                    </div>
                 </div>
-            </div>
-    
-    
-            <div class="social-group">                 
-                <h3 style="text-align: center;">思考力訓練</h3>
-                <div class="btn-group">
-                    <a href="https://wordwall.net/play/71826/122/618" target="_blank" class="btn">水平vs垂直思考</a>
-                    <a href="https://wordwall.net/play/72277/218/579" target="_blank" class="btn">若P則Q</a>
-                    <a href="https://www.gimkit.com/practice/6631a12d8ce39001e55860e4" target="_blank" class="btn">稻草人謬誤</a>
-                    <a href="https://wordwall.net/play/72930/890/401" target="_blank" class="btn">合理不等於正確</a>
-                </div>
-            </div>   
-        </div>       
-     </div>
- </div>
-
-<div id="section2" class="section-content">
-    <div class="social-container">
-        <div class="single-row">   
-            <div class="social-group">                
-                <h3 style="text-align: center;">專注力訓練</h3>
-                <div class="btn-group">
-                    <a href="https://math-exercise.johnwu.cc/zh-tw/schulte-table/" target="_blank" class="btn">舒爾特方格量表</a>
-                    <a href="https://digitalmaster.knsh.com.tw/ju/math/wake-up/" target="_blank" class="btn">腦力活化</a>
-               </div>
-            </div>   
-            <div class="social-group">                    
-                <h3 style="text-align: center;">國中學習策略量表</h3>
-                <div class="btn-group">
-                    <a href="https://cbsc.mytest.com.tw/SelfLS_j/Default.aspx" target="_blank" class="btn">線上施測</a>
-                    帳號︰LSj000019
-                    <br>
-                    <br>
-                    密碼︰efx7g4    
-                </div>
-            </div>           
-        </div>       
+        
+                <div class="social-group">                 
+                    <h3 style="text-align: center;">思考力訓練</h3>
+                    <div class="btn-group">
+                        <a href="https://wordwall.net/play/71826/122/618" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="strategy-thinking-horizontal_vertical">水平vs垂直思考</a>
+                        <a href="https://wordwall.net/play/72277/218/579" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="strategy-thinking-p_implies_q">若P則Q</a>
+                        <a href="https://www.gimkit.com/practice/6631a12d8ce39001e55860e4" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="strategy-thinking-strawman">稻草人謬誤</a>
+                        <a href="https://wordwall.net/play/72930/890/401" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="strategy-thinking-reasonable_not_correct">合理不等於正確</a>
+                    </div>
+                </div>   
+            </div>       
+         </div>
     </div>
- </div>
 
-     <div id="section3" class="section-content">
-    <div class="social-container">
-        <div class="single-row">  
-            <div class="social-group">                 
-                <h3 style="text-align: center;">思考力訓練</h3>
-                <div class="btn-group">
-                    <a href="https://www.youtube.com/watch?v=6RtmRAYY74M" target="_blank" class="btn">水平vs垂直思考</a>
-                    <a href="https://www.youtube.com/watch?v=lpHLk3aKbI4" target="_blank" class="btn">若P則Q</a>
-                    <a href="https://www.youtube.com/watch?v=8p2q5o0paRA" target="_blank" class="btn">稻草人謬誤</a>
-                    <a href="https://www.youtube.com/watch?v=ISjSdBwTffU" target="_blank" class="btn">合理不等於正確</a>
-                </div>
-            </div>   
-        </div>       
-     </div>
- </div>
+    <div id="section2" class="section-content">
+        <div class="social-container">
+            <div class="single-row">   
+                <div class="social-group">                
+                    <h3 style="text-align: center;">專注力訓練</h3>
+                    <div class="btn-group">
+                        <a href="https://math-exercise.johnwu.cc/zh-tw/schulte-table/" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="strategy-focus-schulte">舒爾特方格量表</a>
+                        <a href="https://digitalmaster.knsh.com.tw/ju/math/wake-up/" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="strategy-focus-brain_activation">腦力活化</a>
+                   </div>
+                </div>   
+                <div class="social-group">                    
+                    <h3 style="text-align: center;">國中學習策略量表</h3>
+                    <div class="btn-group">
+                        <a href="https://cbsc.mytest.com.tw/SelfLS_j/Default.aspx" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="strategy-focus-assessment">線上施測</a>
+                        <div style="margin-top: 10px; padding: 10px; background: #f0f0f0; border: 1px solid #ccc; font-size: 0.9em;">
+                            帳號︰LSj000019<br>
+                            密碼︰efx7g4
+                        </div>
+                    </div>
+                </div>           
+            </div>       
+        </div>
+    </div>
 
-   
-<script src="main.js"></script>
+    <div id="section3" class="section-content">
+        <div class="social-container">
+            <div class="single-row">  
+                <div class="social-group">                 
+                    <h3 style="text-align: center;">思考力訓練</h3>
+                    <div class="btn-group">
+                        <a href="https://www.youtube.com/watch?v=6RtmRAYY74M" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="strategy-video-horizontal_vertical">水平vs垂直思考</a>
+                        <a href="https://www.youtube.com/watch?v=lpHLk3aKbI4" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="strategy-video-p_implies_q">若P則Q</a>
+                        <a href="https://www.youtube.com/watch?v=8p2q5o0paRA" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="strategy-video-strawman">稻草人謬誤</a>
+                        <a href="https://www.youtube.com/watch?v=ISjSdBwTffU" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="strategy-video-reasonable_not_correct">合理不等於正確</a>
+                    </div>
+                </div>   
+            </div>       
+         </div>
+    </div>
+
+    <script src="main.js"></script>
+    <script src="tracking.js"></script>
 
 </body>
-</html>
 <footer>
-    <a href="index.html">
-        <img src="images/dog.png" alt="Logo" style="height: 100px; vertical-align: middle; margin-right: 10px;">
-    </a>
     <br>
     <p style="display: inline;">Created by Chu Pei Yi</p>
 </footer>
+</html>

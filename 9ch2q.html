@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WMNZ6FESH7"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-WMNZ6FESH7');
-    </script>
   <meta charset="UTF-8">
   <title>天淨沙秋思選擇題</title>
   <style>
@@ -104,8 +96,8 @@
     <h2 id="result-title">作答結果</h2>
     <div id="score"></div>
     <div id="wrong-list"></div>
-    <button onclick="retryWrong()">重測錯題</button>
-    <button onclick="retryAll()">全部重測</button>
+    <button onclick="retryWrong()" data-track-cat="quiz_action" data-track-lbl="retry_wrong">重測錯題</button>
+    <button onclick="retryAll()" data-track-cat="quiz_action" data-track-lbl="retry_all">全部重測</button>
   </div>
 
   <script>
@@ -164,6 +156,11 @@
           const btn = document.createElement('button');
           btn.className = 'option-button';
           btn.innerText = opt;
+          
+          // 自動加入追蹤屬性
+          btn.setAttribute('data-track-cat', 'quiz_option');
+          btn.setAttribute('data-track-lbl', `q${index + 1}_option_${i}`);
+
           btn.onclick = () => {
             const buttons = box.querySelectorAll('.option-button');
             buttons.forEach(b => b.disabled = true);
@@ -179,17 +176,29 @@
           const prevBtn = document.createElement('button');
           prevBtn.innerText = '上一題';
           prevBtn.onclick = () => showQuestion(index - 1);
+          
+          // 加入追蹤
+          prevBtn.setAttribute('data-track-cat', 'quiz_nav');
+          prevBtn.setAttribute('data-track-lbl', 'prev_btn');
           nav.appendChild(prevBtn);
         }
         if (index < questionsToRender.length - 1) {
           const nextBtn = document.createElement('button');
           nextBtn.innerText = '下一題';
           nextBtn.onclick = () => showQuestion(index + 1);
+
+          // 加入追蹤
+          nextBtn.setAttribute('data-track-cat', 'quiz_nav');
+          nextBtn.setAttribute('data-track-lbl', 'next_btn');
           nav.appendChild(nextBtn);
         } else {
           const submitBtn = document.createElement('button');
           submitBtn.innerText = '交卷';
           submitBtn.onclick = () => showResult(questionsToRender);
+
+          // 加入追蹤
+          submitBtn.setAttribute('data-track-cat', 'quiz_action');
+          submitBtn.setAttribute('data-track-lbl', 'submit_quiz');
           nav.appendChild(submitBtn);
         }
         box.appendChild(nav);
@@ -254,13 +263,11 @@
 
     createQuiz(questions);
   </script>
+  
+  <script src="tracking.js"></script>
 </body>
 </html>
 <footer>
-    <a href="index.html">
-        <img src="images/dog.png" alt="Logo" style="height: 200px; vertical-align: middle; margin-right: 10px;">
-    </a>
     <br>
-    <p style="display: inline;">Created by Chu Pei Yi</p>
+    <p style="text-align: center;">Created by Chu Pei Yi</p>
 </footer>
-
