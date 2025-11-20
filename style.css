@@ -1,12 +1,18 @@
-﻿body {
-    background-color: #f7f9fb; /* 淺灰藍，像天空 */
-    color: #444;
+﻿/* 引入像素字體 (如果有網路會顯示，沒有則退回預設) */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+    /* 修改：背景色改為經典 NES 天空藍 */
+    background-color: #5C94FC; 
+    /* 修改：移除漸層，改用純色以還原遊戲畫面 */
+    background: #5C94FC; 
+    color: #ffffff; /* 修改：文字改為白色以便在深色塊上閱讀 */
     margin: 0;
     padding: 20px;
     padding-top: 70px;
     box-sizing: border-box;
-    font-family: 'Comic Sans MS', 'Microsoft JhengHei', sans-serif; /* 活潑的字型 */
-    background: linear-gradient(135deg, #e6f7ff, #b3e0ff); /* 淺藍到深的漸層 */
+    /* 修改：字體改為像素風格 */
+    font-family: 'Press Start 2P', 'Courier New', monospace; 
 }
 
 /* 導覽列樣式 */
@@ -14,7 +20,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #008cff; /* 哆啦A夢的藍 */
+    /* 修改：背景改為地面磚塊的褐色 */
+    background: #C84C0C; 
     color: #fff;
     padding: 15px 20px;
     position: fixed;
@@ -23,29 +30,27 @@
     left: 0;
     z-index: 1000;
     box-sizing: border-box;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    border-bottom-left-radius: 25px;
-    border-bottom-right-radius: 25px;
-    /* 新增：動畫屬性 */
+    /* 修改：底部改為黑色粗框，移除圓角 */
+    box-shadow: 0 4px 0 #000000;
+    border-bottom: 4px solid #000000;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    
     animation: slideInFromTop 1s ease-out forwards;
-    transform: translateY(-100%); /* 初始位置設定在螢幕上方 */
+    transform: translateY(-100%);
 }
 
-/* 導覽列滑入動畫 */
+/* 導覽列滑入動畫 (保留不動) */
 @keyframes slideInFromTop {
-    0% {
-        transform: translateY(-20%);
-        opacity: 0;
-    }
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
+    0% { transform: translateY(-20%); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
 }
 
 .navbar .logo {
     font-size: 1.5em;
     font-weight: bold;
+    /* 修改：增加黑色文字陰影 */
+    text-shadow: 3px 3px 0 #000000;
 }
 
 .nav-links {
@@ -64,43 +69,47 @@
 }
 
 .nav-links a {
-    color: #e6f7ff; /* 淺藍色 */
+    /* 修改：導覽連結顏色 */
+    color: #ffffff; 
     text-decoration: none;
-    font-size: 1em;
-    font-family: 'Comic Sans MS', 'Microsoft JhengHei', sans-serif;
-    position: relative; /* 新增：設定相對定位，讓偽元素能以此為基準 */
+    font-size: 0.8em; /* 像素字體通常較大，稍微縮小以防跑版 */
+    font-family: 'Press Start 2P', monospace;
+    position: relative;
+    text-shadow: 2px 2px 0 #000; /* 增加可讀性 */
 }
 
-/* 這個偽元素是用來製作滑動底線的 */
+/* 底線樣式 */
 .nav-links a::after {
-    content: ''; /* 內容為空，這樣才能顯示 */
+    content: '';
     display: block;
     position: absolute;
-    bottom: -5px; /* 放在連結的下方 */
+    bottom: -5px;
     left: 0;
-    width: 0; /* 初始寬度為 0 */
-    height: 2px;
-    background: #fff; /* 底線顏色為白色 */
-    transition: width 0.3s ease; /* 新增：讓寬度變化有過渡效果 */
+    width: 0;
+    height: 4px; /* 修改：線條變粗 */
+    background: #fff;
+    transition: width 0.3s ease;
 }
 
 .nav-links a:hover {
-    color: #fff;
-    text-shadow: none; /* 移除光暈 */
+    color: #FBD000; /* 修改：懸停變金幣黃 */
+    text-shadow: 2px 2px 0 #000;
 }
 
 .nav-links a:hover::after {
-    width: 100%; /* 當滑鼠移到連結上時，底線寬度變成 100% */
+    width: 100%;
+    background: #FBD000; /* 修改：底線變黃 */
 }
 
 .nav-links a.active {
-    background-color: #ff5757; /* 領巾的紅色 */
-    color: #fff;
-    border: none;
-    border-radius: 20px;
+    /* 修改：Active 狀態改為黑色背景 (像 HUD 介面) */
+    background-color: #000000; 
+    color: #FBD000;
+    border: 2px solid #FBD000;
+    border-radius: 0; /* 修改：直角 */
     padding: 6px 12px;
     font-weight: bold;
-    box-shadow: none; /* 移除陰影 */
+    box-shadow: none;
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
@@ -110,54 +119,33 @@
     color: #fff;
     background: none;
     border: none;
+    text-shadow: 2px 2px 0 #000;
 }
 
 .intro-text {
-    font-family: 'Comic Sans MS', 'Microsoft JhengHei', sans-serif;
-    font-size: clamp(2.0rem, 6vw, 3.5rem); /* 字體變更大 */
-    font-weight: bold; /* 字體變更粗 */
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(1.5rem, 4vw, 2.5rem); /* 像素字體需微調大小 */
+    font-weight: bold;
     text-align: center;
     margin: 30px auto 20px;
     white-space: nowrap;
     overflow: hidden;
-    border-right: 5px solid #ff5757; /* 改為紅色 */
+    border-right: 8px solid #FBD000; /* 修改：游標變粗、黃色 */
     width: 0;
-    animation: typing 3.5s steps(35, end) forwards, blink 0.75s step-end infinite;
-    background: #008cff; /* 純色取代漸層 */
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: 3px;
-    text-shadow: none; /* 移除光暈 */
+    animation: typing 3.5s steps(25, end) forwards, blink 0.75s step-end infinite;
+    /* 修改：文字顏色與陰影 */
+    background: none;
+    color: #ffffff;
+    text-shadow: 4px 4px 0 #000000; /* 經典黑色硬陰影 */
+    -webkit-text-fill-color: #ffffff;
+    letter-spacing: 0px; /* 像素字體不需要過大間距 */
     max-width: 90vw;
     padding: 0 10px;
 }
 
-@keyframes typing {
-    from {
-        width: 0;
-    }
-    to {
-        width: 100%;
-    }
-}
-
-@keyframes blink {
-    50% {
-        border-color: transparent;
-    }
-}
-
-/* 頁面切換動畫 */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+@keyframes typing { from { width: 0; } to { width: 100%; } }
+@keyframes blink { 50% { border-color: transparent; } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
 .button-section {
     display: flex;
@@ -176,24 +164,26 @@
     max-width: 1000px;
 }
 
-/* 大型按鈕 */
+/* 大型按鈕 - 修改為水管綠風格 */
 .big-button {
-    background: linear-gradient(135deg, #008cff, #38b6ff); /* 淺藍漸層 */
+    /* 修改：經典水管綠 */
+    background: #00AA00; 
     color: #fff;
     padding: 15px 30px;
-    font-size: 30px;
-    border-radius: 80px;
+    font-size: 20px; /* 像素字體調整 */
+    /* 修改：變為直角方塊 */
+    border-radius: 0; 
     text-decoration: none;
     text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.1s ease, box-shadow 0.1s ease; /* 加快動畫反應，像按鈕 */
     display: inline-block;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 柔和的陰影 */
-    border: 2px solid #fff;
-    letter-spacing: 1.5px;
+    /* 修改：黑色粗框與硬陰影 */
+    box-shadow: 6px 6px 0 #000000; 
+    border: 4px solid #000000;
+    letter-spacing: 1px;
     font-weight: bold;
     max-width: 250px;
-    animation: fadeIn 0.4s ease-in forwards, 
-               scaleIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    animation: fadeIn 0.4s ease-in forwards, scaleIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .button-container {
@@ -202,9 +192,9 @@
 }
 
 .big-button:hover {
-    background: linear-gradient(135deg, #ff5757, #ff9494); /* 柔和紅色漸層 */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 懸停時增強陰影 */
-    transform: scale(1.05) translateY(-5px); /* 懸停時縮放並上浮 */
+    background: #00d600; /* 變亮 */
+    box-shadow: 6px 6px 0 #000000; /* 陰影不變，保持像素感 */
+    transform: translateY(-4px);
 }
 
 .big-button i {
@@ -212,80 +202,57 @@
     font-size: 0.9em;
 }
 
-/* 新增的 keyframes */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 @keyframes scaleIn {
-  0% {
-    transform: scale(0.5);
-  }
-  70% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
+  0% { transform: scale(0.5); }
+  70% { transform: scale(1.1); }
+  100% { transform: scale(1); }
 }
 
+.section-content { display: none; }
+.active-section { display: block; animation: fadeIn 0.8s ease-out forwards; }
 
-.section-content {
-    display: none;
-}
-
-.active-section {
-    display: block;
-    animation: fadeIn 0.8s ease-out forwards; /* 新增淡入動畫 */
-}
-
-/* 切換鈕 */
+/* 切換鈕 - 修改為磚塊風格 */
 .section-button {
     margin: 12px;
     margin-bottom: 40px;
     padding: 10px 20px;
-    font-size: 18px;
-    font-family: 'Comic Sans MS', 'Microsoft JhengHei', sans-serif;
-    background: #fff;
-    color: #008cff;
-    border: 2px solid #008cff;
-    border-radius: 12px;
-    box-shadow: none; /* 移除陰影 */
-    text-shadow: none; /* 移除陰影 */
-    letter-spacing: 2px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* 新增過渡效果 */
+    font-size: 16px;
+    font-family: 'Press Start 2P', monospace;
+    /* 修改：問號磚塊的金黃色 */
+    background: #E89C24; 
+    color: #000; /* 黑色文字 */
+    /* 修改：黑色邊框與直角 */
+    border: 4px solid #000000;
+    border-radius: 0;
+    /* 修改：硬陰影 */
+    box-shadow: 4px 4px 0 #000000; 
+    text-shadow: none;
+    letter-spacing: 1px;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
 .section-button:hover {
-    background: linear-gradient(135deg, #ff5757, #ff9494);
-    color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* 增加陰影 */
-    transform: scale(1.06) translateY(-3px); /* 懸停時上浮 */
-    border: 2px solid #fff;
-    transition: all 0.25s ease;
+    background: #FFCC66;
+    color: #000;
+    box-shadow: 4px 4px 0 #000000;
+    transform: translateY(-4px);
+    border: 4px solid #000000;
     cursor: pointer;
 }
 
 .section-button.active {
-    background: #ff5757;
+    /* 修改：啟動後變為褐色 (空磚塊) */
+    background: #682800; 
     color: #fff;
     font-weight: bold;
-    border: 2px solid #fff;
-    border-radius: 12px;
-    transform: scale(1.08);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 柔和的陰影 */
-    transition: all 0.3s ease;
+    border: 4px solid #000000;
+    border-radius: 0;
+    transform: scale(1.0);
+    box-shadow: inset 4px 4px 0 rgba(0,0,0,0.5); /* 內陰影 */
     z-index: 10;
 }
 
-.menu-toggle {
-    display: none;
-}
+.menu-toggle { display: none; }
 
 .social-container {
     display: flex;
@@ -307,26 +274,31 @@
 
 .social-group {
     padding: 20px;
-    border-radius: 20px;
+    /* 修改：改為直角 */
+    border-radius: 0; 
     text-align: left;
     width: calc(25% - 20px);
     min-width: 250px;
-    background: rgba(0, 140, 255, 0.1); /* 淺藍透明背景 */
-    border: 1px solid #008cff;
-    box-shadow: none; /* 移除陰影 */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* 新增過渡效果 */
-    transform: scale(0.95); /* 初始縮小 */
+    /* 修改：背景為白色，配黑色粗框 */
+    background: #ffffff; 
+    border: 4px solid #000000;
+    box-shadow: 6px 6px 0 #000000; /* 硬陰影 */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transform: scale(0.95);
 }
 
 .social-group:hover {
-    transform: scale(1.05) translateY(-3px); /* 懸停時上浮並略微放大 */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 增加陰影 */
+    transform: scale(1.0) translateY(-5px);
+    box-shadow: 10px 10px 0 #000000;
 }
 
 .social-group h3 {
     margin-bottom: 15px;
-    color: #008cff;
-    font-size: 25px;
+    /* 修改：標題顏色改為磚紅色 */
+    color: #C84C0C; 
+    font-size: 18px;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 0 #000;
 }
 
 .btn-group {
@@ -336,18 +308,20 @@
 }
 
 .btn {
-    background: #fff;
-    color: #008cff;
-    padding: 7px 20px;
-    font-size: 20px;
-    border-radius: 50px;
+    /* 修改：黑色按鈕配白字 */
+    background: #000000; 
+    color: #ffffff;
+    padding: 10px 20px;
+    font-size: 14px;
+    /* 修改：直角 */
+    border-radius: 0; 
     text-decoration: none;
     text-align: left;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.1s ease;
     display: block;
     margin-bottom: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 柔和的陰影 */
-    border: 2px solid #ff5757;
+    box-shadow: 4px 4px 0 rgba(255, 255, 255, 0.3); /* 白色陰影 */
+    border: 2px solid #ffffff;
     letter-spacing: 1px;
     font-weight: bold;
 }
@@ -358,9 +332,11 @@
 }
 
 .btn:hover {
-    transform: scale(1.1) translateY(-3px);
-    background: linear-gradient(135deg, #ff5757, #ff9494);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transform: scale(1.02) translateY(-2px);
+    /* 修改：懸停變紅 */
+    background: #E52521; 
+    box-shadow: 4px 4px 0 #000;
+    border-color: #000;
     color: #fff;
 }
 
@@ -370,8 +346,11 @@
     width: 250px;
     height: 300px;
     overflow: hidden;
-    border-radius: 20px; /* 圓潤的按鈕邊角 */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* 修改：直角 */
+    border-radius: 0; 
+    /* 修改：邊框 */
+    border: 4px solid #000;
+    box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.4);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -380,6 +359,8 @@
     height: 120%;
     object-fit: cover;
     transition: transform 0.3s ease;
+    /* 讓圖片像素化 */
+    image-rendering: pixelated; 
 }
 
 .overlay-text {
@@ -391,16 +372,18 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
+    /* 修改：文字樣式 */
+    color: #FBD000; 
     font-weight: bold;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
-    background-color: rgba(0, 0, 0, 0.3);
-    font-size: 50px;
+    text-shadow: 3px 3px 0 #000000;
+    background-color: rgba(0, 0, 0, 0.5);
+    font-size: 30px;
+    font-family: 'Press Start 2P', monospace;
 }
 
 .image-button:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.4);
 }
 
 .image-button:hover img {
@@ -408,19 +391,23 @@
 }
 
 .section-title {
-    font-family: 'Comic Sans MS', 'Microsoft JhengHei', sans-serif;
-    font-size: clamp(2.0rem, 6vw, 3.5rem); /* 字體變更大 */
-    font-weight: bold; /* 字體變更粗 */
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: bold;
     text-align: center;
     margin: 40px auto 20px;
     white-space: nowrap;
-    background: none; /* 移除漸層 */
+    background: none;
     -webkit-background-clip: unset;
-    -webkit-text-fill-color: #008cff; /* 字體顏色改為純藍色 */
-    letter-spacing: 4px;
-    text-shadow: none; /* 移除光暈 */
+    /* 修改：純白文字配黑邊 */
+    -webkit-text-fill-color: #ffffff; 
+    color: #ffffff;
+    -webkit-text-stroke: 2px #000; /* 模擬邊框 */
+    text-shadow: 4px 4px 0 #000;
+    letter-spacing: 2px;
     max-width: 500px;
-    border-bottom: 2px solid #008cff;
+    /* 修改：底線改為磚塊色 */
+    border-bottom: 4px solid #C84C0C; 
     padding-bottom: 10px;
 }
 
@@ -434,20 +421,24 @@
 
 .iframe-box {
     padding: 20px;
-    border-radius: 20px;
+    /* 修改：直角 */
+    border-radius: 0; 
     text-align: left;
     width: calc(25% - 20px);
     min-width: 250px;
-    background: rgba(0, 140, 255, 0.1);
-    border: 1px solid #008cff;
-    box-shadow: none; /* 移除陰影 */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* 新增過渡效果 */
-    transform: scale(0.95); /* 初始縮小 */
+    /* 修改：黑色背景 */
+    background: #000000; 
+    /* 修改：白色邊框 */
+    border: 4px solid #ffffff; 
+    box-shadow: 0 0 0 2px #000; /* 雙層邊框效果 */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transform: scale(0.95);
 }
 
 .iframe-box:hover {
-    transform: scale(1.05) translateY(-3px); /* 懸停時上浮並略微放大 */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 增加陰影 */
+    transform: scale(1.0) translateY(-3px);
+    border-color: #FBD000; /* 懸停變黃 */
+    box-shadow: 0 0 15px rgba(251, 208, 0, 0.5);
 }
 
 .button-row {
@@ -460,27 +451,31 @@
 
 .step-label:first-of-type {
     animation: pulse 1s infinite;
-    font-family: 'Comic Sans MS', 'Microsoft JhengHei', sans-serif;
-    font-size: 2rem;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 1.5rem;
     text-align: center;
+    color: #FBD000; /* 金幣黃 */
+    text-shadow: 2px 2px 0 #000;
 }
 
 .countdown-container {
-    font-family: 'Share Tech Mono', monospace;
-    background: linear-gradient(135deg, #008cff, #ff5757); /* 藍紅漸層 */
+    font-family: 'Press Start 2P', monospace;
+    /* 修改：黑色背景 */
+    background: #000000; 
     color: #fff;
     text-align: center;
     padding: 15px;
-    border-radius: 12px;
+    /* 修改：直角 */
+    border-radius: 0; 
     margin: 20px auto;
     max-width: 800px;
     width: 100%;
-    box-shadow: none; /* 移除陰影 */
+    box-shadow: 0 0 0 4px #fff; /* 白色邊框 */
     overflow: hidden;
 }
 
 .countdown-timer {
-    font-size: 6rem;
+    font-size: 4rem; /* 字體較大 */
     display: inline-flex;
     gap: 10px;
     flex-wrap: nowrap;
@@ -492,8 +487,8 @@
 }
 
 .countdown-timer .label {
-    font-size: 2rem;
-    color: #fff;
+    font-size: 1rem;
+    color: #FBD000; /* 標籤為黃色 */
     margin-left: 2px;
 }
 
@@ -502,7 +497,11 @@ footer {
     width: 100%;
     text-align: center;
     padding: 10px;
-    font-size: 14px;
+    font-size: 12px;
+    background: #C84C0C; /* 地面顏色 */
+    color: #fff;
+    text-shadow: 1px 1px 0 #000;
+    border-top: 4px solid #000;
 }
 
 .img-wrapper {
@@ -513,39 +512,42 @@ footer {
     height: 250px;
     max-width: 100%;
     width: auto;
+    border: 4px solid #000; /* 圖片加框 */
 }
 
 /* Chapter buttons */
 .chapter-button {
     margin: 10px;
     padding: 15px 30px;
-    font-size: 20px;
-    font-family: 'Comic Sans MS', 'Microsoft JhengHei', sans-serif;
+    font-size: 16px;
+    font-family: 'Press Start 2P', monospace;
+    /* 修改：白色背景黑框 */
     background: #fff;
-    color: #008cff;
-    border: 2px solid #008cff;
-    border-radius: 12px;
-    letter-spacing: 2px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: #000;
+    border: 4px solid #000;
+    border-radius: 0; /* 直角 */
+    letter-spacing: 1px;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
     cursor: pointer;
+    box-shadow: 4px 4px 0 #000; /* 硬陰影 */
 }
 
 .chapter-button:hover {
-    background: #ff5757;
+    background: #00AA00; /* 水管綠 */
     color: #fff;
-    transform: scale(1.06) translateY(-3px);
-    border: 2px solid #ff9494;
+    transform: scale(1.0) translateY(-3px);
+    border: 4px solid #000;
+    box-shadow: 6px 6px 0 #000;
 }
 
 .chapter-button.active {
-    background: #ff5757;
+    background: #E52521; /* 瑪麗歐紅 */
     color: #fff;
     font-weight: bold;
-    border: 2px solid #fff;
-    border-radius: 12px;
-    transform: scale(1.08);
-    box-shadow: none; /* 移除陰影 */
-    transition: all 0.3s ease;
+    border: 4px solid #000;
+    border-radius: 0;
+    transform: scale(1.0);
+    box-shadow: none;
     z-index: 10;
 }
 
@@ -563,4 +565,3 @@ footer {
         transform: scale(1);
     }
 }
-
