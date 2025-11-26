@@ -78,14 +78,7 @@
         .comparison-table tr:nth-child(even) {
             background-color: #f8fafc;
         }
-        /* 咒語區樣式 */
-        .prompt-textarea {
-            font-family: monospace;
-            font-size: 0.875rem;
-            line-height: 1.5;
-            white-space: pre-wrap;
-            resize: none;
-        }
+
     </style>
 
     <!-- Google Analytics -->
@@ -103,18 +96,7 @@
           });
       }
 
-      // 複製咒語功能
-      function copyPrompt(id) {
-          var copyText = document.getElementById(id);
-          copyText.select();
-          copyText.setSelectionRange(0, 99999); /* For mobile devices */
-          navigator.clipboard.writeText(copyText.value).then(function() {
-              alert("咒語已複製！請貼上給 AI 使用。");
-              trackEvent('button_click', 'copy_prompt', id);
-          }, function(err) {
-              console.error('Async: Could not copy text: ', err);
-          });
-      }
+
     </script>
 </head>
 <body class="bg-background-light min-h-screen text-text-light flex flex-col">
@@ -256,144 +238,6 @@
             </div>
         </div>
 
-        <!-- 進階玩法：DIY 自行生成 (取代原本的超級比一比) -->
-        <div class="mb-16">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">
-                🧪 進階玩法：DIY 自行生成
-            </h2>
-            <div class="bg-white rounded-xl shadow-md p-8 border border-gray-100">
-                <p class="text-gray-700 mb-6 text-center leading-relaxed">
-                    如果現有的工具無法滿足您的需求，或者您想自己體驗 AI 製作網頁的過程，<br>
-                    您可以<strong>複製下方的「咒語（Prompt）」</strong>，貼給 AI（如 ChatGPT、Gemini），並附上您的題目文字或圖片。
-                </p>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <!-- 咒語一 -->
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center">
-                            <h3 class="font-bold text-accent text-lg">✨ 咒語一：逐步引導・填答型</h3>
-                            <button onclick="copyPrompt('prompt1')" class="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded transition-colors flex items-center">
-                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
-                                複製咒語
-                            </button>
-                        </div>
-                        <textarea id="prompt1" class="w-full h-64 p-4 bg-gray-50 border border-gray-200 rounded-lg prompt-textarea text-gray-600 focus:outline-none focus:border-accent" readonly>你是一名專業的特教老師，同時也是互動式學習網頁設計專家。
-
-當我提供你「題目文字」或「題目圖片」時，請依照以下規則，幫我設計一個 互動式解題練習網頁：
-一、整體教學設計
-解題步驟化
-先將題目拆解成清楚、連貫的解題步驟（Step 1、Step 2、Step 3…）。
-每一步驟只做一件小事，避免一次包含太多運算或資訊。
-語句要符合智能障礙、學習障礙學生的程度：短句、直白、不卡字，必要時適度換行。
-逐步檢核與解鎖機制
-每一個步驟都要有 挖空填答的輸入格（input），讓學生自己輸入答案。
-學生輸入後可以按「檢查」或按 Enter 檢核：
-若答對：
-顯示「✔️正確」的提示。
-輸入框邊框或背景變成綠色。
-自動跳到下一個輸入格，並解鎖下一個步驟。
-若答錯：
-顯示「再想想」或簡短鼓勵提示，不要直接給答案。
-輸入框可以短暫變紅，提醒學生再試一次。
-已完成步驟的呈現
-學生做完、答對的步驟，內容要保留並保持清晰可見，不要隱藏、不要變模糊。
-可以在該步驟旁邊顯示「✔️已完成」或用淡綠底框顯示，讓學生知道自己完成到哪裡。
-題目與重點標示
-題目放在畫面上方的「題目區」。
-將題目中的關鍵資訊（例如：條件、數字、單位、關鍵字）用 螢光標記效果 標出，例如：
-使用 &lt;mark&gt; 標籤，或
-使用 CSS 做成螢光底色。
-若題目較長，請適度分行，避免變成一大段文字。
-二、圖形題與 SVG 繪圖
-圖形題的圖像呈現
-如果題目中有幾何圖形、長條圖、圓餅圖或其他示意圖：
-請用 SVG（Scalable Vector Graphics） 來畫出示意圖。
-例如使用 &lt;svg&gt; &lt;rect&gt; &lt;circle&gt; &lt;line&gt; &lt;text&gt; 等標籤，畫出：
-線段、角度、圓形、矩形、座標、標示文字等。
-圖形要盡量簡化、清楚，符合學生理解程度，不需要過度美術化。
-如有需要，請在圖形旁加上簡單標示，例如：
-邊長標注、角度符號、數值說明等。
-三、技術實作要求
-網頁技術
-請產出 可直接貼上就能用 的程式碼，包括：
-完整 HTML 結構
-CSS（可以使用 Tailwind CSS，或在 &lt;style&gt; 中寫簡單樣式）
-JavaScript（負責檢核答案、變換顏色、自動跳下一格、解鎖下一步驟）
-請避免使用複雜框架（例如 React、Vue），以方便在一般教學環境中使用。
-互動行為細節
-每一個輸入框需要：
-檢查正確與否的函式。
-答對後：
-顯示正確提示。
-輸入框變綠。
-自動 focus 到下一個步驟的輸入框。
-若是最後一格答對，可以顯示「恭喜你完成所有步驟！」。
-步驟之間一開始只能看到當前步驟與已完成的步驟，尚未解鎖的步驟可以半透明或鎖住，直到上一個步驟答對才顯示。
-四、輸出格式
-請依照我提供的題目，輸出：
-
-完整、可執行的 HTML + CSS + JavaScript 程式碼。
-若為圖形題，請在 HTML 中嵌入 SVG 圖形程式碼，放在題目區或步驟區中。
-在解題區塊中，把每一個步驟的說明文字、輸入框、檢查按鈕、狀態提示都寫好。</textarea>
-                    </div>
-
-                    <!-- 咒語二 -->
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center">
-                            <h3 class="font-bold text-primary text-lg">✨ 咒語二：點選填空・操作型</h3>
-                            <button onclick="copyPrompt('prompt2')" class="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded transition-colors flex items-center">
-                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
-                                複製咒語
-                            </button>
-                        </div>
-                        <textarea id="prompt2" class="w-full h-64 p-4 bg-gray-50 border border-gray-200 rounded-lg prompt-textarea text-gray-600 focus:outline-none focus:border-primary" readonly>你是一位專業特教老師與互動式網頁設計專家，擅長製作 點選式解題學習工具。
-
-當我提供題目時，請使用以下規則，將它設計成「選項點擊填入版互動網頁」：
-🧩 一、互動設計規則
-拆解成步驟式填答
-題目需拆成數個解題步驟（Step 1→Step 2→…），每一個步驟只做一件事。
-每一步驟包含「空格 slot」與「選項按鈕」。
-學生點選答案填入
-學生從選項按鈕點擊 → 填入第一個空格（slot）。
-按鈕被使用後會 自動禁用，避免重複使用。
-點擊 slot 可移除答案並重新啟用按鈕。
-不得一次填太多
-必須依序填入，不能跳格。
-若還有空格時就按「檢查答案」，需提示「請填滿所有空格」。
-檢查答案
-答對：顯示綠色提示 + 可加 Tada 動畫 / SVG 勾勾 / 簡短音效。
-答錯：顯示紅色錯誤訊息「再想想」，但不清除填入內容。
-答對後可顯示「下一步」或直接自動解鎖下一題 / 並跳入下一題步驟。
-答對的步驟需維持清楚，不要模糊
-slot 改變底線顏色（如藍/綠）
-可以顯示「✔️ 完成」標記
-不要變模糊或消失
-題目重點標示
-使用 &lt;mark&gt; 或 CSS 螢光標記關鍵數字/文字。
-圖形題支援 SVG
-若題目需搭配圖形 (幾何、長條圖、量角器、數線等)，請用 &lt;svg&gt;…&lt;/svg&gt; 畫圖。
-🛠️ 二、技術要求
-HTML + Tailwind CSS + JavaScript
-不使用框架（如 Vue/React）
-slot（空格）請用類似這種形式呈現：
-
-&lt;div class="slot" data-index="0"&gt;&lt;/div&gt;
-選項按鈕形式：
-
-&lt;button class="option-btn" data-value="3"&gt;3&lt;/button&gt;
-可以加入動畫（Tada、SVG 勾勾）
-📤 三、輸出方式
-請一次產生：
-
-🧱 完整 HTML（含題目、slot 區域、選項區）
-🎨 CSS（可用 Tailwind 或 &lt;style&gt; 內嵌）
-⚙️ JavaScript（含點擊填入、移除、禁用、檢查、動畫等功能）
-若為圖形題，請在題目區加入 SVG 繪圖程式碼
-所有內容需 直接貼上即可使用。</textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- 製作流程與發布教學 -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
@@ -512,4 +356,5 @@ slot（空格）請用類似這種形式呈現：
         <p>歡迎非商業用途轉載、引用或改編，請保留「米克師」署名，並附上本作品原始連結。</p>
     </footer>
 </body>
+
 </html>
