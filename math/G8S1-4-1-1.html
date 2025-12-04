@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPEDMIX - 判別一元二次方程式</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f0f9ff; /* 淺藍色背景，護眼且放鬆 */
+        }
+
+        /* 數學式專用 CSS (符合教科書排版) */
+        .math {
+            font-family: 'Times New Roman', serif; /* 數學符號常用字體 */
+            font-size: 32px; /* 特教需求：字體加大 */
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #1e3a8a; /* 深藍色，對比清晰 */
+        }
+
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1.1;
+            margin: 0 4px;
+        }
+
+        .fraction span:first-child {
+            border-bottom: 2px solid #000;
+            padding: 0 4px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .power {
+            font-size: 20px;
+            vertical-align: super;
+            margin-left: 1px;
+            margin-bottom: 12px; /* 修正對齊 */
+            color: #e63946; /* 次方用紅色標示，提示重點 */
+        }
+
+        .sqrt::before {
+            content: "√";
+            font-size: 32px;
+            margin-right: 2px;
+        }
+
+        .abs::before { content: "|"; margin-right: 2px;}
+        .abs::after { content: "|"; margin-left: 2px;}
+
+        /* 互動元件樣式 */
+        .slot {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 80px;
+            height: 50px;
+            border-bottom: 3px solid #cbd5e1;
+            background-color: #ffffff;
+            margin: 0 8px;
+            font-size: 24px;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            vertical-align: middle;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .slot:hover {
+            background-color: #e2e8f0;
+        }
+
+        .slot.filled {
+            border-bottom-color: #3b82f6; /* 填入後變藍 */
+            background-color: #eff6ff;
+            font-weight: bold;
+        }
+
+        .slot.correct {
+            border-bottom-color: #22c55e; /* 答對變綠 */
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+
+        /* 修改後的按鈕樣式 */
+        .option-btn {
+            background-color: #ffffff;
+            border: 2px solid #94a3b8;
+            color: #475569;
+            padding: 12px 32px;
+            font-size: 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 0 #64748b;
+            transition: all 0.1s;
+            min-width: 120px; /* 加寬 */
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .option-btn:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+        
+        /* 是按鈕 */
+        .option-btn.btn-yes {
+            border-color: #3b82f6;
+            color: #2563eb;
+            box-shadow: 0 4px 0 #1d4ed8;
+        }
+        .option-btn.btn-yes:hover { background-color: #eff6ff; }
+
+        /* 否按鈕 */
+        .option-btn.btn-no {
+            border-color: #ef4444;
+            color: #dc2626;
+            box-shadow: 0 4px 0 #b91c1c;
+        }
+        .option-btn.btn-no:hover { background-color: #fef2f2; }
+
+
+        .option-btn:disabled {
+            background-color: #e2e8f0;
+            border-color: #cbd5e1;
+            color: #94a3b8;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: translateY(4px);
+        }
+
+        /* 重點標示 */
+        mark {
+            background-color: #fef08a; /* 柔和黃 */
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #854d0e;
+        }
+
+        /* 動畫 */
+        @keyframes tada {
+            0% { transform: scale(1); }
+            10%, 20% { transform: scale(0.9) rotate(-3deg); }
+            30%, 50%, 70%, 90% { transform: scale(1.1) rotate(3deg); }
+            40%, 60%, 80% { transform: scale(1.1) rotate(-3deg); }
+            100% { transform: scale(1) rotate(0); }
+        }
+
+        .animate-tada {
+            animation: tada 1s ease-in-out;
+        }
+
+        .step-container {
+            opacity: 0.5;
+            pointer-events: none;
+            filter: grayscale(0.8);
+            transition: all 0.5s ease;
+        }
+
+        .step-container.active {
+            opacity: 1;
+            pointer-events: auto;
+            filter: grayscale(0);
+            transform: scale(1);
+        }
+
+        .step-container.completed {
+            opacity: 1;
+            filter: grayscale(0);
+            border-color: #22c55e;
+            background-color: #f0fdf4;
+        }
+
+        /* 隱藏滾動條但保持功能 */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 max-w-4xl mx-auto pb-40">
+
+    <!-- Header -->
+    <header class="text-center mb-10">
+        <h1 class="text-3xl md:text-4xl font-bold text-slate-800 mb-2">一、判別一元二次方程式</h1>
+        <p class="text-slate-600 text-lg">請依照步驟，檢查每一個數學式是否符合條件。</p>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-2 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-blue-500 transition-all duration-500" style="width: 0%"></div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div id="quiz-container" class="space-y-12">
+        <!-- Steps will be injected here by JS -->
+    </div>
+
+    <!-- Feedback & Controls (Fixed Bottom) -->
+    <div class="fixed bottom-0 left-0 w-full bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] p-4 border-t border-gray-100 z-40">
+        <div class="max-w-4xl mx-auto flex flex-col items-center">
+            
+            <!-- Message Area -->
+            <div id="feedback-message" class="text-xl font-bold mb-4 h-8 text-center transition-all duration-300 text-slate-600">
+                請點擊按鈕填入空格
+            </div>
+
+            <!-- Options Area -->
+            <div id="options-container" class="flex flex-wrap justify-center gap-8 w-full">
+                <!-- Buttons injected by JS -->
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-4 flex gap-4 w-full justify-center">
+                <button id="check-btn" onclick="checkAnswer()" class="hidden bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-xl shadow-[0_4px_0_#15803d] active:translate-y-1 active:shadow-none transition-all text-xl w-full md:w-auto min-w-[200px]">
+                    檢查答案
+                </button>
+                <button id="next-btn" onclick="nextStep()" class="hidden bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-xl shadow-[0_4px_0_#1d4ed8] active:translate-y-1 active:shadow-none transition-all text-xl w-full md:w-auto min-w-[200px]">
+                    下一題 ➔
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sounds (Optional) -->
+    <audio id="sound-correct" src="data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA="></audio>
+    <audio id="sound-wrong" src="data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA="></audio>
+
+<script>
+    // --- 題目資料 ---
+    // 規則：mathHtml (數學式 HTML), answers (正確答案陣列), hints (教學提示)
+    // Options 欄位已移除，改為固定的 Yes/No 按鈕
+    const quizData = [
+        {
+            id: 1,
+            title: "第 1 題",
+            mathHtml: `<div class="math">3x + 5 = 0</div>`,
+            conditions: [
+                { label: "只有一個未知數嗎？(一元)", answer: "是" },
+                { label: "最高次方是 2 嗎？(二次)", answer: "否" },
+                { label: "有等號嗎？(方程式)", answer: "是" },
+                { label: "結論：這是一元二次方程式嗎？", answer: "否" }
+            ],
+            hint: "觀察 x 的上方，如果沒有數字，代表是 1 次方喔！"
+        },
+        {
+            id: 2,
+            title: "第 2 題",
+            mathHtml: `<div class="math">2x<span class="power">2</span> + x = 7</div>`,
+            conditions: [
+                { label: "只有一個未知數嗎？(一元)", answer: "是" },
+                { label: "最高次方是 2 嗎？(二次)", answer: "是" },
+                { label: "有等號嗎？(方程式)", answer: "是" },
+                { label: "結論：這是一元二次方程式嗎？", answer: "是" }
+            ],
+            hint: "只要整理後最高次方是 2，且只有一種未知數，就是一元二次方程式。"
+        },
+        {
+            id: 3,
+            title: "第 3 題",
+            mathHtml: `<div class="math">x<span class="power">2</span> - 1 = 0</div>`,
+            conditions: [
+                { label: "只有一個未知數嗎？(一元)", answer: "是" },
+                { label: "最高次方是 2 嗎？(二次)", answer: "是" },
+                { label: "有等號嗎？(方程式)", answer: "是" },
+                { label: "結論：這是一元二次方程式嗎？", answer: "是" }
+            ],
+            hint: "即使缺了 x 項，只要最高次方是 2 就可以了。"
+        },
+        {
+            id: 4,
+            title: "第 4 題",
+            mathHtml: `<div class="math">5x<span class="power">2</span> - 4x - 3 = 0</div>`,
+            conditions: [
+                { label: "只有一個未知數嗎？(一元)", answer: "是" },
+                { label: "最高次方是 2 嗎？(二次)", answer: "是" },
+                { label: "有等號嗎？(方程式)", answer: "是" },
+                { label: "結論：這是一元二次方程式嗎？", answer: "是" }
+            ],
+            hint: "這是一個很標準的一元二次方程式形式。"
+        },
+        {
+            id: 5,
+            title: "第 5 題 (陷阱題)",
+            mathHtml: `<div class="math">3x<span class="power">2</span> - 4x + 5</div>`,
+            conditions: [
+                { label: "只有一個未知數嗎？(一元)", answer: "是" },
+                { label: "最高次方是 2 嗎？(二次)", answer: "是" },
+                { label: "有等號嗎？(方程式)", answer: "否" },
+                { label: "結論：這是一元二次方程式嗎？", answer: "否" }
+            ],
+            hint: "注意看，這個式子有等號「=」嗎？沒有等號就不是方程式喔！"
+        }
+    ];
+
+    // --- 狀態變數 ---
+    let currentStep = 0;
+    let userAnswers = {}; // 儲存使用者每一步的答案 { stepIndex: [ans1, ans2...] }
+
+    // --- 初始化 ---
+    document.addEventListener("DOMContentLoaded", () => {
+        renderAllSteps();
+        activateStep(0);
+    });
+
+    // --- 渲染畫面 ---
+    function renderAllSteps() {
+        const container = document.getElementById('quiz-container');
+        container.innerHTML = quizData.map((data, index) => {
+            // 建立條件列表的 HTML
+            const conditionsHtml = data.conditions.map((cond, i) => `
+                <div class="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200 shadow-sm mb-3">
+                    <span class="text-lg md:text-xl text-slate-700 font-medium flex-1">
+                        ${highlightKeywords(cond.label)}
+                    </span>
+                    <div class="slot empty" 
+                         data-step="${index}" 
+                         data-slot-index="${i}" 
+                         onclick="clearSlot(${index}, ${i})">
+                    </div>
+                </div>
+            `).join('');
+
+            return `
+                <div id="step-${index}" class="step-container bg-white rounded-2xl shadow-lg border-2 border-slate-100 overflow-hidden mb-8 transform transition-all">
+                    <!-- 標題區 -->
+                    <div class="bg-slate-50 p-4 border-b border-slate-200 flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <span class="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">${index + 1}</span>
+                            <h2 class="text-xl font-bold text-slate-700">${data.title}</h2>
+                        </div>
+                        <div class="status-icon opacity-0 text-green-500 font-bold text-xl">
+                            ✔️ 完成
+                        </div>
+                    </div>
+
+                    <div class="p-6">
+                        <!-- 題目顯示區 -->
+                        <div class="flex justify-center mb-8 p-6 bg-blue-50 rounded-xl border-dashed border-2 border-blue-200">
+                            ${data.mathHtml}
+                        </div>
+
+                        <!-- 填答區 -->
+                        <div class="space-y-2">
+                            ${conditionsHtml}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    // 關鍵字高亮
+    function highlightKeywords(text) {
+        return text
+            .replace(/一元/g, "<mark>一元</mark>")
+            .replace(/二次/g, "<mark>二次</mark>")
+            .replace(/方程式/g, "<mark>方程式</mark>")
+            .replace(/等號/g, "<mark>等號</mark>");
+    }
+
+    // --- 邏輯控制 ---
+
+    function activateStep(index) {
+        // 更新進度條
+        const progress = ((index) / quizData.length) * 100;
+        document.getElementById('progress-bar').style.width = `${progress}%`;
+
+        // 視覺切換
+        document.querySelectorAll('.step-container').forEach((el, i) => {
+            if (i === index) {
+                el.classList.add('active');
+                // 滾動到該元素
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else if (i < index) {
+                el.classList.add('completed');
+                el.classList.remove('active');
+            } else {
+                el.classList.remove('active', 'completed');
+            }
+        });
+
+        // 準備選項按鈕 (改為固定兩個)
+        renderFixedOptions(index);
+        
+        // 隱藏/顯示控制按鈕
+        document.getElementById('check-btn').classList.remove('hidden');
+        document.getElementById('next-btn').classList.add('hidden');
+        document.getElementById('feedback-message').textContent = "請點擊「是」或「否」填入空格";
+        document.getElementById('feedback-message').className = "text-xl font-bold mb-4 h-8 text-center text-slate-600";
+        
+        // 初始化該步驟的答案陣列
+        if (!userAnswers[index]) {
+            userAnswers[index] = new Array(quizData[index].conditions.length).fill(null);
+        }
+    }
+
+    function renderFixedOptions(stepIndex) {
+        const container = document.getElementById('options-container');
+        // 不再從 quizData 讀取 options，直接生成固定的 是/否 按鈕
+        container.innerHTML = `
+            <button class="option-btn btn-yes" 
+                    onclick="handleOptionClick(this, '是', ${stepIndex})">
+                ⭕ 是
+            </button>
+            <button class="option-btn btn-no" 
+                    onclick="handleOptionClick(this, '否', ${stepIndex})">
+                ❌ 否
+            </button>
+        `;
+    }
+
+    function handleOptionClick(btn, value, stepIndex) {
+        // 1. 找到該步驟第一個空的 slot
+        const emptySlotIndex = userAnswers[stepIndex].findIndex(val => val === null);
+
+        if (emptySlotIndex === -1) {
+            showMessage("空格已經滿囉！請先檢查答案。", "orange");
+            return;
+        }
+
+        // 2. 填入資料 (不再需要紀錄 btnId 因為按鈕不禁用)
+        userAnswers[stepIndex][emptySlotIndex] = { value: value };
+        
+        // 3. 更新 UI (Slot)
+        const slot = document.querySelector(`.slot[data-step="${stepIndex}"][data-slot-index="${emptySlotIndex}"]`);
+        slot.textContent = value;
+        slot.classList.remove('empty');
+        slot.classList.add('filled');
+        
+        // 如果填入的是 "否"，可以考慮給它紅色文字，"是" 給藍色文字 (選擇性)
+        if (value === "否") {
+            slot.style.color = "#dc2626";
+        } else {
+            slot.style.color = "#2563eb";
+        }
+
+        // 4. 不禁用按鈕 (Binary Choice 模式下允許重複使用)
+
+        // 5. 提示
+        showMessage("已填入", "gray");
+    }
+
+    function clearSlot(stepIndex, slotIndex) {
+        // 只有當前步驟且未完成時可以清除
+        if (stepIndex !== currentStep) return;
+        const currentData = userAnswers[stepIndex][slotIndex];
+        
+        if (!currentData) return; // 已經是空的
+
+        // 1. (移除) 不需恢復按鈕，因為按鈕本來就沒被禁用
+
+        // 2. 清除資料
+        userAnswers[stepIndex][slotIndex] = null;
+
+        // 3. 更新 UI
+        const slot = document.querySelector(`.slot[data-step="${stepIndex}"][data-slot-index="${slotIndex}"]`);
+        slot.textContent = "";
+        slot.style.color = ""; // 重置顏色
+        slot.classList.remove('filled', 'correct', 'error');
+        slot.classList.add('empty');
+    }
+
+    function checkAnswer() {
+        const currentData = quizData[currentStep];
+        const currentAnswers = userAnswers[currentStep];
+
+        // 1. 檢查是否填滿
+        if (currentAnswers.includes(null)) {
+            showMessage("還有空格沒填完喔！", "red");
+            shakeElement(document.getElementById(`step-${currentStep}`));
+            return;
+        }
+
+        // 2. 比對答案
+        let isAllCorrect = true;
+        currentData.conditions.forEach((cond, i) => {
+            const userVal = currentAnswers[i].value;
+            const slot = document.querySelector(`.slot[data-step="${currentStep}"][data-slot-index="${i}"]`);
+            
+            if (userVal === cond.answer) {
+                slot.classList.add('correct');
+            } else {
+                slot.classList.add('error'); 
+                isAllCorrect = false;
+            }
+        });
+
+        if (isAllCorrect) {
+            handleCorrect();
+        } else {
+            handleWrong();
+        }
+    }
+
+    function handleCorrect() {
+        showMessage("太棒了！完全正確！🎉", "green");
+        playSound('correct');
+
+        // 該步驟加上完成標記
+        const stepEl = document.getElementById(`step-${currentStep}`);
+        stepEl.querySelector('.status-icon').style.opacity = '1';
+        stepEl.classList.add('border-green-400');
+
+        // 按鈕切換
+        document.getElementById('check-btn').classList.add('hidden');
+        document.getElementById('options-container').innerHTML = ''; // 隱藏按鈕
+
+        if (currentStep < quizData.length - 1) {
+            document.getElementById('next-btn').classList.remove('hidden');
+            // 自動觸發 Tada 動畫
+            document.querySelector(`.status-icon`).classList.add('animate-tada');
+        } else {
+            // 全部完成
+            finishQuiz();
+        }
+    }
+
+    function handleWrong() {
+        showMessage(`再想一下喔！提示：${quizData[currentStep].hint}`, "red");
+        playSound('wrong');
+        
+        userAnswers[currentStep].forEach((ans, i) => {
+             const slot = document.querySelector(`.slot[data-step="${currentStep}"][data-slot-index="${i}"]`);
+             if (ans.value !== quizData[currentStep].conditions[i].answer) {
+                 shakeElement(slot);
+                 slot.style.borderColor = '#ef4444'; // 紅色邊框提示
+                 setTimeout(() => slot.style.borderColor = '', 1000); // 1秒後恢復
+             }
+        });
+    }
+
+    function nextStep() {
+        currentStep++;
+        activateStep(currentStep);
+    }
+
+    function finishQuiz() {
+        document.getElementById('progress-bar').style.width = '100%';
+        showMessage("恭喜！你完成了所有練習！🏆", "green");
+        
+        const container = document.getElementById('quiz-container');
+        container.innerHTML += `
+            <div class="text-center py-10 animate-tada">
+                <h2 class="text-4xl font-bold text-blue-600 mb-4">全部通關！</h2>
+                <p class="text-xl text-slate-600">你已經學會判斷一元二次方程式囉！</p>
+                <button onclick="location.reload()" class="mt-8 bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-bold py-3 px-8 rounded-xl shadow-lg transition-transform hover:scale-105">
+                    再玩一次 ↻
+                </button>
+            </div>
+        `;
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    // --- 輔助函式 ---
+
+    function showMessage(text, type) {
+        const el = document.getElementById('feedback-message');
+        el.textContent = text;
+        
+        el.classList.remove('text-slate-600', 'text-green-600', 'text-red-500', 'text-orange-500');
+        
+        if (type === 'green') el.classList.add('text-green-600');
+        else if (type === 'red') el.classList.add('text-red-500');
+        else if (type === 'orange') el.classList.add('text-orange-500');
+        else el.classList.add('text-slate-600');
+    }
+
+    function shakeElement(el) {
+        el.style.animation = 'shake 0.5s';
+        setTimeout(() => el.style.animation = '', 500);
+    }
+    
+    // 定義 shake keyframes (JS注入)
+    const styleSheet = document.createElement("style");
+    styleSheet.innerText = `
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+    `;
+    document.head.appendChild(styleSheet);
+
+    function playSound(type) {
+        // 這裡僅作示例，實際使用時需放入真實音效 Base64 或路徑
+        // console.log("Play sound:", type);
+    }
+
+</script>
+</body>
+</html>

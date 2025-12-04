@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPEDMIX - 一元二次方程式的解 (全五題)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #fffbeb;
+            padding-bottom: 200px; /* 預留底部空間給固定面板 */
+        }
+
+        /* 數學式 CSS */
+        .math {
+            font-family: 'Times New Roman', serif;
+            font-size: 26px; /* 適中大小 */
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #451a03;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1;
+            margin: 0 4px;
+            font-size: 0.9em;
+            vertical-align: middle;
+        }
+
+        .fraction span:first-child {
+            border-bottom: 2px solid currentColor;
+            padding: 0 4px;
+            width: 100%;
+            text-align: center;
+            display: block;
+        }
+        
+        .fraction span:last-child {
+            display: block;
+            padding-top: 2px;
+        }
+
+        .power {
+            font-size: 0.7em;
+            vertical-align: super;
+            margin-left: 1px;
+            color: #d97706;
+        }
+
+        /* 填答 Slot */
+        .slot {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            min-width: 50px;
+            height: 44px;
+            border-bottom: 3px solid #a8a29e;
+            background-color: #ffffff;
+            margin: 0 4px;
+            padding: 0 8px;
+            font-size: 22px;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            vertical-align: middle;
+            border-radius: 6px 6px 0 0;
+            box-shadow: inset 0 -2px 0 rgba(0,0,0,0.05);
+        }
+
+        .slot:hover { background-color: #f5f5f4; border-bottom-color: #78716c; }
+        .slot.filled { border-bottom-color: #d97706; background-color: #fff7ed; font-weight: bold; color: #b45309; }
+        .slot.correct { border-bottom-color: #22c55e; background-color: #dcfce7; color: #15803d; }
+        .slot.error { border-bottom-color: #ef4444; background-color: #fee2e2; color: #b91c1c; animation: shake 0.4s; }
+
+        /* 選項按鈕 */
+        .option-btn {
+            background-color: #ffffff;
+            border: 2px solid #f59e0b;
+            color: #b45309;
+            padding: 8px;
+            font-size: 22px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 3px 0 #d97706;
+            transition: all 0.1s;
+            width: 100%;
+            aspect-ratio: 1; /* 正方形 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .option-btn:active { transform: translateY(3px); box-shadow: none; }
+        .option-btn:hover { background-color: #fff7ed; }
+        .option-btn:disabled { background-color: #e7e5e4; border-color: #d6d3d1; color: #a8a29e; box-shadow: none; cursor: not-allowed; opacity: 0.6; transform: translateY(3px); }
+
+        /* 導航按鈕 */
+        .nav-btn {
+            padding: 8px 16px;
+            border-radius: 99px;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            white-space: nowrap;
+        }
+        .nav-btn.active {
+            background-color: #f59e0b;
+            color: white;
+            box-shadow: 0 2px 5px rgba(245, 158, 11, 0.3);
+        }
+        .nav-btn.inactive {
+            background-color: #ffffff;
+            color: #78716c;
+            border-color: #e7e5e4;
+        }
+        .nav-btn.inactive:hover {
+            border-color: #f59e0b;
+            color: #f59e0b;
+        }
+
+        /* 步驟容器 */
+        .step-container {
+            opacity: 0.6;
+            pointer-events: none;
+            filter: grayscale(0.6);
+            transition: all 0.5s ease;
+        }
+        .step-container.active {
+            opacity: 1;
+            pointer-events: auto;
+            filter: grayscale(0);
+            transform: scale(1);
+            border-color: #f59e0b;
+            box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.2);
+        }
+        .step-container.completed {
+            opacity: 1;
+            filter: grayscale(0);
+            border-color: #84cc16;
+            background-color: #f7fee7;
+        }
+
+        /* 重點標示 */
+        mark { background-color: #fde68a; padding: 0 4px; border-radius: 4px; color: #92400e; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        @keyframes tada {
+            0% { transform: scale(1); }
+            10%, 20% { transform: scale(0.9) rotate(-3deg); }
+            30%, 50%, 70%, 90% { transform: scale(1.1) rotate(3deg); }
+            40%, 60%, 80% { transform: scale(1.1) rotate(-3deg); }
+            100% { transform: scale(1) rotate(0); }
+        }
+        .animate-tada { animation: tada 1s ease-in-out; }
+    </style>
+</head>
+<body class="bg-amber-50 min-h-screen">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1.5 bg-gray-200 z-50">
+        <div id="progress-bar" class="h-full bg-amber-500 transition-all duration-500" style="width: 0%"></div>
+    </div>
+
+    <!-- Top Navigation (Sticky) -->
+    <nav class="sticky top-0 z-40 bg-white/90 backdrop-blur-md shadow-sm border-b border-amber-100 px-4 py-3">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <span class="font-bold text-amber-800 text-lg hidden md:block mr-4">SPEDMIX</span>
+            <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar w-full md:w-auto" id="nav-container">
+                <!-- Nav Buttons Injected Here -->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Layout -->
+    <div class="max-w-7xl mx-auto p-4 md:p-6 lg:p-8 flex flex-col lg:flex-row gap-6 lg:gap-10 relative">
+        
+        <!-- Left: Question Content -->
+        <main class="flex-1 min-w-0">
+            <!-- Header for Problem -->
+            <header class="mb-6">
+                <div id="problem-header" class="bg-white px-5 py-5 rounded-2xl border-2 border-amber-200 shadow-sm inline-block w-full">
+                    <!-- Title injected -->
+                </div>
+            </header>
+
+            <!-- Steps Container -->
+            <div id="quiz-container" class="space-y-6">
+                <!-- Steps injected -->
+            </div>
+        </main>
+
+        <!-- Right: Control Panel (Sticky Bottom on Mobile, Sidebar on Desktop) -->
+        <aside class="w-full lg:w-[300px] shrink-0">
+            <div class="lg:sticky lg:top-24 bg-white rounded-t-2xl lg:rounded-2xl shadow-[0_-4px_20px_rgba(0,0,0,0.1)] lg:shadow-xl border-2 border-amber-100 p-5 flex flex-col gap-4 transition-all z-40 fixed bottom-0 left-0 right-0 lg:static border-b-0 lg:border-b-2">
+                
+                <div class="text-center border-b border-gray-100 pb-2">
+                    <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">選項面板</div>
+                    <div id="feedback-message" class="text-base font-bold text-slate-600 min-h-[1.5em] flex items-center justify-center">
+                        請選擇題目開始
+                    </div>
+                </div>
+
+                <!-- Options Grid -->
+                <div id="options-container" class="grid grid-cols-4 lg:grid-cols-3 gap-3">
+                    <!-- Options injected -->
+                </div>
+
+                <!-- Next Step Button -->
+                <button id="next-btn" onclick="nextStep()" class="hidden w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-xl shadow-[0_4px_0_#15803d] active:translate-y-1 active:shadow-none transition-all text-lg flex items-center justify-center gap-2">
+                    下一步 ➔
+                </button>
+            </div>
+        </aside>
+
+    </div>
+
+<script>
+    // --- 題庫資料 (共5題) ---
+    const problems = [
+        {
+            id: 1,
+            navTitle: "第 1 題",
+            questionHtml: `<h2 class="text-xl font-bold text-amber-900 mb-2">第 1 題</h2>
+                           <p class="text-xl text-amber-800 font-medium">若 <span class="text-red-600 font-bold mx-1">1</span> 為方程式 <span class="font-serif italic mx-1">2x<span class="power">2</span> + ax - 5 = 0</span> 的解，求 <span class="italic">a</span>？</p>`,
+            steps: [
+                {
+                    title: "步驟 1：代入",
+                    desc: "將 x = 1 代入方程式。",
+                    mathHtml: `2(<div class="slot"></div>)<span class="power">2</span> + a(<div class="slot"></div>) - 5 = 0`,
+                    answers: ["1", "1"],
+                    options: ["1", "1", "2", "5"],
+                    hint: "x 換成 1"
+                },
+                {
+                    title: "步驟 2：運算",
+                    desc: "計算 2 乘以 1 的平方。",
+                    mathHtml: `<div class="slot"></div> + a - 5 = 0`,
+                    answers: ["2"],
+                    options: ["1", "2", "4"],
+                    hint: "1的平方是1，2乘1是2"
+                },
+                {
+                    title: "步驟 3：整理",
+                    desc: "合併數字：2 減 5。",
+                    mathHtml: `a - <div class="slot"></div> = 0`,
+                    answers: ["3"], // 因為 2-5 = -3，顯示成 a - 3 = 0
+                    options: ["2", "3", "5"],
+                    hint: "2 - 5 = -3"
+                },
+                {
+                    title: "步驟 4：求解",
+                    desc: "移項求 a。",
+                    mathHtml: `a = <div class="slot"></div>`,
+                    answers: ["3"],
+                    options: ["3", "-3", "0"],
+                    hint: "-3 移過去變 +3"
+                }
+            ]
+        },
+        {
+            id: 2,
+            navTitle: "第 2 題",
+            questionHtml: `<h2 class="text-xl font-bold text-amber-900 mb-2">第 2 題</h2>
+                           <p class="text-xl text-amber-800 font-medium">若 <span class="text-red-600 font-bold mx-1">-1</span> 為方程式 <span class="font-serif italic mx-1">3x<span class="power">2</span> + ax + 7 = 0</span> 的解，求 <span class="italic">a</span>？</p>`,
+            steps: [
+                {
+                    title: "步驟 1：代入",
+                    desc: "將 x = -1 代入方程式。",
+                    mathHtml: `3(<div class="slot"></div>)<span class="power">2</span> + a(<div class="slot"></div>) + 7 = 0`,
+                    answers: ["-1", "-1"],
+                    options: ["-1", "-1", "1", "3"],
+                    hint: "x 換成 -1"
+                },
+                {
+                    title: "步驟 2：整理乘方",
+                    desc: "計算 3 乘以 (-1) 的平方，並整理中間項。",
+                    // 3(1) - a + 7 = 0
+                    mathHtml: `<div class="slot"></div> - a + 7 = 0`,
+                    answers: ["3"],
+                    options: ["3", "-3", "1"],
+                    hint: "負負得正，(-1)平方是1，3乘1是3"
+                },
+                {
+                    title: "步驟 3：合併數字",
+                    desc: "3 加 7 是多少？",
+                    mathHtml: `<div class="slot"></div> - a = 0`,
+                    answers: ["10"],
+                    options: ["4", "10", "-4"],
+                    hint: "3 + 7 = 10"
+                },
+                {
+                    title: "步驟 4：求解",
+                    desc: "求出 a 的值。",
+                    mathHtml: `a = <div class="slot"></div>`,
+                    answers: ["10"],
+                    options: ["10", "-10", "1"],
+                    hint: "10 - a = 0，所以 a 是 10"
+                }
+            ]
+        },
+        {
+            id: 3,
+            navTitle: "第 3 題",
+            questionHtml: `<h2 class="text-xl font-bold text-amber-900 mb-2">第 3 題</h2>
+                           <p class="text-xl text-amber-800 font-medium">若 <span class="text-red-600 font-bold mx-1">2</span> 為方程式 <span class="font-serif italic mx-1">4x<span class="power">2</span> + 5ax - 6 = 0</span> 的解，求 <span class="italic">a</span>？</p>`,
+            steps: [
+                {
+                    title: "步驟 1：代入",
+                    desc: "將 x = 2 代入。",
+                    mathHtml: `4(<div class="slot"></div>)<span class="power">2</span> + 5a(<div class="slot"></div>) - 6 = 0`,
+                    answers: ["2", "2"],
+                    options: ["2", "2", "4", "5"],
+                    hint: "x 換成 2"
+                },
+                {
+                    title: "步驟 2：運算",
+                    desc: "算出 4x² 的值 (4 × 4) 和 5a × 2。",
+                    mathHtml: `<div class="slot"></div> + 10a - 6 = 0`,
+                    answers: ["16"],
+                    options: ["8", "16", "12"],
+                    hint: "2的平方是4，4乘4是16"
+                },
+                {
+                    title: "步驟 3：合併",
+                    desc: "16 減 6 等於多少？",
+                    mathHtml: `10a + <div class="slot"></div> = 0`,
+                    answers: ["10"],
+                    options: ["10", "22", "-10"],
+                    hint: "16 - 6 = 10"
+                },
+                {
+                    title: "步驟 4：求解",
+                    desc: "10a = -10，那 a 是多少？",
+                    mathHtml: `a = <div class="slot"></div>`,
+                    answers: ["-1"],
+                    options: ["1", "-1", "10"],
+                    hint: "正數移過去變負數，然後除以10"
+                }
+            ]
+        },
+        {
+            id: 4,
+            navTitle: "第 4 題",
+            questionHtml: `<h2 class="text-xl font-bold text-amber-900 mb-2">第 4 題</h2>
+                           <p class="text-xl text-amber-800 font-medium">若 <span class="text-red-600 font-bold mx-1">3</span> 為方程式 <span class="font-serif italic mx-1">-x<span class="power">2</span> - 2ax - 9 = 0</span> 的解，求 <span class="italic">a</span>？</p>`,
+            steps: [
+                {
+                    title: "步驟 1：代入",
+                    desc: "小心負號！將 x = 3 代入。",
+                    mathHtml: `-(<div class="slot"></div>)<span class="power">2</span> - 2a(<div class="slot"></div>) - 9 = 0`,
+                    answers: ["3", "3"],
+                    options: ["3", "3", "-3", "9"],
+                    hint: "x 換成 3"
+                },
+                {
+                    title: "步驟 2：運算",
+                    desc: "-(3)² 是 -9，整理一下。",
+                    mathHtml: `<div class="slot"></div> - 6a - 9 = 0`,
+                    answers: ["-9"],
+                    options: ["9", "-9", "-6"],
+                    hint: "先算平方再加負號，是 -9"
+                },
+                {
+                    title: "步驟 3：合併",
+                    desc: "-9 再減 9 是多少？",
+                    mathHtml: `<div class="slot"></div> - 6a = 0`,
+                    answers: ["-18"],
+                    options: ["0", "-18", "18"],
+                    hint: "欠9塊再欠9塊，共欠18塊"
+                },
+                {
+                    title: "步驟 4：求解",
+                    desc: "-18 - 6a = 0，移項後 -6a = 18，a = ?",
+                    mathHtml: `a = <div class="slot"></div>`,
+                    answers: ["-3"],
+                    options: ["3", "-3", "1/3"],
+                    hint: "18 除以 -6"
+                }
+            ]
+        },
+        {
+            id: 5,
+            navTitle: "第 5 題",
+            questionHtml: `<h2 class="text-xl font-bold text-amber-900 mb-2">第 5 題 (進階)</h2>
+                           <p class="text-xl text-amber-800 font-medium">若 <span class="text-red-600 font-bold mx-1">-3</span> 為方程式 <span class="font-serif italic mx-1">2x<span class="power">2</span> + 7ax - 11 = 0</span> 的解，求 <span class="italic">a</span>？</p>`,
+            steps: [
+                {
+                    title: "步驟 1：代入",
+                    desc: "將 x = -3 代入。",
+                    mathHtml: `2(<div class="slot"></div>)<span class="power">2</span> + 7a(<div class="slot"></div>) - 11 = 0`,
+                    answers: ["-3", "-3"],
+                    options: ["-3", "-3", "3", "9"],
+                    hint: "括號內填入 -3"
+                },
+                {
+                    title: "步驟 2：運算",
+                    desc: "2 × (-3)² = 18。整理 7a × (-3)。",
+                    // 18 - 21a - 11 = 0
+                    mathHtml: `18 - <div class="slot"></div>a - 11 = 0`,
+                    answers: ["21"],
+                    options: ["7", "21", "14"],
+                    hint: "7 乘以 3 是 21"
+                },
+                {
+                    title: "步驟 3：合併",
+                    desc: "18 - 11 = ?",
+                    mathHtml: `<div class="slot"></div> - 21a = 0`,
+                    answers: ["7"],
+                    options: ["7", "29", "-7"],
+                    hint: "18 減 11 等於 7"
+                },
+                {
+                    title: "步驟 4：求解",
+                    desc: "7 - 21a = 0，所以 21a = 7，a 是分數喔！",
+                    mathHtml: `a = <div class="slot"></div>`,
+                    answers: ["1/3"],
+                    options: [`<span class="fraction"><span>1</span><span>3</span></span>`, "3", "7"],
+                    hint: "7 除以 21，約分後是 1/3"
+                }
+            ]
+        }
+    ];
+
+    // --- 狀態管理 ---
+    let currentProblemIdx = 0;
+    let currentStep = 0;
+    let stepState = { filled: {}, isCompleted: false };
+
+    document.addEventListener("DOMContentLoaded", () => {
+        renderNav();
+        loadProblem(0);
+    });
+
+    // --- 導航列渲染 ---
+    function renderNav() {
+        const navContainer = document.getElementById('nav-container');
+        navContainer.innerHTML = problems.map((prob, idx) => `
+            <button onclick="switchProblem(${idx})" 
+                    class="nav-btn ${idx === currentProblemIdx ? 'active' : 'inactive'}">
+                ${prob.navTitle}
+            </button>
+        `).join('');
+    }
+
+    // --- 切換題目 ---
+    function switchProblem(idx) {
+        currentProblemIdx = idx;
+        currentStep = 0;
+        stepState = { filled: {}, isCompleted: false };
+        
+        // 更新導航樣式
+        document.querySelectorAll('.nav-btn').forEach((btn, i) => {
+            if (i === idx) {
+                btn.classList.add('active');
+                btn.classList.remove('inactive');
+            } else {
+                btn.classList.add('inactive');
+                btn.classList.remove('active');
+            }
+        });
+
+        // 隱藏下一步按鈕
+        document.getElementById('next-btn').classList.add('hidden');
+        
+        loadProblem(idx);
+    }
+
+    // --- 載入題目內容 ---
+    function loadProblem(idx) {
+        const problem = problems[idx];
+        
+        // 渲染標題
+        document.getElementById('problem-header').innerHTML = problem.questionHtml;
+        
+        // 渲染所有步驟
+        renderAllSteps(problem);
+        
+        // 啟動第一步
+        activateStep(0);
+        
+        // 捲動到頂部
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderAllSteps(problem) {
+        const container = document.getElementById('quiz-container');
+        container.innerHTML = problem.steps.map((step, idx) => `
+            <div id="step-${idx}" class="step-container bg-white rounded-2xl shadow-md border-2 border-stone-100 overflow-hidden p-5 relative transition-all duration-500">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <span class="inline-block bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded-full mb-2">Step ${idx + 1}</span>
+                        <h3 class="text-lg font-bold text-stone-700">${step.title}</h3>
+                        <p class="text-stone-500 text-sm mt-1">${step.desc}</p>
+                    </div>
+                    <div class="status-mark opacity-0 text-2xl transition-opacity duration-300">🎉</div>
+                </div>
+                
+                <div class="flex justify-center items-center bg-amber-50 rounded-xl p-4 border border-amber-100 min-h-[80px]">
+                    <div class="math text-center">
+                        ${transformSlots(step.mathHtml, idx)}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function transformSlots(html, stepIdx) {
+        return html.replace(/class="slot"/g, `class="slot" data-step="${stepIdx}" onclick="clearSlot(${stepIdx}, this)"`);
+    }
+
+    function activateStep(idx) {
+        const problem = problems[currentProblemIdx];
+        
+        // 更新進度條
+        const progress = ((idx) / problem.steps.length) * 100;
+        document.getElementById('progress-bar').style.width = `${progress}%`;
+
+        // 視覺切換
+        document.querySelectorAll('.step-container').forEach((el, i) => {
+            if (i === idx) {
+                el.classList.add('active');
+                setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 200);
+            } else if (i < idx) {
+                el.classList.add('completed');
+                el.classList.remove('active');
+            } else {
+                el.classList.remove('active', 'completed');
+            }
+        });
+
+        stepState = { filled: {}, isCompleted: false };
+        renderOptions(idx);
+        
+        showMessage("請點擊選項填空", "normal");
+    }
+
+    function renderOptions(stepIdx) {
+        const container = document.getElementById('options-container');
+        const data = problems[currentProblemIdx].steps[stepIdx];
+        
+        container.innerHTML = data.options.map((opt, i) => {
+            // 處理 HTML 選項 (如分數) 的值
+            let value = opt;
+            // 如果選項包含 HTML 標籤（例如分數），我們需要提取純文字值來做比對，或者直接用 data-value 屬性
+            // 簡單起見，我們將 opt 直接傳遞，但在比對時要小心
+            // 這裡採用: 若 opt 包含 span class="fraction"，則 value 設為特殊標記，如 "1/3"
+            if (opt.includes('fraction')) {
+                 if(opt.includes('1') && opt.includes('3')) value = "1/3";
+            }
+            
+            return `
+            <button class="option-btn" 
+                id="btn-${stepIdx}-${i}"
+                onclick="handleOptionClick(this, '${value.replace(/'/g, "\\'")}', ${stepIdx})">
+                ${opt}
+            </button>
+        `}).join('');
+    }
+
+    function handleOptionClick(btn, value, stepIdx) {
+        if (stepState.isCompleted) return;
+
+        const slots = document.querySelectorAll(`.slot[data-step="${stepIdx}"]`);
+        let targetSlot = null;
+        let targetSlotIdx = -1;
+
+        for (let i = 0; i < slots.length; i++) {
+            if (!slots[i].classList.contains('filled')) {
+                targetSlot = slots[i];
+                targetSlotIdx = i;
+                break;
+            }
+        }
+
+        if (!targetSlot) {
+            showMessage("空格已滿", "orange");
+            return;
+        }
+
+        // 填入顯示 (如果是分數，要顯示 HTML)
+        if (value === "1/3") {
+            targetSlot.innerHTML = `<span class="fraction"><span>1</span><span>3</span></span>`;
+        } else {
+            targetSlot.textContent = value;
+        }
+        
+        targetSlot.classList.add('filled');
+        targetSlot.classList.remove('empty');
+        stepState.filled[targetSlotIdx] = value;
+        
+        btn.disabled = true;
+        targetSlot.dataset.btnId = btn.id;
+
+        // 檢查是否填滿
+        const correctAnswers = problems[currentProblemIdx].steps[stepIdx].answers;
+        const filledCount = Object.keys(stepState.filled).length;
+
+        if (filledCount === correctAnswers.length) {
+            checkStepAnswer(stepIdx);
+        } else {
+            showMessage("還有空格喔", "normal");
+        }
+    }
+
+    function clearSlot(stepIdx, slotEl) {
+        if (stepIdx !== currentStep || stepState.isCompleted) return;
+        
+        if (slotEl.classList.contains('filled')) {
+            const btnId = slotEl.dataset.btnId;
+            if (btnId) {
+                const btn = document.getElementById(btnId);
+                if (btn) btn.disabled = false;
+            }
+            
+            slotEl.innerHTML = ""; // 清空 (包含HTML)
+            slotEl.classList.remove('filled', 'error');
+            
+            // 移除紀錄
+            // 需找出這是第幾個 slot
+            const allSlots = document.querySelectorAll(`.slot[data-step="${stepIdx}"]`);
+            for(let i=0; i<allSlots.length; i++) {
+                if(allSlots[i] === slotEl) {
+                    delete stepState.filled[i];
+                    break;
+                }
+            }
+            showMessage("已清除", "normal");
+        }
+    }
+
+    function checkStepAnswer(stepIdx) {
+        const correctAnswers = problems[currentProblemIdx].steps[stepIdx].answers;
+        const slots = document.querySelectorAll(`.slot[data-step="${stepIdx}"]`);
+        let allCorrect = true;
+
+        slots.forEach((slot, i) => {
+            const userVal = stepState.filled[i];
+            if (userVal === correctAnswers[i]) {
+                slot.classList.add('correct');
+                slot.classList.remove('error');
+            } else {
+                slot.classList.add('error');
+                slot.classList.remove('correct');
+                allCorrect = false;
+            }
+        });
+
+        if (allCorrect) {
+            stepState.isCompleted = true;
+            showMessage("答對了！🎉", "green");
+            document.getElementById('next-btn').classList.remove('hidden');
+            document.getElementById('options-container').innerHTML = ''; 
+            
+            document.querySelector(`#step-${stepIdx} .status-mark`).style.opacity = '1';
+            document.querySelector(`#step-${stepIdx} .status-mark`).classList.add('animate-tada');
+
+            // 如果是最後一步
+            if (stepIdx === problems[currentProblemIdx].steps.length - 1) {
+                showFinalSuccess();
+            }
+        } else {
+            showMessage(`再試試看... ${problems[currentProblemIdx].steps[stepIdx].hint}`, "red");
+        }
+    }
+
+    function nextStep() {
+        const totalSteps = problems[currentProblemIdx].steps.length;
+        if (currentStep < totalSteps - 1) {
+            currentStep++;
+            activateStep(currentStep);
+            document.getElementById('next-btn').classList.add('hidden');
+        }
+    }
+
+    function showFinalSuccess() {
+        document.getElementById('progress-bar').style.width = '100%';
+        document.getElementById('next-btn').classList.add('hidden');
+        
+        const container = document.getElementById('quiz-container');
+        const finalMsg = document.createElement('div');
+        finalMsg.className = "text-center py-6 animate-tada bg-amber-100 rounded-xl mt-6 border-2 border-amber-300";
+        
+        // 判斷是否還有下一題
+        const hasNextProblem = currentProblemIdx < problems.length - 1;
+        const btnHtml = hasNextProblem 
+            ? `<button onclick="switchProblem(${currentProblemIdx + 1})" class="mt-4 bg-amber-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-amber-600 shadow-md">挑戰下一題 ➔</button>`
+            : `<button onclick="location.reload()" class="mt-4 bg-white text-amber-600 border-2 border-amber-400 font-bold py-2 px-6 rounded-lg hover:bg-amber-50">重新開始</button>`;
+
+        finalMsg.innerHTML = `
+            <h2 class="text-2xl font-bold text-amber-600 mb-2">🎉 恭喜完成本題！</h2>
+            ${btnHtml}
+        `;
+        container.appendChild(finalMsg);
+        
+        setTimeout(() => finalMsg.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
+    }
+
+    function showMessage(text, type) {
+        const el = document.getElementById('feedback-message');
+        el.textContent = text;
+        
+        el.className = "text-base font-bold min-h-[1.5em] flex items-center justify-center transition-colors duration-300";
+        if (type === 'green') el.classList.add('text-green-600');
+        else if (type === 'red') el.classList.add('text-red-500');
+        else if (type === 'orange') el.classList.add('text-orange-500');
+        else el.classList.add('text-slate-600');
+    }
+
+</script>
+</body>
+</html> 
