@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文字符號 - 熟練3</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f0f9ff;
+        }
+
+        /* 數學式專用 CSS */
+        .math {
+            font-family: 'Times New Roman', serif;
+            font-size: 28px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #1e3a8a;
+            vertical-align: middle;
+        }
+
+        /* 分數結構 */
+        .fraction-group {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            vertical-align: middle;
+            margin: 0 4px;
+        }
+        
+        .fraction-group .fraction-line {
+            width: 100%;
+            height: 3px;
+            background-color: #333;
+            margin: 4px 0;
+            border-radius: 2px;
+        }
+
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.9em;
+            vertical-align: middle;
+        }
+        .fraction span:first-child { border-bottom: 2px solid #000; padding: 0 4px; display: block; text-align: center; }
+        
+        /* 填答槽 (Slot) */
+        .slot {
+            min-width: 60px;
+            height: 60px;
+            padding: 0 10px;
+            border: 2px dashed #94a3b8;
+            border-radius: 8px;
+            background-color: #ffffff;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin: 0 2px;
+            vertical-align: middle;
+        }
+
+        /* 分數模式下的 Slot 特調 */
+        .fraction-group .slot {
+            min-width: 50px;
+            height: 50px;
+            font-size: 20px;
+            border-width: 2px;
+            margin: 1px 0;
+        }
+
+        .slot.filled {
+            border: 2px solid #3b82f6;
+            background-color: #eff6ff;
+            border-style: solid;
+        }
+
+        .slot.correct {
+            border: 2px solid #22c55e;
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+
+        /* 選項按鈕 */
+        .option-btn {
+            min-width: 60px;
+            height: 60px;
+            padding: 0 16px;
+            margin: 6px;
+            background-color: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 22px;
+            font-family: 'Times New Roman', serif;
+            font-weight: bold;
+            color: #334155;
+            box-shadow: 0 4px 0 #cbd5e1;
+            transition: all 0.1s;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .option-btn:active { transform: translateY(4px); box-shadow: none; }
+        .option-btn:disabled {
+            background-color: #f1f5f9; color: #cbd5e1;
+            border-color: #f1f5f9; box-shadow: none;
+            cursor: not-allowed; transform: translateY(4px);
+        }
+
+        /* 步驟容器 */
+        .step-container {
+            opacity: 0.6;
+            pointer-events: none;
+            transition: all 0.4s ease;
+            filter: grayscale(0.8);
+        }
+        .step-container.active {
+            opacity: 1; pointer-events: auto; filter: grayscale(0);
+            background-color: white; border: 2px solid #3b82f6;
+            transform: scale(1.01); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .step-container.completed {
+            opacity: 1; filter: grayscale(0); border: 2px solid #22c55e;
+            background-color: #f0fdf4;
+        }
+
+        /* 重點高亮 */
+        mark { background-color: #fef08a; padding: 0 4px; border-radius: 4px; color: #854d0e; }
+    </style>
+</head>
+<body class="p-4 md:p-8 min-h-screen flex flex-col items-center">
+
+    <!-- Header -->
+    <header class="w-full max-w-3xl mb-8 text-center">
+        <div class="inline-block bg-slate-700 text-white px-6 py-2 rounded-full text-lg font-bold mb-4 shadow-md">
+            📓 熱練 3：以文字符號表示生活中的數量關係
+        </div>
+        <p class="text-slate-600 text-lg">
+            根據題意，將正確的數學式填入空格中。<br>
+            <span class="text-sm text-slate-500">（不必化簡，列出式子即可）</span>
+        </p>
+    </header>
+
+    <!-- Main Game Area -->
+    <main id="game-area" class="w-full max-w-3xl space-y-6">
+        <!-- Steps generated by JS -->
+    </main>
+
+    <!-- Feedback Modal -->
+    <div id="feedback-modal" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white px-6 py-4 rounded-xl shadow-2xl border-l-8 hidden z-50 flex items-center gap-4 transition-all duration-300">
+        <span id="feedback-icon" class="text-3xl"></span>
+        <span id="feedback-text" class="text-xl font-bold text-slate-700"></span>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // 題目資料：熟練 3
+        const stepsData = [
+            {
+                id: 1,
+                title: "題目 1：正方形邊長",
+                question: "已知一正方形的 <mark>周長為 x 公分</mark>，<br>則此正方形的 <b>邊長</b> 為多少公分？",
+                layout: "fraction", // 特殊佈局：分數
+                slots: 2, // 分子 + 分母
+                options: ["x", "4", "4x", "1"],
+                correctAnswer: ["x", "4"],
+                hint: "邊長 = 周長 ÷ 4，試著用分數表示看看！(分子 ÷ 分母)",
+            },
+            {
+                id: 2,
+                title: "題目 2：距離公式",
+                question: "以 <mark>每小時 60 公里</mark> 的速度行駛 <span class='math'>x</span> 小時，<br>可行駛多少公里？",
+                layout: "linear",
+                slots: 2, // 60 x
+                options: ["60", "x", "60+x", "÷"],
+                correctAnswer: ["60", "x"],
+                hint: "距離 = 速度 × 時間 (乘號可以省略喔)",
+            },
+            {
+                id: 3,
+                title: "題目 3：位值原理",
+                question: "個位數為 <span class='math'>x-3</span>，十位數為 <span class='math'>x</span> 的二位數，<br>可表示為？",
+                layout: "linear",
+                slots: 3, // 10x + (x-3)
+                options: ["10x", "+", "(x-3)", "x", "10"],
+                correctAnswer: ["10x", "+", "(x-3)"],
+                hint: "數值 = 10 × 十位數字 + 個位數字",
+            },
+            {
+                id: 4,
+                title: "題目 4：除法原理",
+                question: "甲數除以乙數的商為 7，餘數為 5。<br>設 <mark>乙數為 x</mark>，則 <b>甲數</b> 為？",
+                layout: "linear",
+                slots: 3, // 7x + 5
+                options: ["7x", "+", "5", "7", "x", "-"],
+                correctAnswer: ["7x", "+", "5"],
+                hint: "被除數(甲) = 除數(乙) × 商 + 餘數。注意：7 乘以 x 可以簡記為 7x 喔！",
+            }
+        ];
+
+        let currentStep = 0;
+        let userAnswers = {}; 
+        let stepCompleted = {}; 
+
+        const gameArea = document.getElementById('game-area');
+        const feedbackModal = document.getElementById('feedback-modal');
+        const feedbackText = document.getElementById('feedback-text');
+        const feedbackIcon = document.getElementById('feedback-icon');
+
+        function init() {
+            renderSteps();
+            activateStep(0);
+        }
+
+        function renderSteps() {
+            gameArea.innerHTML = '';
+            stepsData.forEach((step, index) => {
+                const stepEl = document.createElement('div');
+                stepEl.id = `step-${index}`;
+                stepEl.className = `step-container bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden`;
+                
+                userAnswers[index] = new Array(step.slots).fill(null);
+                stepCompleted[index] = false;
+
+                stepEl.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-lg font-bold text-slate-400">Step ${index + 1}：${step.title}</h3>
+                        <span class="status-icon hidden text-green-500 text-xl font-bold">✔️ 完成</span>
+                    </div>
+                    
+                    <div class="mb-6 text-xl text-slate-800 leading-relaxed font-medium">
+                        ${step.question}
+                    </div>
+
+                    <div class="flex flex-col items-center gap-6">
+                        <!-- 答題區 -->
+                        <div class="flex items-center flex-wrap gap-2 bg-slate-50 p-6 rounded-xl w-full justify-center min-h-[120px] math" id="slots-area-${index}">
+                            ${generateSlotsByLayout(index, step)}
+                            <span class="text-xl text-slate-400 font-bold ml-2">
+                                ${getUnit(index)}
+                            </span>
+                        </div>
+
+                        <!-- 選項區 -->
+                        <div class="flex flex-wrap justify-center gap-3" id="options-area-${index}">
+                            ${generateOptionsHTML(index, step.options)}
+                        </div>
+
+                        <!-- 檢查按鈕 -->
+                        <button onclick="checkStep(${index})" class="check-btn bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold py-3 px-8 rounded-xl shadow-lg transform transition active:scale-95 w-full md:w-auto mt-2">
+                            檢查答案
+                        </button>
+                    </div>
+                `;
+                gameArea.appendChild(stepEl);
+            });
+        }
+
+        function getUnit(index) {
+            // 根據題目顯示單位 (非必要，但增加完整度)
+            if (index === 0) return "(公分)";
+            if (index === 1) return "(公里)";
+            return "";
+        }
+
+        // 根據佈局類型生成 Slot HTML
+        function generateSlotsByLayout(stepIndex, step) {
+            if (step.layout === 'fraction') {
+                // 生成分數結構：分子 Slot 0, 分母 Slot 1
+                return `
+                    <div class="fraction-group">
+                        <div class="slot" data-step="${stepIndex}" data-slot-index="0" onclick="handleSlotClick(${stepIndex}, 0)"></div>
+                        <div class="fraction-line"></div>
+                        <div class="slot" data-step="${stepIndex}" data-slot-index="1" onclick="handleSlotClick(${stepIndex}, 1)"></div>
+                    </div>
+                `;
+            } else {
+                // 預設線性結構
+                let html = '';
+                for (let i = 0; i < step.slots; i++) {
+                    html += `<div class="slot" data-step="${stepIndex}" data-slot-index="${i}" onclick="handleSlotClick(${stepIndex}, ${i})"></div>`;
+                }
+                return html;
+            }
+        }
+
+        function generateOptionsHTML(stepIndex, options) {
+            return options.map(opt => `
+                <button class="option-btn" data-step="${stepIndex}" data-val="${opt}" onclick="handleOptionClick(${stepIndex}, '${opt}', this)">
+                    ${opt}
+                </button>
+            `).join('');
+        }
+
+        function activateStep(index) {
+            currentStep = index;
+            const stepEl = document.getElementById(`step-${index}`);
+            if (stepEl) {
+                stepEl.classList.add('active');
+                setTimeout(() => stepEl.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
+            }
+        }
+
+        window.handleOptionClick = function(stepIndex, value, btnEl) {
+            if (stepCompleted[stepIndex]) return;
+
+            // 尋找該步驟第一個空的 slot
+            const emptySlotIndex = userAnswers[stepIndex].findIndex(val => val === null);
+            
+            if (emptySlotIndex !== -1) {
+                userAnswers[stepIndex][emptySlotIndex] = value;
+                
+                const slotEl = document.querySelector(`.slot[data-step="${stepIndex}"][data-slot-index="${emptySlotIndex}"]`);
+                slotEl.innerHTML = value; // 不需要複雜渲染，直接填入
+                slotEl.classList.add('filled');
+                
+                btnEl.disabled = true;
+                playSound('pop');
+            } else {
+                showFeedback('空格滿了！點擊空格可以清除重填。', 'warning');
+            }
+        }
+
+        window.handleSlotClick = function(stepIndex, slotIndex) {
+            if (stepCompleted[stepIndex]) return;
+
+            const currentVal = userAnswers[stepIndex][slotIndex];
+            if (currentVal) {
+                userAnswers[stepIndex][slotIndex] = null;
+
+                const slotEl = document.querySelector(`.slot[data-step="${stepIndex}"][data-slot-index="${slotIndex}"]`);
+                slotEl.innerHTML = '';
+                slotEl.classList.remove('filled');
+
+                // 恢復按鈕狀態
+                const optionBtns = document.querySelectorAll(`#options-area-${stepIndex} .option-btn`);
+                for (let btn of optionBtns) {
+                    if (btn.disabled && btn.dataset.val === currentVal) {
+                        btn.disabled = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        window.checkStep = function(stepIndex) {
+            const currentAnswers = userAnswers[stepIndex];
+            const correctData = stepsData[stepIndex].correctAnswer;
+            
+            if (currentAnswers.includes(null)) {
+                showFeedback('請填滿所有空格再檢查！', 'warning');
+                return;
+            }
+
+            // 檢查答案 (JSON stringify 比對陣列)
+            const isCorrect = JSON.stringify(currentAnswers) === JSON.stringify(correctData);
+
+            if (isCorrect) {
+                handleSuccess(stepIndex);
+            } else {
+                handleFailure(stepIndex, stepsData[stepIndex].hint);
+            }
+        }
+
+        function handleSuccess(stepIndex) {
+            stepCompleted[stepIndex] = true;
+            const stepEl = document.getElementById(`step-${stepIndex}`);
+            
+            stepEl.classList.remove('active');
+            stepEl.classList.add('completed');
+            stepEl.querySelector('.status-icon').classList.remove('hidden');
+            stepEl.querySelector('.check-btn').classList.add('hidden');
+            
+            const slots = stepEl.querySelectorAll('.slot');
+            slots.forEach(s => s.classList.add('correct'));
+
+            showFeedback('答對了！太棒了！ 🎉', 'success');
+            playSound('success');
+
+            if (stepIndex < stepsData.length - 1) {
+                setTimeout(() => activateStep(stepIndex + 1), 1500);
+            } else {
+                setTimeout(() => {
+                    showFeedback('恭喜！所有挑戰都完成了！ 🏆', 'success');
+                    confettiEffect();
+                }, 1000);
+            }
+        }
+
+        function handleFailure(stepIndex, hint) {
+            showFeedback(`再想想看... 💡 ${hint}`, 'error');
+            playSound('error');
+            const slotsArea = document.getElementById(`slots-area-${stepIndex}`);
+            slotsArea.classList.add('animate-pulse');
+            setTimeout(() => slotsArea.classList.remove('animate-pulse'), 500);
+        }
+
+        function showFeedback(msg, type) {
+            feedbackText.innerText = msg;
+            feedbackModal.classList.remove('hidden');
+            
+            // Reset classes
+            feedbackModal.className = "fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white px-8 py-4 rounded-xl shadow-2xl border-l-8 z-50 flex items-center gap-4 transition-all duration-300 min-w-[320px]";
+            
+            if (type === 'success') {
+                feedbackModal.classList.add('border-green-500');
+                feedbackIcon.innerText = "😎";
+            } else if (type === 'error') {
+                feedbackModal.classList.add('border-red-500');
+                feedbackIcon.innerText = "💪";
+            } else {
+                feedbackModal.classList.add('border-yellow-500');
+                feedbackIcon.innerText = "⚠️";
+            }
+
+            setTimeout(() => feedbackModal.classList.add('hidden'), 3500);
+        }
+
+        function playSound(type) {
+            // Placeholder for sound
+        }
+
+        function confettiEffect() {
+            const colors = ['#f43f5e', '#8b5cf6', '#3b82f6', '#10b981', '#f59e0b'];
+            for(let i=0; i<60; i++) {
+                const conf = document.createElement('div');
+                Object.assign(conf.style, {
+                    position: 'fixed',
+                    left: Math.random() * 100 + 'vw',
+                    top: '-10px',
+                    width: '12px',
+                    height: '12px',
+                    backgroundColor: colors[Math.floor(Math.random() * colors.length)],
+                    transition: 'top 2.5s ease-out, transform 2.5s linear',
+                    zIndex: '9999',
+                    borderRadius: '2px'
+                });
+                document.body.appendChild(conf);
+                setTimeout(() => {
+                    conf.style.top = '105vh';
+                    conf.style.transform = `rotate(${Math.random() * 720}deg) translateX(${Math.random()*100 - 50}px)`;
+                }, 50);
+            }
+        }
+
+        // Init
+        init();
+    </script>
+</body>
+</html>

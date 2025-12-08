@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文字符號代表數 - 互動練習</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f0f9ff; /* Light Blue bg */
+        }
+
+        /* -------------------------------------- */
+        /* 數學式專用 CSS (符合教科書排版規則) */
+        /* -------------------------------------- */
+        .math {
+            font-family: 'Times New Roman', serif; /* 數學變數常數常用襯線字 */
+            font-size: 28px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #1e3a8a; /* Dark Blue */
+            vertical-align: middle;
+        }
+
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1;
+            vertical-align: middle;
+            margin: 0 4px;
+        }
+        
+        .fraction span:first-child {
+            border-bottom: 2px solid #000;
+            padding: 2px 4px;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+
+        .fraction span:last-child {
+            padding-top: 2px;
+            display: block;
+        }
+
+        .power {
+            font-size: 16px;
+            vertical-align: super;
+            margin-left: 2px;
+            transform: translateY(-8px);
+            color: #e63946;
+        }
+
+        .sqrt::before {
+            content: "√";
+            font-size: 28px;
+            margin-right: -2px;
+        }
+        
+        .sqrt {
+            border-top: 2px solid #000;
+            padding-top: 1px;
+            display: inline-block;
+        }
+
+        /* -------------------------------------- */
+        /* 互動元件 CSS */
+        /* -------------------------------------- */
+        
+        /* 填答槽 (Slot) */
+        .slot {
+            width: 60px;
+            height: 50px;
+            border: 2px dashed #94a3b8;
+            border-radius: 8px;
+            background-color: #ffffff;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin: 0 4px;
+            vertical-align: middle;
+        }
+
+        .slot.filled {
+            border: 2px solid #3b82f6; /* Blue border when filled */
+            background-color: #eff6ff;
+            border-style: solid;
+        }
+
+        .slot.correct {
+            border: 2px solid #22c55e; /* Green border */
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+
+        .slot.active-target {
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6;
+        }
+
+        /* 選項按鈕 (Option Button) */
+        .option-btn {
+            min-width: 60px;
+            height: 60px;
+            padding: 0 16px;
+            margin: 6px;
+            background-color: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 24px;
+            font-family: 'Times New Roman', serif;
+            font-weight: bold;
+            color: #334155;
+            box-shadow: 0 4px 0 #cbd5e1;
+            transition: all 0.1s;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .option-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #cbd5e1;
+        }
+
+        .option-btn:disabled {
+            background-color: #f1f5f9;
+            color: #cbd5e1;
+            border-color: #f1f5f9;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: translateY(4px);
+        }
+
+        /* 步驟容器 */
+        .step-container {
+            opacity: 0.5;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            filter: grayscale(0.8);
+        }
+
+        .step-container.active {
+            opacity: 1;
+            pointer-events: auto;
+            filter: grayscale(0);
+            background-color: white;
+            border: 2px solid #3b82f6;
+            transform: scale(1.01);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-container.completed {
+            opacity: 1;
+            filter: grayscale(0);
+            border: 2px solid #22c55e;
+            background-color: #f0fdf4;
+        }
+
+        /* 重點高亮 */
+        mark {
+            background-color: #fef08a; /* Yellow-200 */
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #854d0e;
+            font-weight: bold;
+        }
+
+        /* 隱藏元素但保留空間 (Fade out) */
+        .fade-enter {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .fade-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.5s ease;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 min-h-screen flex flex-col items-center">
+
+    <!-- Header -->
+    <header class="w-full max-w-3xl mb-8 text-center">
+        <div class="inline-block bg-indigo-600 text-white px-6 py-2 rounded-full text-lg font-bold mb-4 shadow-md">
+            🧩 熟練 1：以文字符號代表數
+        </div>
+        <p class="text-slate-600 text-lg">
+            請根據題意，點擊下方按鈕將正確的符號或數字填入空格中。
+        </p>
+    </header>
+
+    <!-- Main Game Area -->
+    <main id="game-area" class="w-full max-w-3xl space-y-6">
+        <!-- Steps will be injected here by JS -->
+    </main>
+
+    <!-- Global Feedback Area (Fixed Bottom or inline) -->
+    <div id="feedback-modal" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white px-6 py-4 rounded-xl shadow-2xl border-l-8 border-yellow-500 hidden z-50 flex items-center gap-4 transition-all duration-300">
+        <span id="feedback-icon" class="text-3xl">🤔</span>
+        <span id="feedback-text" class="text-xl font-bold text-slate-700">提示訊息</span>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // 題目資料結構
+        const stepsData = [
+            {
+                id: 1,
+                title: "題目 1-1：年齡問題",
+                question: "媽媽比小妍 <mark>大 23 歲</mark>。<br>如果小妍今年 <span class='math'>x</span> 歲，則媽媽今年幾歲？",
+                slots: 3, // x + 23
+                options: ["x", "y", "+", "-", "23"],
+                correctAnswer: ["x", "+", "23"], // 順序必須完全一致
+                hint: "「比...大」通常是用加法喔！",
+                illustration: null
+            },
+            {
+                id: 2,
+                title: "題目 1-2：反向思考",
+                question: "承上題，如果媽媽今年 <span class='math'>y</span> 歲，<br>則小妍今年幾歲？",
+                slots: 3, // y - 23
+                options: ["x", "y", "+", "-", "23"],
+                correctAnswer: ["y", "-", "23"],
+                hint: "如果是從小妍算媽媽是加，那從媽媽算回小妍呢？",
+                illustration: null
+            },
+            {
+                id: 3,
+                title: "題目 2-1：票價計算",
+                question: "棒球賽門票 <mark>每張 300 元</mark>。<br>如果小祐買了 <span class='math'>x</span> 張門票，則他共需付多少元？",
+                slots: 3, // x * 300 (依題目圖片顯示邏輯)
+                options: ["x", "y", "300", "×", "÷"],
+                correctAnswer: [["x", "×", "300"], ["300", "×", "x"]], 
+                hint: "總金額 = 單價 × 數量 (也可以是 數量 × 單價 喔！)",
+                illustration: null
+            },
+            {
+                id: 4,
+                title: "題目 2-2：數量計算",
+                question: "承上題，如果小祐共付了 <span class='math'>y</span> 元，<br>則他買了幾張門票？",
+                slots: 3, // y / 300
+                options: ["x", "y", "300", "×", "÷"],
+                correctAnswer: ["y", "÷", "300"],
+                hint: "數量 = 總金額 ÷ 單價",
+                illustration: null
+            }
+        ];
+
+        let currentStep = 0;
+        let userAnswers = {}; // Store answers per step: { 1: [val, val], ... }
+        let stepCompleted = {}; // Store completion status
+
+        const gameArea = document.getElementById('game-area');
+        const feedbackModal = document.getElementById('feedback-modal');
+        const feedbackText = document.getElementById('feedback-text');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const feedbackBorder = document.getElementById('feedback-modal');
+
+        // 初始化
+        function init() {
+            renderSteps();
+            activateStep(0);
+        }
+
+        // 渲染所有步驟
+        function renderSteps() {
+            gameArea.innerHTML = '';
+            stepsData.forEach((step, index) => {
+                // 建立步驟容器
+                const stepEl = document.createElement('div');
+                stepEl.id = `step-${index}`;
+                stepEl.className = `step-container bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden`;
+                
+                // 初始化答案陣列
+                userAnswers[index] = new Array(step.slots).fill(null);
+                stepCompleted[index] = false;
+
+                // 構建 HTML
+                stepEl.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-lg font-bold text-slate-400 step-title">Step ${index + 1}</h3>
+                        <span class="status-icon hidden text-green-500 text-xl font-bold">✔️ 完成</span>
+                    </div>
+                    
+                    <div class="mb-6 text-xl text-slate-800 leading-relaxed">
+                        ${step.question}
+                    </div>
+
+                    <div class="flex flex-col items-center gap-6">
+                        <!-- 答題區 (Slots) -->
+                        <div class="flex items-center gap-2 bg-slate-50 p-4 rounded-xl w-full justify-center min-h-[100px]" id="slots-area-${index}">
+                            ${generateSlotsHTML(index, step.slots)}
+                            <span class="text-xl font-bold ml-2 text-slate-500 unit-label">${getUnitLabel(index)}</span>
+                        </div>
+
+                        <!-- 選項區 (Options) -->
+                        <div class="flex flex-wrap justify-center gap-2" id="options-area-${index}">
+                            ${generateOptionsHTML(index, step.options)}
+                        </div>
+
+                        <!-- 檢查按鈕 -->
+                        <button onclick="checkStep(${index})" class="check-btn bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold py-3 px-8 rounded-xl shadow-lg transform transition active:scale-95 w-full md:w-auto mt-2">
+                            檢查答案
+                        </button>
+                    </div>
+                `;
+                gameArea.appendChild(stepEl);
+            });
+        }
+
+        function getUnitLabel(index) {
+            if (index === 0 || index === 1) return "歲";
+            if (index === 2) return "元";
+            if (index === 3) return "張";
+            return "";
+        }
+
+        function generateSlotsHTML(stepIndex, count) {
+            let html = '<div class="math">'; // 外層包裹 math 類別以確保符號垂直置中
+            for (let i = 0; i < count; i++) {
+                html += `<div class="slot" data-step="${stepIndex}" data-slot-index="${i}" onclick="handleSlotClick(${stepIndex}, ${i})"></div>`;
+            }
+            html += '</div>';
+            return html;
+        }
+
+        function generateOptionsHTML(stepIndex, options) {
+            return options.map(opt => `
+                <button class="option-btn" data-step="${stepIndex}" data-val="${opt}" onclick="handleOptionClick(${stepIndex}, '${opt}', this)">
+                    ${opt}
+                </button>
+            `).join('');
+        }
+
+        // 啟動特定步驟
+        function activateStep(index) {
+            currentStep = index;
+            const stepEl = document.getElementById(`step-${index}`);
+            if (stepEl) {
+                stepEl.classList.add('active');
+                // 聚焦滾動
+                setTimeout(() => {
+                    stepEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 300);
+            }
+        }
+
+        // 處理選項點擊
+        window.handleOptionClick = function(stepIndex, value, btnEl) {
+            if (stepCompleted[stepIndex]) return; // 已完成不可操作
+
+            // 尋找該步驟第一個空的 slot
+            const emptySlotIndex = userAnswers[stepIndex].findIndex(val => val === null);
+            
+            if (emptySlotIndex !== -1) {
+                // 填入資料
+                userAnswers[stepIndex][emptySlotIndex] = value;
+                
+                // 更新 UI
+                const slotEl = document.querySelector(`.slot[data-step="${stepIndex}"][data-slot-index="${emptySlotIndex}"]`);
+                slotEl.innerHTML = renderMathContent(value);
+                slotEl.classList.add('filled');
+                
+                // 禁用按鈕
+                btnEl.disabled = true;
+                btnEl.dataset.linkedSlot = emptySlotIndex; // 記住這個按鈕對應哪個 slot，以便清除時恢復
+
+                playSound('pop');
+            } else {
+                showFeedback('空格已經滿囉！請先檢查或點擊空格清除。', 'warning');
+            }
+        }
+
+        // 處理 Slot 點擊 (清除)
+        window.handleSlotClick = function(stepIndex, slotIndex) {
+            if (stepCompleted[stepIndex]) return;
+
+            const currentVal = userAnswers[stepIndex][slotIndex];
+            if (currentVal) {
+                // 清除資料
+                userAnswers[stepIndex][slotIndex] = null;
+
+                // 清除 UI
+                const slotEl = document.querySelector(`.slot[data-step="${stepIndex}"][data-slot-index="${slotIndex}"]`);
+                slotEl.innerHTML = '';
+                slotEl.classList.remove('filled');
+
+                // 恢復對應的按鈕
+                // 注意：這裡如果有多個相同選項(例如兩個x)，邏輯需要更嚴謹。
+                // 簡單作法：找到該步驟中，值等於 currentVal 且被禁用的按鈕，恢復一個。
+                const optionBtns = document.querySelectorAll(`#options-area-${stepIndex} .option-btn`);
+                for (let btn of optionBtns) {
+                    if (btn.disabled && btn.dataset.val === currentVal) {
+                        btn.disabled = false;
+                        break; // 只恢復一個
+                    }
+                }
+                
+                // 如果清除的是中間的格，後面的格不需要自動移位(依需求)，但為了簡單，這裡不移位。
+            }
+        }
+
+        // 檢查答案
+        window.checkStep = function(stepIndex) {
+            const currentAnswers = userAnswers[stepIndex];
+            const correctData = stepsData[stepIndex].correctAnswer;
+
+            // 1. 檢查是否填滿
+            if (currentAnswers.includes(null)) {
+                showFeedback('請填滿所有空格再按檢查喔！', 'warning');
+                return;
+            }
+
+            // 2. 檢查正確性 (支援多組正確答案)
+            let isCorrect = false;
+
+            // 判斷 correctData 是「單一答案陣列」還是「多組答案陣列」
+            // 如果第一個元素也是陣列，代表有多組正確解 (例如 [["x","*","300"], ["300","*","x"]])
+            if (Array.isArray(correctData[0])) {
+                isCorrect = correctData.some(ans => JSON.stringify(ans) === JSON.stringify(currentAnswers));
+            } else {
+                // 單一標準答案 (舊邏輯維持相容)
+                isCorrect = JSON.stringify(currentAnswers) === JSON.stringify(correctData);
+            }
+
+            if (isCorrect) {
+                handleSuccess(stepIndex);
+            } else {
+                handleFailure(stepIndex);
+            }
+        }
+
+        function handleSuccess(stepIndex) {
+            stepCompleted[stepIndex] = true;
+            
+            // 視覺變化
+            const stepEl = document.getElementById(`step-${stepIndex}`);
+            stepEl.classList.remove('active');
+            stepEl.classList.add('completed');
+            
+            // 標題變化
+            stepEl.querySelector('.status-icon').classList.remove('hidden');
+            stepEl.querySelector('.check-btn').classList.add('hidden'); // 隱藏按鈕
+            
+            // Slot 變綠
+            const slots = stepEl.querySelectorAll('.slot');
+            slots.forEach(s => s.classList.add('correct'));
+
+            showFeedback('太棒了！答對了！ 🎉', 'success');
+            playSound('success');
+
+            // 解鎖下一步
+            if (stepIndex < stepsData.length - 1) {
+                setTimeout(() => {
+                    activateStep(stepIndex + 1);
+                }, 1500);
+            } else {
+                // 全數完成
+                setTimeout(() => {
+                    showFeedback('恭喜！所有題目都完成了！你是數學小天才！ 🏆', 'success');
+                    confettiEffect();
+                }, 1000);
+            }
+        }
+
+        function handleFailure(stepIndex) {
+            showFeedback('再想想看，順序對嗎？ 🤔', 'error');
+            playSound('error');
+            
+            // 錯誤搖晃動畫
+            const slotsArea = document.getElementById(`slots-area-${stepIndex}`);
+            slotsArea.classList.add('animate-pulse'); // Tailwind simple pulse or custom shake
+            setTimeout(() => slotsArea.classList.remove('animate-pulse'), 500);
+        }
+
+        // 輔助函式：渲染數學內容 (雖然此題大多是純文字，但保留擴充性)
+        function renderMathContent(val) {
+            if (val === "/") return "÷";
+            if (val === "*") return "×";
+            return val;
+        }
+
+        // 輔助函式：顯示回饋
+        function showFeedback(msg, type) {
+            feedbackText.innerText = msg;
+            feedbackModal.classList.remove('hidden');
+            
+            // 樣式設定
+            feedbackModal.className = "fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white px-8 py-4 rounded-xl shadow-2xl border-l-8 z-50 flex items-center gap-4 transition-all duration-300 min-w-[300px]";
+            
+            if (type === 'success') {
+                feedbackModal.classList.add('border-green-500');
+                feedbackIcon.innerText = "😄";
+            } else if (type === 'error') {
+                feedbackModal.classList.add('border-red-500');
+                feedbackIcon.innerText = "💡";
+            } else {
+                feedbackModal.classList.add('border-yellow-500');
+                feedbackIcon.innerText = "☝️";
+            }
+
+            // 3秒後自動消失
+            setTimeout(() => {
+                feedbackModal.classList.add('hidden');
+            }, 3000);
+        }
+
+        // 簡單音效模擬 (如果不想要真實音效檔，可留空)
+        function playSound(type) {
+            // 在真實部署時，可以使用 Audio() 載入 mp3
+            // 這裡僅作結構預留
+            console.log(`Playing sound: ${type}`);
+        }
+        
+        // 簡易彩帶效果
+        function confettiEffect() {
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff'];
+            for(let i=0; i<50; i++) {
+                const conf = document.createElement('div');
+                conf.style.position = 'fixed';
+                conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.top = '-10px';
+                conf.style.width = '10px';
+                conf.style.height = '10px';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.transition = 'top 3s ease-out, transform 3s linear';
+                conf.style.zIndex = '9999';
+                document.body.appendChild(conf);
+                
+                setTimeout(() => {
+                    conf.style.top = '105vh';
+                    conf.style.transform = `rotate(${Math.random() * 360}deg)`;
+                }, 100);
+            }
+        }
+
+        // Start
+        init();
+
+    </script>
+</body>
+</html>
