@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI即時生圖測驗</title>
     <link rel="icon" href="dog.png" type="image/png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chiron+GoRound+TC:wght@200..900&family=Noto+Sans+TC:wght@100..900&display=swap" rel="stylesheet">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         // 套用範本的顏色配置
@@ -18,16 +23,26 @@
                         'text-light': '#2D3748',
                         'accent': '#80CBC4',
                     },
+                    fontFamily: {
+                        // 設定 Tailwind 的字體堆疊
+                        sans: ['"Noto Sans TC"', 'sans-serif'],
+                        display: ['"Chiron GoRound TC"', '"Noto Sans TC"', 'sans-serif'],
+                    }
                 },
             },
         };
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
         body {
             box-sizing: border-box;
-            font-family: 'Noto Sans TC', sans-serif;
+            font-family: 'Noto Sans TC', sans-serif; /* 預設使用黑體 */
         }
+        
+        /* 針對標題和 LOGO 使用圓體，增加活潑感 */
+        h1, h2, h3, h4, .font-display, .text-xl.font-bold {
+            font-family: 'Chiron GoRound TC', sans-serif;
+        }
+
         .card-shadow {
             box-shadow: 0 10px 25px rgba(56, 163, 165, 0.1);
         }
@@ -38,8 +53,23 @@
             transform: translateY(-5px);
             box-shadow: 0 15px 35px rgba(56, 163, 165, 0.15);
         }
+        /* 自定義捲軸樣式 */
+        textarea::-webkit-scrollbar {
+            width: 8px;
+        }
+        textarea::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 4px;
+        }
+        textarea::-webkit-scrollbar-thumb {
+            background: #c7c7c7; 
+            border-radius: 4px;
+        }
+        textarea::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0; 
+        }
     </style>
-
+    
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5BBHYN77N9"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -49,14 +79,14 @@
       gtag('config', 'G-5BBHYN77N9');
     </script>
 </head>
-<body class="bg-background-light min-h-screen text-text-light">
+<body class="bg-background-light min-h-screen text-text-light flex flex-col">
 
     <nav class="bg-surface-light/80 backdrop-blur-sm shadow-md sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="text-xl font-bold text-primary">SPEDMIX</div>
-            <a href="https://www.instagram.com/spedmix2025/"
-               target="_blank"
-               rel="noopener noreferrer"
+            <div class="text-xl font-bold text-primary tracking-wide">SPEDMIX</div>
+            <a href="https://www.instagram.com/spedmix2025/" 
+               target="_blank" 
+               rel="noopener noreferrer" 
                class="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-white hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-110"
                onclick="trackEvent('button_click', 'social_link', 'navbar-instagram')">
                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -65,10 +95,11 @@
             </a>
         </div>
     </nav>
-    
-    <div class="container mx-auto px-4 py-8 max-w-4xl">
+
+    <div class="container mx-auto px-4 py-8 max-w-4xl flex-grow">
+        
         <div class="text-center mb-10">
-            <h1 class="text-4xl md:text-5xl font-bold text-primary mb-4">
+            <h1 class="text-4xl md:text-5xl font-bold text-primary mb-4 tracking-tight">
                  AI即時生圖測驗
             </h1>
             <p class="text-lg text-text-light max-w-2xl mx-auto leading-relaxed mb-8">
@@ -77,7 +108,6 @@
             
             <div class="bg-surface-light p-6 rounded-lg card-shadow">
                 <div class="flex flex-col md:flex-row justify-center items-start gap-8">
-                    <!-- Chinese Buttons Section -->
                     <div class="flex-1 w-full">
                         <h3 class="text-xl font-semibold mb-4 text-primary border-b-2 border-primary pb-2">中文版本</h3>
                         <div class="flex flex-wrap justify-center gap-4 pt-2">
@@ -86,8 +116,7 @@
                              <a href="https://gemini.google.com/share/aa2b64a4f2dc" target="_blank" rel="noopener noreferrer" class="inline-block bg-primary hover:bg-opacity-90 text-white font-bold py-3 px-6 rounded-full text-base transition-all duration-300 transform hover:scale-105 shadow-lg" onclick="trackEvent('button_click', 'tool_link', 'chinese-no-image')">無圖版</a>
                         </div>
                     </div>
-                     <!-- English Buttons Section -->
-                    <div class="flex-1 w-full">
+                     <div class="flex-1 w-full">
                         <h3 class="text-xl font-semibold mb-4 text-primary border-b-2 border-primary pb-2">英文版本</h3>
                          <div class="flex flex-wrap justify-center gap-4 pt-2">
                             <a href="https://gemini.google.com/share/be4148aa64ec" target="_blank" rel="noopener noreferrer" class="inline-block bg-primary hover:bg-opacity-90 text-white font-bold py-3 px-6 rounded-full text-base transition-all duration-300 transform hover:scale-105 shadow-lg" onclick="trackEvent('button_click', 'tool_link', 'english-multisensory_quiz_v1')">第一版</a>
@@ -100,38 +129,48 @@
         </div>
         
         <div class="space-y-8">
-            <!-- Update Card -->
-            <div class="bg-surface-light border-l-4 border-accent p-6 rounded-r-lg card-shadow">
+            <div class="bg-surface-light border-l-4 border-indigo-500 p-6 rounded-r-lg card-shadow">
                 <div class="flex items-center mb-4">
-                    <span class="text-2xl mr-3">✨</span>
-                    <h3 class="text-lg font-semibold" style="color: #38A3A5;">最新更新</h3>
+                    <span class="text-2xl mr-3">☁️</span>
+                    <h3 class="text-lg font-semibold text-indigo-600">進階功能：自動串接 Firebase 後台</h3>
                 </div>
-                <div class="text-text-light space-y-2 text-sm">
-                    <p><strong>圖片穩定度說明：</strong>由於不同使用者的帳號方案（免費版或付費版）、使用習慣與下指令方式皆不相同，我們無法預測圖片在生成過程中何時會開始出現錯亂。有時候它就是會有點「任性」😅，因此我們推出了第二版作為優化。</p>
-                    <p><strong>V2 版本優化：</strong>圖片生成指令更穩定，並新增預覽圖片功能。</p>
-                    <p><strong>無圖版本：</strong>無需等待圖片生成，讓測驗流程更快速、更順暢！</p>
+                <div class="text-text-light text-sm space-y-4">
+                    <p class="font-bold">想保留學生成績嗎？</p>
+                    <p>如果您希望擁有即時同步的成績後台，請在測驗生成完畢後，<span class="text-indigo-600 font-bold">複製以下咒語</span> 並傳送給 Gemini：</p>
+                    
+                    <div class="relative">
+                        <textarea id="firebase-prompt" class="w-full h-32 p-4 bg-gray-100 border border-gray-300 rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none font-mono" readonly>我要用 Google Firebase 當作資料庫，引入firebase sdk,不用讓我再手動填寫api,再來功能要有：
+學生登入： 輸入名字就可以開始。
+老師後台： 我要有一個後台，按進去並輸入密碼0822,可以看到所有學生的成績。最重要的是：當有學生剛考完，教師後台「不用按重新整理」就會自動跳出新成績（即時同步）。</textarea>
+                        <button onclick="copyPrompt()" id="copy-btn" class="absolute top-2 right-2 bg-indigo-500 hover:bg-indigo-600 text-white text-xs px-3 py-1.5 rounded transition-colors duration-200 shadow-sm flex items-center z-10">
+                            <span id="btn-text">複製咒語</span>
+                        </button>
+                    </div>
 
-                    <hr class="my-4 border-gray-300">
-
-                    <h4 class="text-base font-semibold text-accent mt-4 mb-2">💡 常見問題 Q&A</h4>
-
-                    <p><strong>Q1：按下「共用」後，沒有出現分享的選項怎麼辦？</strong><br>
-                    A1：請確認您目前的帳號是否為「教育版帳號」。教育版帳號的共用功能會受限制，只會出現「複製內容」的選項。<br>
-                    若要正常分享，請切換成「個人帳號」再試一次，就能看到完整的分享功能。</p>
-
-                    <p><strong>Q2：為什麼圖片有時能生成，有時又會出錯？</strong><br>
-                    A2：圖片生成的穩定度受到多項因素影響，例如：<br>
-                    ‧ 使用的是免費版或付費版帳號<br>
-                    ‧ 同時間下達的生成請求數量<br>
-                    ‧ 指令是否太長或太頻繁<br>
-                    ‧ 有時系統本身也會出現不穩的情況（它真的有點任性😅）。<br>
-                    ‧ 建議一次生成量不要太多，若出錯可稍後再試或改用無圖版本。</p>
-
-                    <p><strong>Q3：為什麼之前成功的單元，後來又無法生成圖片？</strong><br>
-                    A3：每次執行測驗時，圖片都會重新生成，若當下系統忙碌或頻寬不足，就可能導致失敗。建議先以少量測試確認穩定，再批次製作。</p>
+                    <div class="p-3 bg-yellow-50 rounded border border-yellow-200 text-xs text-yellow-800 flex items-start leading-relaxed">
+                        <span class="text-lg mr-2 mt-[-2px]">⚠️</span>
+                        <div>
+                            <strong>小提醒：</strong>AI 寫程式不敢保證 100% 一次成功。如果執行後出現錯誤或功能不完整，請不用擔心，只要將錯誤訊息貼給 AI，持續與它溝通，它就能修正好囉！
+                        </div>
+                    </div>
                 </div>
             </div>
 
+            <div class="bg-surface-light p-5 rounded-lg card-shadow border border-gray-100">
+                <h4 class="text-base font-bold text-gray-700 mb-3 flex items-center">
+                    <span class="mr-2">💡</span> 快速疑難排解
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div class="bg-gray-50 p-3 rounded">
+                        <p class="font-bold text-primary mb-1">Q：找不到「分享」按鈕？</p>
+                        <p class="text-gray-600 text-xs">A：教育版帳號功能受限，建議切換成「個人 Google 帳號」即可正常分享。</p>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded">
+                        <p class="font-bold text-primary mb-1">Q：圖片生成失敗？</p>
+                        <p class="text-gray-600 text-xs">A：AI 偶爾會不穩，若失敗可稍後再試，或改用「無圖版」會更順暢。</p>
+                    </div>
+                </div>
+            </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="bg-surface-light border-l-4 border-primary p-6 rounded-r-lg card-shadow h-full">
@@ -146,7 +185,7 @@
                         </div>
                         <div class="flex items-start">
                             <span class="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 flex-shrink-0 mt-0.5">2</span>
-                            <span>按右下角「複製 Canvas」，自動跳轉至您的 Gemini。</span>
+                            <span>按右下角「試用Gemini Canvas」，自動跳轉至您的 Gemini。</span>
                         </div>
                         <div class="flex items-start">
                             <span class="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 flex-shrink-0 mt-0.5">3</span>
@@ -197,19 +236,47 @@
                 </div>
             </div>
         </div>
-        .
-
-    <footer style="font-size:12px; color:gray; text-align:center;">
-        © 2025 米克師  
-        本作品採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh_TW" target="_blank">CC BY-NC-SA 4.0 創用CC授權</a>。  
-        歡迎非商業用途轉載、引用或改編，請保留「米克師」署名，並附上本作品原始連結。
-        </footer>
-
     </div>
 
+    <footer class="py-6 mt-auto">
+        <div class="container mx-auto px-4 text-center text-xs text-gray-500">
+            <p class="mb-2">© 2025 米克師</p>
+            <p>本作品採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh_TW" target="_blank" class="hover:text-primary underline">CC BY-NC-SA 4.0 創用CC授權</a>。</p>
+            <p>歡迎非商業用途轉載、引用或改編，請保留「米克師」署名，並附上本作品原始連結。</p>
+        </div>
+    </footer>
+
     <script src="tracking.js"></script>
+    <script>
+        function copyPrompt() {
+            const promptText = document.getElementById('firebase-prompt');
+            promptText.select();
+            promptText.setSelectionRange(0, 99999); /* For mobile devices */
+            
+            navigator.clipboard.writeText(promptText.value).then(() => {
+                const btn = document.getElementById('copy-btn');
+                const btnText = document.getElementById('btn-text');
+                
+                // 變更按鈕外觀為「已複製」
+                const originalText = btnText.innerText;
+                const originalBg = btn.className;
+                
+                // 移除舊顏色，加入新顏色
+                btn.classList.remove('bg-indigo-500', 'hover:bg-indigo-600');
+                btn.classList.add('bg-green-500', 'hover:bg-green-600');
+                btnText.innerText = '已複製！';
+                
+                // 2秒後恢復原狀
+                setTimeout(() => {
+                    btnText.innerText = '複製咒語'; // 直接重設文字
+                    btn.classList.remove('bg-green-500', 'hover:bg-green-600');
+                    btn.classList.add('bg-indigo-500', 'hover:bg-indigo-600');
+                }, 2000);
+            }).catch(err => {
+                console.error('複製失敗:', err);
+                alert('複製失敗，請手動複製文字。');
+            });
+        }
+    </script>
 </body>
 </html>
-
-
-
