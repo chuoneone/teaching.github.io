@@ -1,18 +1,18 @@
-﻿/* 引入像素字體 (如果有網路會顯示，沒有則退回預設) */
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+﻿/* 1. 引入 Chiron GoRound TC 字體 */
+@import url('https://fonts.googleapis.com/css2?family=Chiron+GoRound+TC:wght@200..900&display=swap');
 
 body {
-    /* 修改：背景色改為經典 NES 天空藍 */
+    /* 背景色：經典 NES 天空藍 */
     background-color: #5C94FC; 
-    /* 修改：移除漸層，改用純色以還原遊戲畫面 */
     background: #5C94FC; 
-    color: #ffffff; /* 修改：文字改為白色以便在深色塊上閱讀 */
+    color: #ffffff;
     margin: 0;
     padding: 20px;
     padding-top: 70px;
     box-sizing: border-box;
-    /* 修改：字體改為像素風格 */
-    font-family: 'Press Start 2P', 'Courier New', monospace; 
+    /* 修改：全面改用圓體 */
+    font-family: "Chiron GoRound TC", sans-serif;
+    font-weight: 500; /* 設定一個舒適的預設粗細 */
 }
 
 /* 導覽列樣式 */
@@ -20,7 +20,6 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* 修改：背景改為地面磚塊的褐色 */
     background: #C84C0C; 
     color: #fff;
     padding: 15px 20px;
@@ -30,7 +29,6 @@ body {
     left: 0;
     z-index: 1000;
     box-sizing: border-box;
-    /* 修改：底部改為黑色粗框，移除圓角 */
     box-shadow: 0 4px 0 #000000;
     border-bottom: 4px solid #000000;
     border-bottom-left-radius: 0;
@@ -40,7 +38,6 @@ body {
     transform: translateY(-100%);
 }
 
-/* 導覽列滑入動畫 (保留不動) */
 @keyframes slideInFromTop {
     0% { transform: translateY(-20%); opacity: 0; }
     100% { transform: translateY(0); opacity: 1; }
@@ -48,8 +45,7 @@ body {
 
 .navbar .logo {
     font-size: 1.5em;
-    font-weight: bold;
-    /* 修改：增加黑色文字陰影 */
+    font-weight: 800; /* 加粗 */
     text-shadow: 3px 3px 0 #000000;
 }
 
@@ -69,13 +65,13 @@ body {
 }
 
 .nav-links a {
-    /* 修改：導覽連結顏色 */
     color: #ffffff; 
     text-decoration: none;
-    font-size: 0.8em; /* 像素字體通常較大，稍微縮小以防跑版 */
-    font-family: 'Press Start 2P', monospace;
+    font-size: 1em; /* 圓體可讀性較高，稍微調回正常大小 */
+    font-family: "Chiron GoRound TC", sans-serif;
+    font-weight: 600;
     position: relative;
-    text-shadow: 2px 2px 0 #000; /* 增加可讀性 */
+    text-shadow: 2px 2px 0 #000; 
 }
 
 /* 底線樣式 */
@@ -86,29 +82,28 @@ body {
     bottom: -5px;
     left: 0;
     width: 0;
-    height: 4px; /* 修改：線條變粗 */
+    height: 4px;
     background: #fff;
     transition: width 0.3s ease;
 }
 
 .nav-links a:hover {
-    color: #FBD000; /* 修改：懸停變金幣黃 */
+    color: #FBD000; 
     text-shadow: 2px 2px 0 #000;
 }
 
 .nav-links a:hover::after {
     width: 100%;
-    background: #FBD000; /* 修改：底線變黃 */
+    background: #FBD000; 
 }
 
 .nav-links a.active {
-    /* 修改：Active 狀態改為黑色背景 (像 HUD 介面) */
     background-color: #000000; 
     color: #FBD000;
     border: 2px solid #FBD000;
-    border-radius: 0; /* 修改：直角 */
+    border-radius: 0; 
     padding: 6px 12px;
-    font-weight: bold;
+    font-weight: 700;
     box-shadow: none;
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
@@ -123,22 +118,21 @@ body {
 }
 
 .intro-text {
-    font-family: 'Press Start 2P', monospace;
-    font-size: clamp(1.5rem, 4vw, 2.5rem); /* 像素字體需微調大小 */
-    font-weight: bold;
+    font-family: "Chiron GoRound TC", sans-serif;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 700;
     text-align: center;
     margin: 30px auto 20px;
     white-space: nowrap;
     overflow: hidden;
-    border-right: 8px solid #FBD000; /* 修改：游標變粗、黃色 */
+    border-right: 8px solid #FBD000;
     width: 0;
     animation: typing 3.5s steps(25, end) forwards, blink 0.75s step-end infinite;
-    /* 修改：文字顏色與陰影 */
     background: none;
     color: #ffffff;
-    text-shadow: 4px 4px 0 #000000; /* 經典黑色硬陰影 */
+    text-shadow: 4px 4px 0 #000000;
     -webkit-text-fill-color: #ffffff;
-    letter-spacing: 0px; /* 像素字體不需要過大間距 */
+    letter-spacing: 1px;
     max-width: 90vw;
     padding: 0 10px;
 }
@@ -164,24 +158,21 @@ body {
     max-width: 1000px;
 }
 
-/* 大型按鈕 - 修改為水管綠風格 */
+/* 大型按鈕 */
 .big-button {
-    /* 修改：經典水管綠 */
     background: #00AA00; 
     color: #fff;
     padding: 15px 30px;
-    font-size: 20px; /* 像素字體調整 */
-    /* 修改：變為直角方塊 */
+    font-size: 20px; 
     border-radius: 0; 
     text-decoration: none;
     text-align: center;
-    transition: transform 0.1s ease, box-shadow 0.1s ease; /* 加快動畫反應，像按鈕 */
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
     display: inline-block;
-    /* 修改：黑色粗框與硬陰影 */
     box-shadow: 6px 6px 0 #000000; 
     border: 4px solid #000000;
     letter-spacing: 1px;
-    font-weight: bold;
+    font-weight: 700;
     max-width: 250px;
     animation: fadeIn 0.4s ease-in forwards, scaleIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -192,8 +183,8 @@ body {
 }
 
 .big-button:hover {
-    background: #00d600; /* 變亮 */
-    box-shadow: 6px 6px 0 #000000; /* 陰影不變，保持像素感 */
+    background: #00d600; 
+    box-shadow: 6px 6px 0 #000000; 
     transform: translateY(-4px);
 }
 
@@ -211,20 +202,18 @@ body {
 .section-content { display: none; }
 .active-section { display: block; animation: fadeIn 0.8s ease-out forwards; }
 
-/* 切換鈕 - 修改為磚塊風格 */
+/* 切換鈕 */
 .section-button {
     margin: 12px;
     margin-bottom: 40px;
     padding: 10px 20px;
-    font-size: 16px;
-    font-family: 'Press Start 2P', monospace;
-    /* 修改：問號磚塊的金黃色 */
+    font-size: 18px;
+    font-family: "Chiron GoRound TC", sans-serif;
+    font-weight: 600;
     background: #E89C24; 
-    color: #000; /* 黑色文字 */
-    /* 修改：黑色邊框與直角 */
+    color: #000;
     border: 4px solid #000000;
     border-radius: 0;
-    /* 修改：硬陰影 */
     box-shadow: 4px 4px 0 #000000; 
     text-shadow: none;
     letter-spacing: 1px;
@@ -241,14 +230,13 @@ body {
 }
 
 .section-button.active {
-    /* 修改：啟動後變為褐色 (空磚塊) */
     background: #682800; 
     color: #fff;
-    font-weight: bold;
+    font-weight: 700;
     border: 4px solid #000000;
     border-radius: 0;
     transform: scale(1.0);
-    box-shadow: inset 4px 4px 0 rgba(0,0,0,0.5); /* 內陰影 */
+    box-shadow: inset 4px 4px 0 rgba(0,0,0,0.5);
     z-index: 10;
 }
 
@@ -274,15 +262,13 @@ body {
 
 .social-group {
     padding: 20px;
-    /* 修改：改為直角 */
     border-radius: 0; 
     text-align: left;
     width: calc(25% - 20px);
     min-width: 250px;
-    /* 修改：背景為白色，配黑色粗框 */
     background: #ffffff; 
     border: 4px solid #000000;
-    box-shadow: 6px 6px 0 #000000; /* 硬陰影 */
+    box-shadow: 6px 6px 0 #000000;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     transform: scale(0.95);
 }
@@ -294,9 +280,9 @@ body {
 
 .social-group h3 {
     margin-bottom: 15px;
-    /* 修改：標題顏色改為磚紅色 */
     color: #C84C0C; 
-    font-size: 18px;
+    font-size: 20px;
+    font-weight: 700;
     text-transform: uppercase;
     text-shadow: 1px 1px 0 #000;
 }
@@ -308,22 +294,20 @@ body {
 }
 
 .btn {
-    /* 修改：黑色按鈕配白字 */
     background: #000000; 
     color: #ffffff;
     padding: 10px 20px;
-    font-size: 14px;
-    /* 修改：直角 */
+    font-size: 15px;
     border-radius: 0; 
     text-decoration: none;
     text-align: left;
     transition: transform 0.1s ease;
     display: block;
     margin-bottom: 20px;
-    box-shadow: 4px 4px 0 rgba(255, 255, 255, 0.3); /* 白色陰影 */
+    box-shadow: 4px 4px 0 rgba(255, 255, 255, 0.3);
     border: 2px solid #ffffff;
     letter-spacing: 1px;
-    font-weight: bold;
+    font-weight: 600;
 }
 
 .icon-button {
@@ -333,7 +317,6 @@ body {
 
 .btn:hover {
     transform: scale(1.02) translateY(-2px);
-    /* 修改：懸停變紅 */
     background: #E52521; 
     box-shadow: 4px 4px 0 #000;
     border-color: #000;
@@ -346,9 +329,7 @@ body {
     width: 250px;
     height: 300px;
     overflow: hidden;
-    /* 修改：直角 */
     border-radius: 0; 
-    /* 修改：邊框 */
     border: 4px solid #000;
     box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.4);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -359,7 +340,6 @@ body {
     height: 120%;
     object-fit: cover;
     transition: transform 0.3s ease;
-    /* 讓圖片像素化 */
     image-rendering: pixelated; 
 }
 
@@ -372,13 +352,12 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* 修改：文字樣式 */
     color: #FBD000; 
-    font-weight: bold;
+    font-weight: 800; /* 加粗 */
     text-shadow: 3px 3px 0 #000000;
     background-color: rgba(0, 0, 0, 0.5);
-    font-size: 30px;
-    font-family: 'Press Start 2P', monospace;
+    font-size: 32px;
+    font-family: "Chiron GoRound TC", sans-serif;
 }
 
 .image-button:hover {
@@ -391,28 +370,23 @@ body {
 }
 
 .section-title {
-    /* 1. 字體：改用清楚的黑體，解決像素字體中英文不協調的問題 */
-    font-family: 'Noto Sans TC', sans-serif;
-    font-weight: bold;
+    /* 修改：將原本的 Noto Sans 統一改為 Chiron GoRound TC */
+    font-family: "Chiron GoRound TC", sans-serif;
+    font-weight: 800;
     
-    /* 2. 大小：設定與 .intro-text 相似的響應式大小 */
     font-size: clamp(3rem, 4vw, 2.5rem);
     text-align: center;
     
-    /* 3. 關鍵樣式：純白字 + 4px 黑色硬陰影 (完全比照「請選擇科目」) */
     color: #ffffff;
     text-shadow: 4px 4px 0 #000000; 
     
-    /* 4. 移除之前的描邊 (這是造成讀起來不舒服的主因) */
     -webkit-text-stroke: 0; 
-    -webkit-text-fill-color: initial; /* 重置填充設定 */
+    -webkit-text-fill-color: initial;
     
-    /* 5. 版面位置設定 */
     margin: 40px auto 20px;
     max-width: 600px;
     letter-spacing: 2px;
     
-    /* 保留底部的褐色底線，作為標題區隔 */
     border-bottom: 4px solid var(--ground-brown); 
     padding-bottom: 10px;
 }
@@ -427,23 +401,20 @@ body {
 
 .iframe-box {
     padding: 20px;
-    /* 修改：直角 */
     border-radius: 0; 
     text-align: left;
     width: calc(25% - 20px);
     min-width: 250px;
-    /* 修改：黑色背景 */
     background: #000000; 
-    /* 修改：白色邊框 */
     border: 4px solid #ffffff; 
-    box-shadow: 0 0 0 2px #000; /* 雙層邊框效果 */
+    box-shadow: 0 0 0 2px #000; 
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     transform: scale(0.95);
 }
 
 .iframe-box:hover {
     transform: scale(1.0) translateY(-3px);
-    border-color: #FBD000; /* 懸停變黃 */
+    border-color: #FBD000; 
     box-shadow: 0 0 15px rgba(251, 208, 0, 0.5);
 }
 
@@ -457,31 +428,31 @@ body {
 
 .step-label:first-of-type {
     animation: pulse 1s infinite;
-    font-family: 'Press Start 2P', monospace;
+    font-family: "Chiron GoRound TC", sans-serif;
+    font-weight: 700;
     font-size: 1.5rem;
     text-align: center;
-    color: #FBD000; /* 金幣黃 */
+    color: #FBD000; 
     text-shadow: 2px 2px 0 #000;
 }
 
 .countdown-container {
-    font-family: 'Press Start 2P', monospace;
-    /* 修改：黑色背景 */
+    font-family: "Chiron GoRound TC", sans-serif;
+    font-weight: 700;
     background: #000000; 
     color: #fff;
     text-align: center;
     padding: 15px;
-    /* 修改：直角 */
     border-radius: 0; 
     margin: 20px auto;
     max-width: 800px;
     width: 100%;
-    box-shadow: 0 0 0 4px #fff; /* 白色邊框 */
+    box-shadow: 0 0 0 4px #fff; 
     overflow: hidden;
 }
 
 .countdown-timer {
-    font-size: 4rem; /* 字體較大 */
+    font-size: 4rem; 
     display: inline-flex;
     gap: 10px;
     flex-wrap: nowrap;
@@ -494,7 +465,7 @@ body {
 
 .countdown-timer .label {
     font-size: 1rem;
-    color: #FBD000; /* 標籤為黃色 */
+    color: #FBD000; 
     margin-left: 2px;
 }
 
@@ -503,8 +474,8 @@ footer {
     width: 100%;
     text-align: center;
     padding: 10px;
-    font-size: 12px;
-    background: #C84C0C; /* 地面顏色 */
+    font-size: 13px; /* 字體換了，稍微放大一點點 */
+    background: #C84C0C; 
     color: #fff;
     text-shadow: 1px 1px 0 #000;
     border-top: 4px solid #000;
@@ -518,28 +489,28 @@ footer {
     height: 250px;
     max-width: 100%;
     width: auto;
-    border: 4px solid #000; /* 圖片加框 */
+    border: 4px solid #000; 
 }
 
 /* Chapter buttons */
 .chapter-button {
     margin: 10px;
     padding: 15px 30px;
-    font-size: 16px;
-    font-family: 'Press Start 2P', monospace;
-    /* 修改：白色背景黑框 */
+    font-size: 18px;
+    font-family: "Chiron GoRound TC", sans-serif;
+    font-weight: 600;
     background: #fff;
     color: #000;
     border: 4px solid #000;
-    border-radius: 0; /* 直角 */
+    border-radius: 0; 
     letter-spacing: 1px;
     transition: transform 0.1s ease, box-shadow 0.1s ease;
     cursor: pointer;
-    box-shadow: 4px 4px 0 #000; /* 硬陰影 */
+    box-shadow: 4px 4px 0 #000; 
 }
 
 .chapter-button:hover {
-    background: #00AA00; /* 水管綠 */
+    background: #00AA00; 
     color: #fff;
     transform: scale(1.0) translateY(-3px);
     border: 4px solid #000;
@@ -547,9 +518,9 @@ footer {
 }
 
 .chapter-button.active {
-    background: #E52521; /* 瑪麗歐紅 */
+    background: #E52521; 
     color: #fff;
-    font-weight: bold;
+    font-weight: 700;
     border: 4px solid #000;
     border-radius: 0;
     transform: scale(1.0);
@@ -571,4 +542,3 @@ footer {
         transform: scale(1);
     }
 }
-
