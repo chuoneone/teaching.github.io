@@ -24,9 +24,7 @@
                         'accent': '#80CBC4',
                     },
                     fontFamily: {
-                        // 設定 Tailwind 的字體堆疊
                         sans: ['"Noto Sans TC"', 'sans-serif'],
-                        display: ['"Chiron GoRound TC"', '"Noto Sans TC"', 'sans-serif'],
                     }
                 },
             },
@@ -35,11 +33,11 @@
     <style>
         body {
             box-sizing: border-box;
-            font-family: 'Noto Sans TC', sans-serif; /* 預設使用黑體 */
+            font-family: 'Noto Sans TC', sans-serif;
         }
         
-        /* 針對標題和 LOGO 使用圓體，增加活潑感 */
-        h1, h2, h3, h4, .font-display, .text-xl.font-bold {
+        /* 標題與強調文字使用圓體 */
+        h1, h2, h3, h4, .font-display, .text-xl.font-bold, strong {
             font-family: 'Chiron GoRound TC', sans-serif;
         }
 
@@ -129,13 +127,34 @@
         </div>
         
         <div class="space-y-8">
+            <div class="bg-surface-light border-l-4 border-accent p-6 rounded-r-lg card-shadow">
+                <div class="flex items-center mb-3">
+                    <span class="text-2xl mr-2">ℹ️</span>
+                    <h3 class="text-lg font-semibold text-primary">版本選擇指南</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+                    <div>
+                        <strong class="text-primary text-base block mb-1">🔹 第一版 (V1)</strong>
+                        <p class="text-gray-600 leading-relaxed">有「預覽文字」功能。</p>
+                    </div>
+                    <div>
+                        <strong class="text-primary text-base block mb-1">🔸 第二版 (V2) </strong>
+                        <p class="text-gray-600 leading-relaxed">改為「預覽圖片與文字」功能。</p>
+                    </div>
+                    <div>
+                        <strong class="text-primary text-base block mb-1">⚡ 無圖版</strong>
+                        <p class="text-gray-600 leading-relaxed">無需等待 AI 生圖，適合網速慢或專注文字學習。</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="bg-surface-light border-l-4 border-indigo-500 p-6 rounded-r-lg card-shadow">
                 <div class="flex items-center mb-4">
                     <span class="text-2xl mr-3">☁️</span>
                     <h3 class="text-lg font-semibold text-indigo-600">進階功能：自動串接 Firebase 後台</h3>
                 </div>
                 <div class="text-text-light text-sm space-y-4">
-                    <p class="font-bold">想保留學生成績嗎？</p>
+                    <p class="font-bold text-gray-700">想保留學生成績嗎？</p>
                     <p>如果您希望擁有即時同步的成績後台，請在測驗生成完畢後，<span class="text-indigo-600 font-bold">複製以下咒語</span> 並傳送給 Gemini：</p>
                     
                     <div class="relative">
@@ -185,7 +204,7 @@
                         </div>
                         <div class="flex items-start">
                             <span class="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 flex-shrink-0 mt-0.5">2</span>
-                            <span>按右下角「試用Gemini Canvas」，自動跳轉至您的 Gemini。</span>
+                            <span>按右下角「試用gemini canvas」，自動跳轉至您的 Gemini。</span>
                         </div>
                         <div class="flex items-start">
                             <span class="bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 flex-shrink-0 mt-0.5">3</span>
