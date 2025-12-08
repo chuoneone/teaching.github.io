@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>相似形的應用 - 互動證明題</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 數學符號專用樣式 */
+        .math-text { font-family: 'Times New Roman', serif; font-style: italic; }
+        .math-symbol { font-family: 'Times New Roman', serif; font-style: normal; }
+        
+        .math { font-size: 1.1rem; font-weight: 600; display: inline-flex; align-items: center; gap: 2px; }
+        .fraction { display: inline-flex; flex-direction: column; align-items: center; line-height: 1; vertical-align: middle; margin: 0 4px; }
+        .fraction span:first-child { border-bottom: 2px solid currentColor; padding: 0 4px; display: block; width: 100%; text-align: center; }
+        .fraction span:last-child { padding: 0 4px; display: block; width: 100%; text-align: center; }
+        
+        /* 填答格樣式 */
+        .slot {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 60px;
+            height: 36px;
+            border-bottom: 3px solid #cbd5e1;
+            background-color: #f8fafc;
+            color: #334155;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0 8px;
+            margin: 0 2px;
+            vertical-align: middle;
+            border-radius: 4px 4px 0 0;
+            font-size: 1rem;
+        }
+        
+        .slot.active {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        .slot.filled {
+            border-color: #3b82f6;
+            background-color: #fff;
+            color: #1d4ed8;
+        }
+
+        .slot.correct {
+            border-color: #22c55e;
+            background-color: #f0fdf4;
+            color: #15803d;
+        }
+
+        .slot.error {
+            border-color: #ef4444;
+            background-color: #fef2f2;
+            animation: shake 0.5s;
+        }
+
+        /* 選項按鈕樣式 */
+        .option-btn {
+            background-color: white;
+            border: 2px solid #e2e8f0;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+            transform: translateY(-2px);
+        }
+
+        .option-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background-color: #f1f5f9;
+            transform: none;
+            border-color: #cbd5e1;
+            color: #94a3b8;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .step-container {
+            transition: all 0.5s ease;
+            opacity: 0.4;
+            pointer-events: none;
+            filter: blur(1px);
+        }
+
+        .step-container.active {
+            opacity: 1;
+            pointer-events: auto;
+            filter: none;
+        }
+        
+        .step-container.completed {
+            opacity: 1;
+            pointer-events: none;
+            filter: none;
+        }
+
+        /* 自定義滾動條 */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans h-screen flex flex-col overflow-hidden">
+
+    <!-- 頂部導覽列 -->
+    <nav class="bg-white shadow-sm z-20 flex-none border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center h-14 overflow-x-auto gap-3">
+                <span class="font-bold text-slate-700 mr-2 flex-shrink-0">選擇題目：</span>
+                <button id="nav-btn-1" onclick="switchProblem(1)" class="nav-btn bg-blue-600 text-white px-5 py-1.5 rounded-full text-sm font-bold shadow-md transition-all">
+                    第 1 題：平行線截角
+                </button>
+                <button id="nav-btn-2" onclick="switchProblem(2)" class="nav-btn bg-slate-100 text-slate-500 px-5 py-1.5 rounded-full text-sm font-bold hover:bg-slate-200 transition-all">
+                    第 2 題：等腰與相似
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主內容區 -->
+    <main class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
+        
+        <!-- 左側：題目區 (動態渲染) -->
+        <section class="w-full md:w-5/12 lg:w-1/3 bg-white border-b md:border-b-0 md:border-r border-slate-200 flex flex-col z-10 shadow-sm md:shadow-none h-2/5 md:h-full">
+            <div id="problem-content" class="p-6 overflow-y-auto custom-scrollbar h-full">
+                <!-- 這裡會被 JS 填充 -->
+            </div>
+        </section>
+
+        <!-- 右側：步驟解鎖區 (動態渲染) -->
+        <section class="flex-1 bg-slate-50 relative h-3/5 md:h-full overflow-hidden flex flex-col">
+            <div id="steps-area" class="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 scroll-smooth pb-32 custom-scrollbar">
+                <!-- 這裡會被 JS 填充 -->
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // --- 題目資料庫 ---
+        const problems = {
+            1: {
+                title: "相似形的應用 - 平行線證明",
+                description: `
+                    如圖，<span class="math-text">△ABC</span> 與 <span class="math-text">△CEF</span> 中，
+                    <mark class="bg-yellow-100 px-1 rounded mx-1 text-yellow-800"><span class="math" style="border-top: 1px solid black;">AB</span> // <span class="math" style="border-top: 1px solid black;">CE</span></mark>，
+                    <mark class="bg-green-100 px-1 rounded mx-1 text-green-800"><span class="math" style="border-top: 1px solid black;">BC</span> // <span class="math" style="border-top: 1px solid black;">EF</span></mark>，
+                    求證 <span class="math-text">△ABC</span> <span class="math-symbol">~</span> <span class="math-text">△CEF</span>。
+                `,
+                hint: "利用平行線截角性質（內錯角、同位角）找出對應相等的角。",
+                svg: `
+                    <svg width="300" height="200" viewBox="0 0 300 200" class="border border-slate-100 rounded-lg bg-slate-50 mx-auto">
+                        <path d="M80 40 L40 160 L200 160 Z" fill="none" stroke="#334155" stroke-width="2"/>
+                        <path d="M200 160 L220 100 L140 100 Z" fill="rgba(34, 197, 94, 0.1)" stroke="#16a34a" stroke-width="2"/>
+                        <text x="75" y="30" font-weight="bold" font-size="16">A</text>
+                        <text x="20" y="165" font-weight="bold" font-size="16">B</text>
+                        <text x="205" y="170" font-weight="bold" font-size="16">C</text>
+                        <text x="125" y="90" font-weight="bold" font-size="16">F</text>
+                        <text x="225" y="100" font-weight="bold" font-size="16">E</text>
+                        <path d="M58 95 L55 105 L65 102" fill="none" stroke="#ef4444" stroke-width="2"/>
+                        <path d="M208 125 L205 135 L215 132" fill="none" stroke="#ef4444" stroke-width="2"/>
+                        <path d="M120 160 L110 155 M120 160 L110 165" fill="none" stroke="#3b82f6" stroke-width="2"/>
+                        <path d="M180 100 L170 95 M180 100 L170 105" fill="none" stroke="#3b82f6" stroke-width="2"/>
+                    </svg>
+                `,
+                steps: [
+                    {
+                        id: 1,
+                        title: "證明第一組角相等",
+                        contentHTML: `
+                            <div class="text-lg leading-loose">
+                                <div class="flex flex-wrap items-center gap-2 mb-2">
+                                    <span class="font-math">∵</span>
+                                    <div class="slot" data-step="1" data-index="0"></div>
+                                    <span class="text-slate-400 text-sm">//</span>
+                                    <div class="slot" data-step="1" data-index="1"></div>
+                                    <span>，</span>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="font-math">∴ ∠BAC = ∠ECF</span>
+                                    <span class="text-slate-500 text-base">（內錯角相等）</span>
+                                </div>
+                            </div>
+                        `,
+                        correct: ['AB', 'CE'],
+                        options: ['AB', 'CE', 'BC', 'EF'],
+                        checkType: 'set' // 順序不拘，只要集合對
+                    },
+                    {
+                        id: 2,
+                        title: "證明第二組角相等",
+                        contentHTML: `
+                            <div class="text-lg leading-loose">
+                                <div class="flex flex-wrap items-center gap-2 mb-2">
+                                    <span class="font-math">∵</span>
+                                    <div class="slot" data-step="2" data-index="0"></div>
+                                    <span class="text-slate-400 text-sm">//</span>
+                                    <div class="slot" data-step="2" data-index="1"></div>
+                                    <span>，</span>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="font-math">∴</span>
+                                    <div class="slot min-w-[140px]" data-step="2" data-index="2"></div>
+                                    <span class="text-slate-500 text-base">（同位角相等）</span>
+                                </div>
+                            </div>
+                        `,
+                        correct: ['BC', 'EF', '∠ACB=∠EFC'],
+                        options: ['BC', 'EF', '∠ACB=∠EFC', '∠ABC=∠CEF'],
+                        checkType: 'mixed' // 前兩個順序不拘，第三個固定
+                    },
+                    {
+                        id: 3,
+                        title: "結論",
+                        contentHTML: `
+                            <div class="text-lg leading-loose">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span>故</span>
+                                    <div class="slot min-w-[160px]" data-step="3" data-index="0"></div>
+                                    <span>(</span>
+                                    <div class="slot" data-step="3" data-index="1"></div>
+                                    <span>相似性質 )。</span>
+                                </div>
+                            </div>
+                        `,
+                        correct: ['△ABC~△CEF', 'AA'],
+                        options: ['△ABC~△CEF', '△ABC≅△CEF', 'AA', 'SAS'],
+                        checkType: 'exact'
+                    }
+                ]
+            },
+            2: {
+                title: "相似形的應用 - 等腰三角形",
+                description: `
+                    如圖，<span class="math-text">AB</span> = <span class="math-text">AC</span>，
+                    <span class="math-text">DA</span> = <span class="math-text">DC</span>，
+                    且 <span class="math-text">∠ADC</span> = 80°，
+                    求證 <span class="math-text">△ABC</span> <span class="math-symbol">~</span> <span class="math-text">△DCA</span>。
+                `,
+                hint: "先利用等腰三角形性質算出角度，再比較兩個三角形的角。",
+                svg: `
+                    <svg width="300" height="200" viewBox="0 0 300 200" class="border border-slate-100 rounded-lg bg-slate-50 mx-auto">
+                        <!-- A(150, 20), B(50, 180), C(250, 180), D(72, 180) calculated for accurate geometry -->
+                        <!-- Triangle ABC -->
+                        <path d="M150 20 L50 180 L250 180 Z" fill="none" stroke="#334155" stroke-width="2"/>
+                        <!-- Line AD -->
+                        <line x1="150" y1="20" x2="72" y2="180" stroke="#334155" stroke-width="2"/>
+                        
+                        <!-- Labels -->
+                        <text x="145" y="15" font-weight="bold" font-size="16">A</text>
+                        <text x="35" y="185" font-weight="bold" font-size="16">B</text>
+                        <text x="255" y="185" font-weight="bold" font-size="16">C</text>
+                        <text x="65" y="195" font-weight="bold" font-size="16">D</text>
+                        
+                        <!-- Angle 80 at ADC. Vector DA(78, -160), DC(178, 0). Roughly visual -->
+                        <path d="M82 180 A 20 20 0 0 1 88 165" fill="none" stroke="red" stroke-width="1.5"/>
+                        <text x="88" y="170" font-size="12" fill="red" font-weight="bold">80°</text>
+
+                        <!-- Isosceles Marks: AB=AC -->
+                        <line x1="95" y1="100" x2="105" y2="100" stroke="#3b82f6" stroke-width="2" transform="rotate(-60 100 100)"/>
+                        <line x1="195" y1="100" x2="205" y2="100" stroke="#3b82f6" stroke-width="2" transform="rotate(60 200 100)"/>
+
+                        <!-- Isosceles Marks: DA=DC. DA mid approx(111, 100). DC mid approx(161, 180) -->
+                        <g stroke="#ef4444" stroke-width="2">
+                            <!-- On DA -->
+                            <line x1="108" y1="98" x2="114" y2="102" />
+                            <line x1="110" y1="94" x2="116" y2="98" />
+                            <!-- On DC -->
+                            <line x1="158" y1="175" x2="158" y2="185" />
+                            <line x1="164" y1="175" x2="164" y2="185" />
+                        </g>
+                    </svg>
+                `,
+                steps: [
+                    {
+                        id: 1,
+                        title: "計算角度 (利用等腰性質)",
+                        contentHTML: `
+                            <div class="text-lg leading-loose">
+                                <div class="flex flex-wrap items-center gap-2 mb-2">
+                                    <span class="font-math">∵</span>
+                                    <div class="slot" data-step="1" data-index="0"></div>
+                                    <span>=</span>
+                                    <div class="slot" data-step="1" data-index="1"></div>
+                                    <span>，</span>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-2 mb-2">
+                                    <span class="font-math">∴ ∠C = ∠DAC = 50°</span>
+                                    <span>(</span>
+                                    <div class="slot min-w-[120px]" data-step="1" data-index="2"></div>
+                                    <span>)</span>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span>又</span>
+                                    <div class="slot" data-step="1" data-index="3"></div>
+                                    <span>=</span>
+                                    <div class="slot" data-step="1" data-index="4"></div>
+                                    <span>，</span>
+                                    <span class="font-math">∴ ∠B = ∠C = 50°</span>
+                                </div>
+                            </div>
+                        `,
+                        correct: ['DA', 'DC', '等邊對等角', 'AB', 'AC'],
+                        options: ['DA', 'DC', 'AB', 'AC', '等邊對等角', '內錯角相等'],
+                        checkType: 'mixed' // (0,1) set, 2 exact, (3,4) set
+                    },
+                    {
+                        id: 2,
+                        title: "證明相似",
+                        contentHTML: `
+                            <div class="text-lg leading-loose">
+                                <div class="flex flex-wrap items-center gap-2 mb-2">
+                                    <span>在</span>
+                                    <div class="slot min-w-[90px]" data-step="2" data-index="0"></div>
+                                    <span>與</span>
+                                    <div class="slot min-w-[90px]" data-step="2" data-index="1"></div>
+                                    <span>中，</span>
+                                </div>
+                                <div class="pl-4 border-l-2 border-slate-300 mb-2">
+                                    <div>∠B = ∠C <span class="text-slate-400 text-sm">(已證)</span></div>
+                                    <div>∠C = ∠DAC <span class="text-slate-400 text-sm">(已證)</span></div>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span>故</span>
+                                    <div class="slot min-w-[140px]" data-step="2" data-index="2"></div>
+                                    <span>(</span>
+                                    <div class="slot" data-step="2" data-index="3"></div>
+                                    <span>相似性質 )。</span>
+                                </div>
+                            </div>
+                        `,
+                        correct: ['△ABC', '△DCA', '△ABC~△DCA', 'AA'],
+                        options: ['△ABC', '△DCA', '△ABC~△DCA', 'AA', 'SAS', 'SSS'],
+                        checkType: 'mixed' // (0,1) ordered (important for similarity?), actually (0,1) text is "In ABC and DCA", usually order implies correspondence but for the "In... and..." statement it's loose. However, let's enforce order to match final result. Or allow swap if result swaps? Let's strictly enforce ABC and DCA for simplicity based on prompt image.
+                    }
+                ]
+            }
+        };
+
+        let currentProblemId = 1;
+        let gameState = {};
+
+        // --- 初始化與切換 ---
+        function initProblem(id) {
+            currentProblemId = id;
+            
+            // 重置遊戲狀態
+            const problemData = problems[id];
+            gameState = {
+                steps: {}
+            };
+            problemData.steps.forEach(step => {
+                gameState.steps[step.id] = {
+                    filled: Array(step.correct.length).fill(null),
+                    correct: step.correct,
+                    completed: false
+                };
+            });
+
+            // 更新導覽列樣式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white', 'shadow-md');
+                btn.classList.add('bg-slate-100', 'text-slate-500');
+            });
+            const activeBtn = document.getElementById(`nav-btn-${id}`);
+            activeBtn.classList.remove('bg-slate-100', 'text-slate-500');
+            activeBtn.classList.add('bg-blue-600', 'text-white', 'shadow-md');
+
+            renderContent(id);
+        }
+
+        function switchProblem(id) {
+            if (currentProblemId === id) return;
+            const container = document.querySelector('main');
+            container.style.opacity = '0';
+            setTimeout(() => {
+                initProblem(id);
+                container.style.opacity = '1';
+            }, 200);
+        }
+
+        function renderContent(id) {
+            const data = problems[id];
+            
+            // 1. 渲染左側題目
+            const problemEl = document.getElementById('problem-content');
+            problemEl.innerHTML = `
+                <div class="inline-block bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded mb-3">
+                    題目 ${id}
+                </div>
+                <h2 class="text-xl font-bold mb-4 leading-relaxed">
+                    ${data.description}
+                </h2>
+                <div class="w-full flex justify-center my-6">
+                    ${data.svg}
+                </div>
+                <p class="text-sm text-slate-500 mt-2 bg-yellow-50 p-3 rounded border border-yellow-100">
+                    <span class="font-bold text-yellow-600">💡 提示：</span> 
+                    ${data.hint}
+                </p>
+            `;
+
+            // 2. 渲染右側步驟
+            const stepsEl = document.getElementById('steps-area');
+            stepsEl.innerHTML = ''; // Clear
+
+            data.steps.forEach((step, index) => {
+                const isActive = index === 0 ? 'active' : '';
+                
+                const stepHTML = `
+                    <div id="step-${step.id}" class="step-container ${isActive} bg-white p-5 rounded-xl shadow-sm border border-slate-200 mb-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-blue-600 flex items-center">
+                                <span class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center mr-2 text-sm">${step.id}</span>
+                                ${step.title}
+                            </h3>
+                            <span class="status-icon hidden text-green-500 font-bold text-sm bg-green-50 px-2 py-1 rounded border border-green-100">✔ 完成</span>
+                        </div>
+                        
+                        ${step.contentHTML}
+
+                        <!-- Options Area -->
+                        <div class="options-area mt-6 pt-4 border-t border-slate-100" id="options-area-${step.id}">
+                            <p class="text-sm text-slate-400 mb-2">點擊選項填入：</p>
+                            <div class="flex flex-wrap gap-2" id="options-${step.id}">
+                                ${step.options.map(opt => {
+                                    // 簡單美化數學符號
+                                    let label = opt;
+                                    if(opt.length <= 2 && /^[A-Z]+$/.test(opt)) {
+                                        label = `<span class="math" style="border-top:1px solid black">${opt}</span>`;
+                                    }
+                                    return `<button class="option-btn" onclick="fillSlot(${step.id}, '${opt}')">${label}</button>`;
+                                }).join('')}
+                            </div>
+                            <div class="mt-4 flex justify-end items-center gap-3">
+                                <div id="feedback-${step.id}" class="text-right font-bold text-sm h-6"></div>
+                                <button onclick="checkStep(${step.id})" class="check-btn bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-bold shadow-lg shadow-blue-200 transition-all active:scale-95">
+                                    檢查答案
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                stepsEl.insertAdjacentHTML('beforeend', stepHTML);
+            });
+            
+            // Add spacer
+            stepsEl.insertAdjacentHTML('beforeend', '<div class="h-24"></div>');
+            
+            // Re-bind click events for slots (since innerHTML replaced elements)
+            bindSlotEvents();
+        }
+
+        // --- 互動邏輯 ---
+
+        function bindSlotEvents() {
+            document.querySelectorAll('.slot').forEach(slot => {
+                slot.addEventListener('click', function() {
+                    const stepId = parseInt(this.dataset.step);
+                    const index = parseInt(this.dataset.index);
+
+                    if (gameState.steps[stepId].completed) return;
+
+                    const currentValue = gameState.steps[stepId].filled[index];
+                    if (currentValue) {
+                        gameState.steps[stepId].filled[index] = null;
+                        this.innerHTML = '';
+                        this.classList.remove('filled', 'active', 'error');
+                        delete this.dataset.value;
+                        updateButtons(stepId);
+                    }
+                });
+            });
+        }
+
+        function fillSlot(stepId, value) {
+            const stepData = gameState.steps[stepId];
+            if (stepData.completed) return;
+
+            const emptyIndex = stepData.filled.findIndex(val => val === null);
+
+            if (emptyIndex !== -1) {
+                stepData.filled[emptyIndex] = value;
+                
+                const slots = document.querySelectorAll(`.slot[data-step="${stepId}"]`);
+                const targetSlot = slots[emptyIndex];
+                
+                // 美化顯示
+                let displayHtml = value;
+                if(value.length <= 2 && /^[A-Z]+$/.test(value) && !value.includes('AA')) {
+                     displayHtml = `<span style="border-top: 1px solid black">${value}</span>`;
+                }
+                
+                targetSlot.innerHTML = displayHtml;
+                targetSlot.classList.add('filled', 'active');
+                targetSlot.dataset.value = value;
+
+                updateButtons(stepId);
+                
+                const feedback = document.getElementById(`feedback-${stepId}`);
+                feedback.innerHTML = '';
+            } else {
+                const feedback = document.getElementById(`feedback-${stepId}`);
+                feedback.innerHTML = '<span class="text-orange-500">格子滿了，檢查看看！</span>';
+                // feedback.classList.add('animate-pulse'); // simple visual cue
+            }
+        }
+
+        function updateButtons(stepId) {
+            const filledValues = gameState.steps[stepId].filled.filter(v => v !== null);
+            const buttons = document.querySelectorAll(`#options-${stepId} .option-btn`);
+            
+            // 簡單計數邏輯：如果該選項在正確答案中出現N次，則允許選N次
+            // 這裡簡化：只要選項已被選次數 >= 該選項在選項列表中出現的次數（通常為1），就禁用
+            // 改進：計算此 value 在 filledValues 中出現的次數
+            
+            buttons.forEach(btn => {
+                // Parse value from onclick string
+                const match = btn.getAttribute('onclick').match(/'([^']+)'/);
+                if (match) {
+                    const val = match[1];
+                    // 檢查這個值是否已經被填入
+                    // 針對 "AA" 等可能重複使用的詞，這裡假設每個按鈕對應唯一值。
+                    // 若要更嚴謹，需統計正確答案中該值出現次數。
+                    // 本範例中，選項按鈕是唯一的，所以只要填入過就 disable
+                    if (filledValues.includes(val)) {
+                        btn.disabled = true;
+                    } else {
+                        btn.disabled = false;
+                    }
+                }
+            });
+        }
+
+        function checkStep(stepId) {
+            const stepData = gameState.steps[stepId];
+            const feedbackEl = document.getElementById(`feedback-${stepId}`);
+            const slots = document.querySelectorAll(`.slot[data-step="${stepId}"]`);
+            const problemConfig = problems[currentProblemId].steps.find(s => s.id === stepId);
+
+            if (stepData.filled.includes(null)) {
+                feedbackEl.innerHTML = '<span class="text-orange-500">還有空格喔！</span>';
+                return;
+            }
+
+            let isCorrect = true;
+            const userVals = stepData.filled;
+            const correctVals = stepData.correct;
+
+            if (problemConfig.checkType === 'set') {
+                // 集合檢查：內容相同即可，順序不拘
+                const userSet = [...userVals].sort();
+                const correctSet = [...correctVals].sort();
+                if (JSON.stringify(userSet) !== JSON.stringify(correctSet)) isCorrect = false;
+            } else if (problemConfig.checkType === 'exact') {
+                // 嚴格順序
+                if (JSON.stringify(userVals) !== JSON.stringify(correctVals)) isCorrect = false;
+            } else if (problemConfig.checkType === 'mixed') {
+                // 混合模式：針對 Problem 2 Step 1 & 2 的特殊處理
+                // P1 Step 2: (set of 2) + exact 1
+                // P2 Step 1: (set of 2) + exact 1 + (set of 2)
+                
+                if (currentProblemId === 1 && stepId === 2) {
+                    const setPart = [userVals[0], userVals[1]];
+                    const correctSet = [correctVals[0], correctVals[1]];
+                    if (!correctSet.every(v => setPart.includes(v))) isCorrect = false;
+                    if (userVals[2] !== correctVals[2]) isCorrect = false;
+                }
+                else if (currentProblemId === 2 && stepId === 1) {
+                    // P2 Step 1: 0,1 are DA/DC (set); 2 is Reason (exact); 3,4 are AB/AC (set)
+                    const pair1 = [userVals[0], userVals[1]];
+                    const pair2 = [userVals[3], userVals[4]];
+                    const corr1 = [correctVals[0], correctVals[1]];
+                    const corr2 = [correctVals[3], correctVals[4]];
+                    
+                    if (!corr1.every(v => pair1.includes(v))) isCorrect = false;
+                    if (userVals[2] !== correctVals[2]) isCorrect = false;
+                    if (!corr2.every(v => pair2.includes(v))) isCorrect = false;
+                }
+                else if (currentProblemId === 2 && stepId === 2) {
+                     // P2 Step 2: 0,1 are Triangles (Let's strict order this time for clarity or Set?)
+                     // "In ABC and DCA" -> strict order preferred by convention
+                     if (JSON.stringify(userVals) !== JSON.stringify(correctVals)) isCorrect = false;
+                }
+            }
+
+            if (isCorrect) {
+                stepData.completed = true;
+                feedbackEl.innerHTML = '<span class="text-green-600">🎉 正確！</span>';
+                slots.forEach(slot => {
+                    slot.classList.remove('active', 'error');
+                    slot.classList.add('correct');
+                    slot.style.cursor = 'default';
+                });
+                
+                // Hide controls
+                document.getElementById(`options-area-${stepId}`).style.display = 'none';
+                document.querySelector(`#step-${stepId} .status-icon`).classList.remove('hidden');
+
+                // Unlock next
+                const nextStep = document.getElementById(`step-${stepId + 1}`);
+                if (nextStep) {
+                    setTimeout(() => {
+                        nextStep.classList.add('active');
+                        nextStep.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 500);
+                } else {
+                    setTimeout(() => {
+                        feedbackEl.innerHTML = '<span class="text-blue-600 font-bold">恭喜！本題完成！</span>';
+                        // Show celebration
+                        const jsConfetti = document.createElement('script'); // Just a mock or alert
+                        // alert("恭喜完成本題！");
+                    }, 500);
+                }
+
+            } else {
+                feedbackEl.innerHTML = '<span class="text-red-500">再想想看...</span>';
+                slots.forEach(slot => {
+                    slot.classList.add('error');
+                    setTimeout(() => slot.classList.remove('error'), 500);
+                });
+            }
+        }
+
+        // Start
+        window.onload = () => initProblem(1);
+
+    </script>
+</body>
+</html>
