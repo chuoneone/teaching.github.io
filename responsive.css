@@ -1,32 +1,34 @@
 /* 📱 手機版：最大寬度 768px */
 @media (max-width: 768px) {
     
+  /* --- 全域調整 --- */
+  body {
+      /* 手機版兩側留白少一點，讓內容寬一點 */
+      padding: 10px; 
+      padding-top: 80px; /* 避開導覽列 */
+  }
+
   /* --- 導覽列下拉選單 (NES 風格) --- */
   .nav-links {
     display: grid;
-    /* 修改：改為 2 欄，像遊戲道具選單，3欄在手機上像素字體會太擠 */
     grid-template-columns: repeat(2, 1fr); 
     gap: 10px;
     position: fixed;
-    /* 配合 navbar 高度 */
     top: 74px; 
     left: 0; 
     width: 100%;
     
-    /* ✅ 風格套用: 改為地面褐色，配合 style.css */
-    background-color: var(--ground-brown); 
+    background-color: #000000; 
     
-    /* ✅ 風格套用: 移除圓角，改為黑色粗框 */
     border-radius: 0;
     border-bottom: 4px solid var(--border-black);
-    border-top: 4px solid var(--border-black); /* 增加上框區隔 */
+    border-top: 4px solid var(--border-black);
 
-    padding: 20px;
+    padding: 15px;
     z-index: 999;
-    box-shadow: 0 8px 0 rgba(0, 0, 0, 0.5); /* 硬陰影 */
+    box-shadow: 0 8px 0 rgba(0, 0, 0, 0.5); 
     box-sizing: border-box;
 
-    /* --- 動畫效果 --- */
     transform: translateY(-150%);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s;
     visibility: hidden;
@@ -40,17 +42,19 @@
   .nav-links li {
     padding: 0;
     width: auto;
-    display: flex; /* 讓連結填滿 */
+    display: flex; 
   }
 
-  /* ✅ 選單連結按鈕 (像素風格) */
+  /* ✅ 選單連結按鈕 */
   .nav-links a {
-    /* ✅ 風格套用: 白色文字配黑框陰影 */
     color: #ffffff; 
-    font-family: 'Press Start 2P', monospace; /* 像素字體 */
-    background-color: var(--border-black); /* 黑色背景像按鈕 */
+    /* 修改：統一使用圓體 */
+    font-family: "Chiron GoRound TC", sans-serif;
+    background-color: var(--border-black); 
     
-    font-size: 12px; /* 像素字比較大，手機要縮小 */
+    /* 修改：加大導覽列文字，原本 12px 太小 */
+    font-size: 16px; 
+    font-weight: 600;
     line-height: 1.5;
     display: flex;
     align-items: center;
@@ -59,49 +63,48 @@
     width: 100%;
     transition: transform 0.1s;
     
-    border: 2px solid #fff; /* 內白框 */
-    border-radius: 0; /* 直角 */
+    border: 2px solid #fff; 
+    border-radius: 0; 
     text-align: center;
     text-decoration: none;
     box-shadow: 4px 4px 0 rgba(0,0,0,0.3);
   }
   
-  /* ✅ 滑鼠滑過/點擊效果 */
   .nav-links a:hover,
   .nav-links a:active {
-    background-color: var(--mario-red); /* 變紅 */
+    background-color: var(--mario-red); 
     color: #fff;
     transform: translateY(2px);
     box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
   }
 
-  /* ✅ 當前頁面連結 */
   .nav-links a.active {
-    background-color: var(--coin-yellow); /* 變黃 */
-    color: #000; /* 黑字 */
-    border-color: #000;
-    font-weight: bold;
-    box-shadow: inset 2px 2px 0 rgba(0,0,0,0.2); /* 內陷效果 */
+    background-color: var(--coin-yellow); 
+    color: #f67f00; 
+    border-color: #f67f00;
+    font-weight: 800; /* 加粗 */
+    box-shadow: inset 2px 2px 0 rgba(0,0,0,0.2); 
   }
 
-  /* 確保漢堡圖在最上層 */
   .menu-toggle {
     display: block;
     position: relative;
     z-index: 1000;
     color: #fff;
-    font-size: 24px;
+    font-size: 28px; /* 漢堡圖示加大 */
   }
 
   /* --- 內容區塊調整 --- */
 
-  /* 打字特效縮小字體 */
   .intro-text {
-    font-size: 1.2rem; /* 縮小 */
-    letter-spacing: 0px;
-    border-right: 4px solid var(--coin-yellow);
+    /* 修改：稍微加大並允許換行 */
+    font-size: 1.5rem; 
+    letter-spacing: 1px;
+    border-right: 4px solid #FBD000;
     padding: 0 10px;
     margin-top: 20px;
+    white-space: normal; /* 手機版允許換行，不然字跑馬燈會太長 */
+    height: auto;
   }
 
   .button-section {
@@ -114,15 +117,15 @@
   iframe {
     width: 100% !important;
     height: 50vh !important;
-    border: 4px solid #000 !important; /* 加黑框 */
+    border: 4px solid #000 !important; 
   }
 
   .big-button {
-    width: 90%; /* 滿版 */
-    max-width: 300px;
+    width: 90%; 
+    max-width: 350px;
     height: auto;
-    padding: 15px 10px;
-    font-size: 14px; /* 調整字體大小 */
+    padding: 18px 20px; /* 加大內距 */
+    font-size: 20px; /* 修改：加大字體 */
     margin: 10px auto;
     display: flex;
     align-items: center;
@@ -130,21 +133,35 @@
   }
 
   .grade-row {
-    grid-template-columns: 1fr; /* 手機版改為單欄 */
+    grid-template-columns: 1fr; /* 單欄 */
     gap: 15px;
     width: 100%;
   }
 
   .single-row {
-    flex-direction: column; /* 垂直排列 */
+    flex-direction: column; 
     align-items: center;
-    gap: 20px;
+    gap: 30px; /* 增加間距 */
   }
   
   .social-group {
-    width: 90%; /* 寬度佔滿 */
+    width: 95%; /* 幾乎滿版 */
     max-width: none;
     margin: 0 auto;
+    padding: 15px; /* 內距稍微縮小以爭取空間 */
+  }
+
+  /* 修改：手機版標題 */
+  .social-group h3 {
+      font-size: 24px; /* 確保標題夠大 */
+      margin-bottom: 20px;
+  }
+
+  /* 修改：手機版按鈕 (對應 .btn) */
+  .btn {
+      font-size: 18px; /* 確保按鈕文字夠大 */
+      padding: 12px 20px;
+      text-align: center; /* 手機版置中較好看 */
   }
 
   .image-button {
@@ -154,7 +171,7 @@
   }
 
   .overlay-text {
-    font-size: 20px !important;
+    font-size: 24px !important; /* 加大圖片文字 */
     text-shadow: 2px 2px 0 #000;
   }
 
@@ -175,80 +192,71 @@
     padding: 15px 5px;
     border-width: 2px;
   }
-
-  .countdown-title {
-    font-size: 0.8rem;
-    margin-bottom: 10px;
-  }
-
-  .countdown-timer {
-    gap: 5px;
-  }
-
+  
   .countdown-timer span {
-    font-size: 1.5rem; /* 縮小數字 */
-    min-width: 30px;
-  }
-
-  .label {
-    font-size: 0.6rem;
-    margin-left: 2px;
-  }
-
-  .responsive-img {
-    height: auto;
-    width: 100%;
+    font-size: 2rem; /* 修改：數字不用縮太小 */
+    min-width: 40px;
   }
 
   .section-title {
-    font-size: 1.5rem; /* 標題縮小 */
+    font-size: 2rem; /* 修改：標題加大 */
     flex-direction: column;
     gap: 10px;
-    margin-top: 20px;
-    white-space: normal; /* 允許換行 */
+    margin-top: 30px;
+    white-space: normal; 
+    line-height: 1.3;
   }
 
   /* 章節按鈕容器 */
   .button-container {
     display: grid;
-    /* 改為 2 欄，3欄字會放不下 */
+    /* 保持 2 欄，但如果單字很長可以改 1fr */
     grid-template-columns: repeat(2, 1fr); 
-    gap: 10px;
+    gap: 12px;
     width: 100%;
     margin: 20px auto;
-    padding: 0 10px;
+    padding: 0 5px;
     box-sizing: border-box;
   }
 
-  .section-button {
+  /* 修改：選科目/選單元 按鈕 */
+  .section-button, 
+  .chapter-button {
     margin: 0;
     width: 100%;
     height: auto;
-    padding: 12px 5px;
-    font-size: 12px; /* 縮小字體 */
-    line-height: 1.5;
-    white-space: normal; /* 允許文字換行 */
+    /* 修改：加大內距 */
+    padding: 15px 10px;
+    /* 修改：加大字體，原本 12px 太難讀 */
+    font-size: 18px; 
+    line-height: 1.3;
+    white-space: normal; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
   
   /* 標題畫面手機版調整 */
   #title-screen .game-title {
-      font-size: 1.8rem;
+      font-size: 2.2rem; /* 加大 */
       margin-bottom: 30px;
+      line-height: 1.2;
   }
   
   #title-screen .start-btn {
-      padding: 15px 20px;
-      font-size: 1rem;
+      padding: 15px 30px;
+      font-size: 1.5rem; /* 加大 */
   }
   
   #title-screen .block-container {
       margin-bottom: 20px;
-      gap: 5px;
+      gap: 10px;
   }
   
   #title-screen .block {
-      width: 35px;
-      height: 35px;
-      font-size: 16px;
+      width: 40px; /* 稍微加大 */
+      height: 40px;
+      font-size: 20px;
   }
 }
