@@ -3,216 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>平行四邊形幾何證明 - 互動學習單</title>
-    <!-- Tailwind CSS -->
+    <title>相似形的應用 - 互動證明題</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
-    
     <style>
-        body {
-            font-family: 'Noto Sans TC', sans-serif;
-            background-color: #f3f4f6; /* bg-gray-100 */
-        }
-
-        /* 數學式樣式設定 */
-        .math-text {
-            font-family: 'Times New Roman', serif;
-            font-style: italic;
-            font-weight: 600;
-        }
+        /* 數學符號專用樣式 */
+        .math-text { font-family: 'Times New Roman', serif; font-style: italic; }
+        .math-symbol { font-family: 'Times New Roman', serif; font-style: normal; }
         
-        .segment {
-            text-decoration: overline;
-            margin-right: 2px;
-        }
-
-        .angle {
-            font-style: normal;
-            margin-right: 2px;
-        }
-
-        .triangle {
-            display: inline-block;
-            margin-right: 2px;
-        }
-        .triangle::before {
-            content: "△";
-            font-family: 'Times New Roman', serif;
-        }
-
+        .math { font-size: 1.1rem; font-weight: 600; display: inline-flex; align-items: center; gap: 2px; }
+        .fraction { display: inline-flex; flex-direction: column; align-items: center; line-height: 1; vertical-align: middle; margin: 0 4px; }
+        .fraction span:first-child { border-bottom: 2px solid currentColor; padding: 0 4px; display: block; width: 100%; text-align: center; }
+        .fraction span:last-child { padding: 0 4px; display: block; width: 100%; text-align: center; }
+        
         /* 填答格樣式 */
         .slot {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 80px;
-            height: 42px;
-            margin: 0 4px;
-            padding: 0 10px;
-            border: 2px dashed #9ca3af; /* gray-400 */
-            border-radius: 8px;
-            background-color: #ffffff;
-            color: #374151;
+            min-width: 60px;
+            height: 36px;
+            border-bottom: 3px solid #cbd5e1;
+            background-color: #f8fafc;
+            color: #334155;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
+            padding: 0 8px;
+            margin: 0 2px;
             vertical-align: middle;
-            white-space: nowrap;
+            border-radius: 4px 4px 0 0;
+            font-size: 1rem;
+        }
+        
+        .slot.active {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
         }
 
         .slot.filled {
-            border-style: solid;
-            border-color: #3b82f6; /* blue-500 */
-            background-color: #eff6ff; /* blue-50 */
+            border-color: #3b82f6;
+            background-color: #fff;
             color: #1d4ed8;
         }
 
         .slot.correct {
-            border-color: #10b981; /* green-500 */
-            background-color: #ecfdf5; /* green-50 */
-            color: #047857;
-            cursor: default;
+            border-color: #22c55e;
+            background-color: #f0fdf4;
+            color: #15803d;
         }
 
         .slot.error {
-            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-            border-color: #ef4444; /* red-500 */
+            border-color: #ef4444;
+            background-color: #fef2f2;
+            animation: shake 0.5s;
         }
 
         /* 選項按鈕樣式 */
         .option-btn {
-            background-color: #ffffff;
-            border: 2px solid #e5e7eb;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border-radius: 12px;
-            padding: 10px 16px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #374151;
+            background-color: white;
+            border: 2px solid #e2e8f0;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
             transition: all 0.2s;
-            display: inline-flex;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 1rem;
         }
 
-        .option-btn:not(:disabled):hover {
-            transform: translateY(-2px);
-            border-color: #60a5fa;
+        .option-btn:hover:not(:disabled) {
+            border-color: #3b82f6;
             background-color: #eff6ff;
-        }
-
-        .option-btn:not(:disabled):active {
-            transform: translateY(0);
+            transform: translateY(-2px);
         }
 
         .option-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            background-color: #f3f4f6;
-            transform: none;
-            box-shadow: none;
-        }
-
-        /* 步驟卡片 */
-        .step-card {
             opacity: 0.5;
-            pointer-events: none;
-            filter: grayscale(0.8);
-            transition: all 0.5s ease;
-            transform: translateY(20px);
+            cursor: not-allowed;
+            background-color: #f1f5f9;
+            transform: none;
+            border-color: #cbd5e1;
+            color: #94a3b8;
         }
 
-        .step-card.active {
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .step-container {
+            transition: all 0.5s ease;
+            opacity: 0.4;
+            pointer-events: none;
+            filter: blur(1px);
+        }
+
+        .step-container.active {
             opacity: 1;
             pointer-events: auto;
-            filter: grayscale(0);
-            transform: translateY(0);
-            border-left: 5px solid #3b82f6;
-        }
-
-        .step-card.completed {
-            opacity: 1;
-            pointer-events: none;
-            filter: grayscale(0);
-            border-left: 5px solid #10b981;
-            background-color: #f0fdf4;
+            filter: none;
         }
         
-        .step-card.completed .check-btn-area {
-            display: none;
-        }
-
-        /* 導覽列按鈕 */
-        .problem-tab {
-            opacity: 0.7;
-        }
-        .problem-tab.active {
+        .step-container.completed {
             opacity: 1;
-            background-color: #2563eb; /* blue-600 */
-            color: white;
+            pointer-events: none;
+            filter: none;
         }
 
-        /* 動畫 */
-        @keyframes shake {
-            10%, 90% { transform: translate3d(-1px, 0, 0); }
-            20%, 80% { transform: translate3d(2px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-            40%, 60% { transform: translate3d(4px, 0, 0); }
+        /* 自定義滾動條 */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
         }
-
-        @keyframes tada {
-            0% { transform: scale(1); }
-            10%, 20% { transform: scale(0.9) rotate(-3deg); }
-            30%, 50%, 70%, 90% { transform: scale(1.1) rotate(3deg); }
-            40%, 60%, 80% { transform: scale(1.1) rotate(-3deg); }
-            100% { transform: scale(1) rotate(0); }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
         }
-
-        .animate-tada {
-            animation: tada 1s;
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
         }
-
-        /* 隱藏元素工具 */
-        .hidden { display: none !important; }
-
-        /* SVG 樣式 */
-        .svg-text {
-            font-family: 'Times New Roman', serif;
-            font-style: italic;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        .svg-label {
-            font-family: sans-serif;
-            font-size: 14px;
-            fill: #dc2626; /* red-600 */
-            font-weight: bold;
-        }
-        .svg-line {
-            stroke: #000;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-        .svg-dash {
-            stroke-dasharray: 4;
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
         }
     </style>
 </head>
-<body class="h-screen flex flex-col overflow-hidden">
+<body class="bg-slate-50 text-slate-800 font-sans h-screen flex flex-col overflow-hidden">
 
-    <!-- 導覽列 -->
-    <nav class="bg-white border-b border-gray-200 shadow-sm z-20 flex-none">
+    <!-- 頂部導覽列 -->
+    <nav class="bg-white shadow-sm z-20 flex-none border-b border-slate-200">
         <div class="max-w-7xl mx-auto px-4">
-            <div class="flex space-x-4 overflow-x-auto py-3 items-center">
-                <span class="text-gray-500 font-bold px-2 flex-shrink-0 hidden md:block">單元：平行四邊形</span>
-                
-                <button onclick="switchProblem(1)" id="tab-1" class="problem-tab active px-4 py-2 bg-gray-200 text-gray-700 rounded-full text-sm font-bold shadow-sm whitespace-nowrap transition-colors">
-                    題目 1：求證平行
-                </button>
-                <button onclick="switchProblem(2)" id="tab-2" class="problem-tab px-4 py-2 bg-gray-200 text-gray-700 rounded-full text-sm font-bold shadow-sm whitespace-nowrap transition-colors">
-                    題目 2：對角線平分
+            <div class="flex items-center h-14 overflow-x-auto gap-3">
+                <span class="font-bold text-slate-700 mr-2 flex-shrink-0">目前題目：</span>
+                <button id="nav-btn-1" class="nav-btn bg-blue-600 text-white px-5 py-1.5 rounded-full text-sm font-bold shadow-md transition-all cursor-default">
+                    平行線截角證明
                 </button>
             </div>
         </div>
@@ -221,511 +148,354 @@
     <!-- 主內容區 -->
     <main class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
         
-        <!-- 左側：題目區 -->
-        <section id="left-panel" class="md:w-1/3 bg-white border-b md:border-b-0 md:border-r border-gray-200 flex flex-col overflow-y-auto md:h-full z-10 shadow-sm md:shadow-none">
-            <div class="p-6 sticky top-0">
-                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                    <span class="bg-indigo-100 text-indigo-700 p-2 rounded-lg mr-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                        </svg>
-                    </span>
-                    題目說明
-                </h2>
-                
-                <!-- 題目 1 內容 -->
-                <div id="problem-intro-1">
-                    <div class="flex justify-center mb-6 bg-gray-50 rounded-xl p-4 border border-gray-100">
-                        <svg width="240" height="160" viewBox="0 0 240 160">
-                            <!-- 四邊形 ABCD -->
-                            <polygon points="60,30 30,130 180,130 210,30" fill="none" class="svg-line" />
-                            <line x1="30" y1="130" x2="210" y2="30" class="svg-line" />
-                            <!-- 點標記 -->
-                            <text x="50" y="25" class="svg-text">A</text>
-                            <text x="15" y="135" class="svg-text">B</text>
-                            <text x="190" y="135" class="svg-text">C</text>
-                            <text x="220" y="25" class="svg-text">D</text>
-                            <!-- 角標記 -->
-                            <text x="175" y="45" class="svg-text" font-size="12">1</text>
-                            <text x="55" y="125" class="svg-text" font-size="12">2</text>
-                            <text x="195" y="60" class="svg-text" font-size="12">3</text>
-                            <text x="40" y="115" class="svg-text" font-size="12">4</text>
-                        </svg>
-                    </div>
-                    <div class="space-y-4 text-lg text-gray-700 leading-relaxed">
-                        <p>
-                            <span class="font-bold bg-yellow-100 px-1 rounded">已知：</span>
-                            在四邊形 <span class="math-text">ABCD</span> 中，
-                            <span class="segment math-text">AD</span> // <span class="segment math-text">BC</span>，且 <span class="angle">∠</span><span class="math-text">A</span> = <span class="angle">∠</span><span class="math-text">C</span>。
-                        </p>
-                        <p class="mt-4 border-t pt-4">
-                            <span class="font-bold bg-green-100 px-1 rounded">求證：</span>
-                            <span class="segment math-text">AB</span> // <span class="segment math-text">DC</span>
-                        </p>
-                    </div>
-                </div>
-
-                <!-- 題目 2 內容 (預設隱藏) -->
-                <div id="problem-intro-2" class="hidden">
-                    <div class="flex justify-center mb-6 bg-gray-50 rounded-xl p-4 border border-gray-100">
-                        <svg width="240" height="160" viewBox="0 0 240 160">
-                            <!-- 四邊形 ABCD -->
-                            <polygon points="50,30 20,130 170,130 200,30" fill="none" class="svg-line" />
-                            <!-- 對角線 -->
-                            <line x1="50" y1="30" x2="170" y2="130" class="svg-line" />
-                            <line x1="20" y1="130" x2="200" y2="30" class="svg-line" />
-                            <!-- 點標記 -->
-                            <text x="40" y="25" class="svg-text">A</text>
-                            <text x="5" y="135" class="svg-text">B</text>
-                            <text x="180" y="135" class="svg-text">C</text>
-                            <text x="210" y="25" class="svg-text">D</text>
-                            <text x="110" y="90" class="svg-text">O</text>
-                            <!-- 紅色數字標記 -->
-                            <text x="65" y="50" class="svg-label">1</text>
-                            <text x="80" y="45" class="svg-label">4</text>
-                            <text x="35" y="120" class="svg-label">5</text>
-                            <text x="155" y="115" class="svg-label">2</text>
-                            <text x="140" y="120" class="svg-label">3</text>
-                            <text x="185" y="50" class="svg-label">6</text>
-                        </svg>
-                    </div>
-                    <div class="space-y-4 text-lg text-gray-700 leading-relaxed">
-                        <p>
-                            <span class="font-bold bg-yellow-100 px-1 rounded">已知：</span>
-                            如圖，<span class="math-text">▱ABCD</span> 中，
-                            <span class="segment math-text">AB</span> // <span class="segment math-text">CD</span>，
-                            <span class="segment math-text">AD</span> // <span class="segment math-text">BC</span>，
-                            對角線 <span class="segment math-text">AC</span> 與 <span class="segment math-text">BD</span> 交於 <span class="math-text">O</span> 點。
-                        </p>
-                        <p class="mt-4 border-t pt-4">
-                            <span class="font-bold bg-green-100 px-1 rounded">求證：</span>
-                            <span class="segment math-text">OA</span> = <span class="segment math-text">OC</span>，
-                            <span class="segment math-text">OB</span> = <span class="segment math-text">OD</span>。
-                        </p>
-                    </div>
-                </div>
-
+        <!-- 左側：題目區 (動態渲染) -->
+        <section class="w-full md:w-5/12 lg:w-1/3 bg-white border-b md:border-b-0 md:border-r border-slate-200 flex flex-col z-10 shadow-sm md:shadow-none h-2/5 md:h-full">
+            <div id="problem-content" class="p-6 overflow-y-auto custom-scrollbar h-full">
+                <!-- 這裡會被 JS 填充 -->
             </div>
         </section>
 
-        <!-- 右側：互動步驟區 -->
-        <section id="right-panel" class="flex-1 bg-gray-100 overflow-y-auto p-4 md:p-8 relative">
-            <div id="steps-container" class="max-w-2xl mx-auto space-y-6 pb-20">
-                <!-- 步驟卡片將由 JS 動態生成 -->
+        <!-- 右側：步驟解鎖區 (動態渲染) -->
+        <section class="flex-1 bg-slate-50 relative h-3/5 md:h-full overflow-hidden flex flex-col">
+            <div id="steps-area" class="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 scroll-smooth pb-32 custom-scrollbar">
+                <!-- 這裡會被 JS 填充 -->
             </div>
         </section>
-
     </main>
 
     <script>
-        // 題目資料結構
-        const problems = [
-            // 題目 1
-            {
-                id: 1,
-                steps: [
-                    {
-                        id: 1,
-                        title: "步驟 1：利用平行線性質",
-                        content: `
-                            <p class="mb-2">因為 <span class="segment math-text">AD</span> // <span class="segment math-text">BC</span>，</p>
-                            <p>根據平行線截角性質，我們可以知道：</p>
-                            <div class="my-4 text-xl bg-white p-4 rounded-lg shadow-inner text-center">
-                                <span class="angle">∠</span>1 = <span class="slot" data-index="0"></span>
-                                <br><span class="text-base text-gray-500 mt-2 block">( 根據 <span class="slot" data-index="1"></span> 相等 )</span>
-                            </div>
-                        `,
-                        answers: ["∠2", "內錯角"],
-                        options: ["∠2", "∠3", "內錯角", "同位角"],
-                        hint: "觀察圖形中的 Z 字形，AD 平行 BC，BD 是截線。"
-                    },
-                    {
-                        id: 2,
-                        title: "步驟 2：利用角度關係代換",
-                        content: `
-                            <p class="mb-2">已知 <span class="angle">∠</span><span class="math-text">A</span> = <span class="angle">∠</span><span class="math-text">C</span>，且剛才證出 <span class="angle">∠</span>1 = <span class="angle">∠</span>2。</p>
-                            <p>觀察三角形角度和，我們可以推導：</p>
-                            <div class="my-4 text-lg bg-white p-4 rounded-lg shadow-inner">
-                                <p class="mb-2 text-center text-gray-400 text-sm">三角形內角和 180°</p>
-                                <p class="text-center mb-2"><span class="angle">∠</span><span class="math-text">A</span> + <span class="angle">∠</span>2 + <span class="angle">∠</span>4 = 180°</p>
-                                <p class="text-center mb-2"><span class="angle">∠</span><span class="math-text">C</span> + <span class="angle">∠</span>1 + <span class="angle">∠</span>3 = 180°</p>
-                                <hr class="my-2 border-dashed">
-                                <p class="font-bold text-center text-blue-600">
-                                    <span class="text-black font-normal">結論：</span> 
-                                    <span class="angle">∠</span>3 = <span class="slot" data-index="0"></span>
-                                </p>
-                            </div>
-                        `,
-                        answers: ["∠4"],
-                        options: ["∠1", "∠4", "∠B", "∠D"],
-                        hint: "既然 A=C 且 1=2，剩下的角必定相等。"
-                    },
-                    {
-                        id: 3,
-                        title: "步驟 3：推導出結論",
-                        content: `
-                            <p class="mb-2">最後，因為 <span class="angle">∠</span>3 = <span class="angle">∠</span>4，</p>
-                            <p>這兩角互為 <span class="slot" data-index="0"></span>，</p>
-                            <div class="my-4 text-xl bg-white p-4 rounded-lg shadow-inner text-center border-2 border-blue-200">
-                                <span class="text-base block mb-2">故可得證：</span>
-                                <span class="segment math-text">AB</span> // <span class="slot" data-index="1"></span>
-                            </div>
-                        `,
-                        answers: ["內錯角", "DC"],
-                        options: ["BC", "DC", "內錯角", "同側內角"],
-                        hint: "當內錯角相等時，兩直線平行。"
-                    }
-                ]
-            },
-            // 題目 2
-            {
-                id: 2,
-                steps: [
-                    {
-                        id: 1,
-                        title: "步驟 1：觀察平行關係",
-                        content: `
-                            <p class="mb-2">在 <span class="triangle">△</span><span class="math-text">AOB</span> 與 <span class="triangle">△</span><span class="math-text">COD</span> 中，</p>
-                            <p>因為四邊形 <span class="math-text">ABCD</span> 為平行四邊形，</p>
-                            <div class="my-4 text-xl bg-white p-4 rounded-lg shadow-inner text-center">
-                                <span class="text-base text-gray-500 block mb-1">對邊互相平行：</span>
-                                <span class="slot" data-index="0"></span> // <span class="segment math-text">CD</span>
-                            </div>
-                        `,
-                        answers: ["AB"],
-                        options: ["AB", "AD", "BC", "AC"],
-                        hint: "觀察圖形左側與右側的邊。"
-                    },
-                    {
-                        id: 2,
-                        title: "步驟 2：全等條件 (ASA)",
-                        content: `
-                            <p class="mb-2">因為 <span class="segment math-text">AB</span> // <span class="segment math-text">CD</span>，我們可以找到內錯角相等：</p>
-                            <div class="my-4 text-lg bg-white p-4 rounded-lg shadow-inner space-y-3">
-                                <div class="flex items-center justify-center gap-2">
-                                    <span>①</span>
-                                    <span class="angle">∠</span>1 = <span class="slot" data-index="0"></span>
-                                    <span class="text-sm text-gray-400">(內錯角)</span>
-                                </div>
-                                <div class="flex items-center justify-center gap-2">
-                                    <span>②</span>
-                                    <span class="angle">∠</span>5 = <span class="slot" data-index="1"></span>
-                                    <span class="text-sm text-gray-400">(內錯角)</span>
-                                </div>
-                                <div class="flex items-center justify-center gap-2">
-                                    <span>③</span>
-                                    <span class="segment math-text">AB</span> = <span class="slot" data-index="2"></span>
-                                    <span class="text-sm text-gray-400">(對邊等長)</span>
-                                </div>
-                            </div>
-                        `,
-                        answers: ["∠2", "∠6", "CD"],
-                        options: ["∠2", "∠3", "∠6", "∠4", "CD", "BC"],
-                        hint: "觀察 Z 字形：∠1 與哪個角是內錯角？∠5 呢？"
-                    },
-                    {
-                        id: 3,
-                        title: "步驟 3：結論",
-                        content: `
-                            <p class="mb-2">根據上述條件，<span class="triangle">△</span><span class="math-text">AOB</span> <span class="math-text">≅</span> <span class="triangle">△</span><span class="math-text">COD</span> (ASA 全等)。</p>
-                            <p>所以對應邊會相等：</p>
-                            <div class="my-4 text-xl bg-white p-4 rounded-lg shadow-inner text-center border-2 border-blue-200">
-                                <p class="mb-2"><span class="segment math-text">OA</span> = <span class="slot" data-index="0"></span></p>
-                                <p><span class="segment math-text">OB</span> = <span class="slot" data-index="1"></span></p>
-                            </div>
-                        `,
-                        answers: ["OC", "OD"],
-                        options: ["OC", "OD", "AB", "CD"],
-                        hint: "全等三角形的對應邊相等。"
-                    }
-                ]
-            }
-        ];
-
-        let currentProblemId = 1;
-        // 狀態管理：記錄每題的 currentStepIndex 和 userAnswers
-        // 結構： { problemId: { stepIndex: 0, answers: { step0: [], step1: [] ... } } }
-        let appState = {
+        // --- 題目資料庫 ---
+        const problems = {
             1: {
-                currentStepIndex: 0,
-                answers: {}
-            },
-            2: {
-                currentStepIndex: 0,
-                answers: {}
+                title: "相似形的應用 - 平行線證明",
+                description: `
+                    如圖，<span class="math-text">△ABC</span> 與 <span class="math-text">△CEF</span> 中，
+                    <mark class="bg-yellow-100 px-1 rounded mx-1 text-yellow-800"><span class="math" style="border-top: 1px solid black;">AB</span> // <span class="math" style="border-top: 1px solid black;">CE</span></mark>，
+                    <mark class="bg-green-100 px-1 rounded mx-1 text-green-800"><span class="math" style="border-top: 1px solid black;">BC</span> // <span class="math" style="border-top: 1px solid black;">EF</span></mark>，
+                    求證 <span class="math-text">△ABC</span> <span class="math-symbol">~</span> <span class="math-text">△CEF</span>。
+                `,
+                hint: "利用平行線截角性質（內錯角、同位角）找出對應相等的角。",
+                svg: `
+                    <svg width="300" height="200" viewBox="0 0 300 200" class="border border-slate-100 rounded-lg bg-slate-50 mx-auto">
+                        <path d="M80 40 L40 160 L200 160 Z" fill="none" stroke="#334155" stroke-width="2"/>
+                        <path d="M200 160 L220 100 L140 100 Z" fill="rgba(34, 197, 94, 0.1)" stroke="#16a34a" stroke-width="2"/>
+                        <text x="75" y="30" font-weight="bold" font-size="16">A</text>
+                        <text x="20" y="165" font-weight="bold" font-size="16">B</text>
+                        <text x="205" y="170" font-weight="bold" font-size="16">C</text>
+                        <text x="125" y="90" font-weight="bold" font-size="16">F</text>
+                        <text x="225" y="100" font-weight="bold" font-size="16">E</text>
+                        <path d="M58 95 L55 105 L65 102" fill="none" stroke="#ef4444" stroke-width="2"/>
+                        <path d="M208 125 L205 135 L215 132" fill="none" stroke="#ef4444" stroke-width="2"/>
+                        <path d="M120 160 L110 155 M120 160 L110 165" fill="none" stroke="#3b82f6" stroke-width="2"/>
+                        <path d="M180 100 L170 95 M180 100 L170 105" fill="none" stroke="#3b82f6" stroke-width="2"/>
+                    </svg>
+                `,
+                steps: [
+                    {
+                        id: 1,
+                        title: "證明第一組角相等",
+                        contentHTML: `
+                            <div class="text-lg leading-loose">
+                                <div class="flex flex-wrap items-center gap-2 mb-2">
+                                    <span class="font-math">∵</span>
+                                    <div class="slot" data-step="1" data-index="0"></div>
+                                    <span class="text-slate-400 text-sm">//</span>
+                                    <div class="slot" data-step="1" data-index="1"></div>
+                                    <span>，</span>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="font-math">∴ ∠BAC = ∠ECF</span>
+                                    <span class="text-slate-500 text-base">（內錯角相等）</span>
+                                </div>
+                            </div>
+                        `,
+                        correct: ['AB', 'CE'],
+                        options: ['AB', 'CE', 'BC', 'EF'],
+                        checkType: 'set' // 順序不拘，只要集合對
+                    },
+                    {
+                        id: 2,
+                        title: "證明第二組角相等",
+                        contentHTML: `
+                            <div class="text-lg leading-loose">
+                                <div class="flex flex-wrap items-center gap-2 mb-2">
+                                    <span class="font-math">∵</span>
+                                    <div class="slot" data-step="2" data-index="0"></div>
+                                    <span class="text-slate-400 text-sm">//</span>
+                                    <div class="slot" data-step="2" data-index="1"></div>
+                                    <span>，</span>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="font-math">∴</span>
+                                    <div class="slot min-w-[140px]" data-step="2" data-index="2"></div>
+                                    <span class="text-slate-500 text-base">（同位角相等）</span>
+                                </div>
+                            </div>
+                        `,
+                        correct: ['BC', 'EF', '∠ACB=∠EFC'],
+                        options: ['BC', 'EF', '∠ACB=∠EFC', '∠ABC=∠CEF'],
+                        checkType: 'mixed' // 前兩個順序不拘，第三個固定
+                    },
+                    {
+                        id: 3,
+                        title: "結論",
+                        contentHTML: `
+                            <div class="text-lg leading-loose">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span>故</span>
+                                    <div class="slot min-w-[160px]" data-step="3" data-index="0"></div>
+                                    <span>(</span>
+                                    <div class="slot" data-step="3" data-index="1"></div>
+                                    <span>相似性質 )。</span>
+                                </div>
+                            </div>
+                        `,
+                        correct: ['△ABC~△CEF', 'AA'],
+                        options: ['△ABC~△CEF', '△ABC≅△CEF', 'AA', 'SAS'],
+                        checkType: 'exact'
+                    }
+                ]
             }
         };
 
-        document.addEventListener('DOMContentLoaded', () => {
-            initAnswersStorage();
-            switchProblem(1);
-        });
+        let currentProblemId = 1;
+        let gameState = {};
 
-        function initAnswersStorage() {
-            problems.forEach(p => {
-                p.steps.forEach((step, sIdx) => {
-                    appState[p.id].answers[sIdx] = new Array(step.answers.length).fill(null);
-                });
-            });
-        }
-
-        function switchProblem(id) {
+        // --- 初始化與切換 ---
+        function initProblem(id) {
             currentProblemId = id;
             
-            // 1. 更新導覽列按鈕樣式
-            document.querySelectorAll('.problem-tab').forEach(btn => {
-                btn.classList.remove('active', 'bg-blue-600', 'text-white');
-                btn.classList.add('bg-gray-200', 'text-gray-700');
+            // 重置遊戲狀態
+            const problemData = problems[id];
+            gameState = {
+                steps: {}
+            };
+            problemData.steps.forEach(step => {
+                gameState.steps[step.id] = {
+                    filled: Array(step.correct.length).fill(null),
+                    correct: step.correct,
+                    completed: false
+                };
             });
-            const activeBtn = document.getElementById(`tab-${id}`);
-            activeBtn.classList.add('active', 'bg-blue-600', 'text-white');
-            activeBtn.classList.remove('bg-gray-200', 'text-gray-700');
 
-            // 2. 切換左側題目區塊
-            document.getElementById('problem-intro-1').classList.add('hidden');
-            document.getElementById('problem-intro-2').classList.add('hidden');
-            document.getElementById(`problem-intro-${id}`).classList.remove('hidden');
-
-            // 3. 重新渲染右側步驟
-            renderSteps();
-            updateStepVisibility();
+            renderContent(id);
         }
 
-        function renderSteps() {
-            const container = document.getElementById('steps-container');
-            container.innerHTML = '';
+        function renderContent(id) {
+            const data = problems[id];
             
-            const problem = problems.find(p => p.id === currentProblemId);
-            const state = appState[currentProblemId];
-            
-            problem.steps.forEach((step, index) => {
-                const stepCard = document.createElement('div');
-                // 檢查是否已完成，以決定樣式
-                // 簡單判斷：如果比當前步驟小，就是已完成 (前提是循序漸進)
-                // 為了嚴謹，我們可以檢查是否該步驟已全對，但這裡用 currentStepIndex 判斷即可
-                const isCompleted = index < state.currentStepIndex;
-                const isActive = index === state.currentStepIndex;
+            // 1. 渲染左側題目
+            const problemEl = document.getElementById('problem-content');
+            problemEl.innerHTML = `
+                <div class="inline-block bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded mb-3">
+                    幾何證明
+                </div>
+                <h2 class="text-xl font-bold mb-4 leading-relaxed">
+                    ${data.description}
+                </h2>
+                <div class="w-full flex justify-center my-6">
+                    ${data.svg}
+                </div>
+                <p class="text-sm text-slate-500 mt-2 bg-yellow-50 p-3 rounded border border-yellow-100">
+                    <span class="font-bold text-yellow-600">💡 提示：</span> 
+                    ${data.hint}
+                </p>
+            `;
+
+            // 2. 渲染右側步驟
+            const stepsEl = document.getElementById('steps-area');
+            stepsEl.innerHTML = ''; // Clear
+
+            data.steps.forEach((step, index) => {
+                const isActive = index === 0 ? 'active' : '';
                 
-                let cardClass = `step-card bg-white rounded-xl shadow-md p-6 border border-gray-100`;
-                if (isCompleted) cardClass += ' completed';
-                if (isActive) cardClass += ' active';
+                const stepHTML = `
+                    <div id="step-${step.id}" class="step-container ${isActive} bg-white p-5 rounded-xl shadow-sm border border-slate-200 mb-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-blue-600 flex items-center">
+                                <span class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center mr-2 text-sm">${step.id}</span>
+                                ${step.title}
+                            </h3>
+                            <span class="status-icon hidden text-green-500 font-bold text-sm bg-green-50 px-2 py-1 rounded border border-green-100">✔ 完成</span>
+                        </div>
+                        
+                        ${step.contentHTML}
 
-                stepCard.className = cardClass;
-                stepCard.id = `step-${index}`;
-                stepCard.dataset.index = index;
-
-                // 標題與狀態
-                const header = `
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
-                            <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">Step ${index + 1}</span>
-                            ${step.title}
-                        </h3>
-                        <span class="status-icon ${isCompleted ? '' : 'hidden'} text-green-500 font-bold flex items-center">
-                            <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            完成
-                        </span>
+                        <!-- Options Area -->
+                        <div class="options-area mt-6 pt-4 border-t border-slate-100" id="options-area-${step.id}">
+                            <p class="text-sm text-slate-400 mb-2">點擊選項填入：</p>
+                            <div class="flex flex-wrap gap-2" id="options-${step.id}">
+                                ${step.options.map(opt => {
+                                    // 簡單美化數學符號
+                                    let label = opt;
+                                    if(opt.length <= 2 && /^[A-Z]+$/.test(opt)) {
+                                        label = `<span class="math" style="border-top:1px solid black">${opt}</span>`;
+                                    }
+                                    return `<button class="option-btn" onclick="fillSlot(${step.id}, '${opt}')">${label}</button>`;
+                                }).join('')}
+                            </div>
+                            <div class="mt-4 flex justify-end items-center gap-3">
+                                <div id="feedback-${step.id}" class="text-right font-bold text-sm h-6"></div>
+                                <button onclick="checkStep(${step.id})" class="check-btn bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-bold shadow-lg shadow-blue-200 transition-all active:scale-95">
+                                    檢查答案
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 `;
+                stepsEl.insertAdjacentHTML('beforeend', stepHTML);
+            });
+            
+            // Add spacer
+            stepsEl.insertAdjacentHTML('beforeend', '<div class="h-24"></div>');
+            
+            // Re-bind click events for slots (since innerHTML replaced elements)
+            bindSlotEvents();
+        }
 
-                // 內容與填答格
-                const contentDiv = document.createElement('div');
-                contentDiv.innerHTML = step.content;
-                contentDiv.className = "text-lg leading-relaxed mb-6 text-gray-700";
+        // --- 互動邏輯 ---
 
-                // 若已回答過，需回填 Slot 內容
-                const savedAnswers = state.answers[index];
-                const slots = contentDiv.querySelectorAll('.slot');
-                slots.forEach((slot, slotIdx) => {
-                    const ans = savedAnswers[slotIdx];
-                    if (ans) {
-                        slot.textContent = ans;
-                        slot.classList.add('filled');
-                        if (isCompleted) slot.classList.add('correct');
+        function bindSlotEvents() {
+            document.querySelectorAll('.slot').forEach(slot => {
+                slot.addEventListener('click', function() {
+                    const stepId = parseInt(this.dataset.step);
+                    const index = parseInt(this.dataset.index);
+
+                    if (gameState.steps[stepId].completed) return;
+
+                    const currentValue = gameState.steps[stepId].filled[index];
+                    if (currentValue) {
+                        gameState.steps[stepId].filled[index] = null;
+                        this.innerHTML = '';
+                        this.classList.remove('filled', 'active', 'error');
+                        delete this.dataset.value;
+                        updateButtons(stepId);
                     }
-                    // 綁定點擊事件
-                    slot.addEventListener('click', () => handleSlotClick(index, slot));
                 });
-
-                // 選項按鈕區
-                const optionsDiv = document.createElement('div');
-                optionsDiv.className = "options-area grid grid-cols-2 md:grid-cols-4 gap-3 mb-6";
-                step.options.forEach(opt => {
-                    const btn = document.createElement('button');
-                    btn.className = "option-btn";
-                    btn.textContent = opt;
-                    
-                    // 檢查按鈕是否應該禁用 (已被填入 Slot)
-                    const isUsed = savedAnswers.includes(opt);
-                    if (isUsed && !isCompleted) { // 若該步驟已完成，通常按鈕區會隱藏或禁用，這裡保持禁用
-                         btn.disabled = true;
-                    }
-
-                    btn.onclick = () => handleOptionClick(index, opt, btn);
-                    optionsDiv.appendChild(btn);
-                });
-
-                // 檢查按鈕區
-                const footer = `
-                    <div class="check-btn-area flex flex-col items-center gap-3 border-t pt-4 ${isCompleted ? 'hidden' : ''}">
-                        <div id="feedback-${index}" class="hidden w-full text-center p-2 rounded-lg text-sm font-bold"></div>
-                        <button onclick="checkAnswer(${index})" class="w-full md:w-auto px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-lg shadow-lg transition-transform transform active:scale-95 flex items-center justify-center gap-2">
-                            <span>檢查答案</span>
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        </button>
-                    </div>
-                `;
-
-                stepCard.innerHTML = header;
-                stepCard.appendChild(contentDiv);
-                stepCard.appendChild(optionsDiv);
-                stepCard.insertAdjacentHTML('beforeend', footer);
-
-                container.appendChild(stepCard);
             });
         }
 
-        function handleOptionClick(stepIndex, value, btnElement) {
-            const stepCard = document.getElementById(`step-${stepIndex}`);
-            const slots = stepCard.querySelectorAll('.slot');
-            const currentAnswers = appState[currentProblemId].answers[stepIndex];
-            
-            let emptySlotIndex = -1;
-            for (let i = 0; i < slots.length; i++) {
-                if (!slots[i].classList.contains('filled')) {
-                    emptySlotIndex = i;
-                    break;
+        function fillSlot(stepId, value) {
+            const stepData = gameState.steps[stepId];
+            if (stepData.completed) return;
+
+            const emptyIndex = stepData.filled.findIndex(val => val === null);
+
+            if (emptyIndex !== -1) {
+                stepData.filled[emptyIndex] = value;
+                
+                const slots = document.querySelectorAll(`.slot[data-step="${stepId}"]`);
+                const targetSlot = slots[emptyIndex];
+                
+                // 美化顯示
+                let displayHtml = value;
+                if(value.length <= 2 && /^[A-Z]+$/.test(value) && !value.includes('AA')) {
+                     displayHtml = `<span style="border-top: 1px solid black">${value}</span>`;
                 }
-            }
+                
+                targetSlot.innerHTML = displayHtml;
+                targetSlot.classList.add('filled', 'active');
+                targetSlot.dataset.value = value;
 
-            if (emptySlotIndex !== -1) {
-                const targetSlot = slots[emptySlotIndex];
-                targetSlot.textContent = value;
-                targetSlot.classList.add('filled');
+                updateButtons(stepId);
                 
-                // 更新狀態
-                currentAnswers[emptySlotIndex] = value;
-                
-                btnElement.disabled = true;
-                
-                const feedback = document.getElementById(`feedback-${stepIndex}`);
-                if(feedback) feedback.classList.add('hidden');
-                targetSlot.classList.remove('error');
+                const feedback = document.getElementById(`feedback-${stepId}`);
+                feedback.innerHTML = '';
             } else {
-                showFeedback(stepIndex, "空格已滿，請先按檢查，或點擊空格清除。", "info");
+                const feedback = document.getElementById(`feedback-${stepId}`);
+                feedback.innerHTML = '<span class="text-orange-500">格子滿了，檢查看看！</span>';
+                // feedback.classList.add('animate-pulse'); // simple visual cue
             }
         }
 
-        function handleSlotClick(stepIndex, slotElement) {
-            // 如果步驟已完成 (correct)，不可再點擊清除
-            if (slotElement.classList.contains('correct')) return;
-            if (!slotElement.classList.contains('filled')) return;
-
-            const value = slotElement.textContent;
-            const slotIndex = parseInt(slotElement.dataset.index);
+        function updateButtons(stepId) {
+            const filledValues = gameState.steps[stepId].filled.filter(v => v !== null);
+            const buttons = document.querySelectorAll(`#options-${stepId} .option-btn`);
             
-            // 清除 Slot
-            slotElement.textContent = '';
-            slotElement.classList.remove('filled', 'error');
-            
-            // 更新狀態
-            appState[currentProblemId].answers[stepIndex][slotIndex] = null;
-
-            // 恢復按鈕
-            const stepCard = document.getElementById(`step-${stepIndex}`);
-            const buttons = stepCard.querySelectorAll('.option-btn');
-            for (let btn of buttons) {
-                if (btn.disabled && btn.textContent === value) {
-                    btn.disabled = false;
-                    break; 
+            buttons.forEach(btn => {
+                // Parse value from onclick string
+                const match = btn.getAttribute('onclick').match(/'([^']+)'/);
+                if (match) {
+                    const val = match[1];
+                    if (filledValues.includes(val)) {
+                        btn.disabled = true;
+                    } else {
+                        btn.disabled = false;
+                    }
                 }
-            }
+            });
         }
 
-        function checkAnswer(stepIndex) {
-            const problem = problems.find(p => p.id === currentProblemId);
-            const step = problem.steps[stepIndex];
-            const currentAnswers = appState[currentProblemId].answers[stepIndex];
-            const stepCard = document.getElementById(`step-${stepIndex}`);
-            const slots = stepCard.querySelectorAll('.slot');
+        function checkStep(stepId) {
+            const stepData = gameState.steps[stepId];
+            const feedbackEl = document.getElementById(`feedback-${stepId}`);
+            const slots = document.querySelectorAll(`.slot[data-step="${stepId}"]`);
+            const problemConfig = problems[currentProblemId].steps.find(s => s.id === stepId);
 
-            if (currentAnswers.includes(null)) {
-                showFeedback(stepIndex, "請填滿所有空格再檢查哦！", "warning");
+            if (stepData.filled.includes(null)) {
+                feedbackEl.innerHTML = '<span class="text-orange-500">還有空格喔！</span>';
                 return;
             }
 
-            let allCorrect = true;
-            currentAnswers.forEach((ans, idx) => {
-                if (ans !== step.answers[idx]) {
-                    allCorrect = false;
-                    slots[idx].classList.add('error');
-                } else {
-                    slots[idx].classList.remove('error');
+            let isCorrect = true;
+            const userVals = stepData.filled;
+            const correctVals = stepData.correct;
+
+            if (problemConfig.checkType === 'set') {
+                // 集合檢查：內容相同即可，順序不拘
+                const userSet = [...userVals].sort();
+                const correctSet = [...correctVals].sort();
+                if (JSON.stringify(userSet) !== JSON.stringify(correctSet)) isCorrect = false;
+            } else if (problemConfig.checkType === 'exact') {
+                // 嚴格順序
+                if (JSON.stringify(userVals) !== JSON.stringify(correctVals)) isCorrect = false;
+            } else if (problemConfig.checkType === 'mixed') {
+                // 針對第一題步驟二的特殊處理：前兩格集合，第三格嚴格
+                if (currentProblemId === 1 && stepId === 2) {
+                    const setPart = [userVals[0], userVals[1]];
+                    const correctSet = [correctVals[0], correctVals[1]];
+                    if (!correctSet.every(v => setPart.includes(v))) isCorrect = false;
+                    if (userVals[2] !== correctVals[2]) isCorrect = false;
                 }
-            });
+            }
 
-            if (allCorrect) {
-                handleCorrect(stepIndex, slots);
+            if (isCorrect) {
+                stepData.completed = true;
+                feedbackEl.innerHTML = '<span class="text-green-600">🎉 正確！</span>';
+                slots.forEach(slot => {
+                    slot.classList.remove('active', 'error');
+                    slot.classList.add('correct');
+                    slot.style.cursor = 'default';
+                });
+                
+                // Hide controls
+                document.getElementById(`options-area-${stepId}`).style.display = 'none';
+                document.querySelector(`#step-${stepId} .status-icon`).classList.remove('hidden');
+
+                // Unlock next
+                const nextStep = document.getElementById(`step-${stepId + 1}`);
+                if (nextStep) {
+                    setTimeout(() => {
+                        nextStep.classList.add('active');
+                        nextStep.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 500);
+                } else {
+                    setTimeout(() => {
+                        feedbackEl.innerHTML = '<span class="text-blue-600 font-bold">恭喜！本題完成！</span>';
+                    }, 500);
+                }
+
             } else {
-                showFeedback(stepIndex, "答案不完全正確，再想想看！(點擊空格可以修改)", "error");
+                feedbackEl.innerHTML = '<span class="text-red-500">再想想看...</span>';
+                slots.forEach(slot => {
+                    slot.classList.add('error');
+                    setTimeout(() => slot.classList.remove('error'), 500);
+                });
             }
         }
 
-        function handleCorrect(stepIndex, slots) {
-            const stepCard = document.getElementById(`step-${stepIndex}`);
-            
-            showFeedback(stepIndex, "太棒了！答對了！", "success");
-            slots.forEach(slot => {
-                slot.classList.add('correct');
-            });
-
-            stepCard.classList.add('completed');
-            stepCard.querySelector('.status-icon').classList.remove('hidden');
-            stepCard.querySelector('.status-icon').classList.add('animate-tada');
-            
-            // 隱藏檢查按鈕區
-            stepCard.querySelector('.check-btn-area').classList.add('hidden');
-
-            const state = appState[currentProblemId];
-            const problem = problems.find(p => p.id === currentProblemId);
-
-            // 解鎖下一步
-            if (stepIndex < problem.steps.length - 1) {
-                state.currentStepIndex++;
-                setTimeout(() => {
-                    renderSteps(); // 重新渲染以顯示下一步
-                    
-                    const nextStep = document.getElementById(`step-${state.currentStepIndex}`);
-                    if(nextStep) nextStep.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 1000);
-            } else {
-                state.currentStepIndex++; // 標記為全部完成
-                setTimeout(() => {
-                    alert("恭喜！你已經完成這題的證明了！🎉");
-                }, 800);
-            }
-        }
-
-        function updateStepVisibility() {
-            // 這個功能主要整合在 renderSteps 中了，
-            // 因為我們現在是根據 appState 動態生成 class
-        }
-
-        function showFeedback(stepIndex, msg, type) {
-            const feedbackEl = document.getElementById(`feedback-${stepIndex}`);
-            if(!feedbackEl) return;
-            
-            feedbackEl.textContent = msg;
-            feedbackEl.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'bg-green-100', 'text-green-700', 'bg-yellow-100', 'text-yellow-700');
-            
-            if (type === 'error') {
-                feedbackEl.classList.add('bg-red-100', 'text-red-700');
-            } else if (type === 'success') {
-                feedbackEl.classList.add('bg-green-100', 'text-green-700');
-            } else {
-                feedbackEl.classList.add('bg-yellow-100', 'text-yellow-700');
-            }
-        }
+        // Start
+        window.onload = () => initProblem(1);
 
     </script>
 </body>
