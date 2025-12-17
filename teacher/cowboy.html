@@ -12,17 +12,16 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // 套用範本的顏色配置
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        'primary': '#38A3A5', // 維持原本的主色調，保持網站一致性
+                        'primary': '#38A3A5',
                         'background-light': '#F0F4F8',
                         'surface-light': '#FFFFFF',
                         'text-light': '#2D3748',
                         'accent': '#80CBC4',
-                        'warning': '#D97706', // 增加一個警告色用於強調本機儲存限制
+                        'warning': '#D97706',
                     },
                 },
             },
@@ -43,7 +42,6 @@
             transform: translateY(-5px);
             box-shadow: 0 15px 35px rgba(56, 163, 165, 0.15);
         }
-        /* 步驟指引的圓圈樣式 */
         .step-circle {
             width: 32px;
             height: 32px;
@@ -63,7 +61,6 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-5BBHYN77N9');
     </script>
 </head>
@@ -111,9 +108,25 @@
                         </div>
                         <div class="flex items-start">
                             <div class="step-circle mr-3">3</div>
-                            <div class="mt-1">在對話框輸入您的題目內容（例如：「請幫我出一份關於太陽系的 10 題選擇題」），即可自動生成遊戲。</div>
+                            <div class="mt-1">複製下方的咒語，貼上對話框並補上你的題目，即可自動生成遊戲。</div>
                         </div>
                      </div>
+                </div>
+
+                <div class="bg-gray-100 p-5 rounded-lg border border-gray-200 mb-6">
+                    <label for="promptInput" class="block font-bold text-gray-800 mb-2">建議咒語（更換題目用）：</label>
+                    <div class="w-full">
+                        <input type="text" id="promptInput"
+                               value="請保留原有的所有功能與設定，僅將題目內容更換為以下提供的題目。"
+                               class="w-full p-3 bg-white border border-gray-300 rounded text-gray-700 focus:outline-none focus:border-primary cursor-text"
+                               readonly>
+                    </div>
+                    <button onclick="copyPrompt()" 
+                            id="copyButton"
+                            class="mt-3 bg-slate-500 hover:bg-slate-600 text-white px-5 py-2 rounded shadow transition-colors duration-200 flex items-center font-medium">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                        複製咒語
+                    </button>
                 </div>
 
                 <div class="bg-primary/10 p-5 rounded-lg border border-primary/20">
@@ -188,5 +201,35 @@
     </footer>
 
     <script src="tracking.js"></script>
+    
+    <script>
+        function copyPrompt() {
+            // 取得文字欄位
+            var copyText = document.getElementById("promptInput");
+            
+            // 選取文字
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); // 支援手機版
+
+            // 執行複製
+            navigator.clipboard.writeText(copyText.value).then(function() {
+                // 複製成功的視覺回饋
+                var btn = document.getElementById("copyButton");
+                var originalText = btn.innerHTML;
+                
+                // 更改按鈕樣式與文字
+                btn.classList.remove("bg-slate-500", "hover:bg-slate-600");
+                btn.classList.add("bg-green-600", "hover:bg-green-700");
+                btn.innerHTML = `<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>已複製！`;
+                
+                // 2秒後變回原狀
+                setTimeout(function() {
+                    btn.innerHTML = originalText;
+                    btn.classList.remove("bg-green-600", "hover:bg-green-700");
+                    btn.classList.add("bg-slate-500", "hover:bg-slate-600");
+                }, 2000);
+            });
+        }
+    </script>
 </body>
 </html>
