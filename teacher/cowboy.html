@@ -94,7 +94,9 @@
     <nav class="bg-surface-light/90 backdrop-blur-sm shadow-md sticky top-0 z-50 border-b-4 border-primary">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="text-xl font-bold text-primary flex items-center">
-                <span class="text-2xl mr-2">🤠</span> SPEDMIX
+                <span class="text-2xl mr-2">🤠</span> 
+                <span class="hidden sm:inline">SPEDMIX 西部系列</span>
+                <span class="sm:hidden">SPEDMIX</span>
             </div>
             <a href="https://www.instagram.com/spedmix2025/"
                target="_blank"
@@ -110,18 +112,18 @@
 
     <div class="container mx-auto px-4 py-8 max-w-6xl flex-grow">
         <div class="text-center mb-10">
-            <h1 class="text-4xl md:text-5xl font-bold text-primary mb-4 tracking-wide" style="text-shadow: 2px 2px 0px #DEB887;">
+            <h1 class="text-3xl md:text-5xl font-bold text-primary mb-4 tracking-wide" style="text-shadow: 2px 2px 0px #DEB887;">
                 🌵 西部荒野課堂遊戲
             </h1>
-            <p class="text-lg text-text-light max-w-3xl mx-auto leading-relaxed font-medium">
+            <p class="text-base md:text-lg text-text-light max-w-3xl mx-auto leading-relaxed font-medium">
                 歡迎來到知識的荒野！選擇下方模版，輸入咒語，立即生成充滿西部風情的互動測驗。
             </p>
         </div>
         
-        <div class="bg-surface-light rounded-xl p-6 mb-10 border-2 border-primary/20 shadow-md">
-            <h3 class="text-xl font-bold text-primary mb-6 text-center">👇 如何開始你的遊戲？（通用步驟）</h3>
-            <div class="flex flex-col md:flex-row justify-between items-center px-4 md:px-12">
-                <div class="flex flex-col items-center text-center max-w-xs">
+        <div class="bg-surface-light rounded-xl p-5 md:p-6 mb-10 border-2 border-primary/20 shadow-md">
+            <h3 class="text-xl font-bold text-primary mb-6 text-center">👇 如何開始你的遊戲？</h3>
+            <div class="flex flex-col md:flex-row justify-between items-center px-2 md:px-12">
+                <div class="flex flex-col items-center text-center max-w-xs w-full">
                     <div class="step-circle mb-3">1</div>
                     <p class="font-bold text-gray-800">選擇模版</p>
                     <p class="text-sm text-gray-500">點擊下方按鈕進入 Canvas</p>
@@ -129,7 +131,7 @@
                 
                 <div class="hidden md:block step-connector"></div>
                 
-                <div class="flex flex-col items-center text-center max-w-xs mt-6 md:mt-0">
+                <div class="flex flex-col items-center text-center max-w-xs w-full mt-8 md:mt-0">
                     <div class="step-circle mb-3">2</div>
                     <p class="font-bold text-gray-800">複製咒語</p>
                     <p class="text-sm text-gray-500">複製該工具專屬的 AI 提示詞</p>
@@ -137,7 +139,7 @@
 
                 <div class="hidden md:block step-connector"></div>
 
-                <div class="flex flex-col items-center text-center max-w-xs mt-6 md:mt-0">
+                <div class="flex flex-col items-center text-center max-w-xs w-full mt-8 md:mt-0">
                     <div class="step-circle mb-3">3</div>
                     <p class="font-bold text-gray-800">貼上並生成</p>
                     <p class="text-sm text-gray-500">在 Canvas 右下角貼上咒語 + 題目</p>
@@ -145,9 +147,9 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-12">
             
-            <div class="bg-surface-light rounded-xl p-6 card-shadow hover-lift border border-amber-200 flex flex-col h-full relative overflow-hidden">
+            <div class="bg-surface-light rounded-xl p-5 md:p-6 card-shadow hover-lift border border-amber-200 flex flex-col h-full relative overflow-hidden">
                 <div class="absolute top-0 right-0 bg-accent text-white px-3 py-1 text-xs font-bold rounded-bl-lg">排行競技</div>
                 
                 <div class="flex flex-col items-center text-center mb-6">
@@ -161,16 +163,16 @@
 
                 <div class="mt-auto space-y-4">
                     <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
-                        <label class="block font-bold text-gray-700 mb-2 text-sm flex justify-between">
+                        <label class="block font-bold text-gray-700 mb-2 text-sm flex flex-wrap justify-between gap-1">
                             <span>📜 選擇題專用咒語：</span>
                         </label>
-                        <div class="flex gap-2">
+                        <div class="flex gap-2 w-full">
                             <input type="text" id="promptInputQuiz"
                                    value="請保留原有的所有功能與設定，僅將題目內容更換為以下提供的題目。"
-                                   class="flex-1 p-2 bg-white border border-gray-300 rounded text-sm text-gray-700 focus:outline-none focus:border-primary"
+                                   class="flex-1 min-w-0 p-2 bg-white border border-gray-300 rounded text-sm text-gray-700 focus:outline-none focus:border-primary"
                                    readonly>
                             <button onclick="copyPrompt('promptInputQuiz', 'btnQuiz')" id="btnQuiz"
-                                    class="bg-primary hover:bg-primary-light text-white px-3 py-2 rounded shadow transition-colors duration-200 whitespace-nowrap text-sm font-bold">
+                                    class="flex-shrink-0 bg-primary hover:bg-primary-light text-white px-3 py-2 rounded shadow transition-colors duration-200 whitespace-nowrap text-sm font-bold">
                                 複製
                             </button>
                         </div>
@@ -185,7 +187,7 @@
                 </div>
             </div>
 
-            <div class="bg-surface-light rounded-xl p-6 card-shadow hover-lift border border-amber-200 flex flex-col h-full relative overflow-hidden">
+            <div class="bg-surface-light rounded-xl p-5 md:p-6 card-shadow hover-lift border border-amber-200 flex flex-col h-full relative overflow-hidden">
                 <div class="absolute top-0 right-0 bg-secondary text-white px-3 py-1 text-xs font-bold rounded-bl-lg">記憶挑戰</div>
                 
                 <div class="flex flex-col items-center text-center mb-6">
@@ -199,16 +201,16 @@
                 
                 <div class="mt-auto space-y-4">
                     <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
-                        <label class="block font-bold text-gray-700 mb-2 text-sm flex justify-between">
+                        <label class="block font-bold text-gray-700 mb-2 text-sm flex flex-wrap justify-between gap-1">
                             <span>📜 配對題專用咒語：</span>
                         </label>
-                        <div class="flex gap-2">
+                        <div class="flex gap-2 w-full">
                             <input type="text" id="promptInputMatch"
                                    value="請保留原有的所有功能與設定，僅將配對題目內容更換為以下提供的內容。"
-                                   class="flex-1 p-2 bg-white border border-gray-300 rounded text-sm text-gray-700 focus:outline-none focus:border-primary"
+                                   class="flex-1 min-w-0 p-2 bg-white border border-gray-300 rounded text-sm text-gray-700 focus:outline-none focus:border-primary"
                                    readonly>
                             <button onclick="copyPrompt('promptInputMatch', 'btnMatch')" id="btnMatch"
-                                    class="bg-secondary hover:bg-opacity-80 text-white px-3 py-2 rounded shadow transition-colors duration-200 whitespace-nowrap text-sm font-bold">
+                                    class="flex-shrink-0 bg-secondary hover:bg-opacity-80 text-white px-3 py-2 rounded shadow transition-colors duration-200 whitespace-nowrap text-sm font-bold">
                                 複製
                             </button>
                         </div>
@@ -256,7 +258,7 @@
             var originalText = btn.innerText;
             
             copyText.select();
-            copyText.setSelectionRange(0, 99999);
+            copyText.setSelectionRange(0, 99999); // 手機版兼容
 
             navigator.clipboard.writeText(copyText.value).then(function() {
                 // 變更樣式
