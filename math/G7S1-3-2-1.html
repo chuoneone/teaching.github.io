@@ -90,6 +90,15 @@
             background: #6d4c41; /* Slightly darker */
             margin-top: 5px;
         }
+        .btn-small {
+            padding: 5px 10px; font-size: 0.9rem; width: auto; margin: 0 5px;
+        }
+        
+        .admin-link {
+            position: absolute; bottom: 10px; right: 10px;
+            font-size: 0.8rem; color: var(--wood-light);
+            cursor: pointer; opacity: 0.6; text-decoration: underline;
+        }
 
         .nav-btn-container {
             display: flex;
@@ -111,7 +120,7 @@
             background: #3e2723;
         }
 
-        input[type="text"] {
+        input[type="text"], input[type="password"] {
             width: 100%; max-width: 300px; padding: 10px; font-size: 1.1rem;
             border: 2px solid var(--wood-dark); background: rgba(255,255,255,0.8);
             margin-bottom: 20px; border-radius: 5px;
@@ -130,7 +139,7 @@
         .option-btn.wrong { background: #ffcdd2 !important; border-color: #c62828; animation: shake 0.5s; }
         .option-btn.disabled { pointer-events: none; opacity: 0.9; }
 
-        /* 排行榜表格 */
+        /* 排行榜與後台表格 */
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
         th, td { border-bottom: 1px dashed #8d6e63; padding: 8px; text-align: center; }
         th { background: var(--wood-dark); color: white; }
@@ -138,6 +147,13 @@
 
         .hidden { display: none !important; }
 
+        /* 後台樣式 */
+        .admin-details-row { background: #fff8e1; display: none; }
+        .admin-details-row.show { display: table-row; }
+        .detail-tag { padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; color: white; display: inline-block; margin: 2px;}
+        .tag-correct { background: #4caf50; }
+        .tag-wrong { background: #f44336; }
+        
         @keyframes shake { 0%, 100% {transform: translateX(0);} 25%, 75% {transform: translateX(-5px);} 50% {transform: translateX(5px);} }
         @keyframes coin-fly { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-100px) scale(1.5); } }
         .coin { position: absolute; font-size: 2rem; color: gold; pointer-events: none; z-index: 100; }
@@ -175,6 +191,8 @@
                 <input type="text" id="player-name" placeholder="請輸入牛仔代號" maxlength="10">
                 <button class="btn" onclick="startGame()">拔槍開始</button>
                 <button class="btn btn-secondary" onclick="showMainMenuLeaderboard()">🏆 查看排行榜</button>
+                
+                <div class="admin-link" onclick="showAdminLogin()">教師後台</div>
             </div>
 
             <!-- 2. 測驗畫面 -->
@@ -197,7 +215,7 @@
                 <p id="final-comment" style="text-align: center; font-weight: bold; margin-bottom: 15px;"></p>
                 
                 <div style="flex: 1; overflow-y: auto; border: 2px solid var(--wood-light); padding: 5px; border-radius: 5px; margin-bottom: 10px;">
-                    <h3 style="text-align: center; background: #eee; margin: 0; padding: 5px;">🏆 神槍手排行榜 (本機)</h3>
+                    <h3 style="text-align: center; background: #eee; margin: 0; padding: 5px;">🏆 神槍手排行榜</h3>
                     <table id="leaderboard-table">
                         <thead>
                             <tr>
@@ -214,11 +232,10 @@
 
                 <div style="display: flex; gap: 10px; justify-content: center;">
                     <button class="btn" onclick="restartGame()">再次挑戰</button>
-                    <button class="btn" onclick="clearLeaderboard()" style="background: #b71c1c;">重置排行榜</button>
                 </div>
             </div>
             
-            <!-- 4. 僅排行榜畫面 (從首頁進入) -->
+            <!-- 4. 僅排行榜畫面 -->
             <div id="leaderboard-only-screen" class="paper-card hidden">
                  <h2 style="text-align: center;">🏆 神槍手排行榜</h2>
                  <div style="flex: 1; overflow-y: auto; border: 2px solid var(--wood-light); padding: 5px; border-radius: 5px; margin-bottom: 20px;">
@@ -230,71 +247,65 @@
                                 <th>賞金</th>
                             </tr>
                         </thead>
-                        <tbody id="leaderboard-only-body">
+                        <tbody id="leaderboard-only-body"></tbody>
+                    </table>
+                </div>
+                <button class="btn" onclick="restartGame()">返回首頁</button>
+            </div>
+
+            <!-- 5. 教師後台登入 -->
+            <div id="admin-login-screen" class="paper-card hidden" style="justify-content: center; align-items: center; text-align: center;">
+                <h2>🔐 教師後台登入</h2>
+                <p>請輸入管理密碼</p>
+                <input type="password" id="admin-password" placeholder="密碼">
+                <button class="btn" onclick="checkAdminPassword()">登入</button>
+                <button class="btn btn-secondary" onclick="restartGame()">返回</button>
+            </div>
+
+            <!-- 6. 教師後台儀表板 -->
+            <div id="admin-dashboard-screen" class="paper-card hidden">
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 2px dashed #8d6e63; padding-bottom:10px; margin-bottom:10px;">
+                    <h2 style="margin:0;">📋 學生答題紀錄</h2>
+                    <div>
+                        <button class="btn btn-small" onclick="exportData()">匯出 CSV</button>
+                        <button class="btn btn-small" onclick="clearAllData()" style="background:#b71c1c;">清除所有</button>
+                        <button class="btn btn-small" onclick="restartGame()">登出</button>
+                    </div>
+                </div>
+                
+                <div style="flex:1; overflow-y: auto;">
+                    <table style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th>時間</th>
+                                <th>姓名</th>
+                                <th>分數</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-log-body">
                             <!-- JS 填入 -->
                         </tbody>
                     </table>
                 </div>
-                <button class="btn" onclick="restartGame()">返回首頁</button>
             </div>
 
         </div>
     </div>
 
     <script>
-        // --- 1. 遊戲資料 (Algebra Data) ---
-        // 定義題目結構
+        // --- 1. 遊戲資料 ---
         let questions = [
-            { 
-                q: "(1) x加4是15", 
-                a: "x + 4 = 15", 
-                options: ["x + 4 = 15", "4x = 15", "x - 4 = 15", "x = 4 + 15"] 
-            },
-            { 
-                q: "(2) 比x大9的數是16", 
-                a: "x + 9 = 16", 
-                options: ["x + 9 = 16", "9x = 16", "x - 9 = 16", "x > 9"] 
-            },
-            { 
-                q: "(3) x減17等於8", 
-                a: "x - 17 = 8", 
-                options: ["x - 17 = 8", "17 - x = 8", "x + 17 = 8", "x / 17 = 8"] 
-            },
-            { 
-                q: "(4) －7是比x小11的數", 
-                a: "x - 11 = -7", 
-                options: ["x - 11 = -7", "-7 - x = 11", "x + 11 = -7", "11 - x = -7"] 
-            },
-            {
-                q: "(5) x的13倍等於65",
-                a: "13x = 65",
-                options: ["13x = 65", "x + 13 = 65", "x - 13 = 65", "65x = 13"]
-            },
-            {
-                q: "(6) x的2.4倍等於48",
-                a: "2.4x = 48",
-                options: ["2.4x = 48", "x + 2.4 = 48", "x / 2.4 = 48", "48x = 2.4"]
-            },
-            {
-                q: "(7) 65等於x的兩倍少3",
-                a: "65 = 2x - 3",
-                options: ["65 = 2x - 3", "65 = 2x + 3", "2x = 65 - 3", "65 = 3x - 2"]
-            },
-            {
-                q: "(8) x的5倍再加6是21",
-                a: "5x + 6 = 21",
-                options: ["5x + 6 = 21", "5(x + 6) = 21", "5x = 21 + 6", "x + 5 + 6 = 21"]
-            },
-            {
-                q: "(9) 比x的3倍多5.6的數是11",
-                a: "3x + 5.6 = 11",
-                options: ["3x + 5.6 = 11", "3(x + 5.6) = 11", "3x = 11 + 5.6", "x + 3.56 = 11"]
-            },
-            {
-                q: "(10) 39比x的12倍少9",
-                a: "39 = 12x - 9",
-                options: ["39 = 12x - 9", "39 = 9 - 12x", "12x = 39 - 9", "39 = 12(x - 9)"]
-            }
+            { q: "(1) x加4是15", a: "x + 4 = 15", options: ["x + 4 = 15", "4x = 15", "x - 4 = 15", "x = 4 + 15"] },
+            { q: "(2) 比x大9的數是16", a: "x + 9 = 16", options: ["x + 9 = 16", "9x = 16", "x - 9 = 16", "x > 9"] },
+            { q: "(3) x減17等於8", a: "x - 17 = 8", options: ["x - 17 = 8", "17 - x = 8", "x + 17 = 8", "x / 17 = 8"] },
+            { q: "(4) －7是比x小11的數", a: "x - 11 = -7", options: ["x - 11 = -7", "-7 - x = 11", "x + 11 = -7", "11 - x = -7"] },
+            { q: "(5) x的13倍等於65", a: "13x = 65", options: ["13x = 65", "x + 13 = 65", "x - 13 = 65", "65x = 13"] },
+            { q: "(6) x的2.4倍等於48", a: "2.4x = 48", options: ["2.4x = 48", "x + 2.4 = 48", "x / 2.4 = 48", "48x = 2.4"] },
+            { q: "(7) 65等於x的兩倍少3", a: "65 = 2x - 3", options: ["65 = 2x - 3", "65 = 2x + 3", "2x = 65 - 3", "65 = 3x - 2"] },
+            { q: "(8) x的5倍再加6是21", a: "5x + 6 = 21", options: ["5x + 6 = 21", "5(x + 6) = 21", "5x = 21 + 6", "x + 5 + 6 = 21"] },
+            { q: "(9) 比x的3倍多5.6的數是11", a: "3x + 5.6 = 11", options: ["3x + 5.6 = 11", "3(x + 5.6) = 11", "3x = 11 + 5.6", "x + 3.56 = 11"] },
+            { q: "(10) 39比x的12倍少9", a: "39 = 12x - 9", options: ["39 = 12x - 9", "39 = 9 - 12x", "12x = 39 - 9", "39 = 12(x - 9)"] }
         ];
 
         // --- 2. 遊戲狀態 ---
@@ -302,11 +313,14 @@
         let score = 0;
         let playerName = "無名牛仔";
         let isAnswering = false;
-        // 追蹤每題狀態: null=未答, true=答對, false=答錯
+        // 記錄答題狀態：改為儲存物件 { correct: boolean, selected: string }
         let userAnswersStatus = [];
         
-        // LocalStorage Key
-        const STORAGE_KEY = 'cowboy_algebra_scores';
+        // LocalStorage Keys
+        // 1. 排行榜 (簡單版)
+        const STORAGE_KEY_SCORE = 'cowboy_algebra_scores';
+        // 2. 詳細紀錄 (後台用)
+        const STORAGE_KEY_DETAILS = 'cowboy_algebra_details';
 
         // --- 3. 遊戲邏輯 ---
         function startGame() {
@@ -318,7 +332,7 @@
 
             score = 0;
             currentQIndex = 0;
-            userAnswersStatus = new Array(questions.length).fill(null); // 重置答題狀態
+            userAnswersStatus = new Array(questions.length).fill(null);
             
             document.getElementById('score-display').innerText = "0";
             
@@ -334,32 +348,19 @@
         function loadQuestion() {
             isAnswering = false;
             const qData = questions[currentQIndex];
-            const answerStatus = userAnswersStatus[currentQIndex]; // 檢查是否已作答
+            const answerData = userAnswersStatus[currentQIndex]; // 可能為 null 或 {correct, selected}
 
             document.getElementById('progress-display').innerText = `關卡：${currentQIndex + 1} / ${questions.length}`;
             
             document.getElementById('question-container').innerHTML = `
-                <div class="question-text">
-                    ${qData.q}
-                </div>
+                <div class="question-text">${qData.q}</div>
             `;
 
             const optsDiv = document.getElementById('options-container');
             optsDiv.innerHTML = '';
             
-            // 如果已答過，就不重新洗牌，避免選項順序跳動（這裡簡單處理，每次load還是會洗，
-            // 若要保留選項順序需更複雜結構，但為遊戲性影響不大，這裡為了簡單每次隨機）
-            // 為了體驗更好，建議: 如果已答過，就不要洗牌了? 
-            // 實作: 簡單起見這裡還是洗牌，但如果是「回顧」其實還好。
-            // *修正*: 為了讓"上一題"回來看到的是一樣的，我們這裡暫時每次都隨機。
-            // 只要標示出對錯即可。
-            
-            // 使用隨機種子或固定邏輯會更好，但純前端簡單做：
-            // 我們產生一個臨時的選項陣列來顯示
+            // 選項隨機顯示，但每次進入保持隨機 (簡化邏輯)
             let shuffledOpts = [...qData.options];
-            // 為了讓選項位置在上一題/下一題切換時不要一直變，這是一個優化點，但目前先保持隨機。
-            // 若要優化，可以在 questions 初始化時就先 shuffle 好。
-            // 這裡先不動 shuffle 邏輯，主要處理按鈕狀態。
             shuffledOpts.sort(() => Math.random() - 0.5);
 
             const feedbackArea = document.getElementById('feedback-area');
@@ -370,30 +371,32 @@
                 btn.className = 'option-btn';
                 btn.innerText = opt;
                 
-                // 如果已經回答過該題
-                if (answerStatus !== null) {
-                    btn.classList.add('disabled'); // 禁止點擊
+                // 如果已經回答過
+                if (answerData) {
+                    btn.classList.add('disabled');
+                    // 顯示正確答案
                     if (opt === qData.a) {
-                        btn.classList.add('correct'); // 正解顯示綠色
+                        btn.classList.add('correct');
                     }
-                    // 如果這題答錯了，且這是被選中的錯誤答案 (這裡沒記錄"選了哪個"，只記錄了"對錯")
-                    // 為了簡單，如果已答過，只顯示正確答案為綠色。
-                    // 若要顯示當初選錯的紅色，需要記錄 userSelectedAnswer。
-                    // 這裡簡化：回顧時只顯示正確答案。
+                    // 顯示玩家選的錯誤答案
+                    if (!answerData.correct && opt === answerData.selected) {
+                        btn.classList.add('wrong');
+                    }
                 } else {
                     btn.onclick = () => checkAnswer(opt, qData.a, btn);
                 }
                 optsDiv.appendChild(btn);
             });
 
-            // 顯示回饋文字
-            if (answerStatus === true) {
-                feedbackArea.innerHTML = `<span style="color: green;">✔ 此題已答對</span>`;
-            } else if (answerStatus === false) {
-                 feedbackArea.innerHTML = `<span style="color: #b71c1c;">✘ 此題已答錯 (正解: ${qData.a})</span>`;
+            if (answerData) {
+                if (answerData.correct) {
+                    feedbackArea.innerHTML = `<span style="color: green;">✔ 此題已答對</span>`;
+                } else {
+                    feedbackArea.innerHTML = `<span style="color: #b71c1c;">✘ 你的選擇: ${answerData.selected} (正解: ${qData.a})</span>`;
+                }
             }
 
-            // 更新導航按鈕狀態
+            // 更新按鈕
             document.getElementById('prev-btn').disabled = (currentQIndex === 0);
             const nextBtn = document.getElementById('next-btn');
             if (currentQIndex === questions.length - 1) {
@@ -404,15 +407,21 @@
         }
 
         function checkAnswer(selected, correct, btn) {
-            if (isAnswering || userAnswersStatus[currentQIndex] !== null) return;
+            if (isAnswering || userAnswersStatus[currentQIndex]) return;
             isAnswering = true;
 
             const isCorrect = selected === correct;
-            userAnswersStatus[currentQIndex] = isCorrect; // 記錄狀態
+            // 記錄詳細作答
+            userAnswersStatus[currentQIndex] = {
+                correct: isCorrect,
+                selected: selected,
+                qText: questions[currentQIndex].q, // 存下來方便後台顯示
+                aText: correct
+            };
 
             if (isCorrect) {
                 playSound('correct');
-                score += 10; // 總共10題，每題10分，總分100
+                score += 10; 
                 document.getElementById('score-display').innerText = score;
                 btn.classList.add('correct');
                 showCoin(btn);
@@ -420,35 +429,23 @@
             } else {
                 playSound('wrong');
                 btn.classList.add('wrong');
-                // 顯示正確答案
                 Array.from(document.querySelectorAll('.option-btn')).forEach(b => {
                     if (b.innerText === correct) b.classList.add('correct');
                 });
                 document.getElementById('feedback-area').innerHTML = `<span style="color: #b71c1c;">✘ 正解是: ${correct}</span>`;
             }
 
-            // 鎖定所有按鈕
             Array.from(document.querySelectorAll('.option-btn')).forEach(b => b.classList.add('disabled'));
-            
-            // 取消自動跳轉，玩家需手動按「下一題」
             isAnswering = false; 
         }
 
         function prevQuestion() {
-            if (currentQIndex > 0) {
-                currentQIndex--;
-                loadQuestion();
-            }
+            if (currentQIndex > 0) { currentQIndex--; loadQuestion(); }
         }
 
         function nextQuestion() {
-            if (currentQIndex < questions.length - 1) {
-                currentQIndex++;
-                loadQuestion();
-            } else {
-                // 最後一題
-                endGame();
-            }
+            if (currentQIndex < questions.length - 1) { currentQIndex++; loadQuestion(); }
+            else { endGame(); }
         }
 
         function endGame() {
@@ -463,6 +460,7 @@
             document.getElementById('final-comment').innerText = comment;
 
             saveScore(playerName, score);
+            saveDetailedLog(playerName, score, userAnswersStatus); // 儲存詳細紀錄
             renderLeaderboard('leaderboard-body');
         }
 
@@ -471,64 +469,175 @@
             renderLeaderboard('leaderboard-only-body');
         }
 
-        function restartGame() { showScreen('start-screen'); }
+        function restartGame() {
+            document.getElementById('player-name').value = "";
+            showScreen('start-screen');
+        }
 
-        // --- 4. LocalStorage 排行榜邏輯 ---
+        // --- 4. 儲存與排行榜 (LocalStorage) ---
         function saveScore(name, points) {
-            let scores = [];
-            const stored = localStorage.getItem(STORAGE_KEY);
-            if (stored) {
-                try { scores = JSON.parse(stored); } catch(e) { scores = []; }
-            }
-            // 加入新成績
+            let scores = getFromStorage(STORAGE_KEY_SCORE) || [];
             scores.push({ name: name, score: points, date: new Date().toISOString() });
-            // 排序 (分數高到低)
             scores.sort((a, b) => b.score - a.score);
-            // 只保留前 10 名
             scores = scores.slice(0, 10);
+            localStorage.setItem(STORAGE_KEY_SCORE, JSON.stringify(scores));
+        }
+
+        // --- 5. 教師後台相關功能 ---
+        function showAdminLogin() {
+            showScreen('admin-login-screen');
+            document.getElementById('admin-password').value = '';
+        }
+
+        function checkAdminPassword() {
+            const pwd = document.getElementById('admin-password').value;
+            if (pwd === "0822") {
+                showAdminDashboard();
+            } else {
+                alert("密碼錯誤，請勿擅闖禁地！");
+            }
+        }
+
+        function showAdminDashboard() {
+            showScreen('admin-dashboard-screen');
+            renderAdminLogs();
+        }
+
+        // 儲存詳細日誌
+        function saveDetailedLog(name, score, answers) {
+            let logs = getFromStorage(STORAGE_KEY_DETAILS) || [];
+            logs.unshift({ // 新的在最前面
+                id: Date.now(), // 唯一ID
+                timestamp: new Date().toLocaleString(),
+                name: name,
+                score: score,
+                details: answers // 陣列: {correct, selected, qText, aText}
+            });
+            // 限制筆數以免爆掉 (例如保留最近50筆)
+            if (logs.length > 50) logs = logs.slice(0, 50);
+            localStorage.setItem(STORAGE_KEY_DETAILS, JSON.stringify(logs));
+        }
+
+        function renderAdminLogs() {
+            const tbody = document.getElementById('admin-log-body');
+            tbody.innerHTML = '';
+            const logs = getFromStorage(STORAGE_KEY_DETAILS) || [];
+
+            if (logs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4">尚無遊玩紀錄</td></tr>';
+                return;
+            }
+
+            logs.forEach(log => {
+                // 主列
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${log.timestamp.split(' ')[1] || log.timestamp}</td>
+                    <td style="font-weight:bold;">${escapeHtml(log.name)}</td>
+                    <td>${log.score}</td>
+                    <td><button class="btn btn-small" onclick="toggleDetails(${log.id})">詳情</button></td>
+                `;
+                tbody.appendChild(tr);
+
+                // 詳情列 (隱藏)
+                const detailTr = document.createElement('tr');
+                detailTr.id = `detail-${log.id}`;
+                detailTr.className = 'admin-details-row';
+                
+                let detailsHtml = '<div style="text-align:left; padding:10px; font-size:0.85rem;">';
+                if(log.details) {
+                    log.details.forEach((d, i) => {
+                        if (!d) return; // 跳過沒作答的
+                        const statusClass = d.correct ? 'tag-correct' : 'tag-wrong';
+                        const statusText = d.correct ? '正確' : '錯誤';
+                        detailsHtml += `
+                            <div style="margin-bottom:5px; border-bottom:1px dotted #ccc; padding-bottom:2px;">
+                                <span style="font-weight:bold; color:#5d4037;">Q${i+1}: ${d.qText}</span><br>
+                                <span class="detail-tag ${statusClass}">${statusText}</span>
+                                學生選: <b>${d.selected}</b> 
+                                ${!d.correct ? `(正解: ${d.aText})` : ''}
+                            </div>
+                        `;
+                    });
+                } else {
+                    detailsHtml += '無詳細資料';
+                }
+                detailsHtml += '</div>';
+
+                detailTr.innerHTML = `<td colspan="4" style="background:#fff3e0;">${detailsHtml}</td>`;
+                tbody.appendChild(detailTr);
+            });
+        }
+
+        function toggleDetails(id) {
+            const row = document.getElementById(`detail-${id}`);
+            if (row) {
+                row.classList.toggle('show');
+            }
+        }
+
+        function exportData() {
+            const logs = getFromStorage(STORAGE_KEY_DETAILS) || [];
+            if(logs.length === 0) { alert("沒有資料可匯出"); return; }
             
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(scores));
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; // BOM for Excel
+            csvContent += "時間,姓名,分數,題目,是否正確,學生答案,正確答案\n";
+            
+            logs.forEach(log => {
+                if(log.details) {
+                    log.details.forEach((d, i) => {
+                        if(!d) return;
+                        // 處理逗號以免CSV錯亂
+                        const qSafe = d.qText.replace(/,/g, "，");
+                        const selSafe = d.selected.replace(/,/g, "，");
+                        const aSafe = d.aText.replace(/,/g, "，");
+                        csvContent += `${log.timestamp},${log.name},${log.score},${qSafe},${d.correct?1:0},${selSafe},${aSafe}\n`;
+                    });
+                }
+            });
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "代數對決_答題紀錄.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function clearAllData() {
+            if(confirm("警告：這將清除所有排行榜和答題紀錄，且無法復原！確定嗎？")) {
+                localStorage.removeItem(STORAGE_KEY_SCORE);
+                localStorage.removeItem(STORAGE_KEY_DETAILS);
+                renderAdminLogs();
+                alert("已清除所有資料");
+            }
+        }
+
+        // --- 通用工具 ---
+        function getFromStorage(key) {
+            try { return JSON.parse(localStorage.getItem(key)); } catch(e) { return null; }
         }
 
         function renderLeaderboard(targetId) {
             const tbody = document.getElementById(targetId);
             tbody.innerHTML = '';
+            const scores = getFromStorage(STORAGE_KEY_SCORE) || [];
             
-            const stored = localStorage.getItem(STORAGE_KEY);
-            if (!stored) {
+            if (scores.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="3">目前沒有紀錄</td></tr>';
                 return;
             }
 
-            try {
-                const scores = JSON.parse(stored);
-                scores.forEach((s, index) => {
-                    const tr = document.createElement('tr');
-                    // 若是在結算畫面，且是剛玩完的那筆，高亮顯示 (這裡簡單判斷名字分數)
-                    if (targetId === 'leaderboard-body' && s.name === playerName && s.score === score) {
-                        tr.style.background = "#fff9c4"; 
-                        tr.style.fontWeight = "bold";
-                    }
-                    tr.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td>${escapeHtml(s.name)}</td>
-                        <td>$${s.score}</td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch(e) {
-                tbody.innerHTML = '<tr><td colspan="3">讀取錯誤</td></tr>';
-            }
-        }
-
-        function clearLeaderboard() {
-            if(confirm("確定要清除所有排行榜紀錄嗎？")) {
-                localStorage.removeItem(STORAGE_KEY);
-                // 重新渲染當前顯示的那個榜
-                const activeScreen = document.querySelector('.screen:not(.hidden)'); // 簡單檢查
-                renderLeaderboard('leaderboard-body');
-                renderLeaderboard('leaderboard-only-body');
-            }
+            scores.forEach((s, index) => {
+                const tr = document.createElement('tr');
+                if (targetId === 'leaderboard-body' && s.name === playerName && s.score === score) {
+                    tr.style.background = "#fff9c4"; 
+                    tr.style.fontWeight = "bold";
+                }
+                tr.innerHTML = `<td>${index + 1}</td><td>${escapeHtml(s.name)}</td><td>$${s.score}</td>`;
+                tbody.appendChild(tr);
+            });
         }
 
         function escapeHtml(text) {
@@ -536,7 +645,7 @@
             return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         }
 
-        // --- 5. 工具與音效 ---
+        // 音效
         let audioCtx;
         function initAudio() {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -547,29 +656,22 @@
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.connect(gain); gain.connect(audioCtx.destination);
-            
             const now = audioCtx.currentTime;
             
             if (type === 'correct') {
-                osc.type = 'triangle'; 
-                osc.frequency.setValueAtTime(600, now); 
+                osc.type = 'triangle'; osc.frequency.setValueAtTime(600, now); 
                 osc.frequency.exponentialRampToValueAtTime(1000, now + 0.1);
-                gain.gain.setValueAtTime(0.3, now); 
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
                 osc.start(now); osc.stop(now + 0.3);
             } else if (type === 'wrong') {
-                osc.type = 'sawtooth'; 
-                osc.frequency.setValueAtTime(150, now); 
+                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, now); 
                 osc.frequency.linearRampToValueAtTime(100, now + 0.3);
-                gain.gain.setValueAtTime(0.3, now); 
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
                 osc.start(now); osc.stop(now + 0.3);
             } else if (type === 'start') {
-                osc.type = 'square'; 
-                osc.frequency.setValueAtTime(200, now);
+                osc.type = 'square'; osc.frequency.setValueAtTime(200, now);
                 osc.frequency.linearRampToValueAtTime(400, now + 0.1);
-                gain.gain.setValueAtTime(0.1, now); 
-                gain.gain.linearRampToValueAtTime(0, now + 0.2);
+                gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0, now + 0.2);
                 osc.start(now); osc.stop(now + 0.2);
             }
         }
@@ -588,9 +690,7 @@
             }
         }
 
-        window.onload = () => {
-            showScreen('start-screen');
-        };
+        window.onload = () => { showScreen('start-screen'); };
     </script>
 </body>
 </html>
