@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>西部荒野系列：課堂互動遊戲</title>
-    <link rel="icon" href="dog.png" type="image/png">
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Chiron+GoRound+TC:wght@200..900&display=swap" rel="stylesheet">
@@ -19,6 +17,7 @@
                         'primary': '#8B4513', 
                         'primary-light': '#A0522D',
                         'secondary': '#CD853F',
+                        'tertiary': '#2E8B57', /* 新增：仙人掌綠 */
                         'background-light': '#FFF8DC', 
                         'surface-light': '#FFFFFF',
                         'text-light': '#2D3748',
@@ -142,12 +141,12 @@
                 <div class="flex flex-col items-center text-center max-w-xs w-full mt-8 md:mt-0">
                     <div class="step-circle mb-3">3</div>
                     <p class="font-bold text-gray-800">貼上並生成</p>
-                    <p class="text-sm text-gray-500">在 Canvas 右下角貼上咒語 + 題目</p>
+                    <p class="text-sm text-gray-500">在 Canvas 對話框貼上咒語 + 題目</p>
                 </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-12">
             
             <div class="bg-surface-light rounded-xl p-5 md:p-6 card-shadow hover-lift border border-amber-200 flex flex-col h-full relative overflow-hidden">
                 <div class="absolute top-0 right-0 bg-accent text-white px-3 py-1 text-xs font-bold rounded-bl-lg">排行競技</div>
@@ -224,6 +223,45 @@
                     </a>
                 </div>
             </div>
+
+            <div class="bg-surface-light rounded-xl p-5 md:p-6 card-shadow hover-lift border border-amber-200 flex flex-col h-full relative overflow-hidden">
+                <div class="absolute top-0 right-0 bg-tertiary text-white px-3 py-1 text-xs font-bold rounded-bl-lg">單字特訓</div>
+                
+                <div class="flex flex-col items-center text-center mb-6">
+                    <span class="text-6xl mb-3">🎯</span>
+                    <h2 class="text-2xl font-bold text-primary mb-1">神槍手拼字場</h2>
+                    <span class="western-badge">拼字輸入</span>
+                    <p class="text-sm text-gray-600 mt-2">
+                        結合聽覺與視覺的記憶遊戲！輸入正確字母即觸發槍聲與動畫，讓背單字像打靶一樣爽快。
+                    </p>
+                </div>
+                
+                <div class="mt-auto space-y-4">
+                    <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                        <label class="block font-bold text-gray-700 mb-2 text-sm flex flex-wrap justify-between gap-1">
+                            <span>📜 拼字題專用咒語：</span>
+                        </label>
+                        <div class="flex gap-2 w-full">
+                            <input type="text" id="promptInputSpell"
+                                   value="請保留原有的所有功能與設定，僅將單字題目內容更換為以下提供的內容。"
+                                   class="flex-1 min-w-0 p-2 bg-white border border-gray-300 rounded text-sm text-gray-700 focus:outline-none focus:border-primary"
+                                   readonly>
+                            <button onclick="copyPrompt('promptInputSpell', 'btnSpell')" id="btnSpell"
+                                    class="flex-shrink-0 bg-tertiary hover:bg-opacity-80 text-white px-3 py-2 rounded shadow transition-colors duration-200 whitespace-nowrap text-sm font-bold">
+                                複製
+                            </button>
+                        </div>
+                    </div>
+
+                    <a href="https://gemini.google.com/share/1e8637719d10" 
+                       target="_blank" rel="noopener noreferrer"
+                       class="block w-full bg-tertiary hover:bg-opacity-90 text-white text-center px-6 py-3 rounded-lg transition-all duration-300 font-bold shadow-md hover:shadow-lg transform active:scale-95"
+                       onclick="trackEvent('button_click', 'tool_link', 'spelling_game')">
+                        進入「神槍手拼字場」模版
+                    </a>
+                </div>
+            </div>
+
         </div>
 
         <div class="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-lg shadow-sm mb-8">
@@ -261,8 +299,11 @@
             copyText.setSelectionRange(0, 99999); // 手機版兼容
 
             navigator.clipboard.writeText(copyText.value).then(function() {
-                // 變更樣式
-                btn.classList.remove("bg-primary", "bg-secondary", "hover:bg-primary-light", "hover:bg-opacity-80");
+                // 暫存原始 class
+                var originalClasses = btn.className;
+
+                // 變更為成功樣式 (移除舊有顏色 class, 加入綠色)
+                btn.classList.remove("bg-primary", "bg-secondary", "bg-tertiary", "hover:bg-primary-light", "hover:bg-opacity-80");
                 btn.classList.add("bg-green-600", "hover:bg-green-700");
                 btn.innerText = "已複製！";
                 
@@ -270,8 +311,12 @@
                 setTimeout(function() {
                     btn.innerText = "複製";
                     btn.classList.remove("bg-green-600", "hover:bg-green-700");
+                    
+                    // 根據按鈕 ID 加回原本的顏色
                     if(btnId === 'btnMatch') {
                         btn.classList.add("bg-secondary", "hover:bg-opacity-80"); 
+                    } else if (btnId === 'btnSpell') {
+                        btn.classList.add("bg-tertiary", "hover:bg-opacity-80");
                     } else {
                         btn.classList.add("bg-primary", "hover:bg-primary-light");
                     }
@@ -280,5 +325,4 @@
         }
     </script>
 </body>
-
 </html>
