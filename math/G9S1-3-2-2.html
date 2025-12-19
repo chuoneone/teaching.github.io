@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>直角三角形的外接圓練習</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX CSS & JS (修正 integrity 屬性) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" xintegrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" xintegrity="sha384-XjKyJY9NW4jJYPODxcHnAR8wSpz8cEZ9J5FWcMzEzvXwFooter9q/xQ8rZ9yQY7" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" xintegrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f0f9ff;
+            overflow-x: hidden;
+        }
+
+        /* 數學式容器：使用教科書常見的襯線字體 */
+        .math-container {
+            font-family: 'Times New Roman', serif;
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: #1e293b;
+            display: inline-flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            line-height: 1.5;
+        }
+
+        /* --- 教科書風格的互動式根號 (CSS 模擬) --- */
+        .sqrt-wrapper {
+            display: inline-flex;
+            align-items: stretch; /* 讓符號高度跟隨內容 */
+            margin: 0 4px;
+        }
+
+        .sqrt-symbol {
+            font-family: 'Times New Roman', serif;
+            font-size: 2rem; /* 放大根號頭 */
+            line-height: 1;
+            transform: scaleY(1.2); /* 稍微拉長 */
+            margin-right: -2px; /* 連接橫線 */
+            color: #0f172a;
+            display: flex;
+            align-items: flex-end; /* 對齊底部 */
+            padding-bottom: 6px;
+        }
+        
+        /* 根號內的內容與上方橫線 */
+        .sqrt-content {
+            border-top: 2px solid #0f172a;
+            padding-top: 4px;
+            padding-left: 2px;
+            padding-right: 2px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 0.7rem; /* 調整橫線高度以對齊根號頭頂端 */
+        }
+
+        /* 填答格樣式 */
+        .slot {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            min-width: 60px;
+            height: 46px;
+            border: 2px dashed #94a3b8;
+            border-radius: 6px;
+            background-color: #ffffff;
+            font-size: 1.6rem;
+            font-family: 'Times New Roman', serif;
+            font-weight: bold;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 0 8px;
+            margin: 0 2px;
+            position: relative;
+        }
+
+        .slot.active {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .slot.filled {
+            border-style: solid;
+            border-color: #2563eb;
+            background-color: #fff;
+            color: #1d4ed8;
+        }
+
+        .slot.correct {
+            border-color: #16a34a;
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+
+        /* 運算符號微調 */
+        .operator {
+            font-family: 'Times New Roman', serif;
+            margin: 0 4px;
+            font-size: 1.6rem;
+        }
+
+        /* 按鈕樣式 */
+        .option-btn {
+            background-color: #ffffff;
+            border: 2px solid #cbd5e1;
+            border-bottom-width: 5px;
+            color: #334155;
+            font-size: 1.5rem;
+            font-family: 'Times New Roman', serif;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.1s;
+            min-width: 70px;
+        }
+
+        .option-btn:active {
+            transform: translateY(3px);
+            border-bottom-width: 2px;
+        }
+
+        .option-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            border-bottom-width: 5px;
+            background-color: #e2e8f0;
+        }
+
+        /* 動畫 */
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .pop-anim {
+            animation: pop 0.3s ease-out;
+        }
+
+        /* 步驟區塊過渡 */
+        .step-block {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease-out;
+            display: none; /* 預設隱藏 */
+        }
+        .step-block.visible {
+            opacity: 1;
+            transform: translateY(0);
+            display: block;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col">
+
+    <header class="bg-slate-800 text-white shadow-lg shrink-0 z-50">
+        <div class="flex items-center overflow-x-auto no-scrollbar py-3 px-4 gap-4">
+            <h1 class="text-xl font-bold whitespace-nowrap mr-2 text-yellow-400 font-[Noto Sans TC]">
+                📐 三角形的外接圓
+            </h1>
+            <div id="nav-buttons" class="flex gap-3">
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
+        
+        <section class="md:w-1/3 bg-white border-b-4 md:border-b-0 md:border-r-4 border-slate-200 p-6 overflow-y-auto shrink-0 md:h-full relative z-10 shadow-md">
+            <div class="sticky top-0">
+                <div class="bg-blue-50 border-l-8 border-blue-500 p-4 mb-6 rounded-r-lg">
+                    <h2 class="text-2xl font-bold text-slate-800 mb-2 font-[Noto Sans TC]" id="problem-title">題目載入中...</h2>
+                    <div class="text-lg text-slate-600 leading-relaxed mt-2 font-[Noto Sans TC]" id="problem-desc">
+                        <!-- 題目敘述 -->
+                    </div>
+                </div>
+
+                <div class="flex justify-center items-center bg-slate-50 rounded-xl p-4 border-2 border-slate-100 min-h-[250px]">
+                    <div id="svg-container" class="w-full max-w-[300px]">
+                    </div>
+                </div>
+
+                <div class="mt-4 p-4 bg-yellow-50 rounded-lg text-yellow-800 text-base font-[Noto Sans TC]">
+                    <p class="font-bold flex items-center gap-2">
+                        💡 提示：
+                    </p>
+                    <div class="mt-1 ml-1 space-y-2" id="hint-container">
+                        <!-- 提示內容也會被渲染 -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="md:w-2/3 bg-slate-50 p-4 md:p-8 overflow-y-auto scroll-smooth relative" id="steps-container">
+            <div class="max-w-3xl mx-auto pb-24">
+            </div>
+        </section>
+
+    </main>
+
+    <div id="completion-modal" class="fixed inset-0 bg-black/60 flex items-center justify-center z-[100] hidden backdrop-blur-sm">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-[90%] text-center shadow-2xl transform scale-95 transition-transform duration-300" id="modal-content">
+            <div class="text-6xl mb-4">🎉</div>
+            <h2 class="text-3xl font-bold text-slate-800 mb-2 font-[Noto Sans TC]">太棒了！</h2>
+            <p class="text-xl text-slate-600 mb-8 font-[Noto Sans TC]">你已經成功算出答案！</p>
+            <div class="flex flex-col gap-3 font-[Noto Sans TC]">
+                <button onclick="resetCurrentProblem()" class="w-full bg-blue-500 hover:bg-blue-600 text-white text-xl font-bold py-4 rounded-xl shadow-lg transition-colors">
+                    再練習一次
+                </button>
+                <button onclick="closeModal()" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 text-xl font-bold py-4 rounded-xl transition-colors">
+                    關閉視窗
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-3 rounded-full shadow-lg font-bold text-lg transition-opacity duration-300 opacity-0 pointer-events-none z-[60] font-[Noto Sans TC]">
+        再想想看喔！
+    </div>
+
+    <script>
+        // --- 題目資料 ---
+        const problems = [
+            {
+                id: 1,
+                title: "題目 1",
+                desc: `如圖，\\(\\triangle ABC\\) 中，\\(\\angle B = 90^\\circ\\)，<br>
+                       <span class='inline-block mt-2'><mark class='bg-yellow-200 px-1 rounded'>\\(AB = 10\\)</mark>，<mark class='bg-yellow-200 px-1 rounded'>\\(BC = 24\\)</mark></span>，<br>
+                       求 \\(\\triangle ABC\\) 的外接圓半徑。`,
+                hint: `<ul class="list-disc list-inside">
+                        <li>直角三角形的外接圓半徑 = <span class="font-bold">斜邊的一半</span></li>
+                        <li>先用商高定理找斜邊：\\(c = \\sqrt{a^2 + b^2}\\)</li>
+                       </ul>`,
+                svg: `
+                    <svg viewBox="-5 -5 40 25" class="w-full h-full drop-shadow-md">
+                        <path d="M0,10 L0,0 L24,0 Z" fill="#e0f2fe" stroke="#334155" stroke-width="0.8"/>
+                        <path d="M0,2 L2,2 L2,0" fill="none" stroke="#ef4444" stroke-width="0.8"/>
+                        <text x="-2" y="11" class="text-[0.15rem] font-bold" fill="#0f172a" font-size="2.5">A</text>
+                        <text x="-2" y="0" class="text-[0.15rem] font-bold" fill="#0f172a" font-size="2.5">B</text>
+                        <text x="25" y="0" class="text-[0.15rem] font-bold" fill="#0f172a" font-size="2.5">C</text>
+                        <text x="-3" y="5" class="text-[0.15rem]" fill="#1d4ed8" font-size="2">10</text>
+                        <text x="12" y="3" class="text-[0.15rem]" fill="#1d4ed8" font-size="2">24</text>
+                    </svg>
+                `,
+                steps: [
+                    {
+                        instruction: "步驟 1：找出斜邊長度",
+                        // 使用 HTML 結構模擬根號，避免 LaTeX 跑版
+                        template: `
+                        <div class="math-container flex flex-col items-center md:items-start gap-3">
+                            <div class="flex items-center">
+                                <span class="mr-2">\\(c =\\)</span>
+                                <div class="sqrt-wrapper">
+                                    <div class="sqrt-symbol">√</div>
+                                    <div class="sqrt-content">
+                                        <span class="slot" data-ans="10"></span>
+                                        <span class="sup text-sm align-super">2</span>
+                                        <span class="operator">+</span>
+                                        <span class="slot" data-ans="24"></span>
+                                        <span class="sup text-sm align-super">2</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="mr-2">\\(=\\)</span>
+                                <div class="sqrt-wrapper">
+                                    <div class="sqrt-symbol">√</div>
+                                    <div class="sqrt-content">
+                                        <span class="slot" data-ans="100"></span>
+                                        <span class="operator">+</span>
+                                        <span class="slot" data-ans="576"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="mr-2">\\(=\\)</span>
+                                <div class="sqrt-wrapper">
+                                    <div class="sqrt-symbol">√</div>
+                                    <div class="sqrt-content">
+                                        <span class="slot" data-ans="676"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="mr-2">\\(=\\)</span>
+                                <span class="slot" data-ans="26"></span>
+                            </div>
+                        </div>`,
+                        options: ["10", "24", "100", "576", "676", "26"], 
+                        hint: "1. 填入兩股長度<br>2. 算出平方<br>3. 相加<br>4. 開根號"
+                    },
+                    {
+                        instruction: "步驟 2：算出外接圓半徑",
+                        template: `<div class="math-container"><span class="slot" data-ans="26"></span> <span class="operator">÷</span> 2 <span class="operator">=</span> <span class="slot" data-ans="13"></span></div>`,
+                        options: ["26", "2", "13", "5"],
+                        hint: "半徑是斜邊的一半"
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "題目 2",
+                desc: `如圖，\\(\\triangle ABC\\) 中，\\(\\angle C = 90^\\circ\\)，<br>
+                       <span class='inline-block mt-2'><mark class='bg-yellow-200 px-1 rounded'>\\(AC = 6\\)</mark>，<mark class='bg-yellow-200 px-1 rounded'>\\(BC = 8\\)</mark></span>，<br>
+                       求 \\(\\triangle ABC\\) 的外接圓半徑。`,
+                hint: `<ul class="list-disc list-inside">
+                        <li>直角三角形的外接圓半徑 = <span class="font-bold">斜邊的一半</span></li>
+                        <li>先用商高定理找斜邊：\\(c = \\sqrt{a^2 + b^2}\\)</li>
+                       </ul>`,
+                svg: `
+                    <svg viewBox="-2 -2 15 12" class="w-full h-full drop-shadow-md">
+                        <path d="M0,6 L0,0 L8,0 Z" fill="#fff7ed" stroke="#334155" stroke-width="0.3"/>
+                        <path d="M0,1 L1,1 L1,0" fill="none" stroke="#ef4444" stroke-width="0.3"/>
+                        <text x="-1" y="7" class="text-[0.15rem] font-bold" fill="#0f172a" font-size="1">A</text>
+                        <text x="-1" y="0" class="text-[0.15rem] font-bold" fill="#0f172a" font-size="1">C</text>
+                        <text x="8.5" y="0" class="text-[0.15rem] font-bold" fill="#0f172a" font-size="1">B</text>
+                        <text x="-1.5" y="3" class="text-[0.15rem]" fill="#1d4ed8" font-size="0.8">6</text>
+                        <text x="4" y="1.5" class="text-[0.15rem]" fill="#1d4ed8" font-size="0.8">8</text>
+                    </svg>
+                `,
+                steps: [
+                    {
+                        instruction: "步驟 1：找出斜邊長度",
+                        template: `
+                        <div class="math-container flex flex-col items-center md:items-start gap-3">
+                            <div class="flex items-center">
+                                <span class="mr-2">\\(c =\\)</span>
+                                <div class="sqrt-wrapper">
+                                    <div class="sqrt-symbol">√</div>
+                                    <div class="sqrt-content">
+                                        <span class="slot" data-ans="6"></span>
+                                        <span class="sup text-sm align-super">2</span>
+                                        <span class="operator">+</span>
+                                        <span class="slot" data-ans="8"></span>
+                                        <span class="sup text-sm align-super">2</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="mr-2">\\(=\\)</span>
+                                <div class="sqrt-wrapper">
+                                    <div class="sqrt-symbol">√</div>
+                                    <div class="sqrt-content">
+                                        <span class="slot" data-ans="36"></span>
+                                        <span class="operator">+</span>
+                                        <span class="slot" data-ans="64"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="mr-2">\\(=\\)</span>
+                                <div class="sqrt-wrapper">
+                                    <div class="sqrt-symbol">√</div>
+                                    <div class="sqrt-content">
+                                        <span class="slot" data-ans="100"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="mr-2">\\(=\\)</span>
+                                <span class="slot" data-ans="10"></span>
+                            </div>
+                        </div>`,
+                        options: ["6", "8", "36", "64", "100", "10"], 
+                        hint: "1. 填入兩股長度<br>2. 算出平方<br>3. 相加<br>4. 開根號"
+                    },
+                    {
+                        instruction: "步驟 2：算出外接圓半徑",
+                        template: `<div class="math-container"><span class="slot" data-ans="10"></span> <span class="operator">÷</span> 2 <span class="operator">=</span> <span class="slot" data-ans="5"></span></div>`,
+                        options: ["10", "2", "5", "8"],
+                        hint: "半徑是斜邊的一半"
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "題目 3",
+                desc: `如圖，\\(\\triangle ABC\\) 中，\\(\\angle B = 90^\\circ\\)，<br>
+                       <span class='inline-block mt-2'><mark class='bg-yellow-200 px-1 rounded'>\\(AB = 4\\)</mark>，<mark class='bg-yellow-200 px-1 rounded'>\\(BC = 3\\)</mark></span>，<br>
+                       求 \\(\\triangle ABC\\) 的外接圓面積。`,
+                hint: `<ul class="list-disc list-inside">
+                        <li>外接圓半徑 \\(R =\\) 斜邊的一半</li>
+                        <li>圓面積公式：\\(\\text{Area} = \\pi R^2\\)</li>
+                       </ul>`,
+                svg: `
+                    <svg viewBox="-2 -2 6 6" class="w-full h-full drop-shadow-md">
+                        <path d="M0,4 L0,0 L3,0 Z" fill="#fff7ed" stroke="#334155" stroke-width="0.1"/>
+                        <path d="M0,0.5 L0.5,0.5 L0.5,0" fill="none" stroke="#ef4444" stroke-width="0.1"/>
+                        <text x="-0.5" y="4.2" class="text-[0.1rem] font-bold" fill="#0f172a" font-size="0.8">A</text>
+                        <text x="-0.5" y="0" class="text-[0.1rem] font-bold" fill="#0f172a" font-size="0.8">B</text>
+                        <text x="3.2" y="0" class="text-[0.1rem] font-bold" fill="#0f172a" font-size="0.8">C</text>
+                        <text x="-0.8" y="2" class="text-[0.1rem]" fill="#1d4ed8" font-size="0.6">4</text>
+                        <text x="1.5" y="-0.3" class="text-[0.1rem]" fill="#1d4ed8" font-size="0.6">3</text>
+                    </svg>
+                `,
+                steps: [
+                    {
+                        instruction: "步驟 1：找出斜邊長",
+                        template: `<div class="math-container">
+                                    <div class="sqrt-wrapper">
+                                        <div class="sqrt-symbol">√</div>
+                                        <div class="sqrt-content">
+                                            <span class="slot" data-ans="9"></span>
+                                            <span class="operator">+</span>
+                                            <span class="slot" data-ans="16"></span>
+                                        </div>
+                                    </div>
+                                    <span class="mx-2">\\(=\\)</span>
+                                    <div class="sqrt-wrapper">
+                                        <div class="sqrt-symbol">√</div>
+                                        <div class="sqrt-content">
+                                            25
+                                        </div>
+                                    </div>
+                                    <span class="mx-2">\\(=\\)</span>
+                                    <span class="slot" data-ans="5"></span>
+                                   </div>`,
+                        options: ["9", "16", "5", "3", "4"], 
+                        hint: "\\(3^2=9, 4^2=16\\)"
+                    },
+                    {
+                        instruction: "步驟 2：找半徑",
+                        template: `<div class="math-container"><span class="slot" data-ans="5"></span> <span class="operator">÷</span> 2 <span class="operator">=</span> <span class="slot" data-ans="2.5"></span></div>`,
+                        options: ["5", "2.5", "10"],
+                        hint: "半徑是斜邊的一半"
+                    },
+                    {
+                        instruction: "步驟 3：求圓面積",
+                        template: `<div class="math-container">\\(\\pi \\times\\) <span class="slot" data-ans="2.5"></span><span class="sup text-base align-super">2</span> <span class="operator">=</span> <span class="slot" data-ans="6.25"></span>\\(\\pi\\)</div>`,
+                        options: ["2.5", "6.25", "6"],
+                        hint: "\\(2.5 \\times 2.5\\)"
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "題目 4",
+                desc: `如圖，\\(\\triangle ABC\\) 中，\\(\\angle C = 90^\\circ\\)，<br>
+                       <span class='inline-block mt-2'><mark class='bg-yellow-200 px-1 rounded'>\\(AC = 6\\)</mark>，<mark class='bg-yellow-200 px-1 rounded'>\\(BC = 8\\)</mark></span>，<br>
+                       求 \\(\\triangle ABC\\) 的外接圓面積。`,
+                hint: `<ul class="list-disc list-inside">
+                        <li>外接圓半徑 \\(R =\\) 斜邊的一半</li>
+                        <li>圓面積公式：\\(\\text{Area} = \\pi R^2\\)</li>
+                       </ul>`,
+                svg: `
+                    <svg viewBox="-2 -2 12 10" class="w-full h-full drop-shadow-md">
+                        <path d="M0,6 L0,0 L8,0 Z" fill="#e0f2fe" stroke="#334155" stroke-width="0.1"/>
+                        <path d="M0,0.5 L0.5,0.5 L0.5,0" fill="none" stroke="#ef4444" stroke-width="0.1"/>
+                        <text x="-0.5" y="6.5" class="text-[0.1rem] font-bold" fill="#0f172a" font-size="1">A</text>
+                        <text x="-0.5" y="0" class="text-[0.1rem] font-bold" fill="#0f172a" font-size="1">C</text>
+                        <text x="8.5" y="0" class="text-[0.1rem] font-bold" fill="#0f172a" font-size="1">B</text>
+                        <text x="-1.5" y="3" class="text-[0.1rem]" fill="#1d4ed8" font-size="0.8">6</text>
+                        <text x="4" y="-0.5" class="text-[0.1rem]" fill="#1d4ed8" font-size="0.8">8</text>
+                    </svg>
+                `,
+                steps: [
+                    {
+                        instruction: "步驟 1：找出斜邊長",
+                        template: `<div class="math-container">
+                                    <div class="sqrt-wrapper">
+                                        <div class="sqrt-symbol">√</div>
+                                        <div class="sqrt-content">
+                                            <span class="slot" data-ans="36"></span>
+                                            <span class="operator">+</span>
+                                            <span class="slot" data-ans="64"></span>
+                                        </div>
+                                    </div>
+                                    <span class="mx-2">\\(=\\)</span>
+                                    <div class="sqrt-wrapper">
+                                        <div class="sqrt-symbol">√</div>
+                                        <div class="sqrt-content">
+                                            100
+                                        </div>
+                                    </div>
+                                    <span class="mx-2">\\(=\\)</span>
+                                    <span class="slot" data-ans="10"></span>
+                                   </div>`,
+                        options: ["36", "64", "10", "6", "8"], 
+                        hint: "\\(6^2=36, 8^2=64\\)"
+                    },
+                    {
+                        instruction: "步驟 2：找半徑",
+                        template: `<div class="math-container">\\(\\text{半徑} =\\) <span class="slot" data-ans="10"></span> <span class="operator">÷</span> 2 <span class="operator">=</span> <span class="slot" data-ans="5"></span></div>`,
+                        options: ["10", "5", "2"],
+                        hint: "斜邊的一半"
+                    },
+                    {
+                        instruction: "步驟 3：求圓面積",
+                        template: `<div class="math-container">\\(\\pi \\times\\) <span class="slot" data-ans="5"></span><span class="sup text-base align-super">2</span> <span class="operator">=</span> <span class="slot" data-ans="25"></span>\\(\\pi\\)</div>`,
+                        options: ["5", "25", "50"],
+                        hint: "\\(5 \\times 5\\)"
+                    }
+                ]
+            }
+        ];
+
+        // --- 狀態管理 ---
+        let currentProblemIndex = 0;
+        let currentStepIndex = 0;
+        let stepCompleted = false;
+
+        // --- 輔助函式：觸發 KaTeX 渲染 ---
+        function renderMath(element) {
+            if (typeof renderMathInElement === 'function' && element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '\\(', right: '\\)', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+
+        // --- 初始化 ---
+        function init() {
+            renderNav();
+            loadProblem(0);
+        }
+
+        // --- 渲染導覽列 ---
+        function renderNav() {
+            const nav = document.getElementById('nav-buttons');
+            nav.innerHTML = '';
+            problems.forEach((prob, index) => {
+                const btn = document.createElement('button');
+                btn.className = `whitespace-nowrap px-4 py-2 rounded-full font-bold transition-all font-[Noto Sans TC] ${
+                    index === currentProblemIndex 
+                    ? 'bg-white text-slate-800 shadow-md transform scale-105' 
+                    : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                }`;
+                btn.textContent = prob.title;
+                btn.onclick = () => loadProblem(index);
+                nav.appendChild(btn);
+            });
+        }
+
+        // --- 載入題目 ---
+        function loadProblem(index) {
+            currentProblemIndex = index;
+            currentStepIndex = 0;
+            stepCompleted = false;
+            
+            renderNav();
+
+            const p = problems[index];
+            document.getElementById('problem-title').textContent = p.title;
+            
+            const descEl = document.getElementById('problem-desc');
+            descEl.innerHTML = p.desc;
+            renderMath(descEl); // 渲染題目的數學
+
+            document.getElementById('svg-container').innerHTML = p.svg;
+
+            const hintEl = document.getElementById('hint-container');
+            hintEl.innerHTML = p.hint;
+            renderMath(hintEl); // 渲染提示的數學
+
+            // 清空並重建右側步驟區
+            const container = document.getElementById('steps-container');
+            container.querySelector('div').innerHTML = ''; 
+            
+            renderStep(0);
+        }
+
+        // --- 渲染步驟 ---
+        function renderStep(stepIdx) {
+            const problem = problems[currentProblemIndex];
+            if (stepIdx >= problem.steps.length) {
+                showCompletionModal();
+                return;
+            }
+
+            const stepData = problem.steps[stepIdx];
+            const container = document.querySelector('#steps-container > div');
+
+            // 建立步驟區塊
+            const stepDiv = document.createElement('div');
+            stepDiv.className = `step-block bg-white rounded-2xl p-6 shadow-sm mb-6 border-l-8 border-slate-300`;
+            stepDiv.dataset.step = stepIdx;
+            
+            // 標題與狀態圖標
+            const header = document.createElement('div');
+            header.className = 'flex items-center justify-between mb-4';
+            header.innerHTML = `
+                <h3 class="text-xl font-bold text-slate-700 instruction-text font-[Noto Sans TC]">${stepData.instruction}</h3>
+                <span class="status-icon text-2xl hidden text-green-500">✔</span>
+            `;
+            stepDiv.appendChild(header);
+
+            // 數學填空區
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'flex flex-col items-center gap-6';
+            contentDiv.innerHTML = `
+                <div class="py-2 scale-100 origin-center math-template w-full flex justify-center">${stepData.template}</div>
+                <div class="options-area flex flex-wrap justify-center gap-3 w-full"></div>
+                <div class="action-area w-full flex justify-end mt-2">
+                    <button class="check-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-lg text-lg shadow-md transition-all hidden font-[Noto Sans TC]">
+                        檢查答案
+                    </button>
+                </div>
+            `;
+            stepDiv.appendChild(contentDiv);
+            container.appendChild(stepDiv);
+
+            // *** 關鍵：渲染此步驟中的 LaTeX ***
+            renderMath(header.querySelector('.instruction-text'));
+            renderMath(contentDiv.querySelector('.math-template'));
+
+            // 綁定事件
+            const slots = stepDiv.querySelectorAll('.slot');
+            const optionsArea = stepDiv.querySelector('.options-area');
+            const checkBtn = stepDiv.querySelector('.check-btn');
+
+            // 產生選項按鈕
+            stepData.options.forEach(optVal => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn shadow-sm';
+                btn.textContent = optVal; 
+                
+                btn.onclick = () => {
+                    let emptySlot = null;
+                    for (let s of slots) {
+                        if (!s.textContent) {
+                            emptySlot = s;
+                            break;
+                        }
+                    }
+
+                    if (emptySlot) {
+                        emptySlot.textContent = optVal;
+                        emptySlot.classList.add('pop-anim', 'filled');
+                        btn.disabled = true;
+                        
+                        setTimeout(() => emptySlot.classList.remove('pop-anim'), 300);
+
+                        const allFilled = Array.from(slots).every(s => s.textContent);
+                        if (allFilled) {
+                            checkBtn.classList.remove('hidden');
+                            checkBtn.classList.add('pop-anim');
+                        }
+                    }
+                };
+                optionsArea.appendChild(btn);
+            });
+
+            // Slot 點擊清除功能
+            slots.forEach(slot => {
+                slot.onclick = () => {
+                    if (stepDiv.classList.contains('completed')) return;
+                    if (slot.textContent) {
+                        const val = slot.textContent;
+                        const buttons = optionsArea.querySelectorAll('button');
+                        for (let btn of buttons) {
+                            if (btn.textContent === val && btn.disabled) {
+                                btn.disabled = false;
+                                break;
+                            }
+                        }
+                        slot.textContent = '';
+                        slot.classList.remove('filled', 'correct', 'error');
+                        checkBtn.classList.add('hidden');
+                    }
+                };
+            });
+
+            // 檢查答案按鈕
+            checkBtn.onclick = () => {
+                const currentAnswers = Array.from(slots).map(s => s.textContent);
+                const expectedAnswers = Array.from(slots).map(s => s.dataset.ans);
+                let allCorrect = true;
+
+                const isProb1or2 = (problem.id === 1 || problem.id === 2);
+                const isProb3or4 = (problem.id === 3 || problem.id === 4);
+
+                // --- 檢查邏輯修正 ---
+                if (isProb1or2 && stepIdx === 0) {
+                    // 題目 1 和 2 的第一步是大合併步驟
+                    // 順序： 0,1 (底數) -> 2,3 (平方數) -> 4 (和) -> 5 (根)
+                    
+                    // 1. 檢查前兩個 (底數互換)
+                    const s01 = currentAnswers.slice(0, 2).sort().join(',');
+                    const e01 = expectedAnswers.slice(0, 2).sort().join(',');
+                    if (s01 !== e01) allCorrect = false;
+
+                    // 2. 檢查中間兩個 (平方數互換)
+                    const s23 = currentAnswers.slice(2, 4).sort().join(',');
+                    const e23 = expectedAnswers.slice(2, 4).sort().join(',');
+                    if (s23 !== e23) allCorrect = false;
+
+                    // 3. 檢查最後兩個 (固定順序)
+                    if (currentAnswers[4] !== expectedAnswers[4]) allCorrect = false;
+                    if (currentAnswers[5] !== expectedAnswers[5]) allCorrect = false;
+
+                } else if (isProb3or4 && stepIdx === 0) {
+                    // 題目 3 和 4 的第一步 (前兩個可交換)
+                    if (slots.length >= 2) {
+                        const firstTwoCur = currentAnswers.slice(0, 2).sort().join(',');
+                        const firstTwoExp = expectedAnswers.slice(0, 2).sort().join(',');
+                        if (firstTwoCur !== firstTwoExp) allCorrect = false;
+                        // 剩下的嚴格檢查
+                        for(let i=2; i<slots.length; i++) {
+                            if (currentAnswers[i] !== expectedAnswers[i]) {
+                                allCorrect = false;
+                                break;
+                            }
+                        }
+                    } else {
+                         if (currentAnswers[0] !== expectedAnswers[0]) allCorrect = false;
+                    }
+                } else {
+                    // 其他步驟：嚴格順序
+                    for(let i=0; i<slots.length; i++) {
+                        if (currentAnswers[i] !== expectedAnswers[i]) {
+                            allCorrect = false;
+                            break;
+                        }
+                    }
+                }
+
+                if (allCorrect) {
+                    stepDiv.classList.add('completed', 'border-green-400');
+                    stepDiv.classList.remove('border-slate-300');
+                    slots.forEach(s => s.classList.add('correct'));
+                    optionsArea.style.display = 'none';
+                    checkBtn.style.display = 'none';
+                    stepDiv.querySelector('.status-icon').classList.remove('hidden');
+                    
+                    const title = stepDiv.querySelector('h3');
+                    title.classList.add('text-green-700');
+                    title.classList.remove('text-slate-700');
+
+                    playSuccessEffect();
+
+                    currentStepIndex++;
+                    renderStep(currentStepIndex);
+                } else {
+                    showToast();
+                    slots.forEach(s => {
+                        if(s.textContent) {
+                             s.classList.add('animate-pulse');
+                             setTimeout(() => s.classList.remove('animate-pulse'), 500);
+                        }
+                    });
+                }
+            };
+
+            setTimeout(() => {
+                stepDiv.classList.add('visible');
+                const mainSection = document.getElementById('steps-container');
+                mainSection.scrollTo({
+                    top: mainSection.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }, 100);
+        }
+
+        // --- 輔助功能 ---
+        function showToast() {
+            const t = document.getElementById('toast');
+            t.style.opacity = '1';
+            t.style.transform = 'translate(-50%, -10px)';
+            setTimeout(() => {
+                t.style.opacity = '0';
+                t.style.transform = 'translate(-50%, 0)';
+            }, 2000);
+        }
+
+        function playSuccessEffect() {
+            // 成功特效
+        }
+
+        function showCompletionModal() {
+            const modal = document.getElementById('completion-modal');
+            const content = document.getElementById('modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('completion-modal');
+            const content = document.getElementById('modal-content');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function resetCurrentProblem() {
+            closeModal();
+            setTimeout(() => {
+                loadProblem(currentProblemIndex);
+            }, 300);
+        }
+
+        // 啟動
+        window.addEventListener('DOMContentLoaded', init);
+
+    </script>
+</body>
+</html>
