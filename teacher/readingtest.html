@@ -41,6 +41,21 @@
             transform: translateY(-5px);
             box-shadow: 0 15px 35px rgba(56, 163, 165, 0.15);
         }
+        /* 自定義滾動條樣式，讓咒語框好看一點 */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0;
+        }
     </style>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5BBHYN77N9"></script>
@@ -108,72 +123,102 @@
             
             <div class="bg-surface-light border-l-4 border-gray-500 p-6 rounded-r-lg card-shadow">
                 <div class="flex flex-col h-full">
-                    <div class="flex items-start mb-4">
+                    <div class="flex items-start mb-6">
                         <div class="flex-shrink-0"><span class="text-2xl">🛠️</span></div>
                         <div class="ml-4">
                             <h3 class="text-lg font-semibold text-gray-800 mb-1">老師製作三步驟</h3>
-                            <p class="text-gray-600 text-sm">複製咒語 ➔ 點擊開始 ➔ 貼上並發布</p>
+                            <p class="text-gray-600 text-sm">請依需求選擇「逐句」或「詞語」模式</p>
                         </div>
                     </div>
 
-                    <div class="flex-grow space-y-4">
-                        <div class="relative group">
-                            <div class="absolute -top-3 left-3 bg-gray-600 text-white text-xs px-2 py-0.5 rounded">Prompt (咒語)</div>
-                            <div id="promptText" class="bg-gray-100 p-4 rounded-lg border border-gray-300 text-sm font-mono text-gray-700 break-all leading-relaxed pt-6">
-                                請保留完整功能，僅替換文章內容。請將以下文本（在下方貼上您的文章）進行逐句朗讀評分設定，遇到逗號、句號、驚嘆號、問號時請自動切割成一句。
+                    <div class="flex-grow space-y-8">
+                        
+                        <div class="border-b border-gray-200 pb-6">
+                            <div class="flex items-center mb-2">
+                                <span class="bg-primary text-white text-xs px-2 py-1 rounded mr-2">模式一</span>
+                                <h4 class="font-bold text-gray-800">文章逐句朗讀</h4>
+                            </div>
+                            
+                            <div class="relative group mb-3">
+                                <div class="absolute -top-2 left-2 bg-gray-100 text-gray-500 text-[10px] px-1">咒語 A</div>
+                                <div id="promptSentence" class="custom-scrollbar bg-gray-50 p-3 rounded border border-gray-300 text-xs font-mono text-gray-600 break-all leading-relaxed h-24 overflow-y-auto">
+                                    請保留完整功能，僅替換文章內容。請將以下文本（在下方貼上您的文章）進行逐句朗讀評分設定，遇到逗號、句號、驚嘆號、問號時請自動切割成一句。
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="copyPrompt('promptSentence', this)" 
+                                        class="bg-gray-500 hover:bg-gray-600 text-white py-1.5 px-3 rounded text-sm transition-colors duration-300">
+                                    複製咒語 A
+                                </button>
+                                <a href="https://gemini.google.com/share/25be1763222d" 
+                                   target="_blank" rel="noopener noreferrer"
+                                   class="bg-primary hover:bg-teal-600 text-white py-1.5 px-3 rounded text-sm transition-colors duration-300 text-center font-bold"
+                                   onclick="trackEvent('button_click', 'tool_link', 'start_sentence')">
+                                    ✨ 逐句版
+                                </a>
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-3">
-                            <button onclick="copyPrompt()" 
-                                    class="col-span-2 flex items-center justify-center bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg transition-colors duration-300 font-medium text-sm shadow hover:shadow-md">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
-                                複製咒語
-                            </button>
+                        <div>
+                            <div class="flex items-center mb-2">
+                                <span class="bg-accent text-white text-xs px-2 py-1 rounded mr-2">模式二</span>
+                                <h4 class="font-bold text-gray-800">詞語單字唸讀</h4>
+                            </div>
                             
-                            <a href="https://gemini.google.com/share/25be1763222d" 
-                               target="_blank" rel="noopener noreferrer"
-                               class="flex items-center justify-center bg-primary hover:bg-teal-600 text-white py-2 px-2 rounded-lg transition-colors duration-300 font-bold text-sm shadow hover:shadow-md text-center"
-                               onclick="trackEvent('button_click', 'tool_link', 'start_sentence')">
-                                ✨ 逐句朗讀版
-                            </a>
-                            
-                            <a href="https://gemini.google.com/share/5cffda2342d0" 
-                               target="_blank" rel="noopener noreferrer"
-                                class="flex items-center justify-center bg-primary hover:bg-teal-600 text-white py-2 px-2 rounded-lg transition-colors duration-300 font-bold text-sm shadow hover:shadow-md text-center"
-                               onclick="trackEvent('button_click', 'tool_link', 'start_word')">
-                                ✨ 詞語唸讀版
-                            </a>
+                            <div class="relative group mb-3">
+                                <div class="absolute -top-2 left-2 bg-gray-100 text-gray-500 text-[10px] px-1">咒語 B</div>
+                                <div id="promptWord" class="custom-scrollbar bg-gray-50 p-3 rounded border border-gray-300 text-xs font-mono text-gray-600 break-all leading-relaxed h-24 overflow-y-auto">
+                                    請保留完整功能，僅替換內容。請將以下詞語清單（在下方貼上您的詞語）進行朗讀評分設定，請設定為每一個換行或空格為一個獨立的詞語。
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="copyPrompt('promptWord', this)" 
+                                        class="bg-gray-500 hover:bg-gray-600 text-white py-1.5 px-3 rounded text-sm transition-colors duration-300">
+                                    複製咒語 B
+                                </button>
+                                <a href="https://gemini.google.com/share/5cffda2342d0" 
+                                   target="_blank" rel="noopener noreferrer"
+                                   class="bg-accent hover:bg-teal-500 text-white py-1.5 px-3 rounded text-sm transition-colors duration-300 text-center font-bold"
+                                   onclick="trackEvent('button_click', 'tool_link', 'start_word')">
+                                    ✨ 詞語版
+                                </a>
+                            </div>
                         </div>
-                        <p class="text-xs text-gray-400 text-center mt-2">點擊上方按鈕後，在右下角試用 Gemini Canvas</p>
+
+                    </div>
+                    <p class="text-xs text-gray-400 text-center mt-6">點擊連結後，在右下角試用 Gemini Canvas</p>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-8">
+                <div class="bg-amber-50 border-l-4 border-amber-400 p-6 rounded-r-lg card-shadow">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0"><span class="text-2xl">🔐</span></div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-amber-800 mb-2">後台管理與注意事項</h3>
+                            <ul class="list-disc list-outside ml-4 space-y-2 text-amber-900 text-sm">
+                                <li><strong>後台數據：</strong>教師可看到學生的「練習次數」、「語速」以及「系統評分」。</li>
+                                <li><strong>後台密碼：</strong>預設密碼為 <strong class="bg-amber-200 px-1 rounded">520</strong>。</li>
+                                <li><strong>重複練習：</strong>學生可針對單句或全文無限次重複練習，直到滿意再上傳。</li>
+                                <li>建議在安靜環境下使用，以提升語音辨識準確度。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-surface-light p-6 rounded-lg card-shadow flex-grow">
+                     <h3 class="text-lg font-semibold text-gray-800 mb-2">💡 引用規範</h3>
+                     <div class="bg-gray-100 p-3 rounded border border-gray-200 text-xs font-mono text-gray-700 select-all break-all">
+                        原版工具：米克師<br>
+                        原版連結︰https://chuoneone.github.io/teaching.github.io/teacher/readingtest.html<br>
+                        延伸開發：您的姓名<br>
+                        本作品基於原版工具改編，採用 CC BY-NC-SA 4.0 授權。
                     </div>
                 </div>
             </div>
 
-            <div class="bg-amber-50 border-l-4 border-amber-400 p-6 rounded-r-lg card-shadow">
-                <div class="flex items-start">
-                    <div class="flex-shrink-0"><span class="text-2xl">🔐</span></div>
-                    <div class="ml-4">
-                        <h3 class="text-lg font-semibold text-amber-800 mb-2">後台管理與注意事項</h3>
-                        <ul class="list-disc list-outside ml-4 space-y-2 text-amber-900 text-sm">
-                            <li><strong>後台數據：</strong>教師可看到學生的「練習次數」、「語速」以及「系統評分」。</li>
-                            <li><strong>後台密碼：</strong>預設密碼為 <strong class="bg-amber-200 px-1 rounded">520</strong>。</li>
-                            <li><strong>重複練習：</strong>學生可針對單句或全文無限次重複練習，直到滿意再上傳。</li>
-                            <li>建議在安靜環境下使用，以提升語音辨識準確度。</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="bg-surface-light p-6 rounded-lg card-shadow mb-8">
-             <h3 class="text-lg font-semibold text-gray-800 mb-2">💡 引用規範</h3>
-             <div class="bg-gray-100 p-3 rounded border border-gray-200 text-xs font-mono text-gray-700 select-all break-all">
-                原版工具：米克師<br>
-                原版連結︰https://chuoneone.github.io/teaching.github.io/teacher/readingtest.html<br>
-                延伸開發：您的姓名<br>
-                本作品基於原版工具改編，採用 CC BY-NC-SA 4.0 授權。
-            </div>
         </div>
 
     </div>
@@ -186,21 +231,23 @@
 
     <script src="tracking.js"></script>
     <script>
-        function copyPrompt() {
-            const promptText = document.getElementById('promptText').innerText;
+        // 修改後的函數，接收 elementId 和 btnElement
+        function copyPrompt(elementId, btnElement) {
+            const promptText = document.getElementById(elementId).innerText;
             navigator.clipboard.writeText(promptText).then(() => {
-                // 簡單的提示效果
-                const btn = document.querySelector('button[onclick="copyPrompt()"]');
-                const originalText = btn.innerHTML;
+                // 儲存原始按鈕文字
+                const originalText = btnElement.innerText;
                 
-                btn.innerHTML = '✅ 已複製！';
-                btn.classList.add('bg-green-600', 'hover:bg-green-700');
-                btn.classList.remove('bg-gray-500', 'hover:bg-gray-600');
+                // 改變按鈕樣式與文字
+                btnElement.innerHTML = '✅ 已複製';
+                btnElement.classList.add('bg-green-600', 'hover:bg-green-700');
+                btnElement.classList.remove('bg-gray-500', 'hover:bg-gray-600');
                 
+                // 2秒後恢復原狀
                 setTimeout(() => {
-                    btn.innerHTML = originalText;
-                    btn.classList.remove('bg-green-600', 'hover:bg-green-700');
-                    btn.classList.add('bg-gray-500', 'hover:bg-gray-600');
+                    btnElement.innerText = originalText;
+                    btnElement.classList.remove('bg-green-600', 'hover:bg-green-700');
+                    btnElement.classList.add('bg-gray-500', 'hover:bg-gray-600');
                 }, 2000);
             }).catch(err => {
                 console.error('複製失敗:', err);
