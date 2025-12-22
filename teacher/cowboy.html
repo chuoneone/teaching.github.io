@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SPEDMIX 課堂互動測驗模版中心</title>
+    <link rel="icon" href="dog.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
@@ -57,7 +58,6 @@
             background: #a8a8a8; 
         }
     </style>
-
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5BBHYN77N9"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -67,7 +67,6 @@
     </script>
 </head>
 <body class="bg-background-light min-h-screen text-text-light flex flex-col">
-
     <nav class="bg-surface-light/90 backdrop-blur-sm shadow-sm sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="text-xl font-bold text-primary flex items-center gap-2">
@@ -101,13 +100,13 @@
                 <label class="block text-lg font-bold text-gray-700 mb-3">
                 萬用替換咒語 (所有模版通用)
                 </label>
-                <div class="flex gap-2 max-w-2xl mx-auto">
-                    <input type="text" id="universalPrompt" 
-                           value="請保留原有的所有功能與設定，僅將題目內容更換為以下提供的內容。" 
-                           class="flex-1 p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-inner"
+                <div class="flex flex-col sm:flex-row gap-2 max-w-2xl mx-auto">
+                    <input type="text" id="universalPrompt"
+                            value="請保留原有的所有功能與設定，僅將題目內容更換為以下提供的內容。"
+                            class="w-full sm:flex-1 p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-inner"
                            readonly>
                     <button onclick="copyUniversalPrompt(this)" 
-                            class="flex-shrink-0 bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-lg shadow-md transition-all duration-200 font-bold text-lg hover:shadow-lg transform active:scale-95 flex items-center gap-2">
+                            class="w-full sm:w-auto flex-shrink-0 bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-lg shadow-md transition-all duration-200 font-bold text-lg hover:shadow-lg transform active:scale-95 flex items-center justify-center gap-2">
                         <span>📋</span> 複製咒語
                     </button>
                 </div>
@@ -126,29 +125,50 @@
                     </div>
                 </div>
                 
-                <div class="p-5 space-y-3 flex-grow bg-white">
+                <div class="p-5 flex-grow bg-white flex flex-col">
                     <p class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Step 2. 選擇風格</p>
                     
-                    <a href="https://gemini.google.com/share/2e694cee1b93" target="_blank" class="group flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:border-primary hover:bg-green-50 transition-all duration-200">
-                        <div class="flex items-center gap-2">
-                            <span class="text-xl">🤠</span>
-                            <span class="font-bold text-gray-700 group-hover:text-primary">荒野大對決</span>
-                        </div>
-                    </a>
+                    <div class="space-y-3 mb-4">
+                        <a href="https://gemini.google.com/share/2e694cee1b93" target="_blank" class="group flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:border-primary hover:bg-green-50 transition-all duration-200">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xl">🤠</span>
+                                <span class="font-bold text-gray-700 group-hover:text-primary">荒野大對決</span>
+                            </div>
+                        </a>
 
-                    <a href="https://gemini.google.com/share/2e6c20b910d7" target="_blank" class="group flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:border-primary hover:bg-purple-50 transition-all duration-200">
-                        <div class="flex items-center gap-2">
-                            <span class="text-xl">🎁</span>
-                            <span class="font-bold text-gray-700 group-hover:text-purple-600">盲盒搜集戰</span>
-                        </div>
-                    </a>
+                        <a href="https://gemini.google.com/share/2e6c20b910d7" target="_blank" class="group flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:border-primary hover:bg-purple-50 transition-all duration-200">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xl">🎁</span>
+                                <span class="font-bold text-gray-700 group-hover:text-purple-600">盲盒搜集戰</span>
+                            </div>
+                        </a>
 
-                    <a href="https://gemini.google.com/share/3eb7b15e2b22" target="_blank" class="group flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:border-primary hover:bg-blue-50 transition-all duration-200">
-                        <div class="flex items-center gap-2">
-                            <span class="text-xl">🐾</span>
-                            <span class="font-bold text-gray-700 group-hover:text-blue-600">角色養成風</span>
+                        <a href="https://gemini.google.com/share/3eb7b15e2b22" target="_blank" class="group flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:border-primary hover:bg-blue-50 transition-all duration-200">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xl">🐾</span>
+                                <span class="font-bold text-gray-700 group-hover:text-blue-600">角色養成風</span>
+                            </div>
+                        </a>
+                        
+                        <a href="https://gemini.google.com/share/1382a4e19e24" target="_blank" class="group flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:border-primary hover:bg-rose-50 transition-all duration-200">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xl">☁️</span>
+                                <span class="font-bold text-gray-700 group-hover:text-rose-600">角色養成 (雲端版)</span>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="mt-auto pt-3 border-t border-gray-100">
+                         <div class="bg-blue-50 border border-blue-100 rounded p-3 text-xs text-blue-800">
+                            <p class="font-bold mb-1 flex items-center gap-1">
+                                <span>💡</span> 想要其他風格的連線版？
+                            </p>
+                            <p class="leading-relaxed">
+                                目前全班連線版僅釋出上方這款做為測試。若您希望將其他風格升級為連線版，請點參考下方建議</a>。
+                                </p>
                         </div>
-                    </a>
+                    </div>
+
                 </div>
             </div>
 
@@ -274,7 +294,6 @@
     </footer>
 
     <script src="tracking.js"></script>
-    
     <script>
         // 萬用複製功能
         function copyUniversalPrompt(btnElement) {
