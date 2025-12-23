@@ -143,6 +143,7 @@
         .btn-blue { color: #3b82f6; border-color: #93c5fd; background-color: #eff6ff; }
         .btn-black { color: #1f2937; border-color: #cbd5e1; background-color: #f8fafc; }
         .btn-green { color: #16a34a; border-color: #86efac; background-color: #f0fdf4; }
+        .btn-neutral { color: #334155; border-color: #e2e8f0; background-color: #ffffff; }
 
         .step-card {
             transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out, filter 0.5s;
@@ -225,14 +226,14 @@
 
                 <div class="step-content flex flex-col items-center gap-6">
                     <div class="flex flex-wrap justify-center gap-4 md:gap-8 text-2xl font-bold math-text">
-                        <div class="flex items-center gap-2 bg-red-50 p-2 rounded-lg border border-red-100">
-                            <span class="text-c-red italic">a</span> = <div id="s1-slot-a" class="slot slot-red" data-fill-order="1"></div>
+                        <div class="flex items-center gap-2 bg-slate-50 p-2 rounded-lg border border-slate-200">
+                            <span class="text-slate-800 italic" id="s1-label-a">a</span> = <div id="s1-slot-a" class="slot" data-fill-order="1"></div>
                         </div>
-                        <div class="flex items-center gap-2 bg-blue-50 p-2 rounded-lg border border-blue-100">
-                            <span class="text-c-blue italic">b</span> = <div id="s1-slot-b" class="slot slot-blue" data-fill-order="2"></div>
+                        <div class="flex items-center gap-2 bg-slate-50 p-2 rounded-lg border border-slate-200">
+                            <span class="text-slate-800 italic" id="s1-label-b">b</span> = <div id="s1-slot-b" class="slot" data-fill-order="2"></div>
                         </div>
-                        <div class="flex items-center gap-2 bg-gray-50 p-2 rounded-lg border border-gray-200">
-                            <span class="text-c-black italic">c</span> = <div id="s1-slot-c" class="slot slot-black" data-fill-order="3"></div>
+                        <div class="flex items-center gap-2 bg-slate-50 p-2 rounded-lg border border-slate-200">
+                            <span class="text-slate-800 italic" id="s1-label-c">c</span> = <div id="s1-slot-c" class="slot" data-fill-order="3"></div>
                         </div>
                     </div>
                     
@@ -263,23 +264,23 @@
                         <div class="fraction">
                             <div class="fraction-top">
                                 <span>-</span>
-                                <div id="s2-slot-b1" class="slot slot-blue" data-fill-order="2"></div> 
+                                <div id="s2-slot-b1" class="slot" data-fill-order="2"></div> 
                                 <span class="mx-1">±</span>
                                 <div class="sqrt-container">
                                     <span class="sqrt-symbol">√</span>
                                     <div class="sqrt-content">
-                                        <div id="s2-slot-b2" class="slot slot-blue" data-fill-order="3"></div>
+                                        <div id="s2-slot-b2" class="slot" data-fill-order="3"></div>
                                         <span class="power">2</span>
                                         <span class="mx-1">-</span>
                                         <span>4</span>
-                                        <div id="s2-slot-a1" class="slot slot-red" data-fill-order="4"></div>
-                                        <div id="s2-slot-c1" class="slot slot-black" data-fill-order="5"></div>
+                                        <div id="s2-slot-a1" class="slot" data-fill-order="4"></div>
+                                        <div id="s2-slot-c1" class="slot" data-fill-order="5"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="fraction-bottom">
                                 <span>2</span>
-                                <div id="s2-slot-a2" class="slot slot-red" data-fill-order="1"></div>
+                                <div id="s2-slot-a2" class="slot" data-fill-order="1"></div>
                             </div>
                         </div>
                     </div>
@@ -435,6 +436,23 @@
             updateNavActive(index);
             const p = problems[index];
             const eqDisplay = document.getElementById('equation-display');
+            
+            // 是否使用顏色提示 (題目 1, 2 用顏色，題目 3 起不用)
+            const useColor = index < 2;
+
+            // 定義顏色變數
+            const colorA = useColor ? 'text-c-red' : 'text-slate-800';
+            const colorB = useColor ? 'text-c-blue' : 'text-slate-800';
+            const colorC = useColor ? 'text-c-black' : 'text-slate-800';
+            const slotClassA = useColor ? 'slot-red' : 'slot-black';
+            const slotClassB = useColor ? 'slot-blue' : 'slot-black';
+            const slotClassC = useColor ? 'slot-black' : 'slot-black';
+            const slotClassD = useColor ? 'slot-green' : 'slot-black';
+
+            // --- Step 1 Labels ---
+            document.getElementById('s1-label-a').className = `italic ${colorA}`;
+            document.getElementById('s1-label-b').className = `italic ${colorB}`;
+            document.getElementById('s1-label-c').className = `italic ${colorC}`;
 
             // --- 計算中間值 ---
             const val_neg_b = -p.b;
@@ -446,15 +464,15 @@
 
             // --- 生成方程式 HTML ---
             let aHtml, bHtml, cHtml;
-            if (p.a === 1) aHtml = `<div class="flex items-center shrink-0"><span class="text-c-red font-black hidden">1</span><span>x</span><span class="power">2</span></div>`;
-            else if (p.a === -1) aHtml = `<div class="flex items-center shrink-0"><span class="text-c-red font-black mr-0.5">-</span><span class="text-c-red font-black hidden">1</span><span>x</span><span class="power">2</span></div>`;
-            else aHtml = `<div class="flex items-center shrink-0"><span class="text-c-red font-black">${p.a}</span><span>x</span><span class="power">2</span></div>`;
+            if (p.a === 1) aHtml = `<div class="flex items-center shrink-0"><span class="${colorA} font-black hidden">1</span><span>x</span><span class="power">2</span></div>`;
+            else if (p.a === -1) aHtml = `<div class="flex items-center shrink-0"><span class="${colorA} font-black mr-0.5">-</span><span class="${colorA} font-black hidden">1</span><span>x</span><span class="power">2</span></div>`;
+            else aHtml = `<div class="flex items-center shrink-0"><span class="${colorA} font-black">${p.a}</span><span>x</span><span class="power">2</span></div>`;
             
-            if (p.b < 0) bHtml = `<span class="text-c-blue font-black mx-1 shrink-0">-</span><div class="flex items-center shrink-0"><span class="text-c-blue font-black">${Math.abs(p.b)}</span><span>x</span></div>`;
-            else bHtml = `<span class="text-c-blue font-black mx-1 shrink-0">+</span><div class="flex items-center shrink-0"><span class="text-c-blue font-black">${p.b}</span><span>x</span></div>`;
+            if (p.b < 0) bHtml = `<span class="${colorB} font-black mx-1 shrink-0">-</span><div class="flex items-center shrink-0"><span class="${colorB} font-black">${Math.abs(p.b)}</span><span>x</span></div>`;
+            else bHtml = `<span class="${colorB} font-black mx-1 shrink-0">+</span><div class="flex items-center shrink-0"><span class="${colorB} font-black">${p.b}</span><span>x</span></div>`;
 
-            if (p.c < 0) cHtml = `<span class="text-slate-400 mx-1 shrink-0">-</span><div class="flex items-center shrink-0"><span class="text-c-black font-black">${Math.abs(p.c)}</span></div>`;
-            else cHtml = `<span class="text-slate-400 mx-1 shrink-0">+</span><div class="flex items-center shrink-0"><span class="text-c-black font-black">${p.c}</span></div>`;
+            if (p.c < 0) cHtml = `<span class="text-slate-400 mx-1 shrink-0">-</span><div class="flex items-center shrink-0"><span class="${colorC} font-black">${Math.abs(p.c)}</span></div>`;
+            else cHtml = `<span class="text-slate-400 mx-1 shrink-0">+</span><div class="flex items-center shrink-0"><span class="${colorC} font-black">${p.c}</span></div>`;
 
             eqDisplay.innerHTML = `<div id="math-scaler" class="flex items-center justify-center whitespace-nowrap transition-transform duration-200 origin-center">${aHtml}${bHtml}${cHtml}<span class="text-slate-400 mx-2 shrink-0">=</span><span class="shrink-0">0</span></div>`;
             setTimeout(fitEquation, 0);
@@ -489,83 +507,86 @@
                 <span class="mr-2 italic">x = </span>
                 <div class="fraction">
                     <div class="fraction-top">
-                        <div id="s3-slot-nb" class="slot slot-blue" data-ans="${val_neg_b}" data-fill-order="2"></div>
+                        <div id="s3-slot-nb" class="slot ${slotClassB}" data-ans="${val_neg_b}" data-fill-order="2"></div>
                         <span class="mx-1">±</span>
                         <div class="sqrt-container">
                             <span class="sqrt-symbol">√</span>
                             <div class="sqrt-content">
-                                <div id="s3-slot-bsq" class="slot slot-blue" data-ans="${val_b_sq}" data-fill-order="3"></div>
+                                <div id="s3-slot-bsq" class="slot ${slotClassB}" data-ans="${val_b_sq}" data-fill-order="3"></div>
                                 ${operatorHtml}
-                                <div id="s3-slot-4ac" class="slot slot-black" data-ans="${slot3Ans}" data-fill-order="4"></div>
+                                <div id="s3-slot-4ac" class="slot ${slotClassC}" data-ans="${slot3Ans}" data-fill-order="4"></div>
                             </div>
                         </div>
                     </div>
                     <div class="fraction-bottom">
-                        <div id="s3-slot-2a" class="slot slot-red" data-ans="${val_2a}" data-fill-order="1"></div>
+                        <div id="s3-slot-2a" class="slot ${slotClassA}" data-ans="${val_2a}" data-fill-order="1"></div>
                     </div>
                 </div>
             `;
 
             // --- Step 4 Template ---
             const s4Eq = document.getElementById('s4-equation');
+            const resultColorClass = useColor ? 'text-c-blue' : 'text-slate-800';
+            const denomColorClass = useColor ? 'text-c-red' : 'text-slate-800';
+            
             s4Eq.innerHTML = `
                 <span class="mr-2 italic">x = </span>
                 <div class="fraction">
                     <div class="fraction-top">
-                        <span class="text-c-blue font-bold text-xl">${val_neg_b}</span>
+                        <span class="${resultColorClass} font-bold text-xl">${val_neg_b}</span>
                         <span class="mx-1">±</span>
                         <div class="sqrt-container">
                             <span class="sqrt-symbol">√</span>
                             <div class="sqrt-content">
-                                <div id="s4-slot-D" class="slot slot-green" data-ans="${val_D}" data-fill-order="1"></div>
+                                <div id="s4-slot-D" class="slot ${slotClassD}" data-ans="${val_D}" data-fill-order="1"></div>
                             </div>
                         </div>
                     </div>
                     <div class="fraction-bottom">
-                        <span class="text-c-red font-bold text-xl">${val_2a}</span>
+                        <span class="${denomColorClass} font-bold text-xl">${val_2a}</span>
                     </div>
                 </div>
             `;
 
             // --- 生成選項 ---
             // Step 1: 單純係數
-            renderOptions('s1-options', [p.a, p.b, p.c], 'text-lg', p);
+            renderOptions('s1-options', [p.a, p.b, p.c], 'text-lg', p, useColor);
             
             // Step 2: 係數組合
             const s2Pool = [p.b, p.b, p.a, p.a, p.c]; 
-            renderOptions('s2-options', s2Pool.sort((a,b)=>a-b), 'text-xl', p);
+            renderOptions('s2-options', s2Pool.sort((a,b)=>a-b), 'text-xl', p, useColor);
             
-            // Step 3: 計算值 (帶顏色提示)
-            // -b (Blue), b^2 (Blue), 4ac (Black), 2a (Red)
+            // Step 3: 計算值
             const s3Pool = [
-                { val: val_neg_b, type: 'btn-blue' },
-                { val: val_b_sq, type: 'btn-blue' },
-                { val: val_4ac_abs, type: 'btn-black' },
-                { val: val_2a, type: 'btn-red' }
+                { val: val_neg_b, type: useColor ? 'btn-blue' : 'btn-neutral' },
+                { val: val_b_sq, type: useColor ? 'btn-blue' : 'btn-neutral' },
+                { val: val_4ac_abs, type: useColor ? 'btn-black' : 'btn-neutral' },
+                { val: val_2a, type: useColor ? 'btn-red' : 'btn-neutral' }
             ];
-            // 排序讓數字小的在前，方便尋找
             s3Pool.sort((a, b) => a.val - b.val);
             renderOptionsWithColor('s3-options', s3Pool, 'text-xl');
 
-            // Step 4: 最終值 (Green)
+            // Step 4: 最終值
             const s4Pool = [
-                { val: val_D, type: 'btn-green' }
+                { val: val_D, type: useColor ? 'btn-green' : 'btn-neutral' }
             ];
             renderOptionsWithColor('s4-options', s4Pool, 'text-xl');
 
-            resetUI();
+            resetUI(useColor);
         }
 
-        function renderOptions(containerId, values, textSizeClass, p) {
+        function renderOptions(containerId, values, textSizeClass, p, useColor) {
             const container = document.getElementById(containerId);
             container.innerHTML = '';
             values.forEach(val => {
                 const btn = document.createElement('button');
                 let colorClass = 'text-slate-700 border-slate-200';
-                // Step 1 & 2 的顏色推斷邏輯
-                if (val === p.a) colorClass = 'text-c-red border-red-200 bg-red-50/50';
-                else if (val === p.b) colorClass = 'text-c-blue border-blue-200 bg-blue-50/50';
-                else if (val === p.c) colorClass = 'text-c-black border-slate-200 bg-slate-50/50';
+                
+                if (useColor) {
+                    if (val === p.a) colorClass = 'text-c-red border-red-200 bg-red-50/50';
+                    else if (val === p.b) colorClass = 'text-c-blue border-blue-200 bg-blue-50/50';
+                    else if (val === p.c) colorClass = 'text-c-black border-slate-200 bg-slate-50/50';
+                }
                 
                 btn.className = `option-btn ${colorClass} ${textSizeClass}`;
                 btn.dataset.val = val;
@@ -579,7 +600,6 @@
             container.innerHTML = '';
             items.forEach(item => {
                 const btn = document.createElement('button');
-                // 使用明確指定的顏色 class
                 btn.className = `option-btn ${item.type} ${textSizeClass}`;
                 btn.dataset.val = item.val;
                 btn.textContent = item.val;
@@ -587,15 +607,23 @@
             });
         }
 
-        function resetUI() {
+        function resetUI(useColor) {
             stepStatus = { 1: false, 2: false, 3: false, 4: false };
             document.querySelectorAll('.slot').forEach(s => {
                 s.textContent = '';
+                // 移除所有顏色 class，並根據 useColor 決定是否加回
                 s.className = s.className.replace('filled', '').replace('completed', '').replace('active-slot', '');
-                if(s.id.includes('red')) s.classList.add('slot-red');
-                if(s.id.includes('blue')) s.classList.add('slot-blue');
-                if(s.id.includes('black')) s.classList.add('slot-black');
-                if(s.id.includes('green')) s.classList.add('slot-green');
+                s.classList.remove('slot-red', 'slot-blue', 'slot-black', 'slot-green');
+                
+                if (useColor) {
+                    if(s.id.includes('red') || s.id.includes('2a')) s.classList.add('slot-red');
+                    else if(s.id.includes('blue') || s.id.includes('nb') || s.id.includes('bsq')) s.classList.add('slot-blue');
+                    else if(s.id.includes('green') || s.id.includes('D')) s.classList.add('slot-green');
+                    else s.classList.add('slot-black'); // default c/4ac
+                } else {
+                    s.classList.add('slot-black'); // 統一用黑色/灰色框
+                }
+                
                 delete s.dataset.sourceOid;
             });
             document.querySelectorAll('.step-card').forEach(card => {
@@ -613,14 +641,9 @@
 
         // 高亮下一個要填的格子
         function highlightNextSlot(stepEl) {
-            // 移除所有格子的 active-slot
             stepEl.querySelectorAll('.slot').forEach(s => s.classList.remove('active-slot'));
-            
-            // 找出所有 slot 並排序
             let slots = Array.from(stepEl.querySelectorAll('.slot'));
             slots.sort((a, b) => (parseInt(a.dataset.fillOrder)||999) - (parseInt(b.dataset.fillOrder)||999));
-            
-            // 找出第一個還沒填的
             let target = slots.find(s => !s.classList.contains('filled'));
             if (target) {
                 target.classList.add('active-slot');
@@ -635,14 +658,12 @@
             const checkBtn = stepEl.querySelector('.check-btn');
             const feedback = stepEl.querySelector('.feedback-msg');
 
-            // 初始高亮
             highlightNextSlot(stepEl);
 
             options.forEach((btn, index) => {
                 btn.dataset.oid = `s${stepNum}-opt-${index}`;
                 btn.onclick = () => {
                     if (btn.classList.contains('used')) return;
-                    // 尋找目標：第一個未填的
                     let targetSlot = slots.find(s => !s.classList.contains('filled'));
                     if (targetSlot) {
                         targetSlot.textContent = btn.dataset.val;
@@ -650,8 +671,6 @@
                         targetSlot.dataset.sourceOid = btn.dataset.oid;
                         btn.classList.add('used');
                         feedback.textContent = '';
-                        
-                        // 更新高亮到下一格
                         highlightNextSlot(stepEl);
                     } else {
                         feedback.textContent = '格子已經滿囉，請檢查答案';
@@ -670,8 +689,6 @@
                     slot.classList.remove('filled');
                     delete slot.dataset.sourceOid;
                     feedback.textContent = '';
-                    
-                    // 恢復高亮
                     highlightNextSlot(stepEl);
                 };
             });
@@ -691,12 +708,10 @@
                     stepStatus[stepNum] = true;
                     stepEl.classList.add('completed-step');
                     stepEl.querySelector('.step-check').classList.remove('hidden');
-                    // 完成後移除高亮
                     stepEl.querySelectorAll('.slot').forEach(s => {
                         s.classList.add('completed');
                         s.classList.remove('active-slot');
                     });
-                    
                     const controls = stepEl.querySelector('.controls');
                     controls.style.opacity = '0';
                     setTimeout(() => controls.style.display = 'none', 500);
