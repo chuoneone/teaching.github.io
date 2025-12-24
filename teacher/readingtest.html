@@ -121,6 +121,46 @@
             </div>
         </div>
 
+        <div class="bg-white rounded-lg p-6 sm:p-8 mb-8 card-shadow border border-gray-100">
+            <h2 class="text-2xl font-bold text-primary text-center mb-8 flex items-center justify-center">
+                <span class="mr-2">🚀</span> 如何製作教材？
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 text-center relative">
+                <div class="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gray-100 -z-10 -translate-y-8"></div>
+
+                <div class="relative bg-white p-2">
+                    <div class="w-14 h-14 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-white text-xl font-bold mx-auto mb-4 shadow-lg ring-4 ring-white">
+                        1
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-lg mb-2">複製咒語</h3>
+                    <p class="text-sm text-gray-500">在下方選擇對應的咒語並點擊複製。</p>
+                </div>
+
+                <div class="relative bg-white p-2">
+                    <div class="w-14 h-14 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-white text-xl font-bold mx-auto mb-4 shadow-lg ring-4 ring-white">
+                        2
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-lg mb-2">點擊模版</h3>
+                    <p class="text-sm text-gray-500">點擊按鈕開啟 Gemini 模版連結。</p>
+                </div>
+
+                <div class="relative bg-white p-2">
+                    <div class="w-14 h-14 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-white text-xl font-bold mx-auto mb-4 shadow-lg ring-4 ring-white">
+                        3
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-lg mb-2">啟用 Canvas</h3>
+                    <p class="text-sm text-gray-500">在右下角點擊「試用 Gemini Canvas」。</p>
+                </div>
+
+                <div class="relative bg-white p-2">
+                    <div class="w-14 h-14 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-white text-xl font-bold mx-auto mb-4 shadow-lg ring-4 ring-white">
+                        4
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-lg mb-2">貼上生成</h3>
+                    <p class="text-sm text-gray-500">貼上咒語 + 您的文章或單字內容。</p>
+                </div>
+            </div>
+        </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             
             <div class="bg-surface-light border-l-4 border-primary p-6 rounded-r-lg card-shadow">
@@ -154,7 +194,7 @@
                                    target="_blank" rel="noopener noreferrer"
                                    class="bg-primary hover:bg-teal-600 text-white py-1.5 px-3 rounded text-sm transition-colors duration-300 text-center font-bold"
                                    onclick="trackEvent('button_click', 'tool_link', 'start_sentence_zh')">
-                                    ✨ 逐句版
+                                    ✨ 點我製作
                                 </a>
                             </div>
                         </div>
@@ -162,7 +202,7 @@
                         <div>
                             <div class="flex items-center mb-2">
                                 <span class="bg-primary text-white text-xs px-2 py-1 rounded mr-2">中文</span>
-                                <h4 class="font-bold text-gray-800">詞語單字唸讀</h4>
+                                <h4 class="font-bold text-gray-800">詞語唸讀</h4>
                             </div>
                             <div class="relative group mb-3">
                                 <div class="absolute -top-2 left-2 bg-gray-100 text-gray-500 text-[10px] px-1">咒語 B</div>
@@ -179,7 +219,7 @@
                                    target="_blank" rel="noopener noreferrer"
                                    class="bg-primary hover:bg-teal-600 text-white py-1.5 px-3 rounded text-sm transition-colors duration-300 text-center font-bold"
                                    onclick="trackEvent('button_click', 'tool_link', 'start_word_zh')">
-                                    ✨ 詞語版
+                                    ✨ 點我製作
                                 </a>
                             </div>
                         </div>
@@ -214,11 +254,11 @@
                                         class="bg-gray-500 hover:bg-gray-600 text-white py-1.5 px-3 rounded text-sm transition-colors duration-300">
                                     複製咒語
                                 </button>
-                                <a href="https://gemini.google.com/share/4ea4637210db" 
+                                <a href="https://gemini.google.com/share/d6c5fc5ef429" 
                                    target="_blank" rel="noopener noreferrer"
                                    class="bg-secondary-accent hover:bg-pink-400 text-white py-1.5 px-3 rounded text-sm transition-colors duration-300 text-center font-bold"
                                    onclick="trackEvent('button_click', 'tool_link', 'start_sentence_en')">
-                                    ✨ 英文逐句
+                                    ✨ 點我製作
                                 </a>
                             </div>
                         </div>
@@ -226,7 +266,7 @@
                         <div>
                             <div class="flex items-center mb-2">
                                 <span class="bg-secondary-accent text-white text-xs px-2 py-1 rounded mr-2">英文</span>
-                                <h4 class="font-bold text-gray-800">詞語單字唸讀</h4>
+                                <h4 class="font-bold text-gray-800">單字唸讀</h4>
                             </div>
                             <div class="relative group mb-3">
                                 <div class="absolute -top-2 left-2 bg-gray-100 text-gray-500 text-[10px] px-1">咒語 D</div>
@@ -243,7 +283,7 @@
                                    target="_blank" rel="noopener noreferrer"
                                    class="bg-secondary-accent hover:bg-pink-400 text-white py-1.5 px-3 rounded text-sm transition-colors duration-300 text-center font-bold"
                                    onclick="trackEvent('button_click', 'tool_link', 'start_word_en')">
-                                    ✨ 英文詞語
+                                    ✨ 點我製作
                                 </a>
                             </div>
                         </div>
