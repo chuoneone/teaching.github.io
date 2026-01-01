@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一元二次方程式：KaTeX 互動教學版</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chiron+GoRound+TC:wght@200..900&family=LXGW+WenKai+TC&display=swap" rel="stylesheet">
+    
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <!-- KaTeX Auto-render Extension -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --font-ui: "Chiron GoRound TC", sans-serif;
+            --font-text: "LXGW WenKai TC", serif;
+        }
+        
+        body {
+            font-family: var(--font-ui);
+            background-color: #f5f5f4;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .math-text {
+            font-family: var(--font-text);
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .option-chip {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+        }
+        
+        .option-chip:active { transform: scale(0.95); }
+
+        .solution-step {
+            border-left: 4px solid #ea580c;
+            padding-left: 1rem;
+            margin-bottom: 1.5rem;
+            animation: slide-in 0.5s ease-out forwards;
+        }
+
+        @keyframes slide-in {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* 修正 KaTeX 在選項中的邊距 */
+        .katex-display { margin: 0.5em 0; }
+        .option-chip .katex { font-size: 1.1em; }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals (Stone & Orange) -->
+    <!-- Application Structure Plan: 
+         1. **KaTeX Integration**: All mathematical notation is wrapped in delimiters ($ or $$) and rendered via the KaTeX auto-render extension.
+         2. **Typography**: UI uses Chiron GoRound TC, and problem text/solutions use LXGW WenKai TC for an organic, friendly feel.
+         3. **Seamless Transition**: After Phase 1 (Interactive Formulation), Phase 2 (Direct Teaching) is revealed in the same container.
+         4. **Responsive Math**: KaTeX expressions are placed in flexible containers to prevent horizontal overflow on smaller devices.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="text-stone-800 min-h-screen flex flex-col">
+
+    <!-- Header & Progress -->
+    <header class="bg-white shadow-sm flex-none sticky top-0 z-20">
+        <div class="max-w-4xl mx-auto px-4 py-3 sm:py-4 flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+                <div class="bg-orange-500 p-1.5 sm:p-2 rounded-lg text-white font-bold text-lg sm:text-xl">
+                    Math<span class="opacity-80">Flow</span>
+                </div>
+                <h1 class="text-base sm:text-lg font-semibold text-stone-700 truncate">方程式：列式與解題</h1>
+            </div>
+            <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                <div class="text-xs sm:text-sm font-medium text-stone-500 whitespace-nowrap">進度: <span id="progress-text">1/6</span></div>
+                <div class="w-full sm:w-32 h-2 bg-stone-200 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="h-full bg-orange-500 w-1/6 transition-all duration-500"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tab Navigation -->
+        <div class="bg-stone-50 border-t border-stone-200 overflow-x-auto no-scrollbar">
+            <div class="max-w-4xl mx-auto flex px-2" id="nav-tabs"></div>
+        </div>
+    </header>
+
+    <main class="flex-1 overflow-y-auto p-3 sm:p-6 lg:p-8">
+        <div class="max-w-3xl mx-auto">
+            
+            <!-- Main Content Card -->
+            <div id="problem-card" class="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-stone-200 overflow-hidden mb-6">
+                
+                <!-- Problem Narrative -->
+                <div class="p-5 sm:p-8 border-b border-stone-100 bg-stone-50/50">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span id="problem-category" class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-orange-100 text-orange-700">分類標籤</span>
+                        <span id="phase-tag" class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-stone-200 text-stone-600">第一階段：引導列式</span>
+                    </div>
+                    <p id="problem-text" class="math-text text-xl sm:text-2xl text-stone-800 leading-relaxed font-medium">
+                        <!-- JS content -->
+                    </p>
+                </div>
+
+                <!-- Interaction/Solution Area -->
+                <div class="p-5 sm:p-8">
+                    <!-- Phase 1 Container -->
+                    <div id="phase1-container" class="space-y-8">
+                        <!-- Dynamic Steps -->
+                    </div>
+
+                    <!-- Transition: Final Equation -->
+                    <div id="equation-display-box" class="mt-8 p-6 sm:p-8 bg-stone-900 rounded-xl hidden opacity-0 transition-all duration-500">
+                        <p class="text-stone-500 text-[10px] uppercase tracking-widest text-center mb-3">建立的方程式</p>
+                        <div id="equation-formula" class="text-2xl sm:text-4xl text-white flex flex-wrap justify-center items-center gap-1 sm:gap-2"></div>
+                        <div class="mt-6 flex justify-center">
+                            <button id="start-solve-btn" onclick="app.showSolutionGuide()" class="px-8 py-3 bg-orange-500 text-white rounded-full font-bold shadow-lg hover:bg-orange-600 active:scale-95 transition-all">
+                                觀看解題步驟教學
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Phase 2: Solution Guide (Teaching Mode) -->
+                    <div id="phase2-container" class="mt-10 space-y-8 hidden">
+                        <div class="flex items-center gap-2 mb-6 border-b border-stone-100 pb-2">
+                            <span class="text-orange-600">📖</span>
+                            <h3 class="text-lg font-bold text-stone-800">解題步驟教學</h3>
+                        </div>
+                        <div id="solution-steps" class="math-text space-y-2">
+                            <!-- JS injected static content -->
+                        </div>
+                        <div class="pt-6 border-t border-stone-100 flex justify-center">
+                            <button onclick="app.nextProblem()" class="w-full sm:w-auto px-10 py-4 bg-stone-900 text-white rounded-full font-bold hover:bg-stone-800 transition-all">
+                                我學會了，下一題
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const problems = [
+            {
+                id: 1,
+                category: "原子筆買賣",
+                text: "小齊買原子筆，數量比單價少 6，付了 140 元找回 5 元，單價是多少元？",
+                phase1: [
+                    { label: "設單價為", options: ["$x$"], correct: "$x$" },
+                    { label: "數量則是", options: ["$x + 6$", "$x - 6$"], correct: "$x - 6$" },
+                    { label: "實際花了", options: ["$135$", "$145$"], correct: "$135$" }
+                ],
+                formula: ["$x(x - 6) = 135$"],
+                solution: [
+                    { title: "步驟 1：展開並移項整理", content: "將算式展開得到 $x^2 - 6x = 135$，移項整理成標準式：<br><span class='text-orange-600 font-bold'>$x^2 - 6x - 135 = 0$</span>" },
+                    { title: "步驟 2：進行因式分解", content: "利用十字交乘法，找出組合為 $-15$ 與 $+9$：<br><span class='text-stone-700 font-bold'>$(x - 15)(x + 9) = 0$</span>" },
+                    { title: "步驟 3：求出未知數 $x$", content: "可得：<span class='text-stone-700 font-bold'>$x = 15$</span> 或 <span class='text-stone-700 font-bold'>$x = -9$</span>" },
+                    { title: "步驟 4：判斷答案合理性", content: "價錢不可能是負數，故 <span class='text-red-500'>$x = -9$ (不合)</span>。<br>最終答案：<span class='text-green-600 font-bold'>單價為 15 元</span>。" }
+                ]
+            },
+            {
+                id: 2,
+                category: "筆記本買賣",
+                text: "阿強買筆記本，數量比單價少 13，付 150 元找回 10 元，單價多少元？",
+                phase1: [
+                    { label: "設單價為", options: ["$x$"], correct: "$x$" },
+                    { label: "數量則是", options: ["$x - 13$", "$x + 13$"], correct: "$x - 13$" },
+                    { label: "實際花了", options: ["$140$", "$160$"], correct: "$140$" }
+                ],
+                formula: ["$x(x - 13) = 140$"],
+                solution: [
+                    { title: "步驟 1：展開並移項整理", content: "整理得到：<span class='text-orange-600 font-bold'>$x^2 - 13x - 140 = 0$</span>" },
+                    { title: "步驟 2：因式分解", content: "找出組合為 $-20$ 與 $+7$：<br><span class='text-stone-700 font-bold'>$(x - 20)(x + 7) = 0$</span>" },
+                    { title: "步驟 3：求出 $x$", content: "解得：<span class='text-stone-700 font-bold'>$x = 20$</span> 或 <span class='text-stone-700 font-bold'>$x = -7$</span>" },
+                    { title: "步驟 4：合理判斷", content: "單價需為正數，故 <span class='text-red-500'>$x = -7$ (不合)</span>。<br>最終答案：<span class='text-green-600 font-bold'>單價為 20 元</span>。" }
+                ]
+            },
+            {
+                id: 3,
+                category: "錢數關係",
+                text: "小萱的錢是小儀的 2 倍少 19，兩人錢數相乘得 91，則小儀有多少元？",
+                phase1: [
+                    { label: "設小儀為", options: ["$x$"], correct: "$x$" },
+                    { label: "小萱則是", options: ["$2x - 19$", "$2x + 19$"], correct: "$2x - 19$" }
+                ],
+                formula: ["$x(2x - 19) = 91$"],
+                solution: [
+                    { title: "步驟 1：展開與整理", content: "整理後得到標準式：<br><span class='text-orange-600 font-bold'>$2x^2 - 19x - 91 = 0$</span>" },
+                    { title: "步驟 2：因式分解", content: "使用十字交乘法分解：<br><span class='text-stone-700 font-bold'>$(2x + 7)(x - 13) = 0$</span>" },
+                    { title: "步驟 3：求出 $x$", content: "解得：<span class='text-stone-700 font-bold'>$x = 13$</span> 或 <span class='text-stone-700 font-bold'>$x = -3.5$</span>" },
+                    { title: "步驟 4：合理判斷", content: "錢數應為正數，故 <span class='text-red-500'>$x = -3.5$ (不合)</span>。<br>最終答案：<span class='text-green-600 font-bold'>小儀有 13 元</span>。" }
+                ]
+            },
+            {
+                id: 4,
+                category: "連續奇數",
+                text: "三個連續正奇數，其平方和為 371，這三個數為何？",
+                phase1: [
+                    { label: "設三數為", options: ["$x, x+2, x+4$", "$x, x+1, x+2$"], correct: "$x, x+2, x+4$" }
+                ],
+                formula: ["$x^2 + (x+2)^2 + (x+4)^2 = 371$"],
+                solution: [
+                    { title: "步驟 1：展開括號", content: "展開後：$x^2 + (x^2 + 4x + 4) + (x^2 + 8x + 16) = 371$" },
+                    { title: "步驟 2：合併並化簡", content: "合併後同除以 3：<br><span class='text-orange-600 font-bold'>$x^2 + 4x - 117 = 0$</span>" },
+                    { title: "步驟 3：因式分解與求根", content: "分解為 $(x+13)(x-9)=0$，解得 <span class='text-stone-700 font-bold'>$x = 9$</span> 或 <span class='text-stone-700 font-bold'>$-13$</span>" },
+                    { title: "步驟 4：最終答案", content: "題目要求「正」奇數，故取 <span class='text-green-600 font-bold'>$x = 9$</span>。三數為 9、11、13。" }
+                ]
+            },
+            {
+                id: 5,
+                category: "連續奇數",
+                text: "三個連續正奇數，其平方和為 875，這三個數為何？",
+                phase1: [
+                    { label: "設三數為", options: ["$x, x+2, x+4$"], correct: "$x, x+2, x+4$" }
+                ],
+                formula: ["$x^2 + (x+2)^2 + (x+4)^2 = 875$"],
+                solution: [
+                    { title: "步驟 1：展開與簡化", content: "同理簡化後得到：<br><span class='text-orange-600 font-bold'>$x^2 + 4x - 285 = 0$</span>" },
+                    { title: "步驟 2：因式分解", content: "分解為 $(x + 19)(x - 15) = 0$" },
+                    { title: "步驟 3：求根與判斷", content: "解得 $x=15$ 或 $-19$，因要求「正」奇數，取 <span class='text-green-600 font-bold'>$x = 15$</span>。" },
+                    { title: "步驟 4：最終答案", content: "三數分別為 15、17、19。" }
+                ]
+            },
+            {
+                id: 6,
+                category: "負整數差積",
+                text: "兩個負整數相差 4，其乘積為 165，這兩個數為何？",
+                phase1: [
+                    { label: "設兩數為", options: ["$x, x+4$", "$x, 4x$"], correct: "$x, x+4$" }
+                ],
+                formula: ["$x(x + 4) = 165$"],
+                solution: [
+                    { title: "步驟 1：展開整理", content: "得到標準式：<br><span class='text-orange-600 font-bold'>$x^2 + 4x - 165 = 0$</span>" },
+                    { title: "步驟 2：因式分解", content: "利用十字交乘：<span class='text-stone-700 font-bold'>$(x + 15)(x - 11) = 0$</span>" },
+                    { title: "步驟 3：求出 $x$", content: "解得：<span class='text-stone-700 font-bold'>$x = -15$</span> 或 <span class='text-stone-700 font-bold'>$x = 11$</span>" },
+                    { title: "步驟 4：判斷答案", content: "題目指定「負整數」，故取 <span class='text-green-600 font-bold'>$x = -15$</span>。<br>二數為 $-15$ 與 $-11$。" }
+                ]
+            }
+        ];
+
+        let currentIdx = 0;
+
+        const app = {
+            init: () => {
+                app.renderTabs();
+                app.loadProblem(0);
+            },
+
+            // 觸發 KaTeX 渲染
+            renderMath: (element) => {
+                if (window.renderMathInElement) {
+                    renderMathInElement(element || document.body, {
+                        delimiters: [
+                            {left: '$$', right: '$$', display: true},
+                            {left: '$', right: '$', display: false}
+                        ],
+                        throwOnError: false
+                    });
+                }
+            },
+
+            renderTabs: () => {
+                const nav = document.getElementById('nav-tabs');
+                nav.innerHTML = '';
+                problems.forEach((p, i) => {
+                    const btn = document.createElement('button');
+                    btn.className = `nav-tab px-6 py-3 text-xs font-bold whitespace-nowrap border-b-2 flex-none transition-all ${i === 0 ? 'border-orange-500 text-orange-600 bg-white' : 'border-transparent text-stone-400'}`;
+                    btn.textContent = `第 ${i + 1} 題`;
+                    btn.onclick = () => app.loadProblem(i);
+                    nav.appendChild(btn);
+                });
+            },
+
+            loadProblem: (idx) => {
+                currentIdx = idx;
+                const p = problems[idx];
+
+                document.getElementById('progress-text').textContent = `${idx + 1}/6`;
+                document.getElementById('progress-bar').style.width = `${((idx + 1) / 6) * 100}%`;
+                document.getElementById('problem-category').textContent = p.category;
+                document.getElementById('problem-text').innerHTML = p.text;
+                
+                document.querySelectorAll('.nav-tab').forEach((t, i) => {
+                    t.className = `nav-tab px-6 py-3 text-xs font-bold whitespace-nowrap border-b-2 flex-none transition-all ${i === idx ? 'border-orange-500 text-orange-600 bg-white' : 'border-transparent text-stone-400'}`;
+                    if(i === idx) t.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+                });
+
+                document.getElementById('phase-tag').textContent = "第一階段：引導列式";
+                document.getElementById('phase-tag').className = "px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-stone-200 text-stone-600";
+                document.getElementById('equation-display-box').classList.add('hidden');
+                document.getElementById('phase1-container').classList.remove('hidden');
+                document.getElementById('phase2-container').classList.add('hidden');
+                
+                app.renderPhase1Steps(0);
+                app.renderMath(); // 渲染題目中的數學式
+            },
+
+            renderPhase1Steps: (stepIdx) => {
+                const container = document.getElementById('phase1-container');
+                const p = problems[currentIdx];
+                if (stepIdx === 0) container.innerHTML = '';
+
+                const step = p.phase1[stepIdx];
+                const div = document.createElement('div');
+                div.className = "animate-in fade-in slide-in-from-bottom-2 duration-500";
+                div.innerHTML = `
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="w-6 h-6 rounded-full bg-stone-800 text-white text-xs flex items-center justify-center font-bold">${stepIdx + 1}</span>
+                        <span class="font-bold text-stone-700 text-sm sm:text-base">${step.label}</span>
+                    </div>
+                    <div class="flex flex-wrap gap-2 ml-9" id="opt-wrap-${stepIdx}"></div>
+                `;
+                container.appendChild(div);
+
+                const wrap = document.getElementById(`opt-wrap-${stepIdx}`);
+                step.options.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = "option-chip px-5 py-2 bg-white border-2 border-stone-200 rounded-xl text-lg shadow-sm hover:border-orange-300";
+                    btn.innerHTML = opt; // 使用 innerHTML 以利 KaTeX
+                    btn.onclick = () => app.handleChoice(stepIdx, opt, btn);
+                    wrap.appendChild(btn);
+                });
+                
+                app.renderMath(div); // 渲染新產生的選項
+                if(stepIdx > 0) div.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            },
+
+            handleChoice: (idx, choice, el) => {
+                const p = problems[currentIdx];
+                if (choice === p.phase1[idx].correct) {
+                    el.className = "option-chip px-5 py-2 bg-green-500 border-2 border-green-600 rounded-xl text-lg text-white pointer-events-none shadow-md";
+                    Array.from(el.parentElement.children).forEach(c => {
+                        if (c !== el) { c.style.opacity = "0.2"; c.style.pointerEvents = "none"; }
+                    });
+
+                    if (idx < p.phase1.length - 1) {
+                        setTimeout(() => app.renderPhase1Steps(idx + 1), 300);
+                    } else {
+                        app.showEquationSummary();
+                    }
+                } else {
+                    el.classList.add('border-red-500', 'bg-red-50', 'text-red-600');
+                    setTimeout(() => el.classList.remove('border-red-500', 'bg-red-50', 'text-red-600'), 800);
+                }
+            },
+
+            showEquationSummary: () => {
+                const box = document.getElementById('equation-display-box');
+                const formulaArea = document.getElementById('equation-formula');
+                const p = problems[currentIdx];
+
+                formulaArea.innerHTML = '';
+                p.formula.forEach((f, i) => {
+                    const span = document.createElement('span');
+                    span.className = "char-enter text-orange-400 font-bold";
+                    span.style.animationDelay = `${i * 0.05}s`;
+                    span.innerHTML = f;
+                    formulaArea.appendChild(span);
+                });
+
+                box.classList.remove('hidden');
+                setTimeout(() => {
+                    box.classList.replace('opacity-0', 'opacity-100');
+                    app.renderMath(formulaArea);
+                }, 100);
+                box.scrollIntoView({ behavior: 'smooth' });
+            },
+
+            showSolutionGuide: () => {
+                const p = problems[currentIdx];
+                const container = document.getElementById('phase2-container');
+                const stepsArea = document.getElementById('solution-steps');
+                
+                document.getElementById('phase-tag').textContent = "第二階段：解題步驟教學";
+                document.getElementById('phase-tag').className = "px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-orange-500 text-white";
+                
+                document.getElementById('phase1-container').classList.add('hidden');
+                document.getElementById('equation-display-box').classList.add('hidden');
+
+                stepsArea.innerHTML = '';
+                p.solution.forEach((step, i) => {
+                    const div = document.createElement('div');
+                    div.className = "solution-step";
+                    div.style.animationDelay = `${i * 0.2}s`;
+                    div.innerHTML = `
+                        <h4 class="font-bold text-stone-800 text-lg mb-1">${step.title}</h4>
+                        <div class="text-stone-600 leading-relaxed math-content">${step.content}</div>
+                    `;
+                    stepsArea.appendChild(div);
+                });
+
+                container.classList.remove('hidden');
+                app.renderMath(stepsArea);
+                container.scrollIntoView({ behavior: 'smooth' });
+            },
+
+            nextProblem: () => {
+                if (currentIdx < problems.length - 1) {
+                    app.loadProblem(currentIdx + 1);
+                } else {
+                    const card = document.getElementById('problem-card');
+                    card.innerHTML = `
+                        <div class="p-12 text-center animate-in zoom-in duration-700">
+                            <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">✓</div>
+                            <h2 class="text-3xl font-bold text-stone-800 mb-4">全部練習完成！</h2>
+                            <p class="text-stone-500 text-lg mb-8 max-w-sm mx-auto">你已經學會了數學列式與解題邏輯，太棒了！</p>
+                            <button onclick="location.reload()" class="px-10 py-3 bg-stone-900 text-white rounded-full font-bold shadow-xl">重新練習</button>
+                        </div>
+                    `;
+                }
+            }
+        };
+
+        window.addEventListener('DOMContentLoaded', app.init);
+    </script>
+</body>
+</html>
