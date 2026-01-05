@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>情緒探索者：我的心情小百科 (單機存檔版)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #fdfbf7; 
+            color: #4b5563;
+            overflow-x: hidden;
+        }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #9ca3af; border-radius: 4px; }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 250px;
+            max-height: 300px;
+        }
+
+        /* Learning Cards */
+        .flip-card {
+            background-color: transparent;
+            perspective: 1000px;
+            height: 240px;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.25rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        }
+        .flip-card-front { background-color: #ffffff; border: 2px solid #f3f4f6; }
+        .flip-card-back {
+            background-color: #ffffff;
+            transform: rotateY(180deg);
+            border: 3px solid #3b82f6;
+        }
+
+        /* Matching & Quiz */
+        .match-item, .quiz-option { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .match-item.selected, .quiz-option.selected {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2);
+        }
+        .match-item.correct, .quiz-option.correct {
+            border-color: #10b981;
+            background-color: #ecfdf5;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+        .quiz-option.wrong {
+            border-color: #ef4444;
+            background-color: #fef2f2;
+        }
+
+        .fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Status Pills */
+        .status-pill {
+            @apply px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider;
+        }
+    </style>
+    <!-- Chosen Palette: Harmony Cream & Deep Sea Blue (Background: #fdfbf7, Primary: #3b82f6, Success: #10b981, Dashboard: #6366f1) -->
+    <!-- Application Structure Plan: 
+         1. Information Architecture: A centralized dashboard structure. 
+         2. Persistence Layer: Use localStorage to save {practiceLevels: [], quizStats: {total, correct}, lastActive: date}.
+         3. Navigation: Top bar with 4 distinct modes: 
+            - 📖 Learn (Initial content exploration)
+            - 🎮 Match (Connecting definitions/scenarios)
+            - 📝 Quiz (Multiple choice testing)
+            - 📊 Stats (Data visualization of local storage)
+         4. Interaction Flow: Student explores -> Practices -> Tests -> Reviews progress.
+         Rationale: By providing a persistent "Score" and "Progress", students feel a sense of ownership over their local machine's data.
+    -->
+    <!-- Visualization & Content Choices:
+         - Doughnut Chart: Overall completion of all 20 emotions.
+         - Radar Chart: Mastery per Group (1-4) based on Quiz performance.
+         - Logic: JS processes localStorage arrays into Chart.js datasets.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header / Navigation -->
+    <nav class="bg-white/90 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <span class="text-3xl">🧩</span>
+                <span class="font-black text-xl text-gray-800 tracking-tighter">心情探索者 <span class="text-blue-500 font-medium text-sm ml-1">v2.0</span></span>
+            </div>
+            <div class="flex bg-gray-100 p-1.5 rounded-2xl overflow-x-auto">
+                <button onclick="switchMode('learn')" id="nav-learn" class="px-4 py-2 rounded-xl text-sm font-bold transition-all bg-white shadow-sm text-blue-600">📖 認識</button>
+                <button onclick="switchMode('practice')" id="nav-practice" class="px-4 py-2 rounded-xl text-sm font-bold transition-all text-gray-500">🎮 配對</button>
+                <button onclick="switchMode('quiz')" id="nav-quiz" class="px-4 py-2 rounded-xl text-sm font-bold transition-all text-gray-500">📝 選擇</button>
+                <button onclick="switchMode('stats')" id="nav-stats" class="px-4 py-2 rounded-xl text-sm font-bold transition-all text-gray-500">📊 數據</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow container mx-auto px-6 py-10 max-w-6xl">
+        
+        <!-- INTRO AREA (Dynamic Context) -->
+        <div id="intro-area" class="text-center mb-10 fade-in">
+            <h1 class="text-4xl font-black text-gray-900 mb-3" id="view-title">開始探索心情吧！</h1>
+            <p class="text-gray-500 text-lg max-w-2xl mx-auto leading-relaxed" id="view-desc">這裡記錄了你的學習足跡，所有的答案都會保存在這台電腦裡喔。</p>
+        </div>
+
+        <!-- VIEW: LEARNING MODE -->
+        <div id="view-learn" class="space-y-10 fade-in">
+            <div class="flex justify-center flex-wrap gap-3">
+                <button onclick="filterLearnGroup('all')" class="l-filter-btn px-6 py-2.5 rounded-2xl bg-gray-800 text-white font-bold shadow-lg transition-transform active:scale-95">全部</button>
+                <button onclick="filterLearnGroup(1)" class="l-filter-btn px-6 py-2.5 rounded-2xl bg-white text-gray-500 border-2 border-gray-100 font-bold hover:border-blue-200">第一組</button>
+                <button onclick="filterLearnGroup(2)" class="l-filter-btn px-6 py-2.5 rounded-2xl bg-white text-gray-500 border-2 border-gray-100 font-bold hover:border-blue-200">第二組</button>
+                <button onclick="filterLearnGroup(3)" class="l-filter-btn px-6 py-2.5 rounded-2xl bg-white text-gray-500 border-2 border-gray-100 font-bold hover:border-blue-200">第三組</button>
+                <button onclick="filterLearnGroup(4)" class="l-filter-btn px-6 py-2.5 rounded-2xl bg-white text-gray-500 border-2 border-gray-100 font-bold hover:border-blue-200">第四組</button>
+            </div>
+
+            <div id="cards-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Cards Injected -->
+            </div>
+        </div>
+
+        <!-- VIEW: PRACTICE MODE -->
+        <div id="view-practice" class="hidden space-y-8 fade-in">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Sidebar: Level Selection & Progress -->
+                <div class="lg:col-span-4 space-y-6">
+                    <div class="bg-white rounded-[2rem] p-8 shadow-sm border border-gray-100 text-center">
+                        <h3 class="text-xl font-bold text-gray-800 mb-6">配對挑戰進度</h3>
+                        <div class="chart-container">
+                            <canvas id="practiceProgressChart"></canvas>
+                        </div>
+                        <div class="mt-4 text-4xl font-black text-blue-600" id="practice-percent">0%</div>
+                        <p class="text-gray-400 font-medium" id="practice-count">本關完成：0 / 5</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3" id="level-buttons-container">
+                        <!-- Buttons Injected -->
+                    </div>
+                </div>
+
+                <!-- Game Board -->
+                <div class="lg:col-span-8">
+                    <div class="bg-white rounded-[3rem] p-8 shadow-2xl border-4 border-blue-50 relative min-h-[580px] overflow-hidden">
+                        <div id="win-overlay" class="absolute inset-0 bg-white/95 z-20 hidden flex flex-col items-center justify-center p-10 text-center animate-fade-in">
+                            <div class="text-8xl mb-6">🏆</div>
+                            <h2 class="text-4xl font-black text-gray-900 mb-2">闖關大成功！</h2>
+                            <p class="text-xl text-gray-400 mb-8">你已經完全掌握這一組的心情例子了。</p>
+                            <button onclick="goToNextLevel()" class="px-12 py-4 bg-blue-600 text-white rounded-full text-xl font-bold shadow-xl hover:bg-blue-700 transition transform hover:scale-105">
+                                進入下一關 ➜
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="game-elements">
+                            <div class="space-y-4" id="game-emotions"></div>
+                            <div class="space-y-4" id="game-scenarios"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: QUIZ MODE -->
+        <div id="view-quiz" class="hidden space-y-8 fade-in">
+            <div class="max-w-3xl mx-auto">
+                <div class="bg-white rounded-[3.5rem] p-12 shadow-2xl border-4 border-indigo-50 min-h-[550px] flex flex-col">
+                    <div class="w-full bg-gray-100 h-4 rounded-full mb-10 overflow-hidden">
+                        <div id="quiz-progress-bar" class="bg-indigo-500 h-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+
+                    <div id="quiz-question-container" class="text-center flex-grow flex flex-col justify-center">
+                        <div class="inline-block px-5 py-2 bg-indigo-50 rounded-2xl mb-8">
+                            <button onclick="speakCurrentQuestion()" class="text-3xl hover:scale-110 transition-transform flex items-center">
+                                🔊 <span class="text-base font-bold text-indigo-600 ml-2 italic">讀題目給我聽</span>
+                            </button>
+                        </div>
+                        <h2 id="quiz-question-text" class="text-3xl font-black text-gray-800 leading-snug mb-12">準備好開始挑戰了嗎？</h2>
+                        
+                        <div id="quiz-options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <!-- Options Injected -->
+                        </div>
+                    </div>
+
+                    <div id="quiz-result-overlay" class="hidden flex-col items-center justify-center text-center py-10">
+                        <div class="text-8xl mb-8">🌟</div>
+                        <h2 class="text-4xl font-black text-gray-900 mb-2">挑戰結束！</h2>
+                        <p id="quiz-score-text" class="text-2xl text-gray-500 mb-10">做得好！成績已儲存在儀表板中。</p>
+                        <button onclick="startQuiz()" class="px-12 py-4 bg-indigo-600 text-white rounded-full text-xl font-bold shadow-lg hover:bg-indigo-700 transition transform hover:scale-105">
+                            再挑戰一回 🔄
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: STATS MODE -->
+        <div id="view-stats" class="hidden space-y-10 fade-in">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Summary Stats -->
+                <div class="bg-blue-600 rounded-[2.5rem] p-8 text-white shadow-xl">
+                    <h4 class="text-blue-100 font-bold mb-2 uppercase text-xs tracking-widest">總學習天數</h4>
+                    <div class="text-5xl font-black" id="stat-days">1</div>
+                    <p class="mt-4 text-blue-200 text-sm">持之以恆就是成功！</p>
+                </div>
+                <div class="bg-emerald-500 rounded-[2.5rem] p-8 text-white shadow-xl">
+                    <h4 class="text-emerald-100 font-bold mb-2 uppercase text-xs tracking-widest">累積正確題數</h4>
+                    <div class="text-5xl font-black" id="stat-correct">0</div>
+                    <p class="mt-4 text-emerald-100 text-sm">你對情緒越來越了解了。</p>
+                </div>
+                <div class="bg-amber-500 rounded-[2.5rem] p-8 text-white shadow-xl">
+                    <h4 class="text-amber-100 font-bold mb-2 uppercase text-xs tracking-widest">目前答題率</h4>
+                    <div class="text-5xl font-black" id="stat-rate">0%</div>
+                    <p class="mt-4 text-amber-100 text-sm">根據最近 5 次測驗計算。</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white rounded-[3rem] p-10 shadow-sm border border-gray-100">
+                    <h3 class="text-2xl font-black text-gray-800 mb-8">心情配對完成度</h3>
+                    <div class="chart-container" style="height: 350px;">
+                        <canvas id="groupMasteryChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white rounded-[3rem] p-10 shadow-sm border border-gray-100">
+                    <h3 class="text-2xl font-black text-gray-800 mb-8">最近練習表現</h3>
+                    <div class="chart-container" style="height: 350px;">
+                        <canvas id="quizHistoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center pb-10">
+                <button onclick="clearAllData()" class="text-gray-400 hover:text-red-500 text-sm font-medium underline underline-offset-4 decoration-dashed">
+                    重設所有本機數據 (慎用)
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // --- EMOTION DATA ---
+        const emotions = [
+            { id: 1, g: 1, name: "焦慮", icon: "😰", desc: "擔心壞事發生", ex: "例如明天要上台說話。", matchId: 'C' },
+            { id: 2, g: 1, name: "害怕", icon: "😱", desc: "看到恐怖的事想躲起來", ex: "例如看到很大聲吠叫的狗。", matchId: 'B' },
+            { id: 3, g: 1, name: "生氣", icon: "😠", desc: "覺得很不公平", ex: "例如被撞到沒道歉。", matchId: 'A' },
+            { id: 4, g: 1, name: "委屈", icon: "🥺", desc: "被誤會心裡酸酸的", ex: "例如沒說謊卻被罵。", matchId: 'E' },
+            { id: 5, g: 1, name: "挫折", icon: "😞", desc: "努力了卻失敗", ex: "例如快完成的拼圖被弄倒。", matchId: 'D' },
+            { id: 6, g: 2, name: "嫉妒", icon: "😒", desc: "看到別人有我想要的", ex: "例如同學買了我也想要的遊戲機。", matchId: 'F' },
+            { id: 7, g: 2, name: "恐慌", icon: "😵", desc: "不能呼吸", ex: "例如在商場走散了。", matchId: 'I' },
+            { id: 8, g: 2, name: "憤怒", icon: "😡", desc: "心裡像火在燒", ex: "例如最愛的玩具被故意踩壞。", matchId: 'J' },
+            { id: 9, g: 2, name: "羞愧", icon: "😳", desc: "覺得丟臉", ex: "例如在全班面前跌倒了。", matchId: 'H' },
+            { id: 10, g: 2, name: "不安", icon: "😟", desc: "沒安全感", ex: "例如媽媽今天沒準時來接我。", matchId: 'G' },
+            { id: 11, g: 3, name: "煩躁", icon: "😤", desc: "覺得好煩", ex: "例如旁邊一直有按原子筆的聲音。", matchId: 'L' },
+            { id: 12, g: 3, name: "崩潰", icon: "🤯", desc: "大腦當機", ex: "例如廣播聲跟說話聲太大。", matchId: 'K' },
+            { id: 13, g: 3, name: "困惑", icon: "😵‍💫", desc: "聽不懂", ex: "例如老師講了我不懂的指令。", matchId: 'N' },
+            { id: 14, g: 3, name: "絕望", icon: "🌫️", desc: "努力也沒用", ex: "例如考卷發下來發現全都不會。", matchId: 'M' },
+            { id: 15, g: 3, name: "自責", icon: "😔", desc: "對自己生氣", ex: "例如忘記帶答應要帶的東西。", matchId: 'O' },
+            { id: 16, g: 4, name: "無力", icon: "🫠", desc: "不想動", ex: "例如昨晚沒睡好，全身沒力氣。", matchId: 'Q' },
+            { id: 17, g: 4, name: "抗拒", icon: "🙅", desc: "不想改變", ex: "例如畫畫到一半被叫去收起來。", matchId: 'P' },
+            { id: 18, g: 4, name: "孤單", icon: "🍂", desc: "只有我一個人", ex: "例如大家都在玩，只有我坐在位置。", matchId: 'S' },
+            { id: 19, g: 4, name: "興奮", icon: "🤩", desc: "停不下來", ex: "例如明天要校外教學，睡不著。", matchId: 'T' },
+            { id: 20, g: 4, name: "平靜", icon: "😌", desc: "覺得放鬆", ex: "例如聽著喜歡的音樂，坐在角落。", matchId: 'R' }
+        ];
+
+        // --- STORAGE MANAGER ---
+        const StorageKey = "emotion_app_v2_data";
+        let localData = {
+            levelsCompleted: [], // List of matched IDs
+            quizHistory: [], // {date, score, total}
+            daysVisited: [new Date().toDateString()],
+            groupMastery: { 1: 0, 2: 0, 3: 0, 4: 0 }
+        };
+
+        function loadFromLocal() {
+            const saved = localStorage.getItem(StorageKey);
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                localData = { ...localData, ...parsed };
+                // Update days visited
+                const today = new Date().toDateString();
+                if (!localData.daysVisited.includes(today)) {
+                    localData.daysVisited.push(today);
+                }
+            }
+        }
+
+        function saveToLocal() {
+            localStorage.setItem(StorageKey, JSON.stringify(localData));
+        }
+
+        function clearAllData() {
+            if (confirm("這會刪除所有學習紀錄，確定嗎？")) {
+                localStorage.removeItem(StorageKey);
+                location.reload();
+            }
+        }
+
+        // --- STATE ---
+        let state = {
+            mode: 'learn',
+            learnFilter: 'all',
+            lv: 1,
+            selE: null,
+            selS: null,
+            doneInCurrentSession: [],
+            charts: { progress: null, mastery: null, history: null },
+            quiz: { questions: [], idx: 0, score: 0, locked: false }
+        };
+
+        // --- TTS ---
+        function speak(txt) {
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(txt);
+            u.lang = 'zh-TW'; u.rate = 0.9;
+            window.speechSynthesis.speak(u);
+        }
+
+        // --- CORE UI ---
+        function init() {
+            loadFromLocal();
+            renderCards();
+            renderLevelButtons();
+            initCharts();
+            switchMode('learn');
+        }
+
+        function switchMode(m) {
+            state.mode = m;
+            const navs = ['learn', 'practice', 'quiz', 'stats'];
+            navs.forEach(k => {
+                const btn = document.getElementById(`nav-${k}`);
+                const view = document.getElementById(`view-${k}`);
+                if (k === m) {
+                    btn.className = "px-4 py-2 rounded-xl text-sm font-bold transition-all bg-white shadow-sm text-blue-600";
+                    view.classList.remove('hidden');
+                } else {
+                    btn.className = "px-4 py-2 rounded-xl text-sm font-bold transition-all text-gray-500 hover:text-gray-700";
+                    view.classList.add('hidden');
+                }
+            });
+
+            // Title Updates
+            const titles = { learn: "開始探索心情吧！", practice: "心情配對大挑戰", quiz: "心情情境選擇題", stats: "我的學習儀表板" };
+            const descs = { 
+                learn: "所有的感覺都有個名字，點擊卡片聽聽看吧！", 
+                practice: "根據事件找出對應的心情，答案會自動儲存喔。", 
+                quiz: "測試看看你對心情的了解程度，成績會列入統計。", 
+                stats: "這裡是你的本機學習數據，只有在這台電腦才看得到。" 
+            };
+            document.getElementById('view-title').innerText = titles[m];
+            document.getElementById('view-desc').innerText = descs[m];
+
+            if (m === 'practice') loadPracticeLevel(state.lv);
+            if (m === 'quiz') startQuiz();
+            if (m === 'stats') refreshStats();
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- LEARN ---
+        function filterLearnGroup(g) {
+            state.learnFilter = g;
+            document.querySelectorAll('.l-filter-btn').forEach((btn, idx) => {
+                const target = g === 'all' ? 0 : g;
+                btn.className = idx == target ? "l-filter-btn px-6 py-2.5 rounded-2xl bg-gray-800 text-white font-bold shadow-lg" : "l-filter-btn px-6 py-2.5 rounded-2xl bg-white text-gray-500 border-2 border-gray-100 font-bold hover:border-blue-200";
+            });
+            renderCards();
+        }
+
+        function renderCards() {
+            const container = document.getElementById('cards-grid');
+            container.innerHTML = '';
+            const data = state.learnFilter === 'all' ? emotions : emotions.filter(e => e.g == state.learnFilter);
+            data.forEach(e => {
+                const isFinished = localData.levelsCompleted.includes(e.id);
+                const div = document.createElement('div');
+                div.className = "flip-card cursor-pointer group";
+                div.onclick = () => {
+                    const inner = div.querySelector('.flip-card-inner');
+                    const isFlipped = div.classList.toggle('flipped');
+                    speak(isFlipped ? `${e.name}。${e.desc}。${e.ex}` : e.name);
+                };
+                div.innerHTML = `
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            ${isFinished ? '<span class="absolute top-4 right-4 text-emerald-500 text-xs font-black">已掌握 ✓</span>' : ''}
+                            <span class="text-6xl mb-4 transform group-hover:scale-110 transition-transform">${e.icon}</span>
+                            <h3 class="text-2xl font-black text-gray-800">${e.name}</h3>
+                            <div class="mt-4 text-blue-400 text-sm font-bold opacity-60">🔊 點擊看意思</div>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="text-xl font-bold text-blue-600 mb-2">${e.name}</h3>
+                            <p class="text-gray-600 font-bold leading-tight">${e.desc}</p>
+                            <p class="text-xs text-gray-400 mt-4 italic bg-gray-50 p-2 rounded-xl">"${e.ex}"</p>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // --- PRACTICE ---
+        function renderLevelButtons() {
+            const container = document.getElementById('level-buttons-container');
+            container.innerHTML = '';
+            [1, 2, 3, 4].forEach(lv => {
+                const btn = document.createElement('button');
+                btn.id = `lv-btn-${lv}`;
+                btn.className = "lv-btn p-4 rounded-2xl border-2 font-black text-lg transition-all";
+                btn.onclick = () => loadPracticeLevel(lv);
+                btn.innerText = `第 ${lv} 關`;
+                container.appendChild(btn);
+            });
+        }
+
+        function loadPracticeLevel(lv) {
+            state.lv = lv;
+            state.selE = null; state.selS = null;
+            state.doneInCurrentSession = [];
+
+            // Update UI Sidebar
+            document.querySelectorAll('.lv-btn').forEach((btn, i) => {
+                if ((i+1) == lv) {
+                    btn.className = "lv-btn p-4 rounded-2xl border-2 border-blue-600 bg-blue-50 text-blue-700 font-black text-lg";
+                } else {
+                    btn.className = "lv-btn p-4 rounded-2xl border-2 border-gray-100 bg-white text-gray-400 font-black text-lg hover:border-blue-100";
+                }
+            });
+
+            document.getElementById('win-overlay').classList.add('hidden');
+            renderGameBoard();
+            updatePracticeProgress();
+        }
+
+        function renderGameBoard() {
+            const data = emotions.filter(e => e.g == state.lv);
+            const emoCol = document.getElementById('game-emotions'), scenCol = document.getElementById('game-scenarios');
+            emoCol.innerHTML = ''; scenCol.innerHTML = '';
+
+            data.forEach(e => {
+                const isSaved = localData.levelsCompleted.includes(e.id);
+                const btn = document.createElement('button');
+                btn.className = `match-item w-full flex items-center p-5 border-2 rounded-2xl shadow-sm text-left ${isSaved ? 'correct' : 'bg-white border-gray-100 hover:border-blue-200'}`;
+                btn.id = `emo-${e.id}`;
+                btn.onclick = () => { if(isSaved)return; state.selE = e.id; highlightMatch(); checkMatch(); };
+                btn.innerHTML = `
+                    <span class="text-3xl mr-4">${e.icon}</span>
+                    <div class="flex flex-col">
+                        <span class="text-xl font-black text-gray-700">${e.name}</span>
+                        ${isSaved ? '<span class="text-[10px] text-emerald-500 font-bold">已在紀錄中</span>' : ''}
+                    </div>
+                    <span onclick="event.stopPropagation();speak('${e.name}')" class="ml-auto text-xl opacity-30 hover:opacity-100">🔊</span>
+                `;
+                emoCol.appendChild(btn);
+            });
+
+            const scens = [...data].sort(()=>Math.random()-0.5);
+            scens.forEach(e => {
+                const isSaved = localData.levelsCompleted.includes(e.id);
+                const btn = document.createElement('button');
+                btn.className = `match-item w-full flex items-center p-5 border-2 rounded-2xl shadow-sm text-left ${isSaved ? 'correct' : 'bg-white border-gray-100 hover:border-blue-200'}`;
+                btn.id = `scen-${e.matchId}`;
+                btn.onclick = () => { if(isSaved)return; state.selS = e.matchId; highlightMatch(); checkMatch(); };
+                btn.innerHTML = `
+                    <span onclick="event.stopPropagation();speak('${e.ex}')" class="mr-4 text-xl opacity-20 hover:opacity-100">🔊</span>
+                    <span class="text-gray-500 font-bold leading-snug text-sm">${e.ex}</span>
+                `;
+                scenCol.appendChild(btn);
+            });
+        }
+
+        function highlightMatch() {
+            document.querySelectorAll('.match-item').forEach(el => {
+                if(!el.classList.contains('correct')) el.classList.remove('selected');
+            });
+            if(state.selE) document.getElementById(`emo-${state.selE}`).classList.add('selected');
+            if(state.selS) document.getElementById(`scen-${state.selS}`).classList.add('selected');
+        }
+
+        function checkMatch() {
+            if(!state.selE || !state.selS) return;
+            const target = emotions.find(e => e.id == state.selE);
+            if(target.matchId == state.selS) {
+                // Correct
+                if(!localData.levelsCompleted.includes(state.selE)) {
+                    localData.levelsCompleted.push(state.selE);
+                    saveToLocal();
+                }
+                document.getElementById(`emo-${state.selE}`).classList.add('correct');
+                document.getElementById(`scen-${state.selS}`).classList.add('correct');
+                speak("答對了！紀錄已儲存。");
+                state.selE = null; state.selS = null;
+                updatePracticeProgress();
+                
+                // Check level win
+                const lvEmotions = emotions.filter(e => e.g == state.lv).map(e => e.id);
+                const isLvDone = lvEmotions.every(id => localData.levelsCompleted.includes(id));
+                if(isLvDone) {
+                    setTimeout(()=> {
+                        document.getElementById('win-overlay').classList.remove('hidden');
+                        speak("這一關所有的紀錄都完成了，太棒了！");
+                    }, 600);
+                }
+            } else {
+                setTimeout(()=>{
+                    state.selE = null; state.selS = null; highlightMatch();
+                    speak("再想一想喔");
+                }, 500);
+            }
+        }
+
+        function goToNextLevel() {
+            if(state.lv < 4) loadPracticeLevel(state.lv + 1);
+            else switchMode('stats');
+        }
+
+        function updatePracticeProgress() {
+            const lvEmotions = emotions.filter(e => e.g == state.lv).map(e => e.id);
+            const count = lvEmotions.filter(id => localData.levelsCompleted.includes(id)).length;
+            
+            state.charts.progress.data.datasets[0].data = [count, 5 - count];
+            state.charts.progress.update();
+            
+            document.getElementById('practice-percent').innerText = `${Math.round(count/5*100)}%`;
+            document.getElementById('practice-count').innerText = `本關完成：${count} / 5`;
+        }
+
+        // --- QUIZ ---
+        function startQuiz() {
+            state.quiz.questions = [...emotions].sort(() => Math.random() - 0.5).slice(0, 5);
+            state.quiz.idx = 0;
+            state.quiz.score = 0;
+            state.quiz.locked = false;
+
+            document.getElementById('quiz-question-container').classList.remove('hidden');
+            document.getElementById('quiz-result-overlay').classList.add('hidden');
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            const q = state.quiz.questions[state.quiz.idx];
+            document.getElementById('quiz-progress-bar').style.width = `${(state.quiz.idx / 5) * 100}%`;
+            document.getElementById('quiz-question-text').innerText = q.ex.replace("例如", "情況：");
+            
+            const grid = document.getElementById('quiz-options-grid');
+            grid.innerHTML = '';
+            state.quiz.locked = false;
+
+            let opts = [q, ...emotions.filter(e => e.id !== q.id).sort(()=>Math.random()-0.5).slice(0, 3)].sort(()=>Math.random()-0.5);
+            opts.forEach(o => {
+                const btn = document.createElement('button');
+                btn.className = "quiz-option flex items-center p-5 bg-white border-2 border-gray-100 rounded-[2rem] shadow-sm hover:border-blue-200";
+                btn.onclick = () => handleQuizSelection(o.id, btn);
+                btn.innerHTML = `<span class="text-3xl mr-4">${o.icon}</span><span class="text-xl font-bold text-gray-700">${o.name}</span><span onclick="event.stopPropagation();speak('${o.name}')" class="ml-auto text-xl opacity-20">🔊</span>`;
+                grid.appendChild(btn);
+            });
+            speakCurrentQuestion();
+        }
+
+        function speakCurrentQuestion() {
+            speak(state.quiz.questions[state.quiz.idx].ex.replace("例如", "請問這樣的情況是什麼心情？"));
+        }
+
+        function handleQuizSelection(id, el) {
+            if(state.quiz.locked) return;
+            state.quiz.locked = true;
+            const correct = state.quiz.questions[state.quiz.idx].id === id;
+            if(correct) {
+                state.quiz.score++;
+                el.classList.add('correct');
+                speak("答對了，觀察力很好！");
+            } else {
+                el.classList.add('wrong');
+                speak(`這題不對喔，應該是 ${state.quiz.questions[state.quiz.idx].name}。`);
+            }
+
+            setTimeout(() => {
+                state.quiz.idx++;
+                if(state.quiz.idx < 5) renderQuizQuestion();
+                else finalizeQuiz();
+            }, 1800);
+        }
+
+        function finalizeQuiz() {
+            // Save to Local
+            localData.quizHistory.push({ date: new Date().toLocaleTimeString(), score: state.quiz.score, total: 5 });
+            if(localData.quizHistory.length > 10) localData.quizHistory.shift();
+            saveToLocal();
+
+            document.getElementById('quiz-progress-bar').style.width = "100%";
+            document.getElementById('quiz-question-container').classList.add('hidden');
+            document.getElementById('quiz-result-overlay').classList.remove('hidden');
+            document.getElementById('quiz-score-text').innerText = `答對了 ${state.quiz.score} 題。數據已儲存！`;
+            speak(`挑戰結束，你一共答對了 ${state.quiz.score} 題。`);
+        }
+
+        // --- STATS ---
+        function refreshStats() {
+            document.getElementById('stat-days').innerText = localData.daysVisited.length;
+            const totalCorrect = localData.quizHistory.reduce((a, b) => a + b.score, 0);
+            document.getElementById('stat-correct').innerText = totalCorrect;
+            
+            const recent = localData.quizHistory.slice(-5);
+            const rate = recent.length ? Math.round((recent.reduce((a,b)=>a+b.score, 0) / (recent.length * 5)) * 100) : 0;
+            document.getElementById('stat-rate').innerText = `${rate}%`;
+
+            // Update Mastery Chart
+            const masteries = [1, 2, 3, 4].map(g => {
+                const ids = emotions.filter(e => e.g == g).map(e => e.id);
+                return (ids.filter(id => localData.levelsCompleted.includes(id)).length / 5) * 100;
+            });
+            state.charts.mastery.data.datasets[0].data = masteries;
+            state.charts.mastery.update();
+
+            // Update History Chart
+            state.charts.history.data.labels = localData.quizHistory.map(h => h.date);
+            state.charts.history.data.datasets[0].data = localData.quizHistory.map(h => h.score);
+            state.charts.history.update();
+        }
+
+        // --- CHARTS INIT ---
+        function initCharts() {
+            // Practice Ring
+            const pCtx = document.getElementById('practiceProgressChart').getContext('2d');
+            state.charts.progress = new Chart(pCtx, {
+                type: 'doughnut',
+                data: { datasets: [{ data: [0, 5], backgroundColor: ['#3b82f6', '#f3f4f6'], borderWidth: 0, cutout: '85%' }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { tooltip: { enabled: false } } }
+            });
+
+            // Mastery Bar
+            const mCtx = document.getElementById('groupMasteryChart').getContext('2d');
+            state.charts.mastery = new Chart(mCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['第一組', '第二組', '第三組', '第四組'],
+                    datasets: [{ label: '完成度 %', data: [0, 0, 0, 0], backgroundColor: '#6366f1', borderRadius: 15 }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, max: 100 } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // History Line
+            const hCtx = document.getElementById('quizHistoryChart').getContext('2d');
+            state.charts.history = new Chart(hCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{ label: '正確題數', data: [], borderColor: '#10b981', backgroundColor: '#ecfdf5', fill: true, tension: 0.4 }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { y: { min: 0, max: 5, ticks: { stepSize: 1 } } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
