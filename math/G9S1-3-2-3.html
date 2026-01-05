@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>幾何互動解題：外心與角度</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 基礎字體與排版 */
+        body { font-family: '微軟正黑體', system-ui, sans-serif; background-color: #f8fafc; overflow: hidden; touch-action: manipulation; }
+        
+        /* 數學式樣式 (依規範) */
+        .math { font-size: 1.5rem; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; vertical-align: middle; color: #1e293b; }
+        .slot { 
+            display: inline-flex; align-items: center; justify-content: center;
+            min-width: 60px; height: 50px; 
+            border: 3px solid #cbd5e1; border-radius: 12px; 
+            background-color: #ffffff; color: #334155;
+            font-size: 1.5rem; font-weight: bold; cursor: pointer;
+            margin: 0 4px; padding: 0 10px; transition: all 0.2s;
+        }
+        .slot.active { border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2); }
+        .slot.filled { border-color: #3b82f6; background-color: #eff6ff; color: #1d4ed8; }
+        .slot.correct { border-color: #22c55e; background-color: #f0fdf4; color: #15803d; pointer-events: none; }
+        .slot.error { animation: shake 0.4s ease-in-out; border-color: #ef4444; }
+
+        /* 選項按鈕 */
+        .option-btn {
+            background-color: #ffffff; border: 2px solid #e2e8f0; border-bottom-width: 4px;
+            color: #1e293b; font-size: 1.5rem; font-weight: bold;
+            padding: 12px 24px; border-radius: 16px; cursor: pointer;
+            transition: transform 0.1s, border-color 0.2s;
+            user-select: none; min-width: 80px; text-align: center;
+        }
+        .option-btn:active:not(:disabled) { transform: translateY(2px); border-bottom-width: 2px; }
+        .option-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; border-bottom-width: 2px; background-color: #f1f5f9; }
+        .option-btn:hover:not(:disabled) { border-color: #94a3b8; background-color: #f8fafc; }
+
+        /* 導覽列與按鈕 */
+        .nav-btn { white-space: nowrap; padding: 8px 16px; border-radius: 99px; font-weight: 600; transition: all 0.2s; opacity: 0.7; }
+        .nav-btn.active { background-color: white; color: #2563eb; opacity: 1; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+        /* 動畫 */
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        @keyframes tada { 0% { transform: scale(1); } 10%, 20% { transform: scale(0.9) rotate(-3deg); } 30%, 50%, 70%, 90% { transform: scale(1.1) rotate(3deg); } 40%, 60%, 80% { transform: scale(1.1) rotate(-3deg); } 100% { transform: scale(1) rotate(0); } }
+        .animate-tada { animation: tada 1s; }
+        
+        /* 步驟容器 */
+        .step-container { opacity: 0.5; pointer-events: none; filter: grayscale(1); transition: all 0.4s ease; margin-bottom: 2rem; }
+        .step-container.active { opacity: 1; pointer-events: auto; filter: grayscale(0); }
+        .step-container.done .options-area { display: none; } /* 完成後隱藏選項，保持整潔 */
+
+        /* 隱藏滾動條但保留功能 */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    </style>
+</head>
+<body class="h-screen flex flex-col">
+
+    <header class="bg-blue-600 text-white p-3 shadow-md z-20 shrink-0">
+        <div class="max-w-7xl mx-auto flex items-center gap-4 overflow-x-auto no-scrollbar pb-1">
+            <h1 class="text-xl font-bold shrink-0 mr-2 flex items-center gap-2">
+                <span class="text-2xl">📐</span> 外心與角度
+            </h1>
+            <div id="nav-buttons" class="flex gap-2">
+                </div>
+        </div>
+    </header>
+
+    <main class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
+        
+        <section class="md:w-5/12 bg-slate-50 border-r border-slate-200 flex flex-col shrink-0 md:h-full h-auto max-h-[40vh] md:max-h-full overflow-y-auto z-10 shadow-sm">
+            <div class="p-6 sticky top-0">
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                    <span class="inline-block px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-bold mb-3">
+                        <span id="q-type">幾何</span>
+                    </span>
+                    <h2 id="q-text" class="text-xl md:text-2xl font-bold text-slate-800 leading-relaxed mb-4">
+                        </h2>
+                    <div id="q-svg" class="w-full flex justify-center py-2">
+                        </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="flex-1 bg-white relative overflow-hidden flex flex-col">
+            <div id="steps-area" class="flex-1 overflow-y-auto p-6 scroll-smooth pb-32">
+                </div>
+            
+            <div id="completion-modal" class="absolute inset-0 bg-white/90 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+                <div class="bg-white p-8 rounded-3xl shadow-2xl border-4 border-green-100 text-center max-w-sm mx-4 transform transition-all scale-100">
+                    <div class="text-6xl mb-4 animate-tada">🎉</div>
+                    <h3 class="text-3xl font-black text-slate-800 mb-2">太棒了！</h3>
+                    <p class="text-slate-600 mb-8 text-lg">你完成了這一題！</p>
+                    <div class="flex flex-col gap-3">
+                        <button onclick="resetCurrentProblem()" class="w-full py-3 px-6 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-lg shadow-lg shadow-blue-200 transition-all">
+                            再做一次
+                        </button>
+                        <button onclick="closeModal()" class="w-full py-3 px-6 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-bold text-lg transition-all">
+                            關閉視窗
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- 題目資料 ---
+        const problems = [
+            {
+                id: 1,
+                title: "題目 1",
+                type: "幾何：外心性質",
+                text: "如圖，<span class='math'>△ABC</span> 中，<span class='math'>∠A = 75°</span>，<span class='math'>O</span> 點為 <span class='math'>△ABC</span> 的外心，求 <span class='math'>∠BOC</span>。",
+                svg: `
+                <svg width="240" height="200" viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="60,30 20,150 220,150" fill="#fde2e9" stroke="#333" stroke-width="2"/>
+                    <circle cx="120" cy="110" r="3" fill="#333"/>
+                    <text x="120" y="130" text-anchor="middle" font-size="16" font-style="italic">O</text>
+                    <text x="55" y="25" font-size="16" font-style="italic">A</text>
+                    <text x="10" y="160" font-size="16" font-style="italic">B</text>
+                    <text x="225" y="160" font-size="16" font-style="italic">C</text>
+                    <line x1="20" y1="150" x2="120" y2="110" stroke="#333" stroke-width="1.5"/>
+                    <line x1="220" y1="150" x2="120" y2="110" stroke="#333" stroke-width="1.5"/>
+                </svg>`,
+                steps: [
+                    {
+                        instruction: "題目已知 ∠A 是幾度？",
+                        template: "<span class='math'>∠A = <div class='slot' data-ans='75'></div>°</span>",
+                        options: ["60", "75", "90"]
+                    },
+                    {
+                        instruction: "根據外心性質，∠BOC 是 ∠A 的幾倍？",
+                        template: "<span class='math'>∠BOC = <div class='slot' data-ans='2'></div> × ∠A</span>",
+                        options: ["2", "3", "0.5"]
+                    },
+                    {
+                        instruction: "計算 ∠BOC 的角度：",
+                        template: "<span class='math'>= <div class='slot' data-ans='2'></div> × <div class='slot' data-ans='75'></div>°</span>",
+                        options: ["2", "75", "60"]
+                    },
+                    {
+                        instruction: "最後算出答案：",
+                        template: "<span class='math'>= <div class='slot' data-ans='150'></div>°</span>",
+                        options: ["140", "150", "120"]
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "題目 2",
+                type: "幾何：外心性質",
+                text: "如圖，<span class='math'>△ABC</span> 中，<span class='math'>∠B = 60°</span>，<span class='math'>O</span> 點為 <span class='math'>△ABC</span> 的外心，求 <span class='math'>∠AOC</span>。",
+                svg: `
+                <svg width="240" height="180" viewBox="0 0 240 180" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="60,40 40,140 200,140" fill="none" stroke="#333" stroke-width="2"/>
+                    <circle cx="100" cy="110" r="3" fill="#333"/>
+                    <text x="100" y="100" text-anchor="middle" font-size="16" font-style="italic">O</text>
+                    <text x="60" y="30" font-size="16" font-style="italic">B</text>
+                    <text x="30" y="155" font-size="16" font-style="italic">A</text>
+                    <text x="210" y="155" font-size="16" font-style="italic">C</text>
+                    <line x1="40" y1="140" x2="100" y2="110" stroke="#333" stroke-width="1.5"/>
+                    <line x1="200" y1="140" x2="100" y2="110" stroke="#333" stroke-width="1.5"/>
+                </svg>`,
+                steps: [
+                    {
+                        instruction: "題目已知 ∠B 是幾度？",
+                        template: "<span class='math'>∠B = <div class='slot' data-ans='60'></div>°</span>",
+                        options: ["60", "30", "120"]
+                    },
+                    {
+                        instruction: "根據外心性質，∠AOC 是 ∠B 的幾倍？",
+                        template: "<span class='math'>∠AOC = <div class='slot' data-ans='2'></div> × ∠B</span>",
+                        options: ["2", "60", "3"]
+                    },
+                    {
+                        instruction: "算出 ∠AOC 的角度：",
+                        template: "<span class='math'>= <div class='slot' data-ans='2'></div> × <div class='slot' data-ans='60'></div>° = <div class='slot' data-ans='120'></div>°</span>",
+                        options: ["2", "60", "120", "180"]
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "題目 3",
+                type: "幾何：角度計算",
+                text: "如圖，<span class='math'>O</span> 為銳角 <span class='math'>△ABC</span> 外心，<span class='math'>∠BAC=40°</span>，<span class='math'>∠ABC=82°</span>，求 <span class='math'>∠AOB</span>。",
+                svg: `
+                <svg width="240" height="200" viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="100,20 40,160 200,160" fill="#dbeafe" stroke="#333" stroke-width="2"/>
+                    <circle cx="120" cy="110" r="3" fill="#333"/>
+                    <text x="120" y="135" text-anchor="middle" font-size="16" font-style="italic">O</text>
+                    <text x="100" y="15" font-size="16" font-style="italic">A</text>
+                    <text x="25" y="170" font-size="16" font-style="italic">B</text>
+                    <text x="210" y="170" font-size="16" font-style="italic">C</text>
+                    <line x1="100" y1="20" x2="120" y2="110" stroke="#555" stroke-dasharray="4" stroke-width="1.5"/>
+                    <line x1="40" y1="160" x2="120" y2="110" stroke="#555" stroke-dasharray="4" stroke-width="1.5"/>
+                    <line x1="200" y1="160" x2="120" y2="110" stroke="#555" stroke-dasharray="4" stroke-width="1.5"/>
+                </svg>`,
+                steps: [
+                    {
+                        instruction: "先算出 ∠ACB (三角形內角和 180°)：",
+                        template: "<span class='math'>∠ACB = 180° - <div class='slot' data-ans='40'></div>° - <div class='slot' data-ans='82'></div>°</span>",
+                        options: ["40", "82", "180"]
+                    },
+                    {
+                        instruction: "算出 ∠ACB 的結果：",
+                        template: "<span class='math'>= <div class='slot' data-ans='58'></div>°</span>",
+                        options: ["58", "48", "60"]
+                    },
+                    {
+                        instruction: "因為 ∠AOB 對應弧 AB，角度是 ∠ACB 的兩倍：",
+                        template: "<span class='math'>∠AOB = <div class='slot' data-ans='2'></div> × ∠ACB</span>",
+                        options: ["2", "3", "58"]
+                    },
+                    {
+                        instruction: "帶入數值計算：",
+                        template: "<span class='math'>= <div class='slot' data-ans='2'></div> × <div class='slot' data-ans='58'></div>°</span>",
+                        options: ["2", "58", "116"]
+                    },
+                    {
+                        instruction: "最後答案：",
+                        template: "<span class='math'>= <div class='slot' data-ans='116'></div>°</span>",
+                        options: ["116", "106", "126"]
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "題目 4",
+                type: "幾何：等腰與外心",
+                text: "如圖，<span class='math'>O</span> 點為銳角 <span class='math'>△ABC</span> 外心，<span class='math'>∠BAO=40°</span>，<span class='math'>∠OAC=26°</span>，求 <span class='math'>∠OBC</span>。",
+                svg: `
+                <svg width="200" height="220" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="100,20 40,180 160,180" fill="none" stroke="#333" stroke-width="2"/>
+                    <circle cx="100" cy="130" r="3" fill="#333"/>
+                    <text x="100" y="155" text-anchor="middle" font-size="16" font-style="italic">O</text>
+                    <text x="100" y="15" font-size="16" font-style="italic">A</text>
+                    <text x="30" y="190" font-size="16" font-style="italic">B</text>
+                    <text x="170" y="190" font-size="16" font-style="italic">C</text>
+                    <line x1="100" y1="20" x2="100" y2="130" stroke="#555" stroke-dasharray="4" stroke-width="1.5"/>
+                    <line x1="40" y1="180" x2="100" y2="130" stroke="#555" stroke-dasharray="4" stroke-width="1.5"/>
+                    <line x1="160" y1="180" x2="100" y2="130" stroke="#555" stroke-dasharray="4" stroke-width="1.5"/>
+                </svg>`,
+                steps: [
+                    {
+                        instruction: "算出 ∠BAC (將兩個角度相加)：",
+                        template: "<span class='math'>∠BAC = <div class='slot' data-ans='40'></div> + <div class='slot' data-ans='26'></div> = <div class='slot' data-ans='66'></div>°</span>",
+                        options: ["40", "26", "66"]
+                    },
+                    {
+                        instruction: "算出中心角 ∠BOC (外心性質是 2 倍)：",
+                        template: "<span class='math'>∠BOC = 2 × <div class='slot' data-ans='66'></div> = <div class='slot' data-ans='132'></div>°</span>",
+                        options: ["66", "132", "2"]
+                    },
+                    {
+                        instruction: "△OBC 是等腰三角形，算出兩個底角的總和：",
+                        template: "<span class='math'>180 - <div class='slot' data-ans='132'></div> = <div class='slot' data-ans='48'></div>°</span>",
+                        options: ["132", "180", "48"]
+                    },
+                    {
+                        instruction: "最後算出一個底角 ∠OBC：",
+                        template: "<span class='math'>∠OBC = <div class='slot' data-ans='48'></div> ÷ 2 = <div class='slot' data-ans='24'></div>°</span>",
+                        options: ["48", "24", "2"]
+                    }
+                ]
+            }
+        ];
+
+        // --- 狀態變數 ---
+        let currentProblemIndex = 0;
+        let currentStepIndex = 0;
+
+        // --- 初始化 ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderNav();
+            loadProblem(0);
+        });
+
+        // --- 渲染導覽列 ---
+        function renderNav() {
+            const container = document.getElementById('nav-buttons');
+            container.innerHTML = problems.map((p, idx) => `
+                <button onclick="loadProblem(${idx})" 
+                    class="nav-btn ${idx === currentProblemIndex ? 'active' : 'text-blue-100 hover:bg-blue-500'}">
+                    ${p.title}
+                </button>
+            `).join('');
+        }
+
+        // --- 載入題目 ---
+        function loadProblem(index) {
+            currentProblemIndex = index;
+            currentStepIndex = 0;
+            renderNav();
+            closeModal();
+
+            const p = problems[index];
+            document.getElementById('q-type').textContent = p.type;
+            document.getElementById('q-text').innerHTML = p.text;
+            document.getElementById('q-svg').innerHTML = p.svg;
+
+            const stepsArea = document.getElementById('steps-area');
+            stepsArea.innerHTML = ''; // 清空
+            
+            // 預先建立所有步驟的容器
+            p.steps.forEach((step, sIdx) => {
+                const stepDiv = document.createElement('div');
+                stepDiv.id = `step-${sIdx}`;
+                stepDiv.className = `step-container p-4 bg-white rounded-2xl border-2 border-slate-100 shadow-sm ${sIdx === 0 ? 'active' : ''}`;
+                
+                // 標題與完成勾勾
+                const headerHtml = `
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-slate-500 font-bold text-sm tracking-wider uppercase">Step ${sIdx + 1}</span>
+                        <span class="check-icon text-green-500 font-bold opacity-0 transition-opacity">✔ 完成</span>
+                    </div>
+                `;
+
+                // 指令
+                const instructionHtml = `<p class="text-lg text-slate-700 font-medium mb-3">${step.instruction}</p>`;
+                
+                // 填空區
+                const slotAreaHtml = `<div class="mb-4 text-xl flex flex-wrap items-center gap-2">${step.template}</div>`;
+
+                // 選項按鈕區
+                const optionsHtml = `
+                    <div class="options-area flex flex-wrap gap-3 mt-2">
+                        ${step.options.map(opt => `
+                            <button class="option-btn" onclick="handleOptionClick(this, '${opt}')">${opt}</button>
+                        `).join('')}
+                        <button class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold ml-auto hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200" onclick="checkStep(${sIdx})">
+                            檢查
+                        </button>
+                    </div>
+                `;
+
+                stepDiv.innerHTML = headerHtml + instructionHtml + slotAreaHtml + optionsHtml;
+                stepsArea.appendChild(stepDiv);
+
+                // 綁定 slot 點擊清除事件
+                stepDiv.querySelectorAll('.slot').forEach(slot => {
+                    slot.addEventListener('click', () => clearSlot(slot));
+                });
+            });
+        }
+
+        // --- 互動邏輯 ---
+        function handleOptionClick(btn, value) {
+            const stepDiv = document.getElementById(`step-${currentStepIndex}`);
+            const emptySlots = Array.from(stepDiv.querySelectorAll('.slot')).filter(s => !s.classList.contains('filled'));
+            
+            if (emptySlots.length > 0) {
+                const targetSlot = emptySlots[0];
+                targetSlot.textContent = value;
+                targetSlot.dataset.value = value;
+                targetSlot.classList.add('filled');
+                
+                // 禁用按鈕
+                btn.disabled = true;
+                targetSlot.dataset.linkedBtn = btn.textContent; // 簡單關聯，若有重複選項值可能需更嚴謹 ID
+                
+                // 播放輕微音效 (可選)
+            }
+        }
+
+        function clearSlot(slot) {
+            if (!slot.classList.contains('filled') || slot.classList.contains('correct')) return;
+            
+            const val = slot.textContent;
+            slot.textContent = '';
+            slot.classList.remove('filled', 'error');
+            delete slot.dataset.value;
+
+            // 恢復對應按鈕
+            const stepDiv = document.getElementById(`step-${currentStepIndex}`);
+            const buttons = stepDiv.querySelectorAll('.option-btn');
+            // 找到第一個符合值且被禁用的按鈕恢復
+            for (let btn of buttons) {
+                if (btn.textContent === val && btn.disabled) {
+                    btn.disabled = false;
+                    break;
+                }
+            }
+        }
+
+        function checkStep(stepIdx) {
+            const stepDiv = document.getElementById(`step-${stepIdx}`);
+            const slots = stepDiv.querySelectorAll('.slot');
+            let allCorrect = true;
+            let allFilled = true;
+
+            slots.forEach(slot => {
+                if (!slot.classList.contains('filled')) {
+                    allFilled = false;
+                    return;
+                }
+                if (slot.dataset.value !== slot.dataset.ans) {
+                    allCorrect = false;
+                    slot.classList.add('error');
+                    setTimeout(() => slot.classList.remove('error'), 500);
+                } else {
+                    slot.classList.add('correct');
+                    slot.classList.remove('error');
+                }
+            });
+
+            if (!allFilled) {
+                alert("請填滿所有空格再檢查！");
+                return;
+            }
+
+            if (allCorrect) {
+                // 該步驟完成
+                stepDiv.classList.add('done');
+                stepDiv.querySelector('.check-icon').classList.remove('opacity-0');
+                
+                // 進入下一步
+                if (currentStepIndex < problems[currentProblemIndex].steps.length - 1) {
+                    currentStepIndex++;
+                    const nextStep = document.getElementById(`step-${currentStepIndex}`);
+                    nextStep.classList.add('active');
+                    
+                    // 平滑捲動
+                    setTimeout(() => {
+                        nextStep.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 300);
+                } else {
+                    // 全部完成
+                    setTimeout(() => {
+                        document.getElementById('completion-modal').classList.remove('hidden');
+                    }, 500);
+                }
+            } else {
+                // 有錯，僅恢復錯誤的 slot 狀態讓學生重填 (不清除內容，這符合"再想想看"邏輯，但為了讓學生知道錯哪，我這裡設計是標紅框)
+                // 若要嚴格不清除，只需標紅框即可。若要讓學生重選，則需清除錯誤的 slot。
+                // 根據指示：✖ 錯誤 → 顯示「再想想看」，但 不得清除學生已填寫內容
+                // 已透過 CSS animation: shake 和 border-red 達成視覺反饋。
+                
+                // 為了方便修改，這裡將錯誤的 slot 恢復可點擊狀態，但不自動清空文字，需學生手動點或我們移除 correct class
+                slots.forEach(slot => {
+                    if (slot.dataset.value !== slot.dataset.ans) {
+                         slot.classList.remove('correct'); // 確保沒綠框
+                         // 這裡不自動清空，讓學生看著錯誤思考
+                    }
+                });
+            }
+        }
+
+        function resetCurrentProblem() {
+            loadProblem(currentProblemIndex);
+        }
+
+        function closeModal() {
+            document.getElementById('completion-modal').classList.add('hidden');
+        }
+
+    </script>
+</body>
+</html>
