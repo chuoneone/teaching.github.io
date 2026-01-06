@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一元一次方程式：八大移項法則大師 (嚴格計分版)</title>
+    
+    <!-- Google Fonts: Lexend (教育設計) & Noto Sans TC -->
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- KaTeX JS -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <style>
+        body { 
+            font-family: 'Lexend', 'Noto Sans TC', sans-serif; 
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 300px;
+            margin: 0 auto;
+        }
+        @media (min-width: 768px) {
+            .chart-container { height: 350px; }
+        }
+        /* KaTeX 特殊處理 */
+        .katex-display { margin: 0.5em 0; overflow-x: auto; overflow-y: hidden; }
+        .katex { white-space: nowrap; }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f5f5f4; }
+        ::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a8a29e; }
+        
+        .fade-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .btn-correct { border-color: #10b981 !important; background-color: #ecfdf5 !important; color: #047857 !important; pointer-events: none; }
+        .btn-wrong { border-color: #ef4444 !important; background-color: #fef2f2 !important; color: #b91c1c !important; opacity: 0.6; }
+        
+        /* 連接線樣式 */
+        .step-connector {
+            width: 2px;
+            height: 20px;
+            background-color: #e5e7eb;
+            margin: 0 auto;
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals & Modern Learning Amber -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-stone-50 text-stone-800 antialiased h-screen flex flex-col md:flex-row overflow-hidden">
+
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-white border-b border-stone-200 p-4 flex justify-between items-center z-20">
+        <h1 class="text-lg font-bold text-stone-900">移項法則大師</h1>
+        <button id="mobile-menu-btn" class="text-stone-600 p-2 rounded hover:bg-stone-100">
+            <span class="text-2xl">☰</span>
+        </button>
+    </div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed md:relative transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-30 w-64 h-full bg-white border-r border-stone-200 flex flex-col shadow-xl md:shadow-none">
+        <div class="p-6 border-b border-stone-200">
+            <h1 class="text-2xl font-black text-amber-600 tracking-tight leading-none">EQUATION</h1>
+            <h2 class="text-sm font-bold text-stone-400 mt-1">移項法則大師</h2>
+        </div>
+        
+        <nav class="flex-1 overflow-y-auto p-4 space-y-1" id="nav-container">
+            <!-- JS Injected Nav -->
+        </nav>
+
+        <div class="p-4 border-t border-stone-200 bg-stone-50">
+            <button onclick="clearProgress()" class="w-full py-2 text-[10px] text-stone-400 hover:text-red-500 font-bold transition-colors">
+                清空數據與重新開始
+            </button>
+        </div>
+    </aside>
+
+    <!-- Sidebar Overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/30 z-20 hidden md:hidden"></div>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto p-4 md:p-8 relative" id="main-content">
+        <!-- JS Injected Content -->
+    </main>
+
+    <script>
+        // --- Data Source ---
+        const appData = {
+            modules: [
+                {
+                    id: 1, title: "加法移項", subtitle: "加變減", type: "simple",
+                    desc: "當未知數旁有加數，移向等號另一邊時需改為減法。",
+                    demo: { q: "x + 6 = 14", steps: ["x = 14 - 6", "x = 8"] },
+                    practice: [
+                        { q: "x + 13 = 25", options: ["x = 12", "x = 38", "x = 13", "x = 15"], correctStr: "x = 12" },
+                        { q: "x + 20 = 5", options: ["x = 25", "x = -15", "x = 15", "x = -25"], correctStr: "x = -15" },
+                        { q: "12 + x = 30", options: ["x = 42", "x = 18", "x = 22", "x = 12"], correctStr: "x = 18" },
+                        { q: "x + 4.2 = 10", options: ["x = 14.2", "x = 6.2", "x = 5.8", "x = 4.8"], correctStr: "x = 5.8" }
+                    ]
+                },
+                {
+                    id: 2, title: "減法移項", subtitle: "減變加", type: "simple",
+                    desc: "當未知數旁有減數，移向等號另一邊時需改為加法。",
+                    demo: { q: "x - 9 = 11", steps: ["x = 11 + 9", "x = 20"] },
+                    practice: [
+                        { q: "x - 8 = 4", options: ["x = 12", "x = -4", "x = 4", "x = 2"], correctStr: "x = 12" },
+                        { q: "x - 15 = -5", options: ["x = -20", "x = 10", "x = -10", "x = 20"], correctStr: "x = 10" },
+                        { q: "x - 0.5 = 3.5", options: ["x = 3.0", "x = 4.0", "x = 4.5", "x = -3.0"], correctStr: "x = 4.0" },
+                        { q: "x - 100 = 250", options: ["x = 150", "x = 350", "x = 300", "x = 250"], correctStr: "x = 350" }
+                    ]
+                },
+                {
+                    id: 3, title: "乘法移項", subtitle: "乘變分母", type: "simple",
+                    desc: "係數如果是乘法關係，移項後變為除法，通常寫成分母。",
+                    demo: { q: "3x = 12", steps: ["x = \\frac{12}{3}", "x = 4"] },
+                    practice: [
+                        { q: "7x = 42", options: ["x = 6", "x = 7", "x = 49", "x = 35"], correctStr: "x = 6" },
+                        { q: "-4x = 16", options: ["x = 4", "x = -4", "x = -12", "x = -20"], correctStr: "x = -4" },
+                        { q: "10x = 2", options: ["x = 5", "x = 0.2", "x = 20", "x = 0.1"], correctStr: "x = 0.2" },
+                        { q: "0.1x = 7", options: ["x = 0.7", "x = 70", "x = 7", "x = 0.07"], correctStr: "x = 70" }
+                    ]
+                },
+                {
+                    id: 4, title: "除法移項", subtitle: "除變乘", type: "simple",
+                    desc: "分母的數值移向等號另一邊時改為乘法。",
+                    demo: { q: "\\frac{1}{5}x = 4", steps: ["x = 4 \\times 5", "x = 20"] },
+                    practice: [
+                        { q: "\\frac{1}{2}x = 9", options: ["x = 4.5", "x = 18", "x = 11", "x = 7"], correctStr: "x = 18" },
+                        { q: "\\frac{1}{3}x = -5", options: ["x = -15", "x = -2", "x = 15", "x = -8"], correctStr: "x = -15" },
+                        { q: "\\frac{1}{0.5}x = 10", options: ["x = 20", "x = 5", "x = 15", "x = 50"], correctStr: "x = 5" },
+                        { q: "\\frac{1}{-6}x = 3", options: ["x = -18", "x = 18", "x = -2", "x = -3"], correctStr: "x = -18" }
+                    ]
+                },
+                {
+                    id: 5, title: "兩步驟綜合", subtitle: "先加減，後乘除", type: "simple",
+                    desc: "混合運算時，先將常數項移走，最後再處理未知數的係數。",
+                    demo: { q: "2x + 1 = 5", steps: ["2x = 5 - 1", "2x = 4", "x = \\frac{4}{2}", "x = 2"] },
+                    practice: [
+                        { q: "3x - 4 = 11", options: ["x = 5", "x = 7/3", "x = 15", "x = 4"], correctStr: "x = 5" },
+                        { q: "5x + 10 = 30", options: ["x = 8", "x = 4", "x = 5", "x = 6"], correctStr: "x = 4" },
+                        { q: "4x - 7 = 13", options: ["x = 5", "x = 1.5", "x = 20", "x = 6"], correctStr: "x = 5" },
+                        { q: "6x + 8 = 2", options: ["x = 1", "x = -1", "x = -6", "x = 0"], correctStr: "x = -1" }
+                    ]
+                },
+                {
+                    id: 6, title: "含有括號", subtitle: "先去括號再移項", type: "step-by-step",
+                    desc: "先用分配律展開括號，將問題化簡為兩步驟型態後再求解。請依照步驟完成練習。",
+                    demo: { q: "2(x + 1) = 6", steps: ["2x + 2 = 6", "2x = 6 - 2", "2x = 4", "x = \\frac{4}{2}", "x = 2"] },
+                    practice: [
+                        { 
+                            q: "3(x - 2) = 12",
+                            steps: [
+                                { instruction: "步驟一：分配律去括號", q: "3(x - 2) = 12", options: ["3x - 2 = 12", "3x - 6 = 12", "3x + 6 = 12"], correctStr: "3x - 6 = 12" },
+                                { instruction: "步驟二：移項 (常數項)", q: "3x - 6 = 12", options: ["3x = 6", "3x = 18", "3x = 12"], correctStr: "3x = 18" },
+                                { instruction: "步驟三：求解 x", q: "3x = 18", options: ["x = 6", "x = 15", "x = 9"], correctStr: "x = 6" }
+                            ]
+                        },
+                        { 
+                            q: "5(x + 4) = 35",
+                            steps: [
+                                { instruction: "步驟一：分配律去括號", q: "5(x + 4) = 35", options: ["5x + 4 = 35", "5x + 20 = 35", "5x - 20 = 35"], correctStr: "5x + 20 = 35" },
+                                { instruction: "步驟二：移項 (常數項)", q: "5x + 20 = 35", options: ["5x = 15", "5x = 55", "5x = 35"], correctStr: "5x = 15" },
+                                { instruction: "步驟三：求解 x", q: "5x = 15", options: ["x = 3", "x = 5", "x = 7"], correctStr: "x = 3" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    id: 7, title: "進階去括號", subtitle: "負號分配變號", type: "step-by-step",
+                    desc: "注意！括號前有負號，展開後每一項都要變號。請依照步驟完成練習。",
+                    demo: { q: "-2(3x + 5) = 10", steps: ["-6x - 10 = 10", "-6x = 10 + 10", "-6x = 20", "x = \\frac{20}{-6}", "x = -\\frac{10}{3}"] },
+                    practice: [
+                        { 
+                            q: "-3(x - 4) = 15",
+                            steps: [
+                                { instruction: "步驟一：去括號 (注意變號)", q: "-3(x - 4) = 15", options: ["-3x - 12 = 15", "-3x + 12 = 15", "-3x - 4 = 15"], correctStr: "-3x + 12 = 15" },
+                                { instruction: "步驟二：移項 (常數項)", q: "-3x + 12 = 15", options: ["-3x = 27", "-3x = 3", "-3x = 15"], correctStr: "-3x = 3" },
+                                { instruction: "步驟三：求解 x", q: "-3x = 3", options: ["x = 1", "x = -1", "x = 0"], correctStr: "x = -1" }
+                            ]
+                        },
+                        { 
+                            q: "-5(2x + 1) = 25",
+                            steps: [
+                                { instruction: "步驟一：去括號 (注意變號)", q: "-5(2x + 1) = 25", options: ["-10x + 5 = 25", "-10x - 5 = 25", "10x + 5 = 25"], correctStr: "-10x - 5 = 25" },
+                                { instruction: "步驟二：移項 (常數項)", q: "-10x - 5 = 25", options: ["-10x = 20", "-10x = 30", "-10x = 25"], correctStr: "-10x = 30" },
+                                { instruction: "步驟三：求解 x", q: "-10x = 30", options: ["x = 3", "x = -3", "x = -30"], correctStr: "x = -3" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    id: 8, title: "雙重括號", subtitle: "分配律與同類項合併", type: "step-by-step",
+                    desc: "挑戰級：拆解所有括號，合併 x 項與常數項後，進行最後移項。",
+                    demo: { q: "2(3x + 5) - 3(5x - 10) = 50", steps: ["6x + 10 - 15x + 30 = 50", "-9x + 40 = 50", "-9x = 50 - 40", "-9x = 10", "x = -\\frac{10}{9}"] },
+                    practice: [
+                        { 
+                            q: "3(2x - 1) + 2(x + 4) = 21",
+                            steps: [
+                                { instruction: "步驟一：展開括號", q: "3(2x - 1) + 2(x + 4) = 21", options: ["6x - 3 + 2x + 8 = 21", "6x - 1 + 2x + 4 = 21", "6x - 3 + 2x + 4 = 21"], correctStr: "6x - 3 + 2x + 8 = 21" },
+                                { instruction: "步驟二：合併同類項", q: "6x - 3 + 2x + 8 = 21", options: ["8x + 5 = 21", "8x - 11 = 21", "4x + 5 = 21"], correctStr: "8x + 5 = 21" },
+                                { instruction: "步驟三：移項求解", q: "8x + 5 = 21", options: ["8x = 26", "8x = 16", "x = 3"], correctStr: "8x = 16" },
+                                { instruction: "步驟四：最終答案", q: "8x = 16", options: ["x = 2", "x = 1/2", "x = 8"], correctStr: "x = 2" }
+                            ]
+                        },
+                        { 
+                            q: "4(x + 2) - 3(2x - 1) = 1",
+                            steps: [
+                                { instruction: "步驟一：展開括號 (小心負號!)", q: "4(x + 2) - 3(2x - 1) = 1", options: ["4x + 8 - 6x - 3 = 1", "4x + 8 - 6x + 3 = 1", "4x + 2 - 6x + 3 = 1"], correctStr: "4x + 8 - 6x + 3 = 1" },
+                                { instruction: "步驟二：合併同類項", q: "4x + 8 - 6x + 3 = 1", options: ["-2x + 11 = 1", "-2x + 5 = 1", "2x + 11 = 1"], correctStr: "-2x + 11 = 1" },
+                                { instruction: "步驟三：移項求解", q: "-2x + 11 = 1", options: ["-2x = 12", "-2x = -10", "-2x = 10"], correctStr: "-2x = -10" },
+                                { instruction: "步驟四：最終答案", q: "-2x = -10", options: ["x = -5", "x = 5", "x = 20"], correctStr: "x = 5" }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let currentView = 'overview';
+        let demoStep = 0;
+        let scores = JSON.parse(localStorage.getItem('equations_mastery_v4') || '{}');
+        let currentModuleData = [];
+        let answeredInCurrentSession = new Set();
+        // step state
+        let currentProblemIdx = 0;
+        let currentStepIdx = 0;
+        let currentModuleCorrectCount = 0;
+        let currentStepFailed = false; // Tracks if user messed up current step
+
+        // --- DOM Elements ---
+        let mainContent, navContainer, sidebar, mobileMenuBtn, sidebarOverlay;
+
+        function initDOMElements() {
+            mainContent = document.getElementById('main-content');
+            navContainer = document.getElementById('nav-container');
+            sidebar = document.getElementById('sidebar');
+            mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            sidebarOverlay = document.getElementById('sidebar-overlay');
+        }
+
+        // --- Utilities ---
+        function shuffleArray(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function triggerKatex() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ],
+                throwOnError: false
+            });
+        }
+
+        function getModuleMaxScore(index) {
+            const mod = appData.modules[index];
+            if (mod.type === 'step-by-step') {
+                return mod.practice.reduce((acc, p) => acc + p.steps.length, 0);
+            }
+            return 4; // Simple modules have 4 questions
+        }
+
+        function saveScore(moduleId, currentCorrect) {
+            if (!scores[moduleId]) {
+                scores[moduleId] = { best: currentCorrect, first: currentCorrect, history: [currentCorrect] };
+            } else {
+                scores[moduleId].best = Math.max(scores[moduleId].best, currentCorrect);
+                scores[moduleId].history.push(currentCorrect);
+            }
+            localStorage.setItem('equations_mastery_v4', JSON.stringify(scores));
+            renderNav();
+        }
+
+        function clearProgress() {
+            if (confirm('確定要清除所有學習紀錄嗎？')) {
+                localStorage.removeItem('equations_mastery_v4');
+                scores = {};
+                switchView('overview');
+            }
+        }
+
+        // --- Views ---
+        function renderNav() {
+            if (!navContainer) return;
+            let html = `
+                <button onclick="switchView('overview')" class="w-full text-left px-4 py-3 rounded-xl mb-3 transition-all ${currentView === 'overview' ? 'bg-amber-100 text-amber-900 font-bold shadow-sm' : 'text-stone-600 hover:bg-stone-50'}">
+                    <span class="mr-2">📈</span> 學習儀表板
+                </button>
+                <div class="px-2 pb-2 text-[10px] font-black text-stone-300 uppercase tracking-widest">移項法則挑戰</div>
+            `;
+            
+            appData.modules.forEach((m, i) => {
+                const modScore = scores[i] || { best: 0 };
+                const maxScore = getModuleMaxScore(i);
+                const isActive = currentView === i;
+                html += `
+                    <button onclick="switchView(${i})" class="w-full text-left p-3 rounded-xl mb-1 flex items-center group transition-all ${isActive ? 'bg-white shadow-md border-l-4 border-amber-500' : 'hover:bg-stone-100'}">
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-black mr-3 ${isActive ? 'bg-amber-500 text-white' : 'bg-stone-100 text-stone-400 group-hover:bg-amber-200'}">
+                            ${m.id}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="text-xs font-bold truncate ${isActive ? 'text-amber-900' : 'text-stone-700'}">${m.title}</div>
+                            <div class="text-[9px] text-stone-400">最佳: ${modScore.best}/${maxScore}</div>
+                        </div>
+                    </button>
+                `;
+            });
+            navContainer.innerHTML = html;
+        }
+
+        function renderOverview() {
+            if (!mainContent) return;
+            
+            // Normalize scores to percentages for charts
+            const percentages = appData.modules.map((m, i) => {
+                const s = scores[i] || { best: 0 };
+                const max = getModuleMaxScore(i);
+                return (s.best / max) * 100;
+            });
+
+            const firstScores = appData.modules.map((m, i) => scores[i]?.first || 0);
+            const bestScores = appData.modules.map((m, i) => scores[i]?.best || 0);
+            
+            // Calc total completion
+            let totalMax = appData.modules.reduce((acc, m, i) => acc + getModuleMaxScore(i), 0);
+            let totalCurrent = bestScores.reduce((acc, v) => acc + v, 0);
+            let overallProgress = Math.round((totalCurrent / totalMax) * 100);
+
+            mainContent.innerHTML = `
+                <div class="max-w-5xl mx-auto fade-in">
+                    <header class="mb-10 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+                        <div>
+                            <h2 class="text-4xl font-black text-stone-900 tracking-tighter">學習儀表板</h2>
+                            <p class="text-stone-500 mt-2 font-medium">Data-driven learning progress tracking.</p>
+                        </div>
+                        <div class="bg-green-600 px-6 py-4 rounded-3xl flex items-center shadow-xl shadow-green-200">
+                            <div class="mr-6">
+                                <div class="text-[10px] font-black text-green-200 uppercase tracking-widest">總體熟練度</div>
+                                <div class="text-3xl font-black text-white">${overallProgress}%</div>
+                            </div>
+                            <div class="text-3xl">🎯</div>
+                        </div>
+                    </header>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+                        <div class="bg-white p-8 rounded-[40px] shadow-sm border border-stone-200">
+                            <h3 class="font-bold text-stone-800 mb-6 flex items-center"><span class="mr-2">📈</span> 實力演進 (首次挑戰 vs 最佳紀錄)</h3>
+                            <div class="chart-container"><canvas id="progressChart"></canvas></div>
+                        </div>
+                        <div class="bg-white p-8 rounded-[40px] shadow-sm border border-stone-200">
+                            <h3 class="font-bold text-stone-800 mb-6 flex items-center"><span class="mr-2">📊</span> 概念熟練分布</h3>
+                            <div class="chart-container"><canvas id="radarChart"></canvas></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-amber-500 text-white p-10 rounded-[40px] shadow-2xl shadow-amber-100 flex flex-col md:flex-row items-center gap-8">
+                        <div class="flex-1">
+                            <h3 class="text-3xl font-black mb-3 italic">READY TO GO?</h3>
+                            <p class="text-amber-50 font-medium">從最簡單的加法開始，一步步攀登至雙重括號的巔峰。每一題都是通往大師之路的基石。</p>
+                        </div>
+                        <button onclick="switchView(0)" class="bg-white text-amber-600 font-black px-10 py-5 rounded-2xl shadow-lg hover:scale-105 active:scale-95 transition-all text-xl">
+                            進入第一單元
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            initCharts(firstScores, bestScores, percentages);
+        }
+
+        function renderModule(index) {
+            if (!mainContent) return;
+            const mod = appData.modules[index];
+            demoStep = 0;
+            answeredInCurrentSession.clear();
+            currentModuleCorrectCount = 0;
+            currentProblemIdx = 0;
+            currentStepIdx = 0;
+            currentStepFailed = false;
+
+            // Prepare Data
+            if (mod.type === 'step-by-step') {
+                currentModuleData = shuffleArray(mod.practice).map(p => {
+                    const newSteps = p.steps.map(s => ({
+                        ...s,
+                        options: shuffleArray([...s.options])
+                    }));
+                    return { ...p, steps: newSteps };
+                });
+            } else {
+                currentModuleData = shuffleArray(mod.practice.map(q => {
+                    return { ...q, options: shuffleArray([...q.options]) };
+                }));
+            }
+
+            const maxScore = getModuleMaxScore(index);
+
+            mainContent.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in pb-20">
+                    <div class="flex items-center space-x-3 mb-4 text-amber-600 font-black text-xs tracking-[0.2em] uppercase">
+                        <span>STAGE 0${mod.id}</span>
+                        <span class="w-1.5 h-1.5 bg-amber-200 rounded-full"></span>
+                        <span>${mod.subtitle}</span>
+                    </div>
+                    <h2 class="text-5xl font-black text-stone-900 mb-6 tracking-tighter">${mod.title}</h2>
+                    <p class="text-xl text-stone-600 bg-white p-6 rounded-3xl border-l-[12px] border-amber-400 mb-12 shadow-sm leading-relaxed font-medium">${mod.desc}</p>
+
+                    <div class="flex flex-col gap-12">
+                        
+                        <!-- 演示區 -->
+                        <div class="w-full max-w-3xl mx-auto flex flex-col">
+                            <div class="bg-stone-900 rounded-[40px] overflow-hidden shadow-2xl flex-1 flex flex-col">
+                                <div class="p-5 bg-stone-800/50 flex justify-between items-center border-b border-stone-800">
+                                    <span class="text-[10px] font-black text-stone-500 tracking-widest uppercase">Tutorial Classroom</span>
+                                    <button onclick="resetDemo(${index})" class="text-[10px] text-stone-400 hover:text-white px-3 py-1 border border-stone-700 rounded-full transition-all">RESTART</button>
+                                </div>
+                                <div class="flex-1 p-8 flex flex-col items-center justify-center text-white min-h-[350px]">
+                                    <div class="text-3xl font-bold mb-12 pb-6 border-b border-stone-700 w-full text-center">$${mod.demo.q}$</div>
+                                    <div id="demo-list" class="space-y-6 w-full text-center"></div>
+                                </div>
+                                <div class="p-8 bg-black/20">
+                                    <button id="next-btn" onclick="nextDemo(${index})" class="w-full py-5 bg-amber-500 hover:bg-amber-400 text-white font-black rounded-3xl shadow-xl transition-all active:scale-95 text-lg">
+                                        下一步演示 ➜
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 練習區 -->
+                        <div class="w-full">
+                            <div class="bg-white p-10 rounded-[40px] shadow-sm border border-stone-200 h-full relative overflow-hidden">
+                                <div class="flex justify-between items-center mb-10 border-b border-stone-100 pb-6">
+                                    <h3 class="text-2xl font-black text-stone-800 flex items-center">
+                                        <span class="w-3 h-8 bg-green-500 rounded-full mr-4"></span>
+                                        ${mod.type === 'step-by-step' ? '分步引導式解題' : '實戰隨機題庫'}
+                                    </h3>
+                                    <div id="score-badge" class="px-5 py-2 bg-green-100 text-green-700 rounded-2xl font-black text-xs">Score: 0/${maxScore}</div>
+                                </div>
+                                
+                                <div id="quiz-area">
+                                    ${mod.type === 'step-by-step' ? renderStepByStepUI(index) : renderSimpleQuizUI()}
+                                </div>
+
+                                <div id="retry-footer" class="mt-10 hidden fade-in">
+                                    <button onclick="renderModule(${index})" class="w-full py-5 bg-stone-900 hover:bg-stone-800 text-white font-black rounded-3xl transition-all shadow-xl text-lg">
+                                        洗牌並重新挑戰 ↺
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            triggerKatex();
+        }
+
+        // --- Render Helpers ---
+
+        function renderSimpleQuizUI() {
+            return `<div class="space-y-8" id="quiz-container">
+                ${currentModuleData.map((q, qIdx) => `
+                <div id="q-block-${qIdx}" class="p-6 rounded-3xl bg-stone-50 border border-stone-100 transition-all">
+                    <div class="text-lg font-bold text-stone-700 mb-6 flex items-start">
+                        <span class="w-7 h-7 bg-stone-200 text-stone-500 rounded-xl text-[10px] font-black flex items-center justify-center mr-4 flex-shrink-0 mt-1">${qIdx+1}</span>
+                        <div class="pt-1">$${q.q}$</div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        ${q.options.map((opt, oIdx) => `
+                            <button 
+                                id="btn-${qIdx}-${oIdx}"
+                                onclick="checkSimpleAnswer(${qIdx}, ${oIdx})"
+                                class="opt-btn-${qIdx} py-4 px-5 rounded-2xl border-2 border-white bg-white shadow-sm text-stone-600 font-bold hover:border-amber-400 hover:text-amber-700 transition-all text-sm"
+                            >
+                                $${opt}$
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>`).join('')}
+            </div>`;
+        }
+
+        function renderStepByStepUI(modIdx) {
+            // Check if finished
+            if (currentProblemIdx >= currentModuleData.length) {
+                return `<div class="text-center py-10 fade-in">
+                    <div class="text-6xl mb-4">🎉</div>
+                    <h3 class="text-2xl font-black text-stone-800 mb-2">本單元練習完成！</h3>
+                    <p class="text-stone-500">做得好！您已經完成了所有詳細步驟解題。</p>
+                </div>`;
+            }
+
+            const pData = currentModuleData[currentProblemIdx];
+            const sData = pData.steps[currentStepIdx];
+            const totalSteps = pData.steps.length;
+
+            // Render History (Previous Steps)
+            let historyHTML = '';
+            // Show Initial Problem
+            historyHTML += `
+                <div class="text-stone-400 text-[10px] font-bold uppercase tracking-widest mb-1">Original Equation</div>
+                <div class="bg-stone-100 rounded-xl p-4 text-center text-xl font-bold text-stone-500 mb-2 opacity-70">
+                    $${pData.q}$
+                </div>
+                <div class="step-connector mb-2"></div>
+            `;
+            
+            for(let i=0; i<currentStepIdx; i++) {
+                const pastStep = pData.steps[i];
+                historyHTML += `
+                    <div class="text-green-600 text-[10px] font-bold uppercase tracking-widest mb-1 flex items-center justify-center">
+                        <span class="mr-1">✓</span> ${pastStep.instruction}
+                    </div>
+                    <div class="bg-green-50 border border-green-100 rounded-xl p-4 text-center text-xl font-bold text-green-700 mb-2">
+                        $${pastStep.correctStr}$
+                    </div>
+                    <div class="step-connector mb-2"></div>
+                `;
+            }
+
+            return `
+            <div class="fade-in" id="step-container">
+                <div class="mb-6 flex justify-between items-center text-xs font-bold text-stone-400 uppercase tracking-widest">
+                    <span>Problem ${currentProblemIdx + 1} of ${currentModuleData.length}</span>
+                    <span>Step ${currentStepIdx + 1}/${totalSteps}</span>
+                </div>
+                
+                <!-- History & Flow -->
+                <div class="mb-6">
+                    ${historyHTML}
+                </div>
+
+                <!-- Current Active Step -->
+                <div class="bg-amber-50 border-2 border-amber-400 rounded-3xl p-8 mb-8 text-center relative overflow-hidden shadow-lg transform transition-all">
+                    <div class="text-amber-600 text-xs font-black mb-2 uppercase tracking-widest">CURRENT STEP: ${sData.instruction}</div>
+                    <div class="text-3xl font-black text-stone-800 mb-6">$${sData.q}$</div>
+                    
+                    <div class="grid grid-cols-1 gap-4">
+                        ${sData.options.map((opt, oIdx) => `
+                            <button 
+                                id="step-btn-${oIdx}"
+                                onclick="checkStepAnswer(${oIdx}, ${modIdx})"
+                                class="step-opt-btn py-5 px-6 rounded-2xl border-2 border-stone-100 bg-white shadow-sm text-stone-600 font-bold hover:border-amber-400 hover:text-amber-700 hover:bg-amber-50 transition-all text-base text-left flex items-center"
+                            >
+                                <span class="w-6 h-6 rounded-full border border-stone-200 mr-4 flex items-center justify-center text-[10px] text-stone-400 font-black">${String.fromCharCode(65+oIdx)}</span>
+                                $${opt}$
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        // --- Interaction Handlers ---
+
+        function switchView(view) {
+            currentView = view;
+            renderNav();
+            if (view === 'overview') renderOverview();
+            else renderModule(view);
+            if (mainContent) mainContent.scrollTop = 0;
+            if (window.innerWidth < 768) toggleMobileMenu(false);
+        }
+
+        function nextDemo(idx) {
+            const steps = appData.modules[idx].demo.steps;
+            const list = document.getElementById('demo-list');
+            const btn = document.getElementById('next-btn');
+            if (demoStep < steps.length) {
+                const el = document.createElement('div');
+                el.className = 'text-2xl font-bold text-amber-400 fade-in';
+                el.innerHTML = `$${steps[demoStep]}$`;
+                list.appendChild(el);
+                demoStep++;
+                triggerKatex();
+                if (demoStep === steps.length) {
+                    btn.textContent = "已完成演示 ↺";
+                    btn.classList.replace('bg-amber-500', 'bg-stone-700');
+                    btn.onclick = () => resetDemo(idx);
+                }
+            }
+        }
+
+        function resetDemo(idx) {
+            demoStep = 0;
+            const list = document.getElementById('demo-list');
+            if (list) list.innerHTML = '';
+            const btn = document.getElementById('next-btn');
+            if (btn) {
+                btn.textContent = "下一步演示 ➜";
+                btn.classList.replace('bg-stone-700', 'bg-amber-500');
+                btn.onclick = () => nextDemo(idx);
+            }
+        }
+
+        // Handler for Modules 1-5 (One shot = 1 point)
+        function checkSimpleAnswer(qIdx, oIdx) {
+            if (answeredInCurrentSession.has(qIdx)) return;
+
+            const qData = currentModuleData[qIdx];
+            const correctStr = qData.correctStr;
+            const chosenStr = qData.options[oIdx];
+            const targetBtn = document.getElementById(`btn-${qIdx}-${oIdx}`);
+
+            answeredInCurrentSession.add(qIdx);
+
+            if (chosenStr === correctStr) {
+                targetBtn.classList.add('btn-correct');
+                currentModuleCorrectCount++;
+            } else {
+                targetBtn.classList.add('btn-wrong');
+                const correctOptionIdx = qData.options.findIndex(opt => opt === correctStr);
+                const correctBtn = document.getElementById(`btn-${qIdx}-${correctOptionIdx}`);
+                correctBtn.classList.add('btn-correct');
+            }
+
+            document.getElementById('score-badge').textContent = `Score: ${currentModuleCorrectCount}/4`;
+
+            if (answeredInCurrentSession.size === 4) {
+                saveScore(currentView, currentModuleCorrectCount);
+                document.getElementById('retry-footer').classList.remove('hidden');
+            }
+        }
+
+        // Handler for Modules 6-8 (Step by Step)
+        function checkStepAnswer(oIdx, modIdx) {
+            const btns = document.querySelectorAll('.step-opt-btn');
+            const pData = currentModuleData[currentProblemIdx];
+            const sData = pData.steps[currentStepIdx];
+            const correctStr = sData.correctStr;
+            const chosenStr = sData.options[oIdx];
+            
+            const targetBtn = document.getElementById(`step-btn-${oIdx}`);
+
+            if (chosenStr === correctStr) {
+                // Correct Choice
+                targetBtn.classList.add('btn-correct');
+                btns.forEach(b => b.onclick = null);
+
+                // Only award point if NO error was made on this specific step
+                if (!currentStepFailed) {
+                    currentModuleCorrectCount++;
+                }
+
+                // Reset fail flag for next step
+                currentStepFailed = false;
+
+                // Move to next step
+                setTimeout(() => {
+                    currentStepIdx++;
+                    if (currentStepIdx >= pData.steps.length) {
+                        currentProblemIdx++;
+                        currentStepIdx = 0;
+                    }
+                    updateStepUI(modIdx);
+                }, 1000);
+
+            } else {
+                // Wrong Choice
+                targetBtn.classList.add('btn-wrong');
+                // Mark this step as failed (point lost forever for this step)
+                currentStepFailed = true;
+                // Do NOT advance. Let them try again.
+            }
+        }
+
+        function updateStepUI(modIdx) {
+            const quizArea = document.getElementById('quiz-area');
+            const maxScore = getModuleMaxScore(modIdx);
+            
+            if (currentProblemIdx >= currentModuleData.length) {
+                saveScore(currentView, currentModuleCorrectCount);
+                document.getElementById('retry-footer').classList.remove('hidden');
+            }
+            
+            document.getElementById('score-badge').textContent = `Score: ${currentModuleCorrectCount}/${maxScore}`;
+            quizArea.innerHTML = renderStepByStepUI(modIdx);
+            triggerKatex();
+        }
+
+        function toggleMobileMenu(force) {
+            if (!sidebar || !sidebarOverlay) return;
+            const isClosing = force === false || !sidebar.classList.contains('-translate-x-full');
+            if (isClosing) {
+                sidebar.classList.add('-translate-x-full');
+                sidebarOverlay.classList.add('hidden');
+            } else {
+                sidebar.classList.remove('-translate-x-full');
+                sidebarOverlay.classList.remove('hidden');
+            }
+        }
+
+        // --- Charts ---
+        function initCharts(firstScores, bestScores, percentages) {
+            const pCtx = document.getElementById('progressChart').getContext('2d');
+            new Chart(pCtx, {
+                type: 'bar',
+                data: {
+                    labels: appData.modules.map(m => `P${m.id}`),
+                    datasets: [
+                        { label: '首次挑戰', data: firstScores, backgroundColor: '#e7e5e4', borderRadius: 8 },
+                        { label: '最佳表現', data: bestScores, backgroundColor: '#10b981', borderRadius: 8 }
+                    ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: { y: { min: 0, max: 8, ticks: { stepSize: 2 } }, x: { grid: { display: false } } },
+                    plugins: { legend: { position: 'bottom', labels: { font: { family: 'Lexend', size: 10, weight: 'bold' } } } }
+                }
+            });
+
+            const rCtx = document.getElementById('radarChart').getContext('2d');
+            new Chart(rCtx, {
+                type: 'radar',
+                data: {
+                    labels: appData.modules.map(m => m.title),
+                    datasets: [{
+                        label: '能力分布 (%)',
+                        data: percentages,
+                        backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                        borderColor: '#f59e0b',
+                        pointBackgroundColor: '#f59e0b',
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: { r: { min: 0, max: 100, ticks: { display: false }, grid: { color: '#f5f5f4' } } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initDOMElements();
+            renderNav();
+            renderOverview();
+            if (mobileMenuBtn) mobileMenuBtn.onclick = () => toggleMobileMenu();
+            if (sidebarOverlay) sidebarOverlay.onclick = () => toggleMobileMenu(false);
+            setTimeout(triggerKatex, 500);
+        });
+    </script>
+</body>
+</html>
