@@ -3,6 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="manifest" href="manifest_learning.json">
+    <meta name="theme-color" content="#5C94FC">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="images/dog.png">
+
     <title>特教數位學習網｜米克師</title>
     <meta name="description" content="專為國中特教生設計的數位學習系統。由米克師製作，提供七八九年級國文、數學、英文數位教材，結合學習策略、社會技巧與情緒紀錄。">
     <meta name="keywords" content="國中特教, 數位學習, 特教教材, 數位資源, 資源班, 學習障礙, 米克師, SPED, 會考複習">
@@ -16,7 +23,6 @@
 
     <style>
       /* --- 遊戲標題畫面專用樣式 (Title Screen) --- */
-      
       #title-screen {
         position: fixed;
         top: 0;
@@ -31,10 +37,9 @@
         justify-content: center;
         text-align: center;
         font-family: 'Press Start 2P', cursive;
-        overflow: hidden; /* 防止裝飾凸出去 */
+        overflow: hidden; 
       }
 
-      /* --- 裝飾：懸浮磚塊區 --- */
       .block-container {
         display: flex;
         gap: 10px;
@@ -54,26 +59,23 @@
         color: #000;
       }
 
-      /* 磚塊樣式 */
       .brick {
-        background-color: #C84C0C; /* 磚紅 */
+        background-color: #C84C0C; 
         background-image: 
             linear-gradient(45deg, transparent 48%, #000 48%, #000 52%, transparent 52%),
             linear-gradient(-45deg, transparent 48%, #000 48%, #000 52%, transparent 52%);
         background-size: 20px 20px;
       }
 
-      /* 問號箱樣式 */
       .question-box {
-        background-color: #E89C24; /* 橘黃 */
+        background-color: #E89C24; 
         color: #000;
         animation: blink-color 1s steps(2, start) infinite;
       }
 
-      /* --- 裝飾：綠色水管 --- */
       .pipe-decoration {
         position: absolute;
-        bottom: 60px; /* 地板高度 */
+        bottom: 60px; 
         left: 10%;
         width: 80px;
         height: 120px;
@@ -82,26 +84,23 @@
         z-index: 1;
       }
 
-      /* 水管頭 */
       .pipe-decoration::before {
         content: '';
         position: absolute;
         top: -40px;
         left: -10px;
-        width: 100px; /* 比管身寬 */
+        width: 100px; 
         height: 40px;
         background: linear-gradient(to right, #00AA00 50%, #00d600 90%);
         border: 4px solid #000;
       }
 
-      /* 另一支水管 (右邊) */
       .pipe-decoration.right {
         left: auto;
         right: 10%;
-        height: 80px; /* 比較矮 */
+        height: 80px; 
       }
 
-      /* --- 裝飾：地板 --- */
       .ground-decoration {
         position: absolute;
         bottom: 0;
@@ -110,7 +109,6 @@
         height: 60px;
         background-color: #C84C0C;
         border-top: 4px solid #000;
-        /* 模擬磚塊紋理 */
         background-image: 
             linear-gradient(335deg, #000 4px, transparent 4px),
             linear-gradient(155deg, #000 4px, transparent 4px),
@@ -121,8 +119,6 @@
         z-index: 2;
       }
 
-
-      /* 標題文字 */
       .game-title {
         font-size: clamp(1.5rem, 4vw, 3.5rem);
         color: #ffffff;
@@ -133,7 +129,6 @@
         z-index: 5;
       }
 
-      /* 開始按鈕 (NES 風格) */
       .start-btn {
         background-color: #E89C24;
         color: #000000;
@@ -189,7 +184,6 @@
 <body>
 
   <div id="title-screen">
-      
       <div class="block-container">
           <div class="block brick"></div>
           <div class="block question-box">?</div>
@@ -241,8 +235,6 @@
               <i class="fas fa-bars"></i>
           </div>
       </header>
-
-
 
       <div class="intro-text">請選擇科目......</div>
 
@@ -324,11 +316,18 @@
   <script src="tracking.js"></script>
 
   <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw_learning.js')
+                .then(reg => console.log('學習網 PWA 註冊成功'))
+                .catch(err => console.log('註冊失敗', err));
+        });
+    }
+
     const startBtn = document.getElementById('start-btn');
     const titleScreen = document.getElementById('title-screen');
     const mainView = document.getElementById('main-view');
 
-    // 開始學習函式
     function startGame() {
         titleScreen.style.display = 'none';
         mainView.classList.remove('hidden');
@@ -344,8 +343,4 @@
     });
   </script>
 </body>
-
 </html>
-
-
-
