@@ -5,13 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>9年級數學</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- 引用你原本的 CSS 檔案 -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="responsive.css">
+    
     <link rel="icon" href="images/dog.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
-    </head>
+
+    <style>
+        /* --- 僅保留打勾功能的樣式 --- */
+
+        /* 當按鈕被點擊完成時的狀態 */
+        .btn.completed {
+            background-color: #d1fae5 !important; /* 淺綠色背景 */
+            color: #065f46 !important;            /* 深綠色文字 */
+            border-color: #34d399 !important;     /* 綠色邊框 */
+            padding-right: 35px !important;       /* 留位置給勾勾圖示 */
+            position: relative;                   /* 確保勾勾定位正確 */
+        }
+
+        /* 完成後的勾勾圖示 */
+        .btn.completed::after {
+            content: '\f00c'; /* FontAwesome Check Icon */
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #059669;
+        }
+
+        /* 確保分頁切換正常顯示 (如果你的 style.css 沒處理) */
+        .section-content { display: none; }
+        .active-section { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
 <body>
+
     <header class="navbar">
         <div class="logo">SPED</div>
         <nav>
@@ -57,7 +91,7 @@
                     <h3 style="text-align: center;">1-1 連比</h3>
                     <div class="btn-group">
                         <a href="https://gemini.google.com/share/f7e0dee60031" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_1-simplest_integer_ratio">01最簡整數比</a>                        
-                        <a href="https://gemini.google.com/share/cbb333293546" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_1-continued_ratio_ops">02連比例的運算</a>                                                
+                        <a href="https://gemini.google.com/share/cbb333293546" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_1-continued_ratio_ops">02連比例的運算</a>                                                                
                         <a href="math/G9S1-1-1-3sheet.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_1-continued_ratio_ops_3">03連比例的運算3</a>
                         <a href="math/G9S1-1-1-4sheet.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_1-continued_ratio_ops_4">04連比例的運算4</a>
                     </div>
@@ -125,11 +159,12 @@
                 <div class="social-group">
                     <h3 style="text-align: center;">3-1推理證明</h3>
                     <div class="btn-group">                           
-                        <a href="math/G9S1-3-1-1.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">01全等證明</a>   
-                        <a href="math/G9S1-3-1-2.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">02相似形的應用</a>   
-                        <a href="math/G9S1-3-1-3.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">03輔助線的應用</a>   
-                        <a href="math/G9S1-3-1-4.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">04奇偶數的判別</a>   
-                        <a href="math/G9S1-3-1-5.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">05判別大小</a>   
+                        <a href="math/G9S1-3-1-1.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_1">01全等證明</a>   
+                        <a href="math/G9S1-3-1-2.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_1">02相似形的應用</a>   
+                        <a href="math/G9S1-3-1-3.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_1">03輔助線的應用</a>   
+                        <a href="math/G9S1-3-1-4.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_1">04奇偶數的判別</a>   
+                        <a href="math/G9S1-3-1-5.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_1">05判別大小</a>                          
+                        <a href="math/G9S1-3-1-review.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_1">複習</a>      
                     </div>
                 </div>
 
@@ -144,7 +179,8 @@
                         <a href="math/G9S1-3-2-5.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_2">05三角形面積與內切圓半徑</a>    
                         <a href="math/G9S1-3-2-6.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_2">06直角三角形的內切圓</a> 
                         <a href="math/G9S1-3-2-7.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_2">07三角形的重心</a> 
-                        <a href="math/G9S1-3-2-8.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_2">08重心與面積</a>         
+                        <a href="math/G9S1-3-2-8.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_2">08重心與面積</a>                          
+                        <a href="math/G9S1-3-2-review.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_2">複習</a>          
                     </div>
                 </div>
             </div>
@@ -153,11 +189,56 @@
 
     <script src="main.js"></script>
     <script src="tracking.js"></script>
+
+    <!-- 打勾功能邏輯 -->
+    <script>
+        // 確保分頁切換函數存在
+        if (typeof showSection === 'undefined') {
+            window.showSection = function(sectionId, btn) {
+                document.querySelectorAll('.section-content').forEach(div => {
+                    div.classList.remove('active-section');
+                });
+                document.getElementById(sectionId).classList.add('active-section');
+            };
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const allButtons = document.querySelectorAll('.btn');
+
+            // 初始化：從 LocalStorage 讀取紀錄
+            function initProgress() {
+                allButtons.forEach(btn => {
+                    // 使用 data-track-lbl 或 href 作為 ID
+                    const trackId = btn.getAttribute('data-track-lbl') || btn.getAttribute('href');
+                    
+                    if (localStorage.getItem(trackId) === 'done') {
+                        btn.classList.add('completed');
+                    }
+
+                    // 綁定點擊事件
+                    btn.addEventListener('click', function(e) {
+                        // 切換狀態
+                        toggleCompletion(this, trackId);
+                    });
+                });
+            }
+
+            // 切換完成狀態並存檔
+            function toggleCompletion(btn, trackId) {
+                btn.classList.toggle('completed');
+                
+                if (btn.classList.contains('completed')) {
+                    localStorage.setItem(trackId, 'done');
+                } else {
+                    localStorage.removeItem(trackId);
+                }
+            }
+
+            initProgress();
+        });
+    </script>
 </body>
 </html>
 <footer>
-
     <p style="display: inline;">Created by 米克師</p>
-
 </footer>
-
