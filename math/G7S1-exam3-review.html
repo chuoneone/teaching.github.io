@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>七年級數學科 - 互動複習卷 (動態縮放 & 本地儲存版)</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Chosen Palette: Modern Educational -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'warm-bg': '#F8FAFC',
+                        'warm-surface': '#F1F5F9',
+                        'calm-text': '#1E293B',
+                        'soft-blue': '#3B82F6',
+                        'soft-amber': '#F59E0B',
+                        'correct-green': '#10B981',
+                        'wrong-red': '#EF4444'
+                    },
+                    fontFamily: {
+                        'sans': ['"Noto Sans TC"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --app-font-size: 1rem;
+        }
+
+        body {
+            background-color: #F8FAFC;
+            color: #1E293B;
+            font-size: var(--app-font-size);
+            transition: font-size 0.15s ease-out;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            height: 250px;
+            max-height: 300px;
+        }
+
+        /* Scalable UI Elements using rem/em */
+        .question-text { font-size: 1.25em; line-height: 1.6; }
+        .option-text { font-size: 1.1em; }
+        .katex { font-size: 1.15em; }
+        
+        /* Layout Transitions */
+        .view-transition {
+            transition: opacity 0.3s ease;
+        }
+        
+        .question-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .question-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Control Button Styling */
+        .zoom-btn {
+            @apply p-2 rounded-lg hover:bg-blue-50 text-slate-600 border border-slate-200 transition-all active:scale-90;
+        }
+    </style>
+
+    <!-- Application Structure Plan: 
+         1. **Information Architecture**: A dynamic assessment tool focused on visual comfort and progress tracking.
+         2. **Dashboard**: Centralizes performance metrics (History Line Chart) and structural overview (Topic Doughnut).
+         3. **Dynamic Font Scaling**: Implements a real-time font-size controller in the navbar. Users can increment/decrement the root font-size, which cascades to all UI components and KaTeX formulas.
+         4. **Data Persistence**: Uses `localStorage` for both Score History and the preferred Font Size scale.
+         5. **Visual Design**: High contrast but soft colors (Slate & Blue) to reduce eye fatigue during study sessions.
+    -->
+
+    <!-- Visualization & Content Choices:
+         1. **KaTeX**: Standardized rendering for all math expressions.
+         2. **Chart.js**: Line chart for history, Doughnut for topics. Both are responsive to container resizing.
+         3. **Dynamic Scaling**: Uses CSS variables (--app-font-size) manipulated via JS to ensure smooth, non-glitchy resizing of the entire application.
+    -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col" id="main-body">
+
+    <!-- Navbar with Zoom Controls -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 bg-soft-blue rounded-lg flex items-center justify-center text-white font-bold">∑</div>
+                <span class="text-xl font-bold text-slate-800">數感複習平台</span>
+            </div>
+            
+            <div class="flex items-center bg-slate-50 border border-slate-200 rounded-xl p-1">
+                <button onclick="adjustZoom(-0.1)" class="w-10 h-10 flex items-center justify-center hover:bg-white hover:shadow-sm rounded-lg text-xl font-bold text-slate-500 transition-all" title="縮小字體">
+                    －
+                </button>
+                <div class="px-3 min-w-[70px] text-center font-bold text-slate-700 border-x border-slate-200" id="zoom-display">
+                    100%
+                </div>
+                <button onclick="adjustZoom(0.1)" class="w-10 h-10 flex items-center justify-center hover:bg-white hover:shadow-sm rounded-lg text-xl font-bold text-slate-500 transition-all" title="放大字體">
+                    ＋
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-4xl mx-auto w-full px-4 py-8">
+        
+        <!-- DASHBOARD VIEW -->
+        <section id="view-dashboard" class="space-y-8">
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
+                <h1 class="text-3xl font-extrabold text-slate-900 mb-2">準備好練習了嗎？</h1>
+                <p class="text-slate-500 text-lg">這是 114 七年級第三次段考複習卷。我們會記錄你的每一次進步。</p>
+                
+                <div class="mt-8 flex flex-col sm:flex-row gap-4">
+                    <button onclick="switchView('view-quiz')" class="px-8 py-4 bg-soft-blue hover:bg-blue-600 text-white font-bold rounded-2xl shadow-lg shadow-blue-200 transition-all flex-grow text-center text-xl">
+                        開始新練習
+                    </button>
+                    <button onclick="clearHistory()" class="px-6 py-4 bg-white hover:bg-red-50 text-red-500 font-medium rounded-2xl border border-red-100 transition-all text-center">
+                        清除紀錄
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-800 mb-4">得分歷史</h3>
+                    <div class="chart-container">
+                        <canvas id="historyChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-800 mb-4">題目類別分佈</h3>
+                    <div class="chart-container">
+                        <canvas id="topicChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- QUIZ VIEW -->
+        <section id="view-quiz" class="hidden space-y-8">
+            <div class="sticky top-20 z-40 bg-warm-bg/95 backdrop-blur-md pb-4 border-b border-slate-100">
+                <div class="flex justify-between items-end mb-2">
+                    <span class="text-sm font-bold text-soft-blue" id="progress-text">作答進度：0 / 18</span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-3">
+                    <div id="progress-bar" class="bg-soft-blue h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div id="questions-list" class="space-y-12">
+                <!-- Questions injected via JS -->
+            </div>
+
+            <div class="pt-12 pb-24 flex justify-center">
+                <button onclick="submitExam()" class="px-16 py-5 bg-slate-800 hover:bg-black text-white text-2xl font-black rounded-3xl shadow-2xl transform transition active:scale-95">
+                    提交卷子
+                </button>
+            </div>
+        </section>
+
+        <!-- RESULTS VIEW -->
+        <section id="view-results" class="hidden space-y-8">
+            <div class="bg-white p-10 rounded-3xl shadow-xl border border-slate-200 text-center">
+                <div class="text-sm text-slate-400 uppercase font-bold tracking-widest mb-2">本次評分</div>
+                <div class="text-8xl font-black text-soft-blue mb-8" id="res-score">0</div>
+                
+                <div class="grid grid-cols-2 gap-4 max-w-sm mx-auto mb-10">
+                    <div class="p-4 bg-correct-green/5 rounded-2xl border border-correct-green/10">
+                        <div class="text-xs text-slate-400 font-bold mb-1">答對</div>
+                        <div class="text-3xl font-bold text-correct-green" id="res-correct">0</div>
+                    </div>
+                    <div class="p-4 bg-wrong-red/5 rounded-2xl border border-wrong-red/10">
+                        <div class="text-xs text-slate-400 font-bold mb-1">答錯</div>
+                        <div class="text-3xl font-bold text-wrong-red" id="res-wrong">0</div>
+                    </div>
+                </div>
+
+                <button onclick="switchView('view-dashboard')" class="w-full py-4 bg-slate-800 hover:bg-black text-white font-bold rounded-2xl transition">
+                    回到首頁
+                </button>
+            </div>
+
+            <div id="wrong-answer-review" class="hidden bg-white p-8 rounded-3xl shadow-sm border border-red-100">
+                <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center">
+                    <span class="mr-2">🔎</span> 錯題回顧
+                </h3>
+                <div id="wrong-list" class="space-y-8">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- DATA ---
+        const questions = [
+            { id: 1, category: "解方程式", q: "請判斷哪一個數字是方程式 $15 + 2x = 7$ 的解？", options: ["$x = 4$", "$x = -2$", "$x = 11$", "$x = -4$"], answer: 3, label: "(D) $x = -4$" },
+            { id: 2, category: "代數簡記", q: "將算式 $5 \\times y - 7$ 簡記，結果是多少？", options: ["$5y - 7$", "$-2y$", "$35y$", "$y - 2$"], answer: 0, label: "(A) $5y - 7$" },
+            { id: 3, category: "代數觀念", q: "下面哪一個敘述是「錯誤」的？", options: ["$5 \\times y$ 簡記為 $5y$", "$-y$ 表示 $(-1) \\times y$", "若 $x = y$，則 $x + 8 = y + 8$", "$5x - 4x$ 化簡後結果是 $1$"], answer: 3, label: "(D) $5x - 4x = x$，並非 $1$" },
+            { id: 4, category: "化簡", q: "化簡算式 $-6(3y - 2)$，結果是多少？", options: ["$-18y - 12$", "$-18y + 12$", "$18y + 12$", "$-18y - 2$"], answer: 1, label: "(B) $-18y + 12$" },
+            { id: 5, category: "應用題", q: "小許有 $b$ 張 $500$ 元與 $20$ 個 $100$ 元，請問總共存了多少元？", options: ["$500b + 2000$", "$500b + 200$", "$100b + 500$", "$20b + 100$"], answer: 0, label: "(A) $500b + 2000$" },
+            { id: 6, category: "解方程式", q: "若 $x = 3$ 是方程式 $2x - m + 5 = 4$ 的解，請問 $m = $ ？", options: ["$15$", "$11$", "$7$", "$3$"], answer: 2, label: "(C) $7$" },
+            { id: 7, category: "代數觀念", q: "下面哪一個「不是」一元一次方程式？", options: ["$x - 7 = 10$", "$\\frac{x}{2} + \\frac{x}{2} = x$", "$x + 4 = x + 5$", "$3x = 0$"], answer: 2, label: "(C) $x+4=x+5$ 整理後無未知數" },
+            { id: 8, category: "化簡", q: "化簡 $-12 - 4x + 15 + 2x$ 的結果？", options: ["$3 - 6x$", "$-27 - 2x$", "$3 - 2x$", "$-3 + 2x$"], answer: 2, label: "(C) $3 - 2x$" },
+            { id: 9, category: "等量公理", q: "假設 $a, b, c$ 代表三個數，哪一個不一定正確？", options: ["若 $a+5=b+5$ 則 $a=b$", "若 $a-10=b-10$ 則 $a=b$", "若 $a \\times 0 = b \\times 0$ 則 $a=b$", "若 $a \\div 2 = b \\div 2$ 則 $a=b$"], answer: 2, label: "(C) 乘以 0 後無法反推原數" },
+            { id: 10, category: "應用題", q: "繩子分 5 段，每段比小漢身高 $y$ 多 $25$ 公分，總長？", options: ["$5y + 25$", "$5y + 125$", "$y + 125$", "$5(y - 25)$"], answer: 1, label: "(B) $5(y + 25) = 5y + 125$" },
+            { id: 11, category: "代數求值", q: "若 $x = -2$，則 $-4 - 3x$ 計算結果是多少？", options: ["$2$", "$-10$", "$10$", "$-2$"], answer: 0, label: "(A) $2$" },
+            { id: 12, category: "化簡", q: "將算式 $10 + x \\div \\frac{3}{4}$ 化簡後的結果是多少？", options: ["$\\frac{40+3x}{4}$", "$10 + \\frac{3}{4}x$", "$10 + \\frac{4}{3}x$", "$\\frac{13}{4}x$"], answer: 2, label: "(C) 除以分數等於乘以倒數" },
+            { id: 13, category: "應用題", q: "小光成本 $y$ 元買 $12$ 罐，每罐賣 $\\frac{y}{4}$ 元，賺多少？", options: ["$2y$ 元", "$3y$ 元", "$4y$ 元", "$12y$ 元"], answer: 0, label: "(A) $2y$ 元" },
+            { id: 14, category: "化簡", q: "化簡 $-4(6x - 1) + 2(5x - 8)$？", options: ["$-14x - 12$", "$-14x + 20$", "$-34x - 12$", "$-14x - 15$"], answer: 0, label: "(A) $-14x - 12$" },
+            { id: 15, category: "應用題", q: "和為 20，小數 $x$ 比大數 $\\frac{1}{3}$ 倍多 $2$，列式？", options: ["$20 - x = \\frac{1}{3}x + 2$", "$x = \\frac{1}{3}(20 - x) + 2$", "$x - \\frac{1}{3}x = 2$", "$x + 2 = \\frac{1}{3}(20 - x)$"], answer: 1, label: "(B) 大數為 $20-x$" },
+            { id: 16, category: "化簡", q: "化簡 $\\frac{-x+5}{4} - \\frac{3x-2}{3}$ 的結果？", options: ["$\\frac{-15x + 23}{12}$", "$\\frac{-15x + 7}{12}$", "$\\frac{-9x + 23}{12}$", "$\\frac{-15x - 23}{12}$"], answer: 0, label: "(A) $\\frac{-15x + 23}{12}$" },
+            { id: 17, category: "代數觀念", q: "化簡 $\\frac{3x+1}{4} - \\frac{-2x+3}{3}$，誰做法是對的？", options: ["兩人都對", "兩人都錯", "小漢對 (乘12)", "小光對 (通分)"], answer: 3, label: "(D) 算式化簡不可直接乘分母" },
+            { id: 18, category: "應用題", q: "調漲 20% 且會員改九折。原價 $y$，前後相差？", options: ["$0.12y$", "$0.25y$", "$0.28y$", "$0.30y$"], answer: 2, label: "(C) $0.28y$" }
+        ];
+
+        // --- STATE ---
+        let currentAnswers = new Array(questions.length).fill(null);
+        let zoomLevel = parseFloat(localStorage.getItem('math_app_zoom') || '1.0');
+
+        // --- ZOOM LOGIC ---
+        function applyZoom() {
+            document.documentElement.style.setProperty('--app-font-size', `${zoomLevel}rem`);
+            document.getElementById('zoom-display').innerText = `${Math.round(zoomLevel * 100)}%`;
+            localStorage.setItem('math_app_zoom', zoomLevel.toString());
+        }
+
+        function adjustZoom(delta) {
+            zoomLevel = Math.min(Math.max(zoomLevel + delta, 0.8), 1.5);
+            applyZoom();
+        }
+
+        // --- UI NAVIGATION ---
+        function switchView(viewId) {
+            document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(viewId).classList.remove('hidden');
+            if(viewId === 'view-quiz') initQuiz();
+            else if(viewId === 'view-dashboard') refreshDashboard();
+            window.scrollTo(0,0);
+        }
+
+        function initQuiz() {
+            currentAnswers = new Array(questions.length).fill(null);
+            const list = document.getElementById('questions-list');
+            list.innerHTML = questions.map((q, idx) => `
+                <div class="question-card bg-white p-8 rounded-3xl shadow-sm border border-slate-100 transition-all" id="qc-${idx}">
+                    <div class="flex items-start mb-6">
+                        <span class="bg-slate-800 text-white w-10 h-10 rounded-xl flex items-center justify-center font-bold mr-4 shrink-0">
+                            ${idx + 1}
+                        </span>
+                        <div class="question-text text-slate-800 font-medium">
+                            ${q.q}
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 gap-3 sm:ml-14">
+                        ${q.options.map((opt, oIdx) => `
+                            <button onclick="selectAnswer(${idx}, ${oIdx})" id="opt-${idx}-${oIdx}"
+                                    class="option-btn text-left p-4 rounded-2xl border-2 border-slate-50 hover:border-soft-blue hover:bg-blue-50 transition-all flex items-center group">
+                                <span class="w-8 h-8 rounded-full border border-slate-300 flex items-center justify-center mr-4 group-hover:border-soft-blue font-bold text-sm shrink-0">
+                                    ${String.fromCharCode(65 + oIdx)}
+                                </span>
+                                <span class="option-text">${opt}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+            
+            updateProgress();
+            renderMathInElement(list, {
+                delimiters: [{left: "$", right: "$", display: false}]
+            });
+        }
+
+        function selectAnswer(qIdx, oIdx) {
+            currentAnswers[qIdx] = oIdx;
+            const card = document.getElementById(`qc-${qIdx}`);
+            card.querySelectorAll('.option-btn').forEach(b => {
+                b.classList.remove('bg-soft-blue', 'text-white', 'border-soft-blue');
+                b.querySelector('span:first-child').classList.remove('bg-white', 'text-soft-blue', 'border-white');
+            });
+            const btn = document.getElementById(`opt-${qIdx}-${oIdx}`);
+            btn.classList.add('bg-soft-blue', 'text-white', 'border-soft-blue');
+            btn.querySelector('span:first-child').classList.add('bg-white', 'text-soft-blue', 'border-white');
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const count = currentAnswers.filter(a => a !== null).length;
+            const pct = (count / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${pct}%`;
+            document.getElementById('progress-text').innerText = `作答進度：${count} / ${questions.length}`;
+        }
+
+        function submitExam() {
+            let correct = 0;
+            const wrongs = [];
+            questions.forEach((q, i) => {
+                if(currentAnswers[i] === q.answer) correct++;
+                else wrongs.push({
+                    idx: i + 1, q: q.q,
+                    user: currentAnswers[i] !== null ? q.options[currentAnswers[i]] : "未作答",
+                    correct: q.label
+                });
+            });
+
+            const score = Math.round((correct / questions.length) * 100);
+            const history = JSON.parse(localStorage.getItem('math_exam_history_v2') || '[]');
+            history.push({ date: new Date().toLocaleString(), score, correct });
+            localStorage.setItem('math_exam_history_v2', JSON.stringify(history.slice(-10)));
+
+            document.getElementById('res-score').innerText = score;
+            document.getElementById('res-correct').innerText = correct;
+            document.getElementById('res-wrong').innerText = questions.length - correct;
+            
+            const wrongList = document.getElementById('wrong-list');
+            if(wrongs.length > 0) {
+                document.getElementById('wrong-answer-review').classList.remove('hidden');
+                wrongList.innerHTML = wrongs.map(w => `
+                    <div class="bg-slate-50 p-6 rounded-2xl border-l-4 border-wrong-red">
+                        <div class="font-bold text-slate-800 mb-2">題目 ${w.idx}：${w.q}</div>
+                        <div class="flex flex-wrap gap-4 text-sm font-medium">
+                            <span class="text-wrong-red bg-white px-2 py-1 rounded shadow-sm">❌ 你的回答：${w.user}</span>
+                            <span class="text-correct-green bg-white px-2 py-1 rounded shadow-sm">✅ 正確解答：${w.correct}</span>
+                        </div>
+                    </div>
+                `).join('');
+                renderMathInElement(wrongList, { delimiters: [{left: "$", right: "$", display: false}] });
+            } else {
+                document.getElementById('wrong-answer-review').classList.add('hidden');
+            }
+            switchView('view-results');
+        }
+
+        function clearHistory() {
+            if(confirm('確定清除歷史紀錄嗎？')) {
+                localStorage.removeItem('math_exam_history_v2');
+                refreshDashboard();
+            }
+        }
+
+        function refreshDashboard() {
+            const history = JSON.parse(localStorage.getItem('math_exam_history_v2') || '[]');
+            
+            const ctxTopic = document.getElementById('topicChart').getContext('2d');
+            const categories = {};
+            questions.forEach(q => categories[q.category] = (categories[q.category] || 0) + 1);
+            if(window.tChart) window.tChart.destroy();
+            window.tChart = new Chart(ctxTopic, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(categories),
+                    datasets: [{ data: Object.values(categories), backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#F43F5E', '#8B5CF6'], borderWidth: 0 }]
+                },
+                options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }}}
+            });
+
+            const ctxHist = document.getElementById('historyChart').getContext('2d');
+            if(window.hChart) window.hChart.destroy();
+            window.hChart = new Chart(ctxHist, {
+                type: 'line',
+                data: {
+                    labels: history.map((h, i) => `第 ${i+1} 次`),
+                    datasets: [{ label: '得分', data: history.map(h => h.score), borderColor: '#3B82F6', backgroundColor: '#3B82F615', fill: true, tension: 0.4, pointRadius: 5 }]
+                },
+                options: { maintainAspectRatio: false, scales: { y: { min: 0, max: 100 } } }
+            });
+        }
+
+        window.onload = () => {
+            applyZoom();
+            refreshDashboard();
+        };
+    </script>
+</body>
+</html>
