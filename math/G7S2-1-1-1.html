@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二元一次式：純粹列式實驗室</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Noto Sans TC"', 'sans-serif'] },
+                    colors: {
+                        stone: { 50: '#fafaf9', 100: '#f5f5f4', 200: '#e7e5e4', 300: '#d6d3d1', 400: '#a8a29e', 500: '#78716c', 600: '#57534e', 700: '#44403c', 800: '#292524', 900: '#1c1917' },
+                        accent: { light: '#fdba74', DEFAULT: '#f97316', dark: '#c2410c' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #f5f5f4; }
+        .token-btn { transition: all 0.2s; border: 1px solid #d6d3d1; }
+        .token-btn:hover { transform: translateY(-2px); background-color: #f97316; color: white; border-color: #f97316; box-shadow: 0 4px 10px rgba(249, 115, 22, 0.15); }
+        .token-btn:active { transform: translateY(0); }
+        .builder-display { min-height: 100px; display: flex; align-items: center; justify-content: center; border: 2px dashed #d6d3d1; background: #fff; border-radius: 1.5rem; position: relative; transition: all 0.3s; }
+        .builder-display::before { content: '算式預覽 AREA'; position: absolute; top: 10px; left: 20px; font-size: 9px; color: #a8a29e; font-weight: 900; letter-spacing: 0.15em; }
+        .builder-display.active { border-style: solid; border-color: #f97316; background: #fffaf5; }
+        .katex { font-size: 1.6em; }
+        .problem-nav-btn.active { background-color: #f97316; color: white; border-color: #f97316; }
+    </style>
+    
+    <!-- Chosen Palette: Stone & Safety Orange (Modern Academic) -->
+    <!-- Application Structure Plan: 
+         1. 左右分割布局：
+            - 左欄 (Left)：題目文字、情境分析表。
+            - 右欄 (Right)：算式預覽視窗、交互式標籤鍵盤。
+         2. 優點：在筆記型電腦螢幕上可一覽全貌，無需上下滾動，操作更直覺。
+         3. 響應式：在行動裝置自動切換回垂直堆疊。
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="text-stone-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <header class="bg-white border-b border-stone-200 sticky top-0 z-50">
+        <div class="max-w-[1400px] mx-auto px-6 py-3 flex justify-between items-center">
+            <h1 class="text-sm font-black text-stone-600 tracking-tighter uppercase flex items-center">
+                <span class="w-2 h-2 bg-accent rounded-full mr-2"></span> Algebra Lab <span class="ml-2 font-normal text-stone-400">| 二元一次式實驗室</span>
+            </h1>
+            <div class="flex gap-2" id="nav-buttons">
+                <!-- Nav Buttons -->
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-[1400px] mx-auto px-6 py-6 w-full">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full items-start">
+            
+            <!-- LEFT COLUMN: Problem & Analysis -->
+            <div class="space-y-6">
+                <div class="bg-white rounded-[2rem] shadow-sm border border-stone-200 p-8 min-h-[500px] flex flex-col">
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="text-[10px] font-black text-stone-400 uppercase tracking-widest" id="problem-id-label">Task 01</span>
+                        <span class="px-3 py-1 bg-stone-50 rounded text-[10px] font-bold text-stone-500 border border-stone-200" id="problem-type">總和計算</span>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-stone-800 mb-4" id="problem-title">讀取中...</h2>
+                    
+                    <div id="question-box" class="text-xl leading-relaxed text-stone-600 mb-8 p-6 bg-stone-50 rounded-2xl italic">
+                        <!-- Question Text -->
+                    </div>
+
+                    <div class="mt-auto">
+                        <p class="text-[10px] font-black text-stone-400 uppercase tracking-widest mb-3">邏輯拆解與參考</p>
+                        <div class="overflow-hidden rounded-xl border border-stone-100">
+                            <table class="w-full text-center text-sm">
+                                <thead class="bg-stone-50 text-stone-400 text-[10px] font-black uppercase">
+                                    <tr>
+                                        <th class="p-3">項目</th>
+                                        <th class="p-3">數值</th>
+                                        <th class="p-3">未知數</th>
+                                        <th class="p-3 text-accent">對應項</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-body" class="divide-y divide-stone-50">
+                                    <!-- Rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: Builder & Keyboard -->
+            <div class="space-y-6">
+                
+                <!-- Builder Area -->
+                <div class="bg-white rounded-[2rem] shadow-sm border border-stone-200 p-8 flex flex-col gap-8">
+                    
+                    <div id="builder-display" class="builder-display shadow-inner p-6">
+                        <!-- Formula Output -->
+                    </div>
+
+                    <div class="space-y-6 bg-stone-50 p-6 rounded-2xl">
+                        <div class="grid grid-cols-1 gap-6">
+                            <!-- Items -->
+                            <div class="space-y-3">
+                                <h4 class="text-[10px] font-black text-stone-400 uppercase tracking-widest">代數元件 (Click to add)</h4>
+                                <div class="flex flex-wrap gap-2" id="btn-group-vars">
+                                    <!-- Token Buttons -->
+                                </div>
+                            </div>
+
+                            <!-- Operators -->
+                            <div class="space-y-3">
+                                <h4 class="text-[10px] font-black text-stone-400 uppercase tracking-widest">運算符號</h4>
+                                <div class="flex gap-2">
+                                    <button onclick="app.addToken('+')" class="token-btn w-12 h-12 bg-white rounded-xl shadow-sm text-xl font-bold text-stone-600">+</button>
+                                    <button onclick="app.addToken('-')" class="token-btn w-12 h-12 bg-white rounded-xl shadow-sm text-xl font-bold text-stone-600">-</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- System Actions -->
+                        <div class="flex flex-wrap gap-3 pt-6 border-t border-stone-200">
+                            <button onclick="app.backspace()" class="flex-grow py-3 px-4 bg-white border border-stone-200 rounded-xl text-stone-600 text-xs font-bold hover:bg-stone-100 transition">回退</button>
+                            <button onclick="app.clear()" class="flex-grow py-3 px-4 bg-white border border-stone-200 rounded-xl text-stone-600 text-xs font-bold hover:bg-stone-100 transition uppercase">Clear</button>
+                            <button onclick="app.checkAnswer()" class="w-full py-4 bg-stone-800 text-white rounded-xl text-sm font-bold shadow-lg hover:bg-stone-700 transition">提交答案檢查</button>
+                        </div>
+                    </div>
+
+                    <div class="text-center text-[10px] text-stone-400 font-medium">
+                        * 提示：請依照題目邏輯將數字、變數與符號組合起來
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Feedback Modal -->
+    <div id="feedback-modal" class="fixed inset-0 bg-stone-900/40 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-6">
+        <div class="bg-white rounded-[2.5rem] p-10 max-w-sm w-full text-center shadow-2xl scale-up">
+            <div id="modal-icon" class="text-7xl mb-6">✨</div>
+            <h4 id="modal-title" class="text-2xl font-bold text-stone-800 mb-2">正確！</h4>
+            <p id="modal-text" class="text-stone-500 mb-8 text-sm">你成功將生活情境轉化為數學列式。</p>
+            <button onclick="app.closeModal()" class="w-full py-4 bg-accent text-white rounded-xl font-bold hover:bg-accent-dark transition">繼續挑戰</button>
+        </div>
+    </div>
+
+    <script>
+        const problems = [
+            {
+                id: 1, title: "投籃得分計算", type: "總和列式",
+                desc: "梓華投進了 **兩分球 $x$ 個** 與 **三分球 $y$ 個**，共得幾分？",
+                tokens: ["2", "x", "3", "y"],
+                answer: "2x+3y",
+                rows: [["兩分球", "2", "x", "2x"], ["三分球", "3", "y", "3y"]]
+            },
+            {
+                id: 2, title: "海報與麥克筆", type: "總和列式",
+                desc: "琳琳買了 **10元的海報 $x$ 張** 與 **25元的麥克筆 $y$ 枝**，共花多少元？",
+                tokens: ["10", "x", "25", "y"],
+                answer: "10x+25y",
+                rows: [["海報紙", "10", "x", "10x"], ["麥克筆", "25", "y", "25y"]]
+            },
+            {
+                id: 3, title: "小芳的文具花費", type: "扣減列式",
+                desc: "**原有 200 元**，買了 3 枝 **每枝 $x$ 元** 的自動鉛筆與 4 枝 **每枝 $y$ 元** 的原子筆後，剩多少元？",
+                tokens: ["200", "3", "x", "4", "y"],
+                answer: "200-3x-4y",
+                rows: [["自動鉛筆", "x", "3", "3x"], ["原子筆", "y", "4", "4y"], ["原有基準", "200", "-", "-"]]
+            },
+            {
+                id: 4, title: "便利商店找零", type: "扣減列式",
+                desc: "**身上有 300 元**，買了 $x$ 瓶 **每瓶 25 元** 的果汁與 $y$ 個 **每個 12 元** 的布丁，剩多少元？",
+                tokens: ["300", "25", "x", "12", "y"],
+                answer: "300-25x-12y",
+                rows: [["果菜汁", "25", "x", "25x"], ["布丁", "12", "y", "12y"], ["初始現金", "300", "-", "-"]]
+            },
+            {
+                id: 5, title: "回推原本帶的錢", type: "總和回推",
+                desc: "買了 4 顆 **每顆 $x$ 元** 的蘋果與 3 顆 **每顆 $y$ 元** 的芭樂後，還 **剩下 20 元**，原本帶幾元？",
+                tokens: ["4", "x", "3", "y", "20"],
+                answer: "4x+3y+20",
+                rows: [["蘋果", "x", "4", "4x"], ["芭樂", "y", "3", "3y"], ["剩餘餘額", "20", "-", "-"]]
+            }
+        ];
+
+        const app = {
+            pIdx: 0,
+            userTokens: [],
+
+            init() {
+                this.renderNav();
+                this.loadProblem(0);
+            },
+
+            renderNav() {
+                const nav = document.getElementById('nav-buttons');
+                nav.innerHTML = problems.map((p, i) => `
+                    <button onclick="app.loadProblem(${i})" class="problem-nav-btn w-8 h-8 rounded-lg border border-stone-200 transition-all font-bold text-[10px] flex items-center justify-center ${this.pIdx === i ? 'active' : 'bg-white text-stone-400 hover:border-stone-400'}">
+                        ${p.id}
+                    </button>
+                `).join('');
+            },
+
+            loadProblem(idx) {
+                this.pIdx = idx;
+                this.userTokens = [];
+                const p = problems[idx];
+                this.renderNav();
+
+                document.getElementById('problem-id-label').innerText = `Task 0${p.id}`;
+                document.getElementById('problem-title').innerText = p.title;
+                document.getElementById('problem-type').innerText = p.type;
+                
+                const questionHtml = p.desc.replace(/\*\*(.*?)\*\*/g, '<strong class="text-stone-800">$1</strong>');
+                document.getElementById('question-box').innerHTML = questionHtml;
+
+                const tbody = document.getElementById('table-body');
+                tbody.innerHTML = p.rows.map(r => `
+                    <tr>
+                        <td class="p-3 text-xs font-bold text-stone-700">${r[0]}</td>
+                        <td class="p-3 text-xs text-stone-400">${this.renderKatexInline(r[1])}</td>
+                        <td class="p-3 text-xs text-stone-400">${this.renderKatexInline(r[2])}</td>
+                        <td class="p-3 text-xs font-mono font-bold text-accent">${this.renderKatexInline(r[3])}</td>
+                    </tr>
+                `).join('');
+
+                const btnGroup = document.getElementById('btn-group-vars');
+                btnGroup.innerHTML = p.tokens.map(t => `
+                    <button onclick="app.addToken('${t}')" class="token-btn px-4 py-3 bg-white rounded-xl shadow-sm font-bold text-stone-800 text-sm border-stone-200">${this.renderKatexInline(t)}</button>
+                `).join('');
+
+                this.updateBuilder();
+                this.renderMathOnPage();
+            },
+
+            renderKatexInline(text) {
+                if (text === '-' || !text) return text;
+                try { return katex.renderToString(text, { throwOnError: false }); } 
+                catch (e) { return text; }
+            },
+
+            renderMathOnPage() {
+                const targets = document.querySelectorAll('#question-box');
+                targets.forEach(el => {
+                    el.innerHTML = el.innerHTML.replace(/\$(.*?)\$/g, (m, p1) => this.renderKatexInline(p1));
+                });
+            },
+
+            addToken(t) {
+                this.userTokens.push(t);
+                this.updateBuilder();
+            },
+
+            backspace() {
+                this.userTokens.pop();
+                this.updateBuilder();
+            },
+
+            clear() {
+                this.userTokens = [];
+                this.updateBuilder();
+            },
+
+            updateBuilder() {
+                const display = document.getElementById('builder-display');
+                if (this.userTokens.length === 0) {
+                    display.innerHTML = '<span class="text-stone-300 text-xs font-medium">點擊下方按鈕進行組合...</span>';
+                    display.classList.remove('active');
+                    return;
+                }
+                display.classList.add('active');
+                const formula = this.userTokens.join('');
+                display.innerHTML = this.renderKatexInline(formula);
+            },
+
+            checkAnswer() {
+                const p = problems[this.pIdx];
+                const input = this.userTokens.join('').replace(/\s/g, '');
+                
+                let isCorrect = (input === p.answer);
+                
+                // Commutative Check
+                if (!isCorrect && p.answer.includes('+')) {
+                    const parts = p.answer.split('+');
+                    if (input === parts[1] + '+' + parts[0]) isCorrect = true;
+                    if (p.id === 5) {
+                        const userParts = input.split('+');
+                        if (userParts.length === 3 && userParts.includes('4x') && userParts.includes('3y') && userParts.includes('20')) isCorrect = true;
+                    }
+                }
+
+                this.showModal(isCorrect);
+            },
+
+            showModal(success) {
+                const modal = document.getElementById('feedback-modal');
+                const title = document.getElementById('modal-title');
+                const text = document.getElementById('modal-text');
+                const icon = document.getElementById('modal-icon');
+
+                modal.classList.remove('hidden');
+                if (success) {
+                    icon.innerText = '✨';
+                    title.innerText = '完全正確！';
+                    text.innerText = '你已經掌握了將情境轉換為代數式的精髓。';
+                } else {
+                    icon.innerText = '🔍';
+                    title.innerText = '再檢查一下';
+                    text.innerText = '請注意變數、數字以及加減號的順序與完整性。';
+                }
+            },
+
+            closeModal() {
+                document.getElementById('feedback-modal').classList.add('hidden');
+            }
+        };
+
+        window.onload = () => app.init();
+    </script>
+</body>
+</html>
