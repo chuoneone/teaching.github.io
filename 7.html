@@ -12,8 +12,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
     
     <style>
-        /* 預設隱藏下學期 */
-        #semester2-area { display: none; }
+        /* --- 修改處 1：預設隱藏 7上，顯示 7下 --- */
+        #semester1-area { display: none; }
+        #semester2-area { display: block; }
         
         /* 右上角懸浮切換按鈕 */
         #floating-toggle {
@@ -78,7 +79,7 @@
     </header>
 
     <div id="floating-toggle" onclick="toggleSemester()">
-        <span id="toggle-text">切換至 7下</span>
+        <span id="toggle-text">切換至 7上</span>
         <i id="toggle-icon" class="fas fa-sync-alt"></i>
     </div>
 
@@ -130,7 +131,7 @@
                         <h3 style="text-align: center;">1-4指數記法與科學記號</h3>
                         <div class="btn-group">
                             <a href="https://wordwall.net/play/78918/397/429" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch1_4-exercise_exponent">01指數記法</a>
-                            <a href="https://wordwall.net/play/98338/632/892" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch1_4-exercise_exponent_L">02指數記法L</a>                                                                     
+                            <a href="https://wordwall.net/play/98338/632/892" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch1_4-exercise_exponent_L">02指數記法L</a>                                                             
                             <a href="https://wordwall.net/play/72659/100/839" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch1_4-exercise_is_scientific_notation">03誰是科學記號</a>
                             <a href="https://wordwall.net/play/72658/911/817" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch1_4-exercise_scientific_notation_1">04科學記號(1)</a>                      
                             <a href="https://wordwall.net/play/72658/809/358" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g7-math-s1-ch1_4-exercise_scientific_notation_2">05科學記號(2)</a>
@@ -221,7 +222,9 @@
                 </div>
             </div>
         </div>
-    </div> <div id="semester2-area">
+    </div> 
+    
+    <div id="semester2-area">
         <div class="section-title text-lg font-bold">
             <i class="fas fa-compass mr-2"></i> 7下數學
         </div>
@@ -300,7 +303,14 @@
     <script src="tracking.js"></script>
     
     <script>
-        let currentSem = 1; // 預設為 7上
+        // --- 修改處 3：預設變數改為 2 (代表7下) ---
+        let currentSem = 2; 
+
+        // --- 修改處 4：新增這一段，頁面載入後自動點擊7下的第一個按鈕 ---
+        window.onload = function() {
+            const defaultBtn = document.getElementById('default-s2-btn');
+            if(defaultBtn) defaultBtn.click();
+        };
 
         function toggleSemester() {
             const s1Area = document.getElementById('semester1-area');
