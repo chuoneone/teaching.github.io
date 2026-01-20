@@ -6,7 +6,6 @@
     <title>9年級數學</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <!-- 引用你原本的 CSS 檔案 -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="responsive.css">
     
@@ -15,8 +14,46 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
 
     <style>
-        /* --- 僅保留打勾功能的樣式 --- */
+        /* --- 學期區塊顯示設定 --- */
+        /* 預設隱藏 9上，顯示 9下 */
+        #semester1-area { display: none; }
+        #semester2-area { display: block; }
 
+        /* --- 右上角懸浮切換按鈕樣式 --- */
+        #floating-toggle {
+            position: fixed;
+            top: 80px;  /* 避開上方導覽列 */
+            right: 15px; /* 靠右 */
+            background-color: #333; /* 深色背景 */
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+
+        #floating-toggle:hover {
+            background-color: #555;
+            transform: scale(1.05);
+        }
+        
+        #floating-toggle i {
+            transition: transform 0.3s ease;
+        }
+
+        .rotate-icon {
+            transform: rotate(180deg);
+        }
+
+        /* --- 保留原本的打勾樣式 --- */
         /* 當按鈕被點擊完成時的狀態 */
         .btn.completed {
             background-color: #d1fae5 !important; /* 淺綠色背景 */
@@ -38,7 +75,7 @@
             color: #059669;
         }
 
-        /* 確保分頁切換正常顯示 (如果你的 style.css 沒處理) */
+        /* 確保分頁切換正常顯示 */
         .section-content { display: none; }
         .active-section { display: block; animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -71,116 +108,202 @@
         </div>
     </header>
 
-    <div class="section-title text-lg font-bold">
-        <i class="fas fa-ruler-combined mr-2"></i> 9上數學
+    <div id="floating-toggle" onclick="toggleSemester()">
+        <span id="toggle-text">切換至 9上</span>
+        <i id="toggle-icon" class="fas fa-sync-alt"></i>
     </div>
 
-    <div style="text-align:center; margin-top: 40px;">
-    <div class="button-container">
-        <button class="section-button" onclick="showSection('section1', this)" data-track-cat="chapter_select" data-track-lbl="g9-math-s1-ch1">第1章</button>
-        <button class="section-button" onclick="showSection('section2', this)" data-track-cat="chapter_select" data-track-lbl="g9-math-s1-ch2">第2章</button>
-        <button class="section-button" onclick="showSection('section3', this)" data-track-cat="chapter_select" data-track-lbl="g9-math-s1-ch3">第3章</button>
-        <a href="9s2.html" class="section-button" data-track-cat="semester_toggle" data-track-lbl="g9-math-s1-to-s2">9下</a>
-    </div>
-    </div>
-    
-    <div id="section1" class="section-content active-section">   
-        <div class="social-container">
-            <div class="single-row">
-                <div class="social-group">
-                    <h3 style="text-align: center;">1-1 連比</h3>
-                    <div class="btn-group">
-                        <a href="https://gemini.google.com/share/f7e0dee60031" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_1-simplest_integer_ratio">01最簡整數比</a>                        
-                        <a href="https://gemini.google.com/share/cbb333293546" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_1-continued_ratio_ops">02連比例的運算</a>                                                                
-                        <a href="math/G9S1-1-1-3sheet.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_1-continued_ratio_ops_3">03連比例的運算3</a>
-                        <a href="math/G9S1-1-1-4sheet.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_1-continued_ratio_ops_4">04連比例的運算4</a>
-                    </div>
-                </div>
-        
-                <div class="social-group">
-                    <h3 style="text-align: center;">1-2 比例線段</h3>
-                    <div class="btn-group">
-                        <a href="math/G9S1-1-2-2.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_2-parallel_lines_prop_segments">01平行線截比例線</a>
-                        <a href="math/G9S1-1-2-4.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_2-parallel_lines_prop_segments_2">02平行線截比例線2</a>
-                    </div>
-                </div>
-        
-                <div class="social-group">
-                    <h3 style="text-align: center;">1-3 相似多邊形</h3>
-                    <div class="btn-group">
-                        <a href="math/G9S1-1-3-2.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_3-polygon_scaling">01多邊形的縮放</a>
-                        <a href="math/G9S1-1-3-4.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_3-similarity_correspondence">02相似對應關係</a>                           
-                        <a href="math/G9S1-1-3-567.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_3-triangle_similarity">03三角形相似判別</a>
-                    </div>
-                </div>
-                <div class="social-group">
-                    <h3 style="text-align: center;">1-4 相似三角應用和三角比</h3>
-                    <div class="btn-group">                           
-                        <a href="math/G9S1-1-4-12.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_4">01對應邊的比</a>   
-                        <a href="https://wordwall.net/play/80628/213/992" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_4">02特殊邊長比1</a>
-                        <a href="https://wordwall.net/play/80628/609/444" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_4">03特殊邊長比2</a>
-                        <a href="math/G9S1-1-4-sincos.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_4">04 sin/cos/tan</a>   
-                    </div>
-                </div>
-
-                </div>
+    <div id="semester1-area">
+        <div class="section-title text-lg font-bold">
+            <i class="fas fa-ruler-combined mr-2"></i> 9上數學
         </div>
-    </div>
 
-    <div id="section2" class="section-content">   
-        <div class="social-container">
-            <div class="single-row">
-                <div class="social-group">
-                    <h3 style="text-align: center;">2-1點、線、圓</h3>
-                    <div class="btn-group">                           
-                        <a href="math/G9S1-2-1-1&2.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">01圓定義、02扇形</a>   
-                        <a href="https://gemini.google.com/share/87e86b3adadd" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">03扇形、04點圓位置</a>   
-                        <a href="https://app.edcafe.ai/quiz/691698d93a294dcdcfafddfa" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">點線圓位置測驗</a>   
+        <div style="text-align:center; margin-top: 40px;">
+            <div class="button-container">
+                <button class="section-button" onclick="showSection('s1-section1', this)" id="default-s1-btn" data-track-cat="chapter_select" data-track-lbl="g9-math-s1-ch1">第1章</button>
+                <button class="section-button" onclick="showSection('s1-section2', this)" data-track-cat="chapter_select" data-track-lbl="g9-math-s1-ch2">第2章</button>
+                <button class="section-button" onclick="showSection('s1-section3', this)" data-track-cat="chapter_select" data-track-lbl="g9-math-s1-ch3">第3章</button>
+            </div>
+        </div>
+        
+        <div id="s1-section1" class="section-content active-section">   
+            <div class="social-container">
+                <div class="single-row">
+                    <div class="social-group">
+                        <h3 style="text-align: center;">1-1 連比</h3>
+                        <div class="btn-group">
+                            <a href="https://gemini.google.com/share/f7e0dee60031" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_1-simplest_integer_ratio">01最簡整數比</a>                        
+                            <a href="https://gemini.google.com/share/cbb333293546" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_1-continued_ratio_ops">02連比例的運算</a>                                                                            
+                            <a href="math/G9S1-1-1-3sheet.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_1-continued_ratio_ops_3">03連比例的運算3</a>
+                            <a href="math/G9S1-1-1-4sheet.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_1-continued_ratio_ops_4">04連比例的運算4</a>
+                        </div>
+                    </div>
+            
+                    <div class="social-group">
+                        <h3 style="text-align: center;">1-2 比例線段</h3>
+                        <div class="btn-group">
+                            <a href="math/G9S1-1-2-2.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_2-parallel_lines_prop_segments">01平行線截比例線</a>
+                            <a href="math/G9S1-1-2-4.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_2-parallel_lines_prop_segments_2">02平行線截比例線2</a>
+                        </div>
+                    </div>
+            
+                    <div class="social-group">
+                        <h3 style="text-align: center;">1-3 相似多邊形</h3>
+                        <div class="btn-group">
+                            <a href="math/G9S1-1-3-2.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_3-polygon_scaling">01多邊形的縮放</a>
+                            <a href="math/G9S1-1-3-4.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_3-similarity_correspondence">02相似對應關係</a>                          
+                            <a href="math/G9S1-1-3-567.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_3-triangle_similarity">03三角形相似判別</a>
+                        </div>
+                    </div>
+                    <div class="social-group">
+                        <h3 style="text-align: center;">1-4 相似三角應用和三角比</h3>
+                        <div class="btn-group">                           
+                            <a href="math/G9S1-1-4-12.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_4">01對應邊的比</a>   
+                            <a href="https://wordwall.net/play/80628/213/992" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_4">02特殊邊長比1</a>
+                            <a href="https://wordwall.net/play/80628/609/444" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_4">03特殊邊長比2</a>
+                            <a href="math/G9S1-1-4-sincos.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch1_4">04 sin/cos/tan</a>   
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div class="social-group">
-                    <h3 style="text-align: center;">2-2圓心角與圓周角</h3>
-                    <div class="btn-group">                           
-                        <a href="math/G9S1-2-2-1.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">01圓心角與弧的度數</a>   
-                        <a href="math/G9S1-2-2-2.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">02弧的度數求圓周角</a>   
-                        <a href="math/G9S1-2-2-3.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">03圓周角求弧的度數</a>   
-                        <a href="math/G9S1-2-2-4.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">04平行線截等弧</a>   
-                        <a href="math/G9S1-2-2-5.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">05圓內接四邊形對角互補</a>   
+        <div id="s1-section2" class="section-content">   
+            <div class="social-container">
+                <div class="single-row">
+                    <div class="social-group">
+                        <h3 style="text-align: center;">2-1點、線、圓</h3>
+                        <div class="btn-group">                           
+                            <a href="math/G9S1-2-1-1&2.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">01圓定義、02扇形</a>   
+                            <a href="https://gemini.google.com/share/87e86b3adadd" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">03扇形、04點圓位置</a>   
+                            <a href="https://app.edcafe.ai/quiz/691698d93a294dcdcfafddfa" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">點線圓位置測驗</a>   
+                        </div>
+                    </div>
+
+                    <div class="social-group">
+                        <h3 style="text-align: center;">2-2圓心角與圓周角</h3>
+                        <div class="btn-group">                           
+                            <a href="math/G9S1-2-2-1.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">01圓心角與弧的度數</a>   
+                            <a href="math/G9S1-2-2-2.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">02弧的度數求圓周角</a>   
+                            <a href="math/G9S1-2-2-3.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">03圓周角求弧的度數</a>   
+                            <a href="math/G9S1-2-2-4.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">04平行線截等弧</a>   
+                            <a href="math/G9S1-2-2-5.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">05圓內接四邊形對角互補</a>   
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="s1-section3" class="section-content">
+            <div class="social-container">
+                <div class="single-row">
+                    <div class="social-group">
+                        <h3 style="text-align: center;">3-1推理證明</h3>
+                        <div class="btn-group">                           
+                            <a href="math/G9S1-3-1-1.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_1">01全等證明</a>   
+                            <a href="math/G9S1-3-1-2.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_1">02相似形的應用</a>   
+                            <a href="math/G9S1-3-1-3.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_1">03輔助線的應用</a>   
+                            <a href="math/G9S1-3-1-4.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_1">04奇偶數的判別</a>   
+                            <a href="math/G9S1-3-1-5.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_1">05判別大小</a>                                  
+                            <a href="math/G9S1-3-1-review.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_1">複習</a>      
+                        </div>
+                    </div>
+
+                    <div class="social-group">
+                        <h3 style="text-align: center;">3-2三角形的心</h3>
+                        <div class="btn-group">                           
+                            <a href="https://wordwall.net/play/65890/897/205" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">00判斷外心、內心與重心</a>   
+                            <a href="math/G9S1-3-2-1.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_2">01三角形外心</a>   
+                            <a href="math/G9S1-3-2-2.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_2">02三角形外接圓</a>
+                            <a href="math/G9S1-3-2-3.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_2">03外心與角度</a>   
+                            <a href="math/G9S1-3-2-4.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_2">04三角形的內心與角度</a>    
+                            <a href="math/G9S1-3-2-5.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_2">05三角形面積與內切圓半徑</a>    
+                            <a href="math/G9S1-3-2-6.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_2">06直角三角形的內切圓</a> 
+                            <a href="math/G9S1-3-2-7.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_2">07三角形的重心</a> 
+                            <a href="math/G9S1-3-2-8.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_2">08重心與面積</a>                                  
+                            <a href="math/G9S1-3-2-review.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_2">複習</a>           
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
-    <div id="section3" class="section-content">
-        <div class="social-container">
-            <div class="single-row">
-                <div class="social-group">
-                    <h3 style="text-align: center;">3-1推理證明</h3>
-                    <div class="btn-group">                           
-                        <a href="math/G9S1-3-1-1.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_1">01全等證明</a>   
-                        <a href="math/G9S1-3-1-2.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_1">02相似形的應用</a>   
-                        <a href="math/G9S1-3-1-3.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_1">03輔助線的應用</a>   
-                        <a href="math/G9S1-3-1-4.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_1">04奇偶數的判別</a>   
-                        <a href="math/G9S1-3-1-5.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_1">05判別大小</a>                          
-                        <a href="math/G9S1-3-1-review.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_1">複習</a>      
+
+
+    <div id="semester2-area">
+        <div class="section-title text-lg font-bold">
+            <i class="fas fa-chart-pie mr-2"></i> 9下數學
+        </div>
+
+        <div style="text-align:center; margin-top: 40px;">
+           <div class="button-container">
+            <button class="section-button" onclick="showSection('s2-chapter1', this)" id="default-s2-btn" data-track-cat="chapter_select" data-track-lbl="g9-math-s2-ch1">第1章</button>
+            <button class="section-button" onclick="showSection('s2-chapter2', this)" data-track-cat="chapter_select" data-track-lbl="g9-math-s2-ch2">第2章</button>
+            <button class="section-button" onclick="showSection('s2-chapter3', this)" data-track-cat="chapter_select" data-track-lbl="g9-math-s2-ch3">第3章</button>               
+        </div>
+        </div>
+        
+        <div id="s2-chapter1" class="section-content active-section">
+            <div class="social-container">
+                <div class="single-row">
+                    <div class="social-group">                                             
+                        <h3 style="text-align: center;">挑戰區</h3>
+                        <div class="btn-group">
+                            <a href="https://wordwall.net/play/87479/112/876" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s2-ch1-challenge-is_quadratic_func">01判別二次函數</a>
+                            <a href="https://wordwall.net/play/68561/347/259" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s2-ch1-challenge-find_vertex">02找頂點</a>
+                            <a href="https://wordwall.net/play/69860/567/153" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s2-ch1-challenge-opening_vertex">03開口頂點</a>
+                            <a href="https://wordwall.net/play/69860/529/228" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s2-ch1-challenge-graphing">04二次函數圖形</a>
+                            <a href="https://www.geogebra.org/calculator" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s2-ch1-challenge-graphing_calculator">05圖形計算機</a>
+                        </div>
+                    </div>
+                    <div class="social-group">                                             
+                        <h3 style="text-align: center;">例題影片</h3>
+                        <div class="btn-group">
+                            <a href="https://mathvideo.hle.com.tw/3B/1-1/" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s2-ch1-video-1_1-graphing">1-1二次函數圖形</a>
+                            <a href="https://mathvideo.hle.com.tw/3B/1-2/" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s2-ch1-video-1_2-max_min">1-2最大值、最小值</a>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div class="social-group">
-                    <h3 style="text-align: center;">3-2三角形的心</h3>
-                    <div class="btn-group">                           
-                        <a href="https://wordwall.net/play/65890/897/205" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch2_1">00判斷外心、內心與重心</a>   
-                        <a href="math/G9S1-3-2-1.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_2">01三角形外心</a>   
-                        <a href="math/G9S1-3-2-2.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_2">02三角形外接圓</a>
-                        <a href="math/G9S1-3-2-3.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_2">03外心與角度</a>   
-                        <a href="math/G9S1-3-2-4.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_2">04三角形的內心與角度</a>    
-                        <a href="math/G9S1-3-2-5.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_2">05三角形面積與內切圓半徑</a>    
-                        <a href="math/G9S1-3-2-6.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_2">06直角三角形的內切圓</a> 
-                        <a href="math/G9S1-3-2-7.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_2">07三角形的重心</a> 
-                        <a href="math/G9S1-3-2-8.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_2">08重心與面積</a>                          
-                        <a href="math/G9S1-3-2-review.html" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s1-ch3_2">複習</a>          
+        <div id="s2-chapter2" class="section-content">
+            <div class="social-container">
+                <div class="single-row">
+                    <div class="social-group">
+                        <h3 style="text-align: center;">挑戰區</h3>
+                        <div class="btn-group">
+                            <a href="https://wordwall.net/play/68570/946/261" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s2-ch2-challenge-01">01</a>
+                            <a href="https://wordwall.net/play/68570/803/750" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s2-ch2-challenge-02">02</a>
+                        </div>
+                    </div>
+                    <div class="social-group">
+                        <h3 style="text-align: center;">例題影片</h3>
+                        <div class="btn-group">
+                            <a href="https://mathvideo.hle.com.tw/3B/2-1/" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s2-ch2-video-2_1-quartiles_boxplot">2-1四分位數盒狀圖</a>
+                            <a href="https://mathvideo.hle.com.tw/3B/2-2/" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s2-ch2-video-2_2-probability">2-2機率</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="s2-chapter3" class="section-content">
+            <div class="social-container">
+                <div class="single-row">
+                    <div class="social-group">                                             
+                        <h3 style="text-align: center;">挑戰區</h3>
+                        <div class="btn-group">
+                            <a href="https://wordwall.net/play/70607/680/874" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s2-ch3-challenge-01">01</a>
+                            <a href="https://wordwall.net/play/70607/789/911" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s2-ch3-challenge-02">02</a>
+                        </div>
+                    </div>
+                    <div class="social-group">                                             
+                        <h3 style="text-align: center;">例題影片</h3>
+                        <div class="btn-group">
+                            <a href="https://mathvideo.hle.com.tw/3B/3-1/" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s2-ch3-video-3_1-prism_cylinder">3-1角柱與圓柱</a>
+                            <a href="https://mathvideo.hle.com.tw/3B/3-2/" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g9-math-s2-ch3-video-3_2-pyramid_cone">3-2角錐與圓錐</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -190,55 +313,113 @@
     <script src="main.js"></script>
     <script src="tracking.js"></script>
 
-    <!-- 打勾功能邏輯 -->
     <script>
-        // 確保分頁切換函數存在
-        if (typeof showSection === 'undefined') {
-            window.showSection = function(sectionId, btn) {
-                document.querySelectorAll('.section-content').forEach(div => {
-                    div.classList.remove('active-section');
-                });
-                document.getElementById(sectionId).classList.add('active-section');
-            };
+        let currentSem = 2; // 預設 9下
+
+        // 頁面載入時，自動觸發 9下 的預設按鈕
+        window.onload = function() {
+            const defaultS2 = document.getElementById('default-s2-btn');
+            if(defaultS2) defaultS2.click();
+            
+            // 初始化進度紀錄
+            initProgress();
+        };
+
+        // 切換學期
+        function toggleSemester() {
+            const s1Area = document.getElementById('semester1-area');
+            const s2Area = document.getElementById('semester2-area');
+            const toggleText = document.getElementById('toggle-text');
+            const toggleIcon = document.getElementById('toggle-icon');
+
+            // 旋轉動畫
+            toggleIcon.classList.add('rotate-icon');
+            setTimeout(() => toggleIcon.classList.remove('rotate-icon'), 300);
+
+            if (currentSem === 2) {
+                // 切換至 9上
+                s1Area.style.display = 'block';
+                s2Area.style.display = 'none';
+                toggleText.innerText = "切換至 9下";
+                currentSem = 1;
+
+                // 自動點擊 9上 的第一章
+                const defaultBtn = document.getElementById('default-s1-btn');
+                if(defaultBtn) defaultBtn.click();
+            } else {
+                // 切換至 9下
+                s1Area.style.display = 'none';
+                s2Area.style.display = 'block';
+                toggleText.innerText = "切換至 9上";
+                currentSem = 2;
+
+                // 自動點擊 9下 的第一章
+                const defaultBtn = document.getElementById('default-s2-btn');
+                if(defaultBtn) defaultBtn.click();
+            }
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
+        // 單元切換邏輯
+        window.showSection = function(sectionId, btn) {
+            // 找出目前顯示的學期區域
+            const activeArea = currentSem === 1 ? document.getElementById('semester1-area') : document.getElementById('semester2-area');
+            if (!activeArea) return;
+
+            // 1. 隱藏該學期內所有的 section-content
+            activeArea.querySelectorAll('.section-content').forEach(content => {
+                content.classList.remove('active-section');
+                content.style.display = 'none';
+            });
+
+            // 2. 移除該學期內所有按鈕的 active class
+            activeArea.querySelectorAll('.section-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // 3. 顯示被選中的內容
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active-section');
+                targetSection.style.display = 'block';
+            }
+
+            // 4. 為被點擊的按鈕加上 active class
+            btn.classList.add('active');
+        };
+
+        // --- 以下是原本保留的打勾功能邏輯 ---
+        function initProgress() {
             const allButtons = document.querySelectorAll('.btn');
 
-            // 初始化：從 LocalStorage 讀取紀錄
-            function initProgress() {
-                allButtons.forEach(btn => {
-                    // 使用 data-track-lbl 或 href 作為 ID
-                    const trackId = btn.getAttribute('data-track-lbl') || btn.getAttribute('href');
-                    
-                    if (localStorage.getItem(trackId) === 'done') {
-                        btn.classList.add('completed');
-                    }
-
-                    // 綁定點擊事件
-                    btn.addEventListener('click', function(e) {
-                        // 切換狀態
-                        toggleCompletion(this, trackId);
-                    });
-                });
-            }
-
-            // 切換完成狀態並存檔
-            function toggleCompletion(btn, trackId) {
-                btn.classList.toggle('completed');
+            allButtons.forEach(btn => {
+                // 使用 data-track-lbl 或 href 作為 ID
+                const trackId = btn.getAttribute('data-track-lbl') || btn.getAttribute('href');
                 
-                if (btn.classList.contains('completed')) {
-                    localStorage.setItem(trackId, 'done');
-                } else {
-                    localStorage.removeItem(trackId);
+                if (localStorage.getItem(trackId) === 'done') {
+                    btn.classList.add('completed');
                 }
-            }
 
-            initProgress();
-        });
+                // 綁定點擊事件
+                btn.addEventListener('click', function(e) {
+                    // 切換狀態
+                    toggleCompletion(this, trackId);
+                });
+            });
+        }
+
+        // 切換完成狀態並存檔
+        function toggleCompletion(btn, trackId) {
+            btn.classList.toggle('completed');
+            
+            if (btn.classList.contains('completed')) {
+                localStorage.setItem(trackId, 'done');
+            } else {
+                localStorage.removeItem(trackId);
+            }
+        }
     </script>
 </body>
-</html>
 <footer>
     <p style="display: inline;">Created by 米克師</p>
 </footer>
+</html>

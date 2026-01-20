@@ -5,13 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>8年級英文</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="responsive.css">
+    
     <link rel="icon" href="images/dog.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
-    </head>
+
+    <style>
+        /* --- 學期區塊顯示設定 --- */
+        /* 預設隱藏 8上，顯示 8下 */
+        #semester1-area { display: none; }
+        #semester2-area { display: block; }
+
+        /* --- 右上角懸浮切換按鈕樣式 --- */
+        #floating-toggle {
+            position: fixed;
+            top: 80px;  /* 避開上方導覽列 */
+            right: 15px; /* 靠右 */
+            background-color: #333; /* 深色背景 */
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+
+        #floating-toggle:hover {
+            background-color: #555;
+            transform: scale(1.05);
+        }
+        
+        #floating-toggle i {
+            transition: transform 0.3s ease;
+        }
+
+        .rotate-icon {
+            transform: rotate(180deg);
+        }
+
+        /* 確保分頁切換正常顯示 */
+        .section-content { display: none; }
+        .active-section { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
 <body>
+
     <header class="navbar">
         <div class="logo">SPED</div>
         <nav>
@@ -37,103 +86,167 @@
         </div>
     </header>
 
-    <div class="semester-block">
+    <div id="floating-toggle" onclick="toggleSemester()">
+        <span id="toggle-text">切換至 8上</span>
+        <i id="toggle-icon" class="fas fa-sync-alt"></i>
+    </div>
+
+    <div id="semester1-area">
         <div class="section-title text-lg font-bold">
             <i class="fas fa-book-open mr-2"></i> 8上英文
         </div>
 
         <div style="text-align:center; margin-top: 40px;">
-            <button class="section-button" onclick="showSection('section1', this)" data-track-cat="category_select" data-track-lbl="g8-eng-s1-vocab">1. 單字區</button>
-            <button class="section-button" onclick="showSection('section2', this)" data-track-cat="category_select" data-track-lbl="g8-eng-s1-grammar">2. 文法區</button>
+            <div class="button-container">
+                <button class="section-button" onclick="showSection('s1-unit1', this)" id="default-s1-btn" data-track-cat="unit_select" data-track-lbl="g8-eng-s1-u1">U1</button>
+                <button class="section-button" onclick="showSection('s1-unit2', this)" data-track-cat="unit_select" data-track-lbl="g8-eng-s1-u2">U2</button>
+                <button class="section-button" onclick="showSection('s1-unit3', this)" data-track-cat="unit_select" data-track-lbl="g8-eng-s1-u3">U3</button>
+                <button class="section-button" onclick="showSection('s1-unit4', this)" data-track-cat="unit_select" data-track-lbl="g8-eng-s1-u4">U4</button>
+                <button class="section-button" onclick="showSection('s1-unit5', this)" data-track-cat="unit_select" data-track-lbl="g8-eng-s1-u5">U5</button>
+                <button class="section-button" onclick="showSection('s1-unit6', this)" data-track-cat="unit_select" data-track-lbl="g8-eng-s1-u6">U6</button>
+                <button class="section-button" onclick="showSection('s1-pk', this)" data-track-cat="unit_select" data-track-lbl="g8-eng-s1-pk">PK區</button>
+            </div>
         </div>
         
-        <div id="section1" class="section-content active-section">   
-            </div>
+        <div id="s1-unit1" class="section-content active-section">
+            <div class="social-container"><div class="single-row">
+                <div class="social-group"><h3 style="text-align: center;">單字區</h3><div class="btn-group"><a href="#" class="btn">Dialogue</a><a href="#" class="btn">Theme Words</a><a href="#" class="btn">Reading</a></div></div>
+                <div class="social-group"><h3 style="text-align: center;">文法區</h3><div class="btn-group"><a href="#" class="btn">文法一</a><a href="#" class="btn">文法二</a></div></div>
+                <div class="social-group"><h3 style="text-align: center;">其它區</h3><div class="btn-group"><a href="#" class="btn">習作</a></div></div>
+            </div></div>
+        </div>
+        <div id="s1-unit2" class="section-content">
+            <div class="social-container"><div class="single-row">
+                <div class="social-group"><h3 style="text-align: center;">單字區</h3><div class="btn-group"><a href="#" class="btn">Dialogue</a><a href="#" class="btn">Theme Words</a><a href="#" class="btn">Reading</a></div></div>
+                <div class="social-group"><h3 style="text-align: center;">文法區</h3><div class="btn-group"><a href="#" class="btn">文法一</a><a href="#" class="btn">文法二</a></div></div>
+                <div class="social-group"><h3 style="text-align: center;">其它區</h3><div class="btn-group"><a href="#" class="btn">習作</a></div></div>
+            </div></div>
+        </div>
+        <div id="s1-unit3" class="section-content">
+            <div class="social-container"><div class="single-row">
+                <div class="social-group"><h3 style="text-align: center;">單字區</h3><div class="btn-group"><a href="#" class="btn">Dialogue</a><a href="#" class="btn">Theme Words</a><a href="#" class="btn">Reading</a></div></div>
+                <div class="social-group"><h3 style="text-align: center;">文法區</h3><div class="btn-group"><a href="#" class="btn">文法一</a><a href="#" class="btn">文法二</a></div></div>
+                <div class="social-group"><h3 style="text-align: center;">其它區</h3><div class="btn-group"><a href="#" class="btn">習作</a></div></div>
+            </div></div>
+        </div>
+        <div id="s1-unit4" class="section-content">
+            <div class="social-container"><div class="single-row">
+                <div class="social-group"><h3 style="text-align: center;">單字區</h3><div class="btn-group"><a href="#" class="btn">Dialogue</a><a href="#" class="btn">Theme Words</a><a href="#" class="btn">Reading</a></div></div>
+                <div class="social-group"><h3 style="text-align: center;">文法區</h3><div class="btn-group"><a href="#" class="btn">文法一</a><a href="#" class="btn">文法二</a></div></div>
+                <div class="social-group"><h3 style="text-align: center;">其它區</h3><div class="btn-group"><a href="#" class="btn">習作</a></div></div>
+            </div></div>
+        </div>
+        <div id="s1-unit5" class="section-content">
+            <div class="social-container"><div class="single-row">
+                <div class="social-group"><h3 style="text-align: center;">單字區</h3><div class="btn-group"><a href="#" class="btn">Dialogue</a><a href="#" class="btn">Theme Words</a><a href="#" class="btn">Reading</a></div></div>
+                <div class="social-group"><h3 style="text-align: center;">文法區</h3><div class="btn-group"><a href="#" class="btn">文法一</a><a href="#" class="btn">文法二</a></div></div>
+                <div class="social-group"><h3 style="text-align: center;">其它區</h3><div class="btn-group"><a href="#" class="btn">習作</a></div></div>
+            </div></div>
+        </div>
+        <div id="s1-unit6" class="section-content">
+            <div class="social-container"><div class="single-row">
+                <div class="social-group"><h3 style="text-align: center;">單字區</h3><div class="btn-group"><a href="#" class="btn">Dialogue</a><a href="#" class="btn">Theme Words</a><a href="#" class="btn">Reading</a></div></div>
+                <div class="social-group"><h3 style="text-align: center;">文法區</h3><div class="btn-group"><a href="#" class="btn">文法一</a><a href="#" class="btn">文法二</a></div></div>
+                <div class="social-group"><h3 style="text-align: center;">其它區</h3><div class="btn-group"><a href="#" class="btn">習作</a></div></div>
+            </div></div>
+        </div>
         
-        <div id="section2" class="section-content">     
+        <div id="s1-pk" class="section-content">
+            <div class="social-container">
+                <div class="single-row">
+                    <div class="social-group">
+                        <h3 style="text-align: center;">遊戲區</h3>
+                        <div class="btn-group">
+                            <a href="https://play.blooket.com/play" class="btn" target="_blank">Blooket</a>
+                            <a href="https://www.gimkit.com/join" class="btn" target="_blank">Gimkit</a>
+                        </div>
+                    </div>
+                    <div class="social-group">
+                        <h3 style="text-align: center;">口說區</h3>
+                        <div class="btn-group">
+                            <a href="https://www.learnmode.net/" class="btn" target="_blank">學習吧</a>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
     </div>
 
-    <div style="text-align: center; margin-bottom: 20px; margin-top: 10px;">
-        <a href="index.html">
-          <img src="images/dog.png" alt="Logo" style="height: 100px;">
-        </a>
-    </div>
 
-    <div class="semester-block">
-        <div class="section-title text-lg font-bold" style="margin-top: 350px;">
+    <div id="semester2-area">
+        <div class="section-title text-lg font-bold">
             <i class="fas fa-feather-alt mr-2"></i> 8下英文
         </div>
 
         <div style="text-align:center; margin-top: 40px;">
-            <button class="section-button" onclick="showSection('section3', this)" data-track-cat="category_select" data-track-lbl="g8-eng-s2-vocab">1. 單字區</button>
-            <button class="section-button" onclick="showSection('section4', this)" data-track-cat="category_select" data-track-lbl="g8-eng-s2-grammar">2. 文法區</button>
-        </div>
-        
-        <div id="section3" class="section-content active-section">
-            <div class="social-container">
-                <div class="single-row">
-                    <div class="social-group">
-                        <img src="images/unit1.png" alt="Unit 1" style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
-                        <div class="btn-group">
-                            <a href="https://wordwall.net/play/86876/476/973" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g8-eng-s2-vocab-u1">U1練習</a>
-                        </div>
-                    </div>
-                    <div class="social-group">
-                        <img src="images/unit2.png" alt="Unit 2" style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
-                        <div class="btn-group">
-                            <a href="https://wordwall.net/play/87823/419/406" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g8-eng-s2-vocab-u2">U2練習</a>
-                        </div>
-                    </div>
-                    <div class="social-group">
-                        <img src="images/unit3.png" alt="Unit 3" style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
-                        <div class="btn-group">
-                            <a href="https://wordwall.net/play/90042/351/778" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g8-eng-s2-vocab-u3">U3練習</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="single-row">
-                    <div class="social-group">
-                        <img src="images/unit4.png" alt="Unit 4" style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
-                        <div class="btn-group">
-                            <a href="https://wordwall.net/play/70607/680/874" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g8-eng-s2-vocab-u4">U4練習</a>
-                        </div>
-                    </div>
-                </div>
+            <div class="button-container">
+                <button class="section-button" onclick="showSection('s2-unit1', this)" id="default-s2-btn" data-track-cat="unit_select" data-track-lbl="g8-eng-s2-u1">U1</button>
+                <button class="section-button" onclick="showSection('s2-unit2', this)" data-track-cat="unit_select" data-track-lbl="g8-eng-s2-u2">U2</button>
+                <button class="section-button" onclick="showSection('s2-unit3', this)" data-track-cat="unit_select" data-track-lbl="g8-eng-s2-u3">U3</button>
+                <button class="section-button" onclick="showSection('s2-unit4', this)" data-track-cat="unit_select" data-track-lbl="g8-eng-s2-u4">U4</button>
+                <button class="section-button" onclick="showSection('s2-unit5', this)" data-track-cat="unit_select" data-track-lbl="g8-eng-s2-u5">U5</button>
+                <button class="section-button" onclick="showSection('s2-unit6', this)" data-track-cat="unit_select" data-track-lbl="g8-eng-s2-u6">U6</button>
+                <button class="section-button" onclick="showSection('s2-pk', this)" data-track-cat="unit_select" data-track-lbl="g8-eng-s2-pk">PK區</button>
             </div>
         </div>
 
-        <div id="section4" class="section-content">
+        <div id="s2-unit1" class="section-content active-section">
+            <div class="social-container"><div class="single-row">
+                <div class="social-group"><h3 style="text-align: center;">單字區</h3><div class="btn-group"><a href="https://wordwall.net/play/86876/476/973" target="_blank" class="btn">Dialogue</a><a href="#" class="btn">Theme Words</a><a href="#" class="btn">Reading</a></div></div>
+                <div class="social-group"><h3 style="text-align: center;">文法區</h3><div class="btn-group"><a href="https://wordwall.net/play/86933/949/988" target="_blank" class="btn">文法一</a><a href="https://wordwall.net/play/87390/353/808" target="_blank" class="btn">文法二</a></div></div>
+                <div class="social-group"><h3 style="text-align: center;">其它區</h3><div class="btn-group"><a href="#" class="btn">習作</a></div></div>
+            </div></div>
+        </div>
+        <div id="s2-unit2" class="section-content">
+            <div class="social-container"><div class="single-row">
+                <div class="social-group"><h3 style="text-align: center;">單字區</h3><div class="btn-group"><a href="https://wordwall.net/play/87823/419/406" target="_blank" class="btn">Dialogue</a><a href="#" class="btn">Theme Words</a><a href="#" class="btn">Reading</a></div></div>
+                <div class="social-group"><h3 style="text-align: center;">文法區</h3><div class="btn-group"><a href="https://wordwall.net/play/87824/366/470" target="_blank" class="btn">文法一</a><a href="https://wordwall.net/play/87975/771/422" target="_blank" class="btn">文法二</a></div></div>
+                <div class="social-group"><h3 style="text-align: center;">其它區</h3><div class="btn-group"><a href="#" class="btn">習作</a></div></div>
+            </div></div>
+        </div>
+        <div id="s2-unit3" class="section-content">
+            <div class="social-container"><div class="single-row">
+                <div class="social-group"><h3 style="text-align: center;">單字區</h3><div class="btn-group"><a href="https://wordwall.net/play/90042/351/778" target="_blank" class="btn">Dialogue</a><a href="#" class="btn">Theme Words</a><a href="#" class="btn">Reading</a></div></div>
+                <div class="social-group"><h3 style="text-align: center;">文法區</h3><div class="btn-group"><a href="https://wordwall.net/play/90042/101/587" target="_blank" class="btn">文法一</a><a href="https://wordwall.net/play/90197/407/246" target="_blank" class="btn">文法二</a></div></div>
+                <div class="social-group"><h3 style="text-align: center;">其它區</h3><div class="btn-group"><a href="#" class="btn">習作</a></div></div>
+            </div></div>
+        </div>
+        <div id="s2-unit4" class="section-content">
+            <div class="social-container"><div class="single-row">
+                <div class="social-group"><h3 style="text-align: center;">單字區</h3><div class="btn-group"><a href="https://wordwall.net/play/70607/680/874" target="_blank" class="btn">Dialogue</a><a href="#" class="btn">Theme Words</a><a href="#" class="btn">Reading</a></div></div>
+                <div class="social-group"><h3 style="text-align: center;">文法區</h3><div class="btn-group"><a href="https://wordwall.net/play/71329/146/264" target="_blank" class="btn">文法一</a><a href="https://wordwall.net/play/90197/407/246" target="_blank" class="btn">文法二</a></div></div>
+                <div class="social-group"><h3 style="text-align: center;">其它區</h3><div class="btn-group"><a href="#" class="btn">習作</a></div></div>
+            </div></div>
+        </div>
+        <div id="s2-unit5" class="section-content">
+            <div class="social-container"><div class="single-row">
+                <div class="social-group"><h3 style="text-align: center;">單字區</h3><div class="btn-group"><a href="#" class="btn">Dialogue</a><a href="#" class="btn">Theme Words</a><a href="#" class="btn">Reading</a></div></div>
+                <div class="social-group"><h3 style="text-align: center;">文法區</h3><div class="btn-group"><a href="#" class="btn">文法一</a><a href="#" class="btn">文法二</a></div></div>
+                <div class="social-group"><h3 style="text-align: center;">其它區</h3><div class="btn-group"><a href="#" class="btn">習作</a></div></div>
+            </div></div>
+        </div>
+        <div id="s2-unit6" class="section-content">
+            <div class="social-container"><div class="single-row">
+                <div class="social-group"><h3 style="text-align: center;">單字區</h3><div class="btn-group"><a href="#" class="btn">Dialogue</a><a href="#" class="btn">Theme Words</a><a href="#" class="btn">Reading</a></div></div>
+                <div class="social-group"><h3 style="text-align: center;">文法區</h3><div class="btn-group"><a href="#" class="btn">文法一</a><a href="#" class="btn">文法二</a></div></div>
+                <div class="social-group"><h3 style="text-align: center;">其它區</h3><div class="btn-group"><a href="#" class="btn">習作</a></div></div>
+            </div></div>
+        </div>
+
+        <div id="s2-pk" class="section-content">
             <div class="social-container">
                 <div class="single-row">
                     <div class="social-group">
-                        <img src="images/unit1.png" alt="Unit 1" style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
+                        <h3 style="text-align: center;">遊戲區</h3>
                         <div class="btn-group">
-                            <a href="https://wordwall.net/play/86933/949/988" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g8-eng-s2-grammar-u1_practice1">練習1</a>
-                            <a href="https://wordwall.net/play/87390/353/808" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g8-eng-s2-grammar-u1_practice2">練習2</a>
+                            <a href="https://play.blooket.com/play" class="btn" target="_blank">Blooket</a>
+                            <a href="https://www.gimkit.com/join" class="btn" target="_blank">Gimkit</a>
                         </div>
                     </div>
                     <div class="social-group">
-                        <img src="images/unit2.png" alt="Unit 2" style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
+                        <h3 style="text-align: center;">口說區</h3>
                         <div class="btn-group">
-                            <a href="https://wordwall.net/play/87824/366/470" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g8-eng-s2-grammar-u2_practice1">練習1</a>
-                            <a href="https://wordwall.net/play/87975/771/422" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g8-eng-s2-grammar-u2_practice2">練習2</a>
-                        </div>
-                    </div>
-                    <div class="social-group">
-                        <img src="images/unit3.png" alt="Unit 3" style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
-                        <div class="btn-group">
-                            <a href="https://wordwall.net/play/90042/101/587" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g8-eng-s2-grammar-u3_practice1">練習1</a>
-                            <a href="https://wordwall.net/play/90197/407/246" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g8-eng-s2-grammar-u3_practice2">練習2</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="single-row">
-                    <div class="social-group">
-                        <img src="images/unit4.png" alt="Unit 4" style="display: block; margin: 0 auto 10px auto; max-height: 100px; object-fit: cover; border-radius: 8px;">
-                        <div class="btn-group">
-                            <a href="https://wordwall.net/play/71329/146/264" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g8-eng-s2-grammar-u4_practice1">練習1</a>
-                            <a href="https://wordwall.net/play/90197/407/246" target="_blank" class="btn" data-track-cat="resource_link" data-track-lbl="g8-eng-s2-grammar-u4_practice2">練習2</a>
+                            <a href="https://www.learnmode.net/" class="btn" target="_blank">學習吧</a>
                         </div>
                     </div>
                 </div>
@@ -143,9 +256,75 @@
 
     <script src="main.js"></script>
     <script src="tracking.js"></script>
+
+    <script>
+        let currentSem = 2; // 預設 8下
+
+        // 頁面載入時，自動觸發 8下 的預設按鈕
+        window.onload = function() {
+            const defaultS2 = document.getElementById('default-s2-btn');
+            if(defaultS2) defaultS2.click();
+        };
+
+        // 切換學期
+        function toggleSemester() {
+            const s1Area = document.getElementById('semester1-area');
+            const s2Area = document.getElementById('semester2-area');
+            const toggleText = document.getElementById('toggle-text');
+            const toggleIcon = document.getElementById('toggle-icon');
+
+            // 旋轉動畫
+            toggleIcon.classList.add('rotate-icon');
+            setTimeout(() => toggleIcon.classList.remove('rotate-icon'), 300);
+
+            if (currentSem === 2) {
+                // 切換至 8上
+                s1Area.style.display = 'block';
+                s2Area.style.display = 'none';
+                toggleText.innerText = "切換至 8下";
+                currentSem = 1;
+
+                // 自動點擊 8上 的第一按鈕
+                const defaultBtn = document.getElementById('default-s1-btn');
+                if(defaultBtn) defaultBtn.click();
+            } else {
+                // 切換至 8下
+                s1Area.style.display = 'none';
+                s2Area.style.display = 'block';
+                toggleText.innerText = "切換至 8上";
+                currentSem = 2;
+
+                // 自動點擊 8下 的第一按鈕
+                const defaultBtn = document.getElementById('default-s2-btn');
+                if(defaultBtn) defaultBtn.click();
+            }
+        }
+
+        // 單元切換邏輯
+        window.showSection = function(sectionId, btn) {
+            const activeArea = currentSem === 1 ? document.getElementById('semester1-area') : document.getElementById('semester2-area');
+            if (!activeArea) return;
+
+            activeArea.querySelectorAll('.section-content').forEach(content => {
+                content.classList.remove('active-section');
+                content.style.display = 'none';
+            });
+
+            activeArea.querySelectorAll('.section-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active-section');
+                targetSection.style.display = 'block';
+            }
+
+            btn.classList.add('active');
+        };
+    </script>
 </body>
 <footer>
-
     <p style="display: inline;">Created by 米克師</p>
 </footer>
 </html>
