@@ -3,16 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <link rel="manifest" href="manifest_learning.json">
     <meta name="theme-color" content="#5C94FC">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="images/dog.png">
-
     <title>特教數位學習網｜米克師</title>
-    <meta name="description" content="專為國中特教生設計的數位學習系統。由米克師製作，提供七八九年級國文、數學、英文數位教材，結合學習策略、社會技巧與情緒紀錄。">
-    <meta name="keywords" content="國中特教, 數位學習, 特教教材, 數位資源, 資源班, 學習障礙, 米克師, SPED, 會考複習">
+    <meta name="description" content="專為國中特教生設計的數位學習系統。由米克師製作，提供七八九年級國文、數學、英文數位教材。">
+    <meta name="keywords" content="國中特教, 數位學習, 特教教材, 米克師, SPED">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -22,7 +20,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Press+Start+2P&family=Noto+Sans+TC&display=swap" rel="stylesheet">
 
     <style>
-      /* --- 遊戲標題畫面專用樣式 (Title Screen) --- */
+      /* --- 遊戲標題畫面專用樣式 (Title Screen) - 保留原樣 --- */
       #title-screen {
         position: fixed;
         top: 0;
@@ -37,8 +35,8 @@
         justify-content: center;
         text-align: center;
         font-family: 'Press Start 2P', cursive;
-        overflow: hidden; 
-      }
+        overflow: hidden;
+       }
 
       .block-container {
         display: flex;
@@ -62,8 +60,8 @@
       .brick {
         background-color: #C84C0C; 
         background-image: 
-            linear-gradient(45deg, transparent 48%, #000 48%, #000 52%, transparent 52%),
-            linear-gradient(-45deg, transparent 48%, #000 48%, #000 52%, transparent 52%);
+             linear-gradient(45deg, transparent 48%, #000 48%, #000 52%, transparent 52%),
+             linear-gradient(-45deg, transparent 48%, #000 48%, #000 52%, transparent 52%);
         background-size: 20px 20px;
       }
 
@@ -83,7 +81,6 @@
         border: 4px solid #000;
         z-index: 1;
       }
-
       .pipe-decoration::before {
         content: '';
         position: absolute;
@@ -94,12 +91,11 @@
         background: linear-gradient(to right, #00AA00 50%, #00d600 90%);
         border: 4px solid #000;
       }
-
       .pipe-decoration.right {
         left: auto;
         right: 10%;
-        height: 80px; 
-      }
+        height: 80px;
+       }
 
       .ground-decoration {
         position: absolute;
@@ -110,10 +106,10 @@
         background-color: #C84C0C;
         border-top: 4px solid #000;
         background-image: 
-            linear-gradient(335deg, #000 4px, transparent 4px),
-            linear-gradient(155deg, #000 4px, transparent 4px),
-            linear-gradient(335deg, #000 4px, transparent 4px),
-            linear-gradient(155deg, #000 4px, transparent 4px);
+             linear-gradient(335deg, #000 4px, transparent 4px),
+             linear-gradient(155deg, #000 4px, transparent 4px),
+             linear-gradient(335deg, #000 4px, transparent 4px),
+             linear-gradient(155deg, #000 4px, transparent 4px);
         background-size: 58px 58px;
         background-position: 0px 2px, 4px 35px, 29px 31px, 34px 6px;
         z-index: 2;
@@ -164,13 +160,11 @@
         0%, 100% { transform: translateY(0); }
         50% { transform: translateY(-10px); }
       }
-
       @keyframes pulse-btn {
         0% { transform: scale(1); }
         50% { transform: scale(1.05); }
         100% { transform: scale(1); }
-      }
-      
+      }          
       @keyframes blink-color {
           0% { background-color: #E89C24; }
           50% { background-color: #FFD677; }
@@ -182,7 +176,6 @@
 </head>
 
 <body>
-
   <div id="title-screen">
       <div class="block-container">
           <div class="block brick"></div>
@@ -261,55 +254,53 @@
               <a href="bigtest.html" class="big-button" data-track-cat="category_nav" data-track-lbl="exam_prep"><i class="fas fa-pen-alt"></i> 會考專區</a>
           </div>
 
-          <br><br>
-
-          <div class="countdown-container">
-              <h2 class="countdown-title"><i class="fas fa-clock"></i>寒假還有...</h2>
-              <div class="countdown-timer" id="countdown">
-                  <span id="days">00</span><span class="label">天</span>
-                  <span id="hours">00</span><span class="label">時</span>
-                  <span id="minutes">00</span><span class="label">分</span>
-                  <span id="seconds">00</span><span class="label">秒</span>
-              </div>
-          </div>
-
-          <div class="single-row">
-              <div class="social-group">
-                  <h3 style="text-align: center;"><i class="fas fa-cogs"></i> 小工具</h3>
-                  <div class="btn-group">
-                      <a href="https://play.blooket.com/play" target="_blank" class="btn" data-track-cat="tool_link" data-track-lbl="blooket">Blooket</a>
-                      <a href="https://www.gimkit.com/join?class=60a1e3ba9eaadc0022adafb6" target="_blank" class="btn" data-track-cat="tool_link" data-track-lbl="gimkit">Gimkit</a>
-                      <a href="https://chuone.my.canva.site/counter" target="_blank" class="btn" data-track-cat="tool_link" data-track-lbl="timer">計時器</a>
-                      <a href="teacher.html" target="_blank" class="btn" data-track-cat="tool_link" data-track-lbl="teacher_toolbox">備課幫手</a>
-                  </div>
-              </div>
-
-              <div class="social-group">
-                  <h3 style="text-align: center;"><i class="fas fa-running"></i> 基本練功</h3>
-                  <div class="btn-group">
-                      <a href="https://sites.google.com/view/specialchu/home?authuser=0" target="_blank" class="btn" data-track-cat="basic_skill" data-track-lbl="wordwall">wordwall練習</a>
-                      <a href="test2.html" target="_blank" class="btn" data-track-cat="basic_skill" data-track-lbl="addition_subtraction">加減法</a>
-                      <a href="test.html" target="_blank" class="btn" data-track-cat="basic_skill" data-track-lbl="multiplication_table">99乘法</a>
-                      <a href="math/game1.html" target="_blank" class="btn" data-track-cat="basic_skill" data-track-lbl="pos_neg_addition">正負數加減</a>
-                      <a href="https://five-flamingo-d65.notion.site/1eb4c52ff8d08068abfbdbf7ba7bb48e" target="_blank" class="btn" data-track-cat="basic_skill" data-track-lbl="character_practice">基礎字練習</a>
-                  </div>
-              </div>
-
-              <div class="social-group">
-                  <h3 style="text-align: center;"><i class="fas fa-school"></i> 情境英文</h3>
-                  <div class="btn-group">
-                      <a href="https://wordwall.net/play/93118/185/701" target="_blank" class="btn" data-track-cat="scenario_english" data-track-lbl="common_phrases">常用片語</a>
-                      <a href="RPG/index.html" target="_blank" class="btn" data-track-cat="scenario_english" data-track-lbl="dog_adventure_rpg">狗子冒險去</a>
-                      <a href="traveleng.html" target="_blank" class="btn" data-track-cat="scenario_english" data-track-lbl="travel_english">旅遊</a>
-                  </div>
-              </div>
-          </div>
-
-          <footer>
-            <br>
-            <p style="display: inline;">Created by 米克師</p>
+          <footer class="sticky-footer">
+            <div class="footer-left">
+              <i class="fas fa-sun"></i> 暑假倒數：<span id="days">00</span> 天
+            </div>
+            <div class="footer-center">
+               Created by 米克師
+            </div>
+            <div class="footer-right">
+              <button id="other-btn" class="footer-btn">
+                其它 <i class="fas fa-caret-up"></i>
+              </button>
+            </div>
           </footer>
       </main>
+  </div>
+
+  <div id="other-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h2 style="text-align: center; color: #C84C0C; margin-bottom: 20px;">其它資源</h2>
+      
+      <div class="modal-grid">
+        <div class="modal-group">
+           <h3><i class="fas fa-cogs"></i> 小工具</h3>
+           <a href="https://play.blooket.com/play" target="_blank" class="btn">Blooket</a>
+           <a href="https://www.gimkit.com/join?class=60a1e3ba9eaadc0022adafb6" target="_blank" class="btn">Gimkit</a>
+           <a href="https://chuone.my.canva.site/counter" target="_blank" class="btn">計時器</a>
+           <a href="teacher.html" target="_blank" class="btn">備課幫手</a>
+        </div>
+
+        <div class="modal-group">
+           <h3><i class="fas fa-running"></i> 基本練功</h3>
+           <a href="https://sites.google.com/view/specialchu/home?authuser=0" target="_blank" class="btn">wordwall練習</a>
+           <a href="test2.html" target="_blank" class="btn">加減法</a>
+           <a href="test.html" target="_blank" class="btn">99乘法</a>
+           <a href="math/game1.html" target="_blank" class="btn">正負數加減</a>
+           <a href="https://five-flamingo-d65.notion.site/1eb4c52ff8d08068abfbdbf7ba7bb48e" target="_blank" class="btn">基礎字練習</a>
+        </div>
+
+        <div class="modal-group">
+           <h3><i class="fas fa-school"></i> 情境英文</h3>
+           <a href="https://wordwall.net/play/93118/185/701" target="_blank" class="btn">常用片語</a>
+           <a href="RPG/index.html" target="_blank" class="btn">狗子冒險去</a>
+           <a href="traveleng.html" target="_blank" class="btn">旅遊</a>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="main.js"></script>
@@ -324,6 +315,7 @@
         });
     }
 
+    // Title Screen Logic
     const startBtn = document.getElementById('start-btn');
     const titleScreen = document.getElementById('title-screen');
     const mainView = document.getElementById('main-view');
@@ -341,6 +333,46 @@
             startGame();
         }
     });
+
+    // --- 暑假倒數計時器 (2026/7/1) ---
+    const countDownDate = new Date("Jul 1, 2026 00:00:00").getTime();
+
+    const x = setInterval(function() {
+      const now = new Date().getTime();
+      const distance = countDownDate - now;
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      
+      // 只要顯示天數
+      document.getElementById("days").innerHTML = days;
+
+      if (distance < 0) {
+        clearInterval(x);
+        document.getElementById("days").innerHTML = "0";
+      }
+    }, 1000);
+
+    // --- 彈出視窗控制 (Modal Logic) ---
+    const modal = document.getElementById("other-modal");
+    const otherBtn = document.getElementById("other-btn");
+    const closeSpan = document.getElementsByClassName("close-modal")[0];
+
+    // 按下「其它」按鈕開啟
+    otherBtn.onclick = function() {
+      modal.style.display = "block";
+    }
+
+    // 按下「X」關閉
+    closeSpan.onclick = function() {
+      modal.style.display = "none";
+    }
+
+    // 按下視窗外部關閉
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
   </script>
 </body>
 </html>

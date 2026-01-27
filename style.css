@@ -1,4 +1,6 @@
-﻿/* 1. 引入 Chiron GoRound TC 字體 */
+﻿/* ========================================= */
+/* 1. 字體與基礎設定 */
+/* ========================================= */
 @import url('https://fonts.googleapis.com/css2?family=Chiron+GoRound+TC:wght@200..900&display=swap');
 
 body {
@@ -8,14 +10,17 @@ body {
     color: #ffffff;
     margin: 0;
     padding: 20px;
-    padding-top: 70px;
+    padding-top: 80px; /* 避開上方導覽列 */
+    padding-bottom: 80px; /* 避開下方固定 Footer */
     box-sizing: border-box;
-    /* 修改：全面改用圓體 */
+    /* 全面改用圓體 */
     font-family: "Chiron GoRound TC", sans-serif;
-    font-weight: 500; /* 設定一個舒適的預設粗細 */
+    font-weight: 500;
 }
 
-/* 導覽列樣式 */
+/* ========================================= */
+/* 2. 導覽列 (Navbar) */
+/* ========================================= */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -45,7 +50,7 @@ body {
 
 .navbar .logo {
     font-size: 1.5em;
-    font-weight: 800; /* 加粗 */
+    font-weight: 800;
     text-shadow: 3px 3px 0 #000000;
 }
 
@@ -60,21 +65,18 @@ body {
     color: #fff;
 }
 
-.nav-links li {
-    display: inline;
-}
+.nav-links li { display: inline; }
 
 .nav-links a {
     color: #ffffff; 
     text-decoration: none;
-    font-size: 1em; /* 圓體可讀性較高，稍微調回正常大小 */
+    font-size: 1em;
     font-family: "Chiron GoRound TC", sans-serif;
     font-weight: 600;
     position: relative;
     text-shadow: 2px 2px 0 #000; 
 }
 
-/* 底線樣式 */
 .nav-links a::after {
     content: '';
     display: block;
@@ -87,26 +89,14 @@ body {
     transition: width 0.3s ease;
 }
 
-.nav-links a:hover {
-    color: #FBD000; 
-    text-shadow: 2px 2px 0 #000;
-}
-
-.nav-links a:hover::after {
-    width: 100%;
-    background: #FBD000; 
-}
+.nav-links a:hover { color: #FBD000; text-shadow: 2px 2px 0 #000; }
+.nav-links a:hover::after { width: 100%; background: #FBD000; }
 
 .nav-links a.active {
-    background-color: #000000; 
     color: #FBD000;
-    border: 2px solid #FBD000;
-    border-radius: 0; 
-    padding: 6px 12px;
-    font-weight: 700;
-    box-shadow: none;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    border-bottom: 4px solid #FBD000;
 }
+.nav-links a.active::after { display: none; }
 
 .menu-toggle {
     font-size: 28px;
@@ -115,8 +105,234 @@ body {
     background: none;
     border: none;
     text-shadow: 2px 2px 0 #000;
+    display: none;
 }
 
+/* ========================================= */
+/* 3. 資源區排版 (Flexbox - 置中且自動換行) */
+/* ========================================= */
+
+.social-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    align-items: center;
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.single-row {
+    display: flex;
+    flex-wrap: wrap;         /* 允許換行 */
+    justify-content: center; /* 關鍵：讓不足一排的元素自動置中 */
+    gap: 20px;               /* 每個區塊之間的間距 */
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.social-group {
+    padding: 20px;
+    border-radius: 0; 
+    text-align: left;
+    
+    /* --- 電腦版預設：一排 3 個 --- */
+    /* 計算公式：(總寬 100% - 2個間距40px) 除以 3 */
+    flex: 0 0 calc((100% - 40px) / 3); 
+    
+    /* 限制最小寬度，避免在小螢幕硬塞 3 個變很醜 */
+    min-width: 280px; 
+    
+    background: #ffffff; 
+    border: 4px solid #000000;
+    box-shadow: 6px 6px 0 #000000;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transform: scale(0.95);
+    box-sizing: border-box; 
+}
+
+.social-group:hover {
+    transform: scale(1.0) translateY(-5px);
+    box-shadow: 10px 10px 0 #000000;
+}
+
+.social-group h3 {
+    margin-bottom: 15px;
+    color: #C84C0C; 
+    font-size: 24px;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 0 #000;
+    text-align: center;
+    font-family: "Chiron GoRound TC", sans-serif;
+}
+
+/* --- RWD 響應式調整 --- */
+
+/* 平板尺寸 (螢幕 < 950px)：變為 2 欄 */
+@media (max-width: 950px) {
+    .social-group {
+        flex: 0 0 calc((100% - 20px) / 2);
+    }
+}
+
+/* 手機尺寸 (螢幕 < 600px)：變為 1 欄 */
+@media (max-width: 600px) {
+    .social-group {
+        flex: 0 0 100%; 
+    }
+}
+
+/* 資源連結按鈕 */
+.btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn {
+    background: #000000; 
+    color: #ffffff;
+    padding: 12px 20px;
+    font-size: 24px;
+    border-radius: 0; 
+    text-decoration: none;
+    text-align: left; 
+    transition: transform 0.1s ease;
+    display: block;
+    margin-bottom: 10px;
+    box-shadow: 4px 4px 0 rgba(255, 255, 255, 0.3);
+    border: 2px solid #ffffff;
+    letter-spacing: 1px;
+    font-weight: 600;
+    font-family: "Chiron GoRound TC", sans-serif;
+}
+
+.btn:hover {
+    transform: scale(1.02) translateY(-2px);
+    background: #E52521; 
+    box-shadow: 4px 4px 0 #000;
+    border-color: #000;
+    color: #fff;
+}
+
+/* ========================================= */
+/* 4. 分頁章節按鈕 (相容新舊版 HTML) */
+/* ========================================= */
+
+/* 同時支援 .chapter-button (新) 和 .section-button (舊) */
+.chapter-button, 
+.section-button {
+    margin: 5px;
+    padding: 15px 25px;
+    font-size: 28px;
+    font-family: "Chiron GoRound TC", sans-serif;
+    font-weight: 600;
+    background: #fff;
+    color: #000;
+    border: 4px solid #000;
+    border-radius: 0; 
+    letter-spacing: 1px;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 #000;
+    display: inline-block;
+}
+
+.chapter-button:hover,
+.section-button:hover {
+    background: #00AA00;
+    color: #fff;
+    transform: translateY(-3px);
+    border: 4px solid #000;
+    box-shadow: 6px 6px 0 #000;
+}
+
+.chapter-button.active,
+.section-button.active {
+    background: #E52521; 
+    color: #fff;
+    font-weight: 700;
+    border: 4px solid #000;
+    transform: scale(1.05);
+    box-shadow: 2px 2px 0 #000;
+    z-index: 10;
+}
+
+/* 按鈕容器 */
+.button-row,
+.button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 20px 0 40px 0;
+    text-align: center;
+}
+
+/* ========================================= */
+/* 5. 頁尾 (Footer) - 統一固定底部 */
+/* ========================================= */
+
+/* 不管是 footer 標籤還是 sticky-footer class，統一樣式 */
+footer, .sticky-footer {
+    position: fixed; 
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px; 
+    background: #C84C0C; 
+    border-top: 4px solid #000;
+    color: #fff;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center; /* 預設置中 (給一般分頁用) */
+    
+    padding: 0 20px;
+    box-sizing: border-box;
+    z-index: 9990;
+    font-family: "Chiron GoRound TC", sans-serif;
+    font-size: 14px;
+    text-shadow: 1px 1px 0 #000;
+    
+    /* 覆蓋可能存在的舊樣式 */
+    margin-top: 0;
+}
+
+/* 首頁專用：左右對齊 (因為有倒數和按鈕) */
+.sticky-footer {
+    justify-content: space-between; 
+}
+
+/* 分頁中的文字微調 */
+footer p {
+    margin: 0;
+    display: inline-block;
+}
+
+/* 首頁 Footer 的按鈕樣式 */
+.footer-left { display: flex; align-items: center; gap: 5px; }
+.footer-btn {
+    background: #E89C24;
+    color: #000;
+    border: 2px solid #000;
+    padding: 2px 10px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 2px 2px 0 #000;
+    transition: all 0.1s;
+}
+.footer-btn:hover { background: #FBD000; transform: translateY(-1px); }
+
+/* ========================================= */
+/* 6. 其他通用元件 (標題、動畫、首頁) */
+/* ========================================= */
+
+/* 標題動畫 (首頁) */
 .intro-text {
     font-family: "Chiron GoRound TC", sans-serif;
     font-size: clamp(1.5rem, 4vw, 2.5rem);
@@ -136,11 +352,30 @@ body {
     max-width: 90vw;
     padding: 0 10px;
 }
-
 @keyframes typing { from { width: 0; } to { width: 100%; } }
 @keyframes blink { 50% { border-color: transparent; } }
+
+/* 分頁內容切換 */
+.section-content { display: none; }
+.active-section { display: block; animation: fadeIn 0.8s ease-out forwards; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
+/* 分頁標題 (如 "7上數學") */
+.section-title {
+    font-family: "Chiron GoRound TC", sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 4vw, 3rem);
+    text-align: center;
+    color: #ffffff;
+    text-shadow: 4px 4px 0 #000000; 
+    margin: 40px auto 20px;
+    max-width: 600px;
+    letter-spacing: 2px;
+    border-bottom: 4px solid #C84C0C; 
+    padding-bottom: 10px;
+}
+
+/* 首頁大型按鈕 */
 .button-section {
     display: flex;
     flex-direction: column;
@@ -149,7 +384,6 @@ body {
     margin-top: 30px;
     padding: 20px;
 }
-
 .grade-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -157,8 +391,6 @@ body {
     width: 100%;
     max-width: 1000px;
 }
-
-/* 大型按鈕 */
 .big-button {
     background: #00AA00; 
     color: #fff;
@@ -176,369 +408,85 @@ body {
     max-width: 250px;
     animation: fadeIn 0.4s ease-in forwards, scaleIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
-
-.button-container {
-    text-align: center;
-    margin-top: 20px;
-}
-
 .big-button:hover {
     background: #00d600; 
     box-shadow: 6px 6px 0 #000000; 
     transform: translateY(-4px);
 }
+.big-button i { margin-right: 10px; font-size: 0.9em; }
+@keyframes scaleIn { 0% { transform: scale(0.5); } 70% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
-.big-button i {
-    margin-right: 10px;
-    font-size: 0.9em;
-}
-
-@keyframes scaleIn {
-  0% { transform: scale(0.5); }
-  70% { transform: scale(1.1); }
-  100% { transform: scale(1); }
-}
-
-.section-content { display: none; }
-.active-section { display: block; animation: fadeIn 0.8s ease-out forwards; }
-
-/* 切換鈕 */
-.section-button {
-    margin: 12px;
-    margin-bottom: 40px;
-    padding: 10px 20px;
-    font-size: 26px;
-    font-family: "Chiron GoRound TC", sans-serif;
-    font-weight: 600;
-    background: #E89C24; 
-    color: #000;
-    border: 4px solid #000000;
-    border-radius: 0;
-    box-shadow: 4px 4px 0 #000000; 
-    text-shadow: none;
-    letter-spacing: 1px;
-    transition: transform 0.1s ease, box-shadow 0.1s ease;
-}
-
-.section-button:hover {
-    background: #FFCC66;
-    color: #000;
-    box-shadow: 4px 4px 0 #000000;
-    transform: translateY(-4px);
-    border: 4px solid #000000;
-    cursor: pointer;
-}
-
-.section-button.active {
-    background: #682800; 
-    color: #fff;
-    font-weight: 700;
-    border: 4px solid #000000;
-    border-radius: 0;
-    transform: scale(1.0);
-    box-shadow: inset 4px 4px 0 rgba(0,0,0,0.5);
-    z-index: 10;
-}
-
-.menu-toggle { display: none; }
-
-.social-container {
-    display: flex;
-    flex-direction: column;
-    margin-top: 20px;
-    align-items: center;
-    width: 100%;
-    max-width: 1600px;
-    margin: 0 auto;
-}
-
-.single-row {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    width: 100%;
-    margin-bottom: 20px;
-}
-
-.social-group {
-    padding: 20px;
-    border-radius: 0; 
-    text-align: left;
-    width: calc(25% - 20px);
-    min-width: 250px;
-    background: #ffffff; 
-    border: 4px solid #000000;
-    box-shadow: 6px 6px 0 #000000;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    transform: scale(0.95);
-}
-
-.social-group:hover {
-    transform: scale(1.0) translateY(-5px);
-    box-shadow: 10px 10px 0 #000000;
-}
-
-.social-group h3 {
-    margin-bottom: 15px;
-    color: #C84C0C; 
-    font-size: 28px;
-    font-weight: 700;
-    text-transform: uppercase;
-    text-shadow: 1px 1px 0 #000;
-}
-
-.btn-group {
-    display: inherit;
-    flex-direction: inherit;
-    gap: 10px;
-}
-
-.btn {
-    background: #000000; 
-    color: #ffffff;
-    padding: 10px 20px;
-    font-size: 20px;
-    border-radius: 0; 
-    text-decoration: none;
-    text-align: left;
-    transition: transform 0.1s ease;
-    display: block;
-    margin-bottom: 20px;
-    box-shadow: 4px 4px 0 rgba(255, 255, 255, 0.3);
-    border: 2px solid #ffffff;
-    letter-spacing: 1px;
-    font-weight: 600;
-}
-
-.icon-button {
-    width: 32px;
-    height: 32px;
-}
-
-.btn:hover {
-    transform: scale(1.02) translateY(-2px);
-    background: #E52521; 
-    box-shadow: 4px 4px 0 #000;
-    border-color: #000;
-    color: #fff;
-}
-
-.image-button {
-    position: relative;
-    display: inline-block;
-    width: 250px;
-    height: 300px;
-    overflow: hidden;
-    border-radius: 0; 
-    border: 4px solid #000;
-    box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.4);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.image-button img {
-    width: 100%;
-    height: 120%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-    image-rendering: pixelated; 
-}
-
-.overlay-text {
-    position: absolute;
-    top: 0;
+/* ========================================= */
+/* 7. 彈出視窗 (Modal) - 首頁用 */
+/* ========================================= */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 10000; 
     left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #FBD000; 
-    font-weight: 800; /* 加粗 */
-    text-shadow: 3px 3px 0 #000000;
-    background-color: rgba(0, 0, 0, 0.5);
-    font-size: 32px;
-    font-family: "Chiron GoRound TC", sans-serif;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.6); 
+    animation: fadeIn 0.3s;
 }
 
-.image-button:hover {
-    transform: translateY(-5px);
-    box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.4);
-}
-
-.image-button:hover img {
-    transform: scale(1.1);
-}
-
-.section-title {
-    /* 修改：將原本的 Noto Sans 統一改為 Chiron GoRound TC */
-    font-family: "Chiron GoRound TC", sans-serif;
-    font-weight: 800;
-    
-    font-size: clamp(3rem, 4vw, 2.5rem);
-    text-align: center;
-    
-    color: #ffffff;
-    text-shadow: 4px 4px 0 #000000; 
-    
-    -webkit-text-stroke: 0; 
-    -webkit-text-fill-color: initial;
-    
-    margin: 40px auto 20px;
-    max-width: 600px;
-    letter-spacing: 2px;
-    
-    border-bottom: 4px solid var(--ground-brown); 
-    padding-bottom: 10px;
-}
-
-.iframe-container {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 10px;
-    flex-wrap: wrap;
-}
-
-.iframe-box {
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto; 
     padding: 20px;
-    border-radius: 0; 
-    text-align: left;
-    width: calc(25% - 20px);
-    min-width: 250px;
-    background: #000000; 
-    border: 4px solid #ffffff; 
-    box-shadow: 0 0 0 2px #000; 
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    transform: scale(0.95);
-}
-
-.iframe-box:hover {
-    transform: scale(1.0) translateY(-3px);
-    border-color: #FBD000; 
-    box-shadow: 0 0 15px rgba(251, 208, 0, 0.5);
-}
-
-.button-row {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    margin-top: 30px;
-}
-
-.step-label:first-of-type {
-    animation: pulse 1s infinite;
-    font-family: "Chiron GoRound TC", sans-serif;
-    font-weight: 700;
-    font-size: 1.5rem;
-    text-align: center;
-    color: #FBD000; 
-    text-shadow: 2px 2px 0 #000;
-}
-
-.countdown-container {
-    font-family: "Chiron GoRound TC", sans-serif;
-    font-weight: 700;
-    background: #000000; 
-    color: #fff;
-    text-align: center;
-    padding: 15px;
-    border-radius: 0; 
-    margin: 20px auto;
-    max-width: 800px;
-    width: 100%;
-    box-shadow: 0 0 0 4px #fff; 
-    overflow: hidden;
-}
-
-.countdown-timer {
-    font-size: 4rem; 
-    display: inline-flex;
-    gap: 10px;
-    flex-wrap: nowrap;
-    white-space: nowrap;
-}
-
-.countdown-timer span {
-    min-width: 50px;
-}
-
-.countdown-timer .label {
-    font-size: 1rem;
-    color: #FBD000; 
-    margin-left: 2px;
-}
-
-footer {
-    bottom: 0;
-    width: 100%;
-    text-align: center;
-    padding: 10px;
-    font-size: 13px; /* 字體換了，稍微放大一點點 */
-    background: #C84C0C; 
-    color: #fff;
-    text-shadow: 1px 1px 0 #000;
-    border-top: 4px solid #000;
-}
-
-.img-wrapper {
-    text-align: center;
-}
-
-.responsive-img {
-    height: 250px;
-    max-width: 100%;
-    width: auto;
-    border: 4px solid #000; 
-}
-
-/* Chapter buttons */
-.chapter-button {
-    margin: 10px;
-    padding: 15px 30px;
-    font-size: 22px;
-    font-family: "Chiron GoRound TC", sans-serif;
-    font-weight: 600;
-    background: #fff;
+    border: 4px solid #000;
+    box-shadow: 8px 8px 0 #000;
+    width: 80%; 
+    max-width: 900px;
+    position: relative;
     color: #000;
-    border: 4px solid #000;
-    border-radius: 0; 
-    letter-spacing: 1px;
-    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.close-modal {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
     cursor: pointer;
-    box-shadow: 4px 4px 0 #000; 
+}
+.close-modal:hover { color: #000; }
+
+.modal-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
 }
 
-.chapter-button:hover {
-    background: #00AA00; 
+.modal-group {
+    flex: 1 1 250px;
+    min-width: 250px;
+    border: 2px solid #000;
+    padding: 15px;
+    background: #eee;
+    box-shadow: 4px 4px 0 #ccc;
+}
+
+.modal-group h3 {
+    margin-top: 0;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+    text-align: center;
+    color: #C84C0C;
+    font-size: 20px;
+    font-family: "Chiron GoRound TC", sans-serif;
+}
+
+.modal-group .btn {
+    text-align: center; 
+    background: #000;
     color: #fff;
-    transform: scale(1.0) translateY(-3px);
-    border: 4px solid #000;
-    box-shadow: 6px 6px 0 #000;
+    border: 2px solid #fff;
+    font-size: 18px;
 }
-
-.chapter-button.active {
-    background: #E52521; 
-    color: #fff;
-    font-weight: 700;
-    border: 4px solid #000;
-    border-radius: 0;
-    transform: scale(1.0);
-    box-shadow: none;
-    z-index: 10;
-}
-
-@keyframes pulse {
-    0% {
-        opacity: 1;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 0.6;
-        transform: scale(1.05);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
+.modal-group .btn:hover {
+    background: #E52521;
+    border-color: #000;
 }
